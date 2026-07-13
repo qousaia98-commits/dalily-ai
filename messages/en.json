@@ -81,6 +81,27 @@
       "description": "We could not find matching providers. Try adjusting filters or a different query.",
       "queryLabel": "Your search"
     },
+    "insight": {
+      "detected": "We understood your request as"
+    },
+    "problems": {
+      "water_leak": "Water leak",
+      "power_outage": "Power outage",
+      "ac_not_cooling": "AC not cooling",
+      "locked_out": "Locked out",
+      "appliance_leak": "Appliance leak",
+      "medical_need": "Medical need",
+      "legal_need": "Legal need",
+      "vehicle_repair": "Vehicle repair",
+      "cleaning_need": "Cleaning"
+    },
+    "topResults": "Top {count} matches",
+    "error": {
+      "pageTitle": "Search results",
+      "title": "Search unavailable",
+      "description": "We could not load results right now. Please check your connection and try again.",
+      "retry": "Try again"
+    },
     "filters": {
       "title": "Filters",
       "category": "Category",

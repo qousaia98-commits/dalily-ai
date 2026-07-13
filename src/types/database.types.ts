@@ -13,6 +13,7 @@ export type VerificationStatus =
 
 export type LocalizedJson = { ar: string; en: string };
 export type ImageKind = "avatar" | "cover" | "gallery";
+export type ProblemPriority = "emergency" | "high" | "normal" | "low";
 
 export type Database = {
   public: {
@@ -440,6 +441,51 @@ export type Database = {
         };
         Relationships: [];
       };
+      search_logs: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          query_text: string;
+          normalized_query: string | null;
+          problem_id: string | null;
+          category_slug: string | null;
+          city_slug: string | null;
+          priority: ProblemPriority | null;
+          result_count: number;
+          provider_ids: string[];
+          locale: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          query_text: string;
+          normalized_query?: string | null;
+          problem_id?: string | null;
+          category_slug?: string | null;
+          city_slug?: string | null;
+          priority?: ProblemPriority | null;
+          result_count?: number;
+          provider_ids?: string[];
+          locale?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          query_text?: string;
+          normalized_query?: string | null;
+          problem_id?: string | null;
+          category_slug?: string | null;
+          city_slug?: string | null;
+          priority?: ProblemPriority | null;
+          result_count?: number;
+          provider_ids?: string[];
+          locale?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       modules: {
         Row: {
           id: string;
@@ -491,6 +537,7 @@ export type Database = {
       app_role: AppRole;
       provider_status: ProviderStatus;
       verification_status: VerificationStatus;
+      problem_priority: ProblemPriority;
     };
     CompositeTypes: {
       [_ in never]: never;

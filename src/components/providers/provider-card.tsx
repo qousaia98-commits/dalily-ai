@@ -5,12 +5,13 @@ import { Link } from "@/lib/i18n/routing";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { StarRating } from "@/components/providers/star-rating";
-import { getLocalizedText, type MockProvider } from "@/types/domain.types";
+import { getLocalizedText } from "@/types/domain.types";
+import type { ProviderListItem } from "@/types/search.types";
 import type { Locale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
 
 type ProviderCardProps = {
-  provider: MockProvider;
+  provider: ProviderListItem;
   className?: string;
   style?: React.CSSProperties;
 };
@@ -67,10 +68,12 @@ export async function ProviderCard({ provider, className, style }: ProviderCardP
               <MapPin className="size-3.5" />
               {getLocalizedText(provider.city, locale)}
             </span>
-            <span className="flex items-center gap-1">
-              <Clock className="size-3.5" />
-              {provider.distanceKm} {tProvider("km")}
-            </span>
+            {provider.distanceKm != null ? (
+              <span className="flex items-center gap-1">
+                <Clock className="size-3.5" />
+                {provider.distanceKm} {tProvider("km")}
+              </span>
+            ) : null}
           </div>
         </CardContent>
       </Card>

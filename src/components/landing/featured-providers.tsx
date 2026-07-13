@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { getFeaturedProviders } from "@/lib/mock/data";
+import { mockProviderToListItem } from "@/lib/search/map-provider";
 import { ProviderCard } from "@/components/providers/provider-card";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +19,7 @@ export async function FeaturedProviders({ className }: { className?: string }) {
           {providers.slice(0, 3).map((provider, index) => (
             <ProviderCard
               key={provider.id}
-              provider={provider}
+              provider={mockProviderToListItem(provider)}
               className={cn("animate-fade-in-up", `stagger-${index + 1}`)}
             />
           ))}

@@ -5,7 +5,7 @@ export function SearchResultsSkeleton() {
     <div className="space-y-6">
       <Skeleton className="h-4 w-48" />
       <div className="grid gap-6 sm:grid-cols-2">
-        {Array.from({ length: 4 }).map((_, i) => (
+        {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="overflow-hidden rounded-xl border">
             <Skeleton className="aspect-[16/9] w-full rounded-none" />
             <div className="space-y-3 p-4">

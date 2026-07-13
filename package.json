@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "seed:search": "node scripts/seed-search-providers.mjs",
+    "verify:search": "node scripts/verify-search.mjs",
+    "verify:search:db": "node scripts/verify-search-integration.mjs"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",

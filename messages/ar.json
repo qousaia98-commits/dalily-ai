@@ -81,6 +81,27 @@
       "description": "لم نعثر على مزودين مطابقين. جرّب تعديل الفلاتر أو صياغة مختلفة.",
       "queryLabel": "بحثك"
     },
+    "insight": {
+      "detected": "فهمنا طلبك على أنه"
+    },
+    "problems": {
+      "water_leak": "تسرب ماء",
+      "power_outage": "انقطاع التيار",
+      "ac_not_cooling": "المكيف لا يبرد",
+      "locked_out": "انغلاق الباب",
+      "appliance_leak": "تسرب أجهزة",
+      "medical_need": "حاجة طبية",
+      "legal_need": "حاجة قانونية",
+      "vehicle_repair": "إصلاح مركبة",
+      "cleaning_need": "تنظيف"
+    },
+    "topResults": "أفضل {count} نتائج",
+    "error": {
+      "pageTitle": "نتائج البحث",
+      "title": "البحث غير متاح",
+      "description": "تعذّر تحميل النتائج حالياً. تحقق من الاتصال وحاول مرة أخرى.",
+      "retry": "إعادة المحاولة"
+    },
     "filters": {
       "title": "الفلاتر",
       "category": "الفئة",
