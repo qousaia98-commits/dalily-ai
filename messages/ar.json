@@ -1,0 +1,439 @@
+{
+  "metadata": {
+    "title": "دليلي AI — ابحث عن خدمات موثوقة في سوريا",
+    "description": "منصة ذكاء اصطناعي لاكتشاف مزودي الخدمات المحليين الموثوقين في سوريا."
+  },
+  "common": {
+    "brand": "دليلي AI",
+    "tagline": "خدمات موثوقة بالقرب منك",
+    "search": "بحث",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "النظام"
+  },
+  "nav": {
+    "search": "البحث",
+    "forBusiness": "للأعمال",
+    "dashboard": "لوحة التحكم",
+    "login": "دخول",
+    "register": "تسجيل"
+  },
+  "home": {
+    "heroTitle": "اعثر على الخدمة التي تحتاجها",
+    "heroSubtitle": "سبّاك، كهربائي، طبيب، محامي والمزيد — مدعوم بالذكاء الاصطناعي",
+    "searchHint": "اكتب ما تحتاجه بكلماتك الخاصة",
+    "categoriesTitle": "فئات شائعة",
+    "categorySearchLabel": "ابحث عن {category}",
+    "categories": {
+      "plumber": "سبّاك",
+      "electrician": "كهربائي",
+      "doctor": "طبيب",
+      "lawyer": "محامي",
+      "mechanic": "ميكانيكي",
+      "cleaner": "تنظيف"
+    },
+    "trustBadge": "مزودون موثوقون",
+    "aiPowered": "بحث ذكي",
+    "howItWorks": {
+      "title": "كيف يعمل دليلي؟",
+      "subtitle": "ثلاث خطوات بسيطة للعثور على الخدمة المناسبة",
+      "step": "الخطوة {number}",
+      "steps": {
+        "search": {
+          "title": "ابحث بذكاء",
+          "description": "صف ما تحتاجه بكلماتك — الذكاء الاصطناعي يفهم طلبك ويجد الأنسب."
+        },
+        "connect": {
+          "title": "تواصل مباشرة",
+          "description": "اتصل أو راسل عبر واتساب مع مزودي الخدمات الموثوقين."
+        },
+        "trust": {
+          "title": "اختر بثقة",
+          "description": "قارن التقييمات ونقاط الثقة والتحقق قبل اتخاذ القرار."
+        }
+      }
+    },
+    "featured": {
+      "title": "مزودون مميزون",
+      "subtitle": "أفضل مزودي الخدمات تقييماً في سوريا"
+    }
+  },
+  "search": {
+    "title": "نتائج البحث",
+    "subtitle": "ابحث عن مزودي خدمات موثوقين في سوريا",
+    "placeholder": "مثال: أحتاج سبّاك في دمشق",
+    "submit": "بحث ذكي",
+    "prompt": "أدخل ما تبحث عنه أو اختر فئة من الصفحة الرئيسية",
+    "resultsCount": "{count} نتيجة",
+    "meta": {
+      "title": "البحث — دليلي AI",
+      "titleWithQuery": "نتائج \"{query}\" — دليلي AI",
+      "description": "ابحث عن مزودي خدمات موثوقين في سوريا عبر دليلي AI"
+    },
+    "errors": {
+      "tooShort": "يرجى إدخال كلمتين على الأقل",
+      "tooLong": "البحث طويل جداً — الحد الأقصى 200 حرف"
+    },
+    "empty": {
+      "title": "لا توجد نتائج",
+      "description": "لم نعثر على مزودين مطابقين. جرّب تعديل الفلاتر أو صياغة مختلفة.",
+      "queryLabel": "بحثك"
+    },
+    "filters": {
+      "title": "الفلاتر",
+      "category": "الفئة",
+      "city": "المدينة",
+      "verified": "التحقق",
+      "sort": "ترتيب حسب",
+      "allCategories": "جميع الفئات",
+      "allCities": "جميع المدن",
+      "allProviders": "الكل",
+      "verifiedOnly": "موثقون فقط",
+      "sortOptions": {
+        "best_match": "الأفضل تطابقاً",
+        "highest_rated": "الأعلى تقييماً",
+        "nearest": "الأقرب",
+        "verified": "الموثقون أولاً"
+      }
+    }
+  },
+  "provider": {
+    "trustScore": "نقاط الثقة",
+    "verified": "موثق",
+    "reviews": "تقييم",
+    "km": "كم",
+    "about": "نبذة",
+    "services": "الخدمات",
+    "gallery": "معرض الصور",
+    "reviewsSection": "التقييمات",
+    "noReviews": "لا توجد تقييمات بعد.",
+    "contact": "تواصل",
+    "call": "اتصال",
+    "whatsapp": "واتساب",
+    "contactNote": "سيتم توصيلك مباشرة مع مزود الخدمة.",
+    "respondsIn": "يرد خلال {hours} ساعات"
+  },
+  "footer": {
+    "description": "منصة ذكاء اصطناعي لاكتشاف مزودي الخدمات الموثوقين في سوريا.",
+    "platform": "المنصة",
+    "account": "الحساب",
+    "legal": "قانوني",
+    "links": {
+      "search": "البحث",
+      "forBusiness": "للأعمال",
+      "login": "تسجيل الدخول",
+      "register": "إنشاء حساب",
+      "dashboard": "لوحة التحكم",
+      "privacy": "سياسة الخصوصية",
+      "terms": "شروط الاستخدام"
+    },
+    "copyright": "© {year} دليلي AI. جميع الحقوق محفوظة."
+  },
+  "business": {
+    "nav": {
+      "title": "لوحة الأعمال",
+      "menu": "القائمة",
+      "dashboard": "الرئيسية",
+      "profile": "الملف الشخصي",
+      "services": "الخدمات",
+      "gallery": "المعرض",
+      "analytics": "الإحصائيات",
+      "verification": "التحقق"
+    },
+    "dashboard": {
+      "title": "لوحة التحكم",
+      "subtitle": "مرحباً بك — أدر ملف مزود الخدمة",
+      "noProviderSubtitle": "أنشئ ملف مزود الخدمة للبدء",
+      "profileStatus": "اكتمال الملف",
+      "completion": "نسبة الاكتمال",
+      "completeProfile": "إكمال الملف",
+      "verification": "التحقق",
+      "overview": "نظرة عامة",
+      "servicesCount": "الخدمات",
+      "galleryCount": "صور المعرض",
+      "draftNote": "ملفك في وضع المسودة. أكمله وأرسله للمراجعة.",
+      "pendingNote": "ملفك قيد المراجعة. سنُعلمك عند الموافقة.",
+      "activeNote": "ملفك منشور ومرئي للعملاء."
+    },
+    "stats": {
+      "profileViews": "مشاهدات الملف",
+      "searchAppearances": "ظهور في البحث",
+      "contactClicks": "نقرات التواصل",
+      "favorites": "المفضلة"
+    },
+    "status": {
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "active": "نشط",
+      "suspended": "موقوف",
+      "archived": "مؤرشف"
+    },
+    "create": {
+      "title": "إنشاء ملف مزود",
+      "subtitle": "أعد عملك على دليلي AI",
+      "nameAr": "اسم العمل (عربي)",
+      "nameEn": "اسم العمل (إنجليزي)",
+      "category": "الفئة",
+      "city": "المدينة",
+      "selectCategory": "اختر الفئة",
+      "selectCity": "اختر المدينة",
+      "phone": "رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "aboutAr": "نبذة (عربي)",
+      "aboutEn": "نبذة (إنجليزي)",
+      "submit": "إنشاء الملف",
+      "success": "تم إنشاء ملف المزود",
+      "errors": {
+        "provider_exists": "لديك ملف مزود مسبقاً",
+        "create_failed": "تعذر إنشاء الملف. حاول مرة أخرى",
+        "validation_error": "يرجى التحقق من جميع الحقول",
+        "unknown": "حدث خطأ"
+      }
+    },
+    "profile": {
+      "title": "تعديل الملف",
+      "subtitle": "حدّث معلومات عملك لجذب المزيد من العملاء",
+      "noProvider": "أنشئ ملف مزود أولاً",
+      "basicInfo": "المعلومات الأساسية",
+      "contactInfo": "معلومات التواصل",
+      "media": "الصور",
+      "workingHours": "ساعات العمل",
+      "nameAr": "اسم العمل (عربي)",
+      "nameEn": "اسم العمل (إنجليزي)",
+      "aboutAr": "نبذة (عربي)",
+      "aboutEn": "نبذة (إنجليزي)",
+      "category": "الفئة",
+      "city": "المدينة",
+      "phone": "رقم الهاتف",
+      "whatsapp": "واتساب",
+      "email": "البريد الإلكتروني",
+      "website": "الموقع الإلكتروني",
+      "addressAr": "العنوان (عربي)",
+      "addressEn": "العنوان (إنجليزي)",
+      "avatar": "صورة الملف",
+      "cover": "صورة الغلاف",
+      "uploadAvatar": "رفع الصورة",
+      "uploadCover": "رفع الغلاف",
+      "closed": "مغلق",
+      "save": "حفظ التغييرات",
+      "cancel": "إلغاء",
+      "saved": "تم الحفظ بنجاح",
+      "dangerZone": "النشر",
+      "submitForReview": "إرسال للمراجعة",
+      "deleteProvider": "حذف الملف",
+      "deleteConfirm": "هل أنت متأكد من حذف ملف المزود؟",
+      "deleted": "تم حذف الملف",
+      "submitted": "تم الإرسال للمراجعة",
+      "errors": {
+        "validation_error": "يرجى التحقق من الحقول",
+        "update_failed": "تعذر حفظ التغييرات",
+        "upload_failed": "فشل الرفع",
+        "file_required": "يرجى اختيار ملف",
+        "file_too_large": "الملف كبير جداً (الحد 5 ميجابايت)",
+        "invalid_file_type": "نوع ملف غير مدعوم",
+        "invalid_hours": "يرجى إدخال ساعات عمل صحيحة",
+        "incomplete_profile": "أكمل 60% على الأقل من ملفك أولاً",
+        "invalid_status": "لا يمكن إرسال الملف في حالته الحالية",
+        "submit_failed": "تعذر الإرسال للمراجعة",
+        "delete_failed": "تعذر حذف الملف",
+        "forbidden": "غير مسموح",
+        "unknown": "حدث خطأ"
+      }
+    },
+    "workingHours": {
+      "days": {
+        "0": "الأحد",
+        "1": "الإثنين",
+        "2": "الثلاثاء",
+        "3": "الأربعاء",
+        "4": "الخميس",
+        "5": "الجمعة",
+        "6": "السبت"
+      }
+    },
+    "services": {
+      "title": "إدارة الخدمات",
+      "subtitle": "أضف أو عدّل الخدمات التي تقدمها",
+      "noProvider": "أنشئ ملف مزود أولاً",
+      "list": "قائمة الخدمات",
+      "add": "إضافة خدمة",
+      "addNew": "إضافة خدمة جديدة",
+      "nameAr": "اسم الخدمة (عربي)",
+      "nameEn": "اسم الخدمة (إنجليزي)",
+      "edit": "تعديل",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "added": "تمت إضافة الخدمة",
+      "remove": "حذف",
+      "errors": {
+        "create_failed": "تعذر إضافة الخدمة",
+        "validation_error": "يرجى التحقق من الحقول",
+        "unknown": "حدث خطأ"
+      }
+    },
+    "gallery": {
+      "title": "إدارة المعرض",
+      "subtitle": "اعرض صور أعمالك السابقة",
+      "noProvider": "أنشئ ملف مزود أولاً",
+      "upload": "رفع",
+      "uploaded": "تم رفع الصورة",
+      "images": "{count} صور",
+      "addImage": "إضافة صورة",
+      "remove": "حذف",
+      "errors": {
+        "upload_failed": "فشل الرفع",
+        "file_required": "يرجى اختيار ملف",
+        "file_too_large": "الملف كبير جداً (الحد 5 ميجابايت)",
+        "invalid_file_type": "نوع ملف غير مدعوم",
+        "gallery_limit": "الحد الأقصى 12 صورة",
+        "delete_failed": "تعذر حذف الصورة",
+        "not_found": "الصورة غير موجودة",
+        "unknown": "حدث خطأ"
+      }
+    },
+    "analytics": {
+      "title": "الإحصائيات",
+      "subtitle": "تابع أداء ملفك على المنصة",
+      "weeklyViews": "المشاهدات الأسبوعية",
+      "views": "مشاهدة",
+      "days": {
+        "mon": "إث",
+        "tue": "ثل",
+        "wed": "أر",
+        "thu": "خم",
+        "fri": "جم",
+        "sat": "سب",
+        "sun": "أح"
+      }
+    },
+    "verification": {
+      "title": "حالة التحقق",
+      "subtitle": "تحقق من هويتك لبناء ثقة العملاء",
+      "trustScore": "نقاط الثقة",
+      "verifiedNote": "حسابك موثق ويظهر شارة الثقة لجميع المستخدمين.",
+      "progress": "مراحل التحقق",
+      "reupload": "إعادة رفع الوثائق",
+      "status": {
+        "verified": "موثق"
+      },
+      "steps": {
+        "identity": {
+          "title": "التحقق من الهوية",
+          "description": "تم تأكيد هويتك الشخصية."
+        },
+        "documents": {
+          "title": "رفع الوثائق",
+          "description": "تم استلام وثائق العمل المطلوبة."
+        },
+        "review": {
+          "title": "مراجعة الفريق",
+          "description": "تمت مراجعة طلبك من قبل فريق دليلي."
+        },
+        "approved": {
+          "title": "الموافقة",
+          "description": "تم اعتماد حسابك كمزود موثق."
+        }
+      }
+    }
+  },
+  "auth": {
+    "logout": "تسجيل الخروج",
+    "cities": {
+      "damascus": "دمشق",
+      "aleppo": "حلب",
+      "homs": "حمص",
+      "latakia": "اللاذقية"
+    },
+    "login": {
+      "title": "تسجيل الدخول",
+      "subtitle": "مرحباً بعودتك إلى دليلي AI",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "دخول",
+      "noAccount": "ليس لديك حساب؟",
+      "register": "إنشاء حساب",
+      "errors": {
+        "required": "يرجى إدخال البريد وكلمة المرور",
+        "invalid_credentials": "بيانات الدخول غير صحيحة",
+        "email_not_confirmed": "يرجى تأكيد بريدك الإلكتروني أولاً",
+        "validation_error": "يرجى التحقق من الحقول",
+        "unknown": "حدث خطأ. يرجى المحاولة مرة أخرى"
+      }
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "subtitle": "انضم إلى دليلي AI واعثر على خدمات موثوقة",
+      "name": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "إنشاء حساب",
+      "businessPrompt": "تريد تسجيل عملك؟",
+      "businessLink": "سجّل كمزود خدمة",
+      "hasAccount": "لديك حساب؟",
+      "login": "تسجيل الدخول",
+      "success": {
+        "verifyTitle": "تحقق من بريدك الإلكتروني",
+        "verifyDescription": "أرسلنا رابط تأكيد إلى بريدك. افتحه لتفعيل حسابك."
+      },
+      "errors": {
+        "invalid": "يرجى ملء جميع الحقول — كلمة المرور 6 أحرف على الأقل",
+        "email_taken": "هذا البريد مسجل مسبقاً",
+        "profile_creation_failed": "تعذر إنشاء الملف. يرجى المحاولة مرة أخرى",
+        "validation_error": "يرجى التحقق من الحقول",
+        "unknown": "حدث خطأ. يرجى المحاولة مرة أخرى"
+      }
+    },
+    "businessWizard": {
+      "title": "تسجيل عملك",
+      "subtitle": "أكمل الخطوات لتظهر على دليلي AI",
+      "step": "الخطوة {current} من {total}",
+      "steps": {
+        "business": "معلومات العمل",
+        "contact": "التواصل",
+        "services": "الخدمات",
+        "review": "المراجعة"
+      },
+      "businessName": "اسم العمل",
+      "category": "الفئة",
+      "city": "المدينة",
+      "selectCategory": "اختر الفئة",
+      "selectCity": "اختر المدينة",
+      "phone": "رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "about": "نبذة عن العمل",
+      "services": "الخدمات المقدمة",
+      "servicesPlaceholder": "اكتب خدماتك مفصولة بفواصل",
+      "back": "رجوع",
+      "next": "التالي",
+      "finish": "إنهاء التسجيل",
+      "goToLogin": "الذهاب لتسجيل الدخول",
+      "success": {
+        "verifyTitle": "تحقق من بريدك الإلكتروني",
+        "verifyDescription": "أرسلنا رابط تأكيد. بعد التفعيل يمكنك إدارة عملك من لوحة التحكم."
+      },
+      "errors": {
+        "password_mismatch": "كلمتا المرور غير متطابقتين",
+        "email_taken": "هذا البريد مسجل مسبقاً",
+        "profile_creation_failed": "تعذر إنشاء حساب العمل. يرجى المحاولة مرة أخرى",
+        "validation_error": "يرجى التحقق من جميع الحقول",
+        "unknown": "حدث خطأ. يرجى المحاولة مرة أخرى"
+      }
+    }
+  },
+  "notFound": {
+    "code": "404",
+    "title": "الصفحة غير موجودة",
+    "description": "الصفحة التي تبحث عنها غير متوفرة أو تم نقلها.",
+    "backHome": "العودة للرئيسية"
+  },
+  "error": {
+    "title": "حدث خطأ غير متوقع",
+    "description": "واجهنا مشكلة أثناء تحميل هذه الصفحة. يرجى المحاولة مرة أخرى.",
+    "retry": "إعادة المحاولة",
+    "backHome": "العودة للرئيسية"
+  }
+}

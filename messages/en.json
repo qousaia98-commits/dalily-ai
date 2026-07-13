@@ -1,0 +1,439 @@
+{
+  "metadata": {
+    "title": "Dalily AI — Find trusted services in Syria",
+    "description": "AI-powered platform to discover trusted local service providers in Syria."
+  },
+  "common": {
+    "brand": "Dalily AI",
+    "tagline": "Trusted services near you",
+    "search": "Search",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "nav": {
+    "search": "Search",
+    "forBusiness": "For Business",
+    "dashboard": "Dashboard",
+    "login": "Log in",
+    "register": "Sign up"
+  },
+  "home": {
+    "heroTitle": "Find the service you need",
+    "heroSubtitle": "Plumbers, electricians, doctors, lawyers & more — powered by AI",
+    "searchHint": "Describe what you need in your own words",
+    "categoriesTitle": "Popular categories",
+    "categorySearchLabel": "Search for {category}",
+    "categories": {
+      "plumber": "Plumber",
+      "electrician": "Electrician",
+      "doctor": "Doctor",
+      "lawyer": "Lawyer",
+      "mechanic": "Mechanic",
+      "cleaner": "Cleaner"
+    },
+    "trustBadge": "Verified providers",
+    "aiPowered": "Smart search",
+    "howItWorks": {
+      "title": "How Dalily works",
+      "subtitle": "Three simple steps to find the right service",
+      "step": "Step {number}",
+      "steps": {
+        "search": {
+          "title": "Search smart",
+          "description": "Describe what you need — AI understands your request and finds the best match."
+        },
+        "connect": {
+          "title": "Connect directly",
+          "description": "Call or message trusted providers via WhatsApp instantly."
+        },
+        "trust": {
+          "title": "Choose with confidence",
+          "description": "Compare ratings, trust scores, and verification before you decide."
+        }
+      }
+    },
+    "featured": {
+      "title": "Featured providers",
+      "subtitle": "Top-rated service providers across Syria"
+    }
+  },
+  "search": {
+    "title": "Search results",
+    "subtitle": "Find trusted service providers across Syria",
+    "placeholder": "e.g. I need a plumber in Damascus",
+    "submit": "Smart search",
+    "prompt": "Enter what you are looking for or pick a category on the home page",
+    "resultsCount": "{count} results",
+    "meta": {
+      "title": "Search — Dalily AI",
+      "titleWithQuery": "Results for \"{query}\" — Dalily AI",
+      "description": "Search for trusted service providers in Syria with Dalily AI"
+    },
+    "errors": {
+      "tooShort": "Please enter at least 2 characters",
+      "tooLong": "Search is too long — maximum 200 characters"
+    },
+    "empty": {
+      "title": "No results found",
+      "description": "We could not find matching providers. Try adjusting filters or a different query.",
+      "queryLabel": "Your search"
+    },
+    "filters": {
+      "title": "Filters",
+      "category": "Category",
+      "city": "City",
+      "verified": "Verification",
+      "sort": "Sort by",
+      "allCategories": "All categories",
+      "allCities": "All cities",
+      "allProviders": "All",
+      "verifiedOnly": "Verified only",
+      "sortOptions": {
+        "best_match": "Best match",
+        "highest_rated": "Highest rated",
+        "nearest": "Nearest",
+        "verified": "Verified first"
+      }
+    }
+  },
+  "provider": {
+    "trustScore": "Trust score",
+    "verified": "Verified",
+    "reviews": "reviews",
+    "km": "km",
+    "about": "About",
+    "services": "Services",
+    "gallery": "Gallery",
+    "reviewsSection": "Reviews",
+    "noReviews": "No reviews yet.",
+    "contact": "Contact",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "contactNote": "You will be connected directly with the provider.",
+    "respondsIn": "Responds within {hours} hours"
+  },
+  "footer": {
+    "description": "AI-powered platform to discover trusted service providers in Syria.",
+    "platform": "Platform",
+    "account": "Account",
+    "legal": "Legal",
+    "links": {
+      "search": "Search",
+      "forBusiness": "For Business",
+      "login": "Log in",
+      "register": "Sign up",
+      "dashboard": "Dashboard",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "copyright": "© {year} Dalily AI. All rights reserved."
+  },
+  "business": {
+    "nav": {
+      "title": "Business panel",
+      "menu": "Menu",
+      "dashboard": "Home",
+      "profile": "Profile",
+      "services": "Services",
+      "gallery": "Gallery",
+      "analytics": "Analytics",
+      "verification": "Verification"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Welcome back — manage your provider profile",
+      "noProviderSubtitle": "Create your provider profile to get started",
+      "profileStatus": "Profile completion",
+      "completion": "Completion",
+      "completeProfile": "Complete profile",
+      "verification": "Verification",
+      "overview": "Overview",
+      "servicesCount": "Services",
+      "galleryCount": "Gallery images",
+      "draftNote": "Your profile is in draft. Complete it and submit for review.",
+      "pendingNote": "Your profile is under review. We'll notify you when it's approved.",
+      "activeNote": "Your profile is live and visible to customers."
+    },
+    "stats": {
+      "profileViews": "Profile views",
+      "searchAppearances": "Search appearances",
+      "contactClicks": "Contact clicks",
+      "favorites": "Favorites"
+    },
+    "status": {
+      "draft": "Draft",
+      "pending_review": "Pending review",
+      "active": "Active",
+      "suspended": "Suspended",
+      "archived": "Archived"
+    },
+    "create": {
+      "title": "Create provider profile",
+      "subtitle": "Set up your business on Dalily AI",
+      "nameAr": "Business name (Arabic)",
+      "nameEn": "Business name (English)",
+      "category": "Category",
+      "city": "City",
+      "selectCategory": "Select category",
+      "selectCity": "Select city",
+      "phone": "Phone number",
+      "email": "Email",
+      "aboutAr": "About (Arabic)",
+      "aboutEn": "About (English)",
+      "submit": "Create profile",
+      "success": "Provider profile created",
+      "errors": {
+        "provider_exists": "You already have a provider profile",
+        "create_failed": "Could not create profile. Please try again",
+        "validation_error": "Please check all fields",
+        "unknown": "Something went wrong"
+      }
+    },
+    "profile": {
+      "title": "Edit profile",
+      "subtitle": "Update your business info to attract more customers",
+      "noProvider": "Create a provider profile first",
+      "basicInfo": "Basic information",
+      "contactInfo": "Contact information",
+      "media": "Images",
+      "workingHours": "Working hours",
+      "nameAr": "Business name (Arabic)",
+      "nameEn": "Business name (English)",
+      "aboutAr": "About (Arabic)",
+      "aboutEn": "About (English)",
+      "category": "Category",
+      "city": "City",
+      "phone": "Phone number",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "website": "Website",
+      "addressAr": "Address (Arabic)",
+      "addressEn": "Address (English)",
+      "avatar": "Profile photo",
+      "cover": "Cover image",
+      "uploadAvatar": "Upload photo",
+      "uploadCover": "Upload cover",
+      "closed": "Closed",
+      "save": "Save changes",
+      "cancel": "Cancel",
+      "saved": "Saved successfully",
+      "dangerZone": "Publishing",
+      "submitForReview": "Submit for review",
+      "deleteProvider": "Delete profile",
+      "deleteConfirm": "Are you sure you want to delete your provider profile?",
+      "deleted": "Profile deleted",
+      "submitted": "Submitted for review",
+      "errors": {
+        "validation_error": "Please check the form fields",
+        "update_failed": "Could not save changes",
+        "upload_failed": "Upload failed",
+        "file_required": "Please select a file",
+        "file_too_large": "File is too large (max 5 MB)",
+        "invalid_file_type": "Invalid file type",
+        "invalid_hours": "Please set valid opening hours",
+        "incomplete_profile": "Complete at least 60% of your profile first",
+        "invalid_status": "Profile cannot be submitted in its current state",
+        "submit_failed": "Could not submit for review",
+        "delete_failed": "Could not delete profile",
+        "forbidden": "Action not allowed",
+        "unknown": "Something went wrong"
+      }
+    },
+    "workingHours": {
+      "days": {
+        "0": "Sunday",
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday"
+      }
+    },
+    "services": {
+      "title": "Manage services",
+      "subtitle": "Add or edit the services you offer",
+      "noProvider": "Create a provider profile first",
+      "list": "Service list",
+      "add": "Add service",
+      "addNew": "Add new service",
+      "nameAr": "Service name (Arabic)",
+      "nameEn": "Service name (English)",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "added": "Service added",
+      "remove": "Remove",
+      "errors": {
+        "create_failed": "Could not add service",
+        "validation_error": "Please check the fields",
+        "unknown": "Something went wrong"
+      }
+    },
+    "gallery": {
+      "title": "Manage gallery",
+      "subtitle": "Showcase photos of your previous work",
+      "noProvider": "Create a provider profile first",
+      "upload": "Upload",
+      "uploaded": "Image uploaded",
+      "images": "{count} images",
+      "addImage": "Add image",
+      "remove": "Remove",
+      "errors": {
+        "upload_failed": "Upload failed",
+        "file_required": "Please select a file",
+        "file_too_large": "File is too large (max 5 MB)",
+        "invalid_file_type": "Invalid file type",
+        "gallery_limit": "Maximum 12 gallery images",
+        "delete_failed": "Could not remove image",
+        "not_found": "Image not found",
+        "unknown": "Something went wrong"
+      }
+    },
+    "analytics": {
+      "title": "Analytics",
+      "subtitle": "Track how your profile performs on the platform",
+      "weeklyViews": "Weekly profile views",
+      "views": "views",
+      "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      }
+    },
+    "verification": {
+      "title": "Verification status",
+      "subtitle": "Verify your identity to build customer trust",
+      "trustScore": "Trust score",
+      "verifiedNote": "Your account is verified and displays the trust badge to all users.",
+      "progress": "Verification steps",
+      "reupload": "Re-upload documents",
+      "status": {
+        "verified": "Verified"
+      },
+      "steps": {
+        "identity": {
+          "title": "Identity verification",
+          "description": "Your personal identity has been confirmed."
+        },
+        "documents": {
+          "title": "Document upload",
+          "description": "Required business documents have been received."
+        },
+        "review": {
+          "title": "Team review",
+          "description": "Your application was reviewed by the Dalily team."
+        },
+        "approved": {
+          "title": "Approval",
+          "description": "Your account was approved as a verified provider."
+        }
+      }
+    }
+  },
+  "auth": {
+    "logout": "Log out",
+    "cities": {
+      "damascus": "Damascus",
+      "aleppo": "Aleppo",
+      "homs": "Homs",
+      "latakia": "Latakia"
+    },
+    "login": {
+      "title": "Log in",
+      "subtitle": "Welcome back to Dalily AI",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log in",
+      "noAccount": "Don't have an account?",
+      "register": "Sign up",
+      "errors": {
+        "required": "Please enter your email and password",
+        "invalid_credentials": "Invalid email or password",
+        "email_not_confirmed": "Please confirm your email first",
+        "validation_error": "Please check the form fields",
+        "unknown": "Something went wrong. Please try again"
+      }
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Join Dalily AI and find trusted services",
+      "name": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create account",
+      "businessPrompt": "Want to list your business?",
+      "businessLink": "Register as a provider",
+      "hasAccount": "Already have an account?",
+      "login": "Log in",
+      "success": {
+        "verifyTitle": "Check your email",
+        "verifyDescription": "We sent a confirmation link. Open it to activate your account."
+      },
+      "errors": {
+        "invalid": "Please fill all fields — password must be at least 6 characters",
+        "email_taken": "This email is already registered",
+        "profile_creation_failed": "Could not create your profile. Please try again",
+        "validation_error": "Please check the form fields",
+        "unknown": "Something went wrong. Please try again"
+      }
+    },
+    "businessWizard": {
+      "title": "Register your business",
+      "subtitle": "Complete the steps to appear on Dalily AI",
+      "step": "Step {current} of {total}",
+      "steps": {
+        "business": "Business info",
+        "contact": "Contact",
+        "services": "Services",
+        "review": "Review"
+      },
+      "businessName": "Business name",
+      "category": "Category",
+      "city": "City",
+      "selectCategory": "Select category",
+      "selectCity": "Select city",
+      "phone": "Phone number",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "about": "About your business",
+      "services": "Services offered",
+      "servicesPlaceholder": "List your services separated by commas",
+      "back": "Back",
+      "next": "Next",
+      "finish": "Complete registration",
+      "goToLogin": "Go to log in",
+      "success": {
+        "verifyTitle": "Check your email",
+        "verifyDescription": "We sent a confirmation link. After activation you can manage your business from the dashboard."
+      },
+      "errors": {
+        "password_mismatch": "Passwords do not match",
+        "email_taken": "This email is already registered",
+        "profile_creation_failed": "Could not create the business account. Please try again",
+        "validation_error": "Please check all fields",
+        "unknown": "Something went wrong. Please try again"
+      }
+    }
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "backHome": "Back to home"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "We ran into a problem while loading this page. Please try again.",
+    "retry": "Try again",
+    "backHome": "Back to home"
+  }
+}
