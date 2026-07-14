@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Sans_Arabic } from "next/font/google";
+import { Plus_Jakarta_Sans, Noto_Sans_Arabic } from "next/font/google";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import { localeDirection } from "@/lib/i18n/config";
+import { buildSiteMetadata } from "@/lib/brand/metadata";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const notoArabic = Noto_Sans_Arabic({
@@ -23,11 +20,13 @@ const notoArabic = Noto_Sans_Arabic({
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
+  const locale = await getLocale();
 
-  return {
+  return buildSiteMetadata({
     title: t("title"),
     description: t("description"),
-  };
+    locale,
+  });
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -39,7 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       lang={locale}
       dir={direction}
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${notoArabic.variable}`}
+      className={`${plusJakarta.variable} ${notoArabic.variable}`}
     >
       <body className="min-h-screen antialiased">
         <ThemeProvider>{children}</ThemeProvider>

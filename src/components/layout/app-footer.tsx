@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/routing";
 import { Separator } from "@/components/ui/separator";
+import { DalilyLogo } from "@/components/brand/dalily-logo";
 
 export async function AppFooter() {
   const t = await getTranslations("footer");
@@ -11,12 +12,8 @@ export async function AppFooter() {
       <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-                د
-              </div>
-              <span className="font-semibold">{tCommon("brand")}</span>
-            </div>
+            <DalilyLogo variant="full" />
+            <p className="text-sm text-muted-foreground">{tCommon("tagline")}</p>
             <p className="text-sm text-muted-foreground">{t("description")}</p>
           </div>
 

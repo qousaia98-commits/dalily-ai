@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" role="img" aria-label="Dalily">
+  <rect width="512" height="512" rx="112" fill="#0B1526"/>
+  <g transform="translate(112, 112) scale(6)">
+    <path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M12 12.2A3.2 3.2 0 0 1 15.2 9h5.1c10.8 0 14.2 14.8 11.2 29.1H15.2A3.2 3.2 0 0 1 12 34.9V12.2Zm12.4 11.8a5.4 5.4 0 1 0-10.8 0 5.4 5.4 0 0 0 10.8 0Z"/>
+    <circle cx="26.6" cy="24" r="2.1" fill="#C4A052"/>
+  </g>
+</svg>

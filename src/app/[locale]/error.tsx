@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
 import { Button } from "@/components/ui/button";
+import { DalilyLogo } from "@/components/brand/dalily-logo";
 
 export default function ErrorPage({
   error,
@@ -14,7 +15,8 @@ export default function ErrorPage({
   const t = useTranslations("error");
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-4 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-8 px-4 text-center">
+      <DalilyLogo variant="full" />
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
         <p className="max-w-md text-muted-foreground">{t("description")}</p>

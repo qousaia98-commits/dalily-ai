@@ -12,17 +12,8 @@ export default async function HomePage() {
   return (
     <>
       <main className="flex flex-1 flex-col">
-        <section className="relative overflow-hidden px-4 pb-16 pt-10 sm:px-6 sm:pb-20 sm:pt-16">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -end-32 -top-32 size-96 rounded-full bg-primary/5 blur-3xl"
-          />
-
-          <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-8 text-center sm:gap-10">
+        <section className="border-b border-border/60 px-4 pb-16 pt-10 sm:px-6 sm:pb-20 sm:pt-16">
+          <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 text-center sm:gap-10">
             <div className="animate-fade-in-up flex flex-wrap items-center justify-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary sm:text-sm">
                 <Sparkles className="size-3.5" />
