@@ -33,15 +33,15 @@ async function createUserRecords(params: {
   displayName: string;
   role: AppRole;
   locale: string;
-  useAdmin: boolean;
+  emailVerified: boolean;
 }) {
-  const client = params.useAdmin ? createAdminClient() : await createClient();
+  const client = createAdminClient();
 
   const { error: userError } = await client.from("users").insert({
     id: params.userId,
     email: params.email,
     preferred_locale: params.locale,
-    email_verified_at: params.useAdmin ? null : new Date().toISOString(),
+    email_verified_at: params.emailVerified ? new Date().toISOString() : null,
   });
 
   if (userError) throw userError;
@@ -59,6 +59,25 @@ async function createUserRecords(params: {
   });
 
   if (roleError) throw roleError;
+}
+
+/** Post-signUp bootstrap — always uses service role (RLS-safe in server actions). */
+async function bootstrapUserAfterSignUp(params: {
+  userId: string;
+  email: string;
+  displayName: string;
+  role: AppRole;
+  locale: string;
+  hasSession: boolean;
+}) {
+  await createUserRecords({
+    userId: params.userId,
+    email: params.email,
+    displayName: params.displayName,
+    role: params.role,
+    locale: params.locale,
+    emailVerified: params.hasSession,
+  });
 }
 
 export async function loginAction(
@@ -159,13 +178,13 @@ export async function registerAction(
   const hasSession = Boolean(data.session);
 
   try {
-    await createUserRecords({
+    await bootstrapUserAfterSignUp({
       userId: data.user.id,
       email: parsed.data.email,
       displayName: parsed.data.name,
       role: "user",
       locale: parsed.data.locale,
-      useAdmin: !hasSession,
+      hasSession,
     });
   } catch {
     return { success: false, error: "profile_creation_failed" };
@@ -242,16 +261,16 @@ export async function registerBusinessAction(
   }
 
   const hasSession = Boolean(data.session);
-  const admin = hasSession ? await createClient() : createAdminClient();
+  const admin = createAdminClient();
 
   try {
-    await createUserRecords({
+    await bootstrapUserAfterSignUp({
       userId: data.user.id,
       email: parsed.data.email,
       displayName: parsed.data.businessName,
       role: "business",
       locale: parsed.data.locale,
-      useAdmin: !hasSession,
+      hasSession,
     });
 
     const slug = generateProviderSlug(parsed.data.businessName, data.user.id);

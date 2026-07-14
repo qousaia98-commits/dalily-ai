@@ -2,13 +2,12 @@
 
 import {
   LayoutDashboard,
-  User,
-  Wrench,
-  Images,
-  BarChart3,
+  Building2,
   ShieldCheck,
-  CreditCard,
+  Search,
+  Users,
   Menu,
+  CreditCard,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
@@ -17,24 +16,26 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const navItems = [
-  { href: "/business", icon: LayoutDashboard, key: "dashboard" },
-  { href: "/business/profile", icon: User, key: "profile" },
-  { href: "/business/services", icon: Wrench, key: "services" },
-  { href: "/business/gallery", icon: Images, key: "gallery" },
-  { href: "/business/analytics", icon: BarChart3, key: "analytics" },
-  { href: "/business/verification", icon: ShieldCheck, key: "verification" },
-  { href: "/business/subscription", icon: CreditCard, key: "subscription" },
+  { href: "/admin", icon: LayoutDashboard, key: "dashboard", exact: true },
+  { href: "/admin/providers", icon: Building2, key: "providers" },
+  { href: "/admin/verification", icon: ShieldCheck, key: "verification" },
+  { href: "/admin/searches", icon: Search, key: "searches" },
+  { href: "/admin/users", icon: Users, key: "users" },
+  { href: "/admin/subscriptions", icon: CreditCard, key: "subscriptions" },
 ] as const;
 
-export function BusinessSidebar() {
-  const t = useTranslations("business.nav");
+export function AdminSidebar() {
+  const t = useTranslations("admin.nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const NavContent = () => (
     <nav className="flex flex-col gap-1">
-      {navItems.map(({ href, icon: Icon, key }) => {
-        const active = pathname === href || (href !== "/business" && pathname.startsWith(href));
+      {navItems.map(({ href, icon: Icon, key, ...rest }) => {
+        const exact = "exact" in rest && rest.exact;
+        const active = exact
+          ? pathname === href
+          : pathname === href || pathname.startsWith(`${href}/`);
         return (
           <Link
             key={href}

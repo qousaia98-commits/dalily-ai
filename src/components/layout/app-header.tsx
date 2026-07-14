@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/routing";
 import { getAuthUser } from "@/lib/auth/session";
-import { isBusinessUser } from "@/lib/auth/roles";
+import { isBusinessUser, isPlatformAdmin } from "@/lib/auth/roles";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { LogoutButton } from "@/components/auth/logout-button";
@@ -13,6 +13,7 @@ export async function AppHeader() {
   const tNav = await getTranslations("nav");
   const authUser = await getAuthUser();
   const businessUser = authUser ? isBusinessUser(authUser.roles) : false;
+  const platformAdmin = authUser ? isPlatformAdmin(authUser.roles) : false;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-md">
@@ -35,6 +36,11 @@ export async function AppHeader() {
           <Button variant="ghost" size="sm" asChild>
             <Link href="/search">{tNav("search")}</Link>
           </Button>
+          {platformAdmin ? (
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/admin">{tNav("admin")}</Link>
+            </Button>
+          ) : null}
           {authUser && businessUser ? (
             <Button variant="ghost" size="sm" asChild>
               <Link href="/business">{tNav("dashboard")}</Link>

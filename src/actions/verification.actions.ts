@@ -5,7 +5,8 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAuthUser } from "@/lib/auth/session";
-import { isAdminUser } from "@/lib/auth/roles";
+import { isPlatformAdmin } from "@/lib/auth/roles";
+import { logAdminAudit } from "@/lib/admin/audit";
 import { requireOwnedProvider } from "@/lib/providers/queries";
 import {
   ALLOWED_VERIFICATION_TYPES,
@@ -199,7 +200,7 @@ export async function approveVerificationAction(
   providerId: string,
 ): Promise<VerificationActionState> {
   const authUser = await requireAuthUser();
-  if (!isAdminUser(authUser.roles)) {
+  if (!isPlatformAdmin(authUser.roles)) {
     return { success: false, error: "forbidden" };
   }
 
@@ -241,6 +242,14 @@ export async function approveVerificationAction(
 
   if (providerError) return { success: false, error: "approve_failed" };
 
+  await logAdminAudit({
+    actorId: authUser.id,
+    action: "provider_approved",
+    entityType: "provider",
+    entityId: providerId,
+    metadata: { verificationId: verification.id },
+  });
+
   await revalidateVerificationPaths();
   return { success: true, message: "approved" };
 }
@@ -255,7 +264,7 @@ export async function rejectVerificationAction(
   formData: FormData,
 ): Promise<VerificationActionState> {
   const authUser = await requireAuthUser();
-  if (!isAdminUser(authUser.roles)) {
+  if (!isPlatformAdmin(authUser.roles)) {
     return { success: false, error: "forbidden" };
   }
 
@@ -303,6 +312,17 @@ export async function rejectVerificationAction(
 
   if (providerError) return { success: false, error: "reject_failed" };
 
+  await logAdminAudit({
+    actorId: authUser.id,
+    action: "provider_rejected",
+    entityType: "provider",
+    entityId: parsed.data.providerId,
+    metadata: {
+      verificationId: verification.id,
+      rejectionReason: parsed.data.rejectionReason,
+    },
+  });
+
   await revalidateVerificationPaths();
   return { success: true, message: "rejected" };
 }
@@ -311,7 +331,7 @@ export async function getVerificationDocumentUrlAction(
   path: string,
 ): Promise<{ url: string | null; error?: string }> {
   const authUser = await requireAuthUser();
-  if (!isAdminUser(authUser.roles)) {
+  if (!isPlatformAdmin(authUser.roles)) {
     return { url: null, error: "forbidden" };
   }
 

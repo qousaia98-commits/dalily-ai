@@ -147,7 +147,7 @@ export function AdminVerificationList({ items }: AdminVerificationListProps) {
                 {item.ownerDisplayName ?? item.ownerEmail}
               </p>
             </div>
-            <Badge variant="secondary">{t("status.pending")}</Badge>
+            <Badge variant="secondary">{t(`status.${item.status}`)}</Badge>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap gap-2">
@@ -155,10 +155,16 @@ export function AdminVerificationList({ items }: AdminVerificationListProps) {
               <DocumentLink label={t("documents.idBack")} path={item.idBackUrl} />
               <DocumentLink label={t("documents.selfie")} path={item.selfieUrl} />
             </div>
-            <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
-              <ApproveButton providerId={item.providerId} />
-              <RejectForm providerId={item.providerId} />
-            </div>
+            {item.status === "pending" ? (
+              <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <ApproveButton providerId={item.providerId} />
+                <RejectForm providerId={item.providerId} />
+              </div>
+            ) : item.status === "rejected" && item.rejectionReason ? (
+              <p className="border-t pt-4 text-sm text-muted-foreground">
+                {t("rejectionReason")}: {item.rejectionReason}
+              </p>
+            ) : null}
           </CardContent>
         </Card>
       ))}

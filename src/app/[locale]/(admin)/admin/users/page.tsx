@@ -1,36 +1,34 @@
 import { getTranslations } from "next-intl/server";
 import { requireAdminUser } from "@/lib/auth/session";
-import { listVerificationsForAdmin } from "@/lib/admin/queries";
-import { AdminVerificationList } from "@/components/admin/admin-verification-list";
+import { listUsersForAdmin } from "@/lib/admin/queries";
+import { AdminUserTable } from "@/components/admin/admin-user-table";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import type { ProviderVerificationStatus } from "@/types/database.types";
 
 type PageProps = {
   searchParams: Promise<{
     q?: string;
-    status?: string;
+    role?: string;
     page?: string;
   }>;
 };
 
-export default async function AdminVerificationPage({ searchParams }: PageProps) {
+export default async function AdminUsersPage({ searchParams }: PageProps) {
   await requireAdminUser();
-  const t = await getTranslations("admin.verification");
+  const t = await getTranslations("admin.users");
   const params = await searchParams;
   const page = Number(params.page ?? "1") || 1;
-  const statusOptions = ["all", "pending", "approved", "rejected"] as const;
-  const status =
-    params.status && statusOptions.includes(params.status as (typeof statusOptions)[number])
-      ? (params.status as ProviderVerificationStatus | "all")
-      : "pending";
+  const roleOptions = ["all", "business", "admin"] as const;
+  const roleFilter =
+    params.role && roleOptions.includes(params.role as (typeof roleOptions)[number])
+      ? (params.role as "all" | "business" | "admin")
+      : "all";
 
-  const result = await listVerificationsForAdmin({
+  const result = await listUsersForAdmin({
     search: params.q,
-    status,
+    roleFilter,
     page,
-    pageSize: 10,
   });
 
   return (
@@ -43,26 +41,26 @@ export default async function AdminVerificationPage({ searchParams }: PageProps)
       <form className="grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-3">
         <Input name="q" defaultValue={params.q ?? ""} placeholder={t("filters.search")} />
         <select
-          name="status"
-          defaultValue={status}
+          name="role"
+          defaultValue={roleFilter}
           className="border-input flex h-9 w-full rounded-md border bg-transparent px-3 text-sm"
         >
-          {statusOptions.map((s) => (
-            <option key={s} value={s}>
-              {t(`filters.status.${s}`)}
+          {roleOptions.map((role) => (
+            <option key={role} value={role}>
+              {t(`filters.${role}`)}
             </option>
           ))}
         </select>
         <Button type="submit">{t("filters.apply")}</Button>
       </form>
 
-      <AdminVerificationList items={result.items} />
+      <AdminUserTable items={result.items} />
       <AdminPagination
         page={result.page}
         pageSize={result.pageSize}
         total={result.total}
-        basePath="/admin/verification"
-        searchParams={{ q: params.q, status: params.status ?? status }}
+        basePath="/admin/users"
+        searchParams={{ q: params.q, role: params.role ?? roleFilter }}
         label={t("pagination", { total: result.total })}
       />
     </div>

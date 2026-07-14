@@ -1,3 +1,5 @@
+import type { PlanSlug } from "@/lib/subscription/types";
+import { rankingBonusForPlan, SUBSCRIPTION_RANKING_BONUS_MAX } from "@/lib/subscription/limits";
 import type { VerificationStatus } from "@/types/database.types";
 import type { Database } from "@/types/database.types";
 import type { ProblemPriority } from "@/lib/search/engine/types";
@@ -5,16 +7,18 @@ import type { ProblemPriority } from "@/lib/search/engine/types";
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
 
 export const DALILY_SCORE_WEIGHTS = {
-  verification: 0.28,
-  trustScore: 0.22,
-  rating: 0.18,
-  profileCompleteness: 0.17,
+  verification: 0.26,
+  trustScore: 0.21,
+  rating: 0.17,
+  profileCompleteness: 0.16,
   recency: 0.1,
   urgencyAlignment: 0.05,
+  subscription: SUBSCRIPTION_RANKING_BONUS_MAX,
 } as const;
 
 export type DalilyScoreContext = {
   priority?: ProblemPriority | null;
+  planSlug?: PlanSlug;
 };
 
 function verificationScore(status: VerificationStatus): number {
@@ -70,9 +74,13 @@ function urgencyAlignmentScore(
   return (verifiedBoost + responseBoost) / 2;
 }
 
+function subscriptionScore(planSlug: PlanSlug = "free"): number {
+  const bonus = rankingBonusForPlan(planSlug);
+  return bonus / SUBSCRIPTION_RANKING_BONUS_MAX;
+}
+
 /**
- * Weighted Dalily Score — replaces sequential multi-field sorting.
- * All signals are normalized to 0–1 and combined with configurable weights.
+ * Weighted Dalily Score — quality-first ranking with capped subscription bonus (max 5%).
  */
 export function calculateDalilyScore(
   provider: ProviderRow,
@@ -86,6 +94,7 @@ export function calculateDalilyScore(
 
   const redistributed = urgencyWeight === 0 ? 1 : 1 - weights.urgencyAlignment;
   const scale = urgencyWeight === 0 ? 1 : redistributed / (1 - weights.urgencyAlignment);
+  const planSlug = context.planSlug ?? "free";
 
   return (
     weights.verification * scale * verificationScore(provider.verification_status) +
@@ -93,6 +102,7 @@ export function calculateDalilyScore(
     weights.rating * scale * normalizeRating(Number(provider.rating_avg)) +
     weights.profileCompleteness * scale * normalizeProfileCompleteness(provider.profile_completeness) +
     weights.recency * scale * recencyScore(provider.created_at) +
-    urgencyWeight * urgencyAlignmentScore(provider, context.priority)
+    urgencyWeight * urgencyAlignmentScore(provider, context.priority) +
+    weights.subscription * subscriptionScore(planSlug)
   );
 }

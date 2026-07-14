@@ -17,6 +17,7 @@
     "search": "البحث",
     "forBusiness": "للأعمال",
     "dashboard": "لوحة التحكم",
+    "admin": "الإدارة",
     "login": "دخول",
     "register": "تسجيل",
     "menu": "القائمة",
@@ -216,7 +217,8 @@
       "services": "الخدمات",
       "gallery": "المعرض",
       "analytics": "الإحصائيات",
-      "verification": "التحقق"
+      "verification": "التحقق",
+      "subscription": "الاشتراك"
     },
     "dashboard": {
       "title": "لوحة التحكم",
@@ -427,21 +429,134 @@
         "documents_incomplete": "ارفع المستندات الثلاثة قبل الإرسال.",
         "submit_failed": "تعذر إرسال المستندات. حاول مرة أخرى."
       }
+    },
+    "subscription": {
+      "title": "الاشتراك",
+      "subtitle": "إدارة خطتك والفوترة وسجل المدفوعات",
+      "currentPlan": "الخطة الحالية",
+      "expiresAt": "تنتهي في {date}",
+      "noExpiration": "بدون تاريخ انتهاء",
+      "renew": "تجديد",
+      "downgrade": "الرجوع إلى المجاني",
+      "cancel": "إلغاء الاشتراك",
+      "upgrade": "ترقية",
+      "current": "الخطة الحالية",
+      "freePrice": "مجاني",
+      "perMonth": "شهر",
+      "paymentHistory": "سجل المدفوعات",
+      "noPayments": "لا توجد مدفوعات بعد.",
+      "plans": {
+        "free": "مجاني",
+        "pro": "احترافي",
+        "premium": "مميز"
+      },
+      "status": {
+        "trial": "تجريبي",
+        "active": "نشط",
+        "pending_payment": "بانتظار الدفع",
+        "expired": "منتهي",
+        "cancelled": "ملغى"
+      },
+      "paymentStatus": {
+        "pending": "قيد الانتظار",
+        "paid": "مدفوع",
+        "failed": "فشل",
+        "cancelled": "ملغى"
+      },
+      "features": {
+        "maxServices": "حتى {value} خدمات",
+        "maxImages": "حتى {value} صور",
+        "verifiedBadge": "شارة موثّق",
+        "advancedAnalytics": "تحليلات متقدمة",
+        "featuredSection": "قسم مميز",
+        "premiumBadge": "شارة بريميوم",
+        "unlimitedServices": "خدمات غير محدودة"
+      }
     }
   },
   "admin": {
+    "nav": {
+      "title": "مركز التحكم",
+      "menu": "قائمة الإدارة",
+      "dashboard": "لوحة المعلومات",
+      "providers": "المزودون",
+      "verification": "التحقق",
+      "searches": "تحليلات البحث",
+      "users": "المستخدمون",
+      "subscriptions": "الاشتراكات"
+    },
+    "dashboard": {
+      "title": "لوحة الإدارة",
+      "subtitle": "نظرة عامة على المنصة والمؤشرات الرئيسية",
+      "stats": {
+        "totalProviders": "إجمالي المزودين",
+        "activeProviders": "المزودون النشطون",
+        "pendingReviews": "قيد المراجعة",
+        "rejectedProviders": "مرفوضون",
+        "totalUsers": "إجمالي المستخدمين",
+        "totalSearches": "إجمالي عمليات البحث",
+        "searchesToday": "عمليات البحث اليوم"
+      }
+    },
+    "providers": {
+      "title": "إدارة المزودين",
+      "subtitle": "ابحث وفلتر وأدر جميع مزودي الخدمات",
+      "empty": "لا يوجد مزودون يطابقون الفلاتر.",
+      "viewProfile": "عرض الملف",
+      "pagination": "{total} مزود إجمالاً",
+      "filters": {
+        "search": "ابحث بالاسم أو المعرف…",
+        "allStatuses": "كل الحالات",
+        "allCities": "كل المدن",
+        "allCategories": "كل الفئات",
+        "apply": "تطبيق الفلاتر"
+      },
+      "status": {
+        "draft": "مسودة",
+        "pending_review": "قيد المراجعة",
+        "active": "نشط",
+        "suspended": "موقوف",
+        "archived": "مؤرشف"
+      },
+      "actions": {
+        "activate": "تفعيل",
+        "suspend": "إيقاف",
+        "archive": "أرشفة",
+        "delete": "حذف",
+        "deleteConfirm": "حذف هذا المزود؟ لا يمكن التراجع بسهولة."
+      },
+      "errors": {
+        "forbidden": "ليس لديك صلاحية.",
+        "validation_error": "طلب غير صالح.",
+        "update_failed": "تعذر تحديث المزود.",
+        "delete_failed": "تعذر حذف المزود."
+      }
+    },
     "verification": {
       "title": "التحقق من المزودين",
       "subtitle": "راجع مستندات الهوية واعتمد الأنشطة للظهور في البحث",
-      "empty": "لا توجد طلبات تحقق قيد الانتظار.",
+      "empty": "لا توجد طلبات تحقق تطابق الفلاتر.",
       "approve": "موافقة",
       "reject": "رفض",
       "confirmReject": "تأكيد الرفض",
       "cancel": "إلغاء",
       "rejectionReason": "سبب الرفض",
       "rejectionPlaceholder": "اشرح سبب رفض التحقق",
+      "pagination": "{total} طلب تحقق إجمالاً",
+      "filters": {
+        "search": "ابحث عن نشاط أو مالك…",
+        "apply": "تطبيق الفلاتر",
+        "status": {
+          "all": "كل الحالات",
+          "pending": "قيد الانتظار",
+          "approved": "موافق عليه",
+          "rejected": "مرفوض"
+        }
+      },
       "status": {
-        "pending": "قيد الانتظار"
+        "pending": "قيد الانتظار",
+        "approved": "موافق عليه",
+        "rejected": "مرفوض"
       },
       "documents": {
         "idFront": "الوجه الأمامي",
@@ -455,6 +570,111 @@
         "reject_failed": "تعذر رفض هذا النشاط.",
         "validation_error": "يرجى إدخال سبب الرفض.",
         "url_failed": "تعذر فتح المستند."
+      }
+    },
+    "searches": {
+      "title": "تحليلات البحث",
+      "subtitle": "نشاط البحث خلال آخر 30 يوماً",
+      "topProblems": "أكثر المشاكل بحثاً",
+      "noResults": "عمليات بحث بدون نتائج",
+      "byCity": "البحث حسب المدينة",
+      "perDay": "البحث يومياً",
+      "count": "العدد",
+      "empty": "لا توجد بيانات بحث بعد."
+    },
+    "users": {
+      "title": "إدارة المستخدمين",
+      "subtitle": "إدارة الحسابات والأدوار والصلاحيات",
+      "empty": "لا يوجد مستخدمون يطابقون الفلاتر.",
+      "pagination": "{total} مستخدم إجمالاً",
+      "filters": {
+        "search": "ابحث بالبريد أو الاسم…",
+        "all": "كل المستخدمين",
+        "business": "الأنشطة",
+        "admin": "المسؤولون",
+        "apply": "تطبيق الفلاتر"
+      },
+      "status": {
+        "active": "نشط",
+        "suspended": "موقوف",
+        "banned": "محظور"
+      },
+      "roles": {
+        "user": "مستخدم",
+        "business": "نشاط تجاري",
+        "admin": "مسؤول",
+        "moderator": "مشرف"
+      },
+      "actions": {
+        "disable": "تعطيل",
+        "activate": "تفعيل",
+        "grantRole": "منح {role}",
+        "revokeRole": "سحب {role}"
+      },
+      "errors": {
+        "forbidden": "ليس لديك صلاحية.",
+        "validation_error": "طلب غير صالح.",
+        "update_failed": "تعذر تحديث المستخدم.",
+        "role_failed": "تعذر تغيير الدور.",
+        "self_action": "لا يمكنك تعديل صلاحياتك الإدارية."
+      }
+    },
+    "subscriptions": {
+      "title": "الاشتراكات والمدفوعات",
+      "subtitle": "إدارة خطط الأعمال والموافقة على المدفوعات اليدوية وتمديد الاشتراكات",
+      "paymentsTitle": "المدفوعات",
+      "subscriptionsTitle": "الاشتراكات",
+      "empty": "لا توجد اشتراكات تطابق الفلاتر.",
+      "noPayments": "لا توجد مدفوعات تطابق الفلاتر.",
+      "approve": "موافقة",
+      "reject": "رفض",
+      "setPro": "تعيين Pro",
+      "setPremium": "تعيين Premium",
+      "extend30": "تمديد 30 يوماً",
+      "cancel": "إلغاء",
+      "pagination": "{total} اشتراك إجمالاً",
+      "filters": {
+        "search": "ابحث عن نشاط…",
+        "apply": "تطبيق الفلاتر",
+        "status": {
+          "all": "كل الحالات",
+          "trial": "تجريبي",
+          "active": "نشط",
+          "pending_payment": "بانتظار الدفع",
+          "expired": "منتهي",
+          "cancelled": "ملغى"
+        },
+        "plan": {
+          "all": "كل الخطط",
+          "free": "مجاني",
+          "pro": "احترافي",
+          "premium": "مميز"
+        },
+        "paymentStatus": {
+          "all": "كل المدفوعات",
+          "pending": "قيد الانتظار",
+          "paid": "مدفوع",
+          "failed": "فشل",
+          "cancelled": "ملغى"
+        }
+      },
+      "plans": {
+        "free": "مجاني",
+        "pro": "احترافي",
+        "premium": "مميز"
+      },
+      "status": {
+        "trial": "تجريبي",
+        "active": "نشط",
+        "pending_payment": "بانتظار الدفع",
+        "expired": "منتهي",
+        "cancelled": "ملغى"
+      },
+      "paymentStatus": {
+        "pending": "قيد الانتظار",
+        "paid": "مدفوع",
+        "failed": "فشل",
+        "cancelled": "ملغى"
       }
     }
   },

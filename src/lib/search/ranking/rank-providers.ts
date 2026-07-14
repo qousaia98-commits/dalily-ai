@@ -1,3 +1,4 @@
+import type { PlanSlug } from "@/lib/subscription/types";
 import type { Database } from "@/types/database.types";
 import {
   calculateDalilyScore,
@@ -11,16 +12,23 @@ export type ScoredProvider = {
   dalilyScore: number;
 };
 
+export type RankProvidersContext = DalilyScoreContext & {
+  planSlugsByProviderId?: Map<string, PlanSlug>;
+};
+
 /**
  * Ranks providers by weighted Dalily Score (descending).
  */
 export function rankProviders(
   rows: ProviderRow[],
-  context: DalilyScoreContext = {},
+  context: RankProvidersContext = {},
 ): ProviderRow[] {
   const scored: ScoredProvider[] = rows.map((provider) => ({
     provider,
-    dalilyScore: calculateDalilyScore(provider, context),
+    dalilyScore: calculateDalilyScore(provider, {
+      priority: context.priority,
+      planSlug: context.planSlugsByProviderId?.get(provider.id) ?? context.planSlug ?? "free",
+    }),
   }));
 
   scored.sort((a, b) => {

@@ -64,7 +64,7 @@ export async function enforceRouteAuth(
     return NextResponse.redirect(new URL(`${prefix}/register/business`, request.url));
   }
 
-  if (isAdminRoute(pathname) && !roles.includes("admin") && !roles.includes("moderator")) {
+  if (isAdminRoute(pathname) && !roles.includes("admin")) {
     return NextResponse.redirect(new URL(`${prefix}/`, request.url));
   }
 

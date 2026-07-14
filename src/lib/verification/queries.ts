@@ -84,21 +84,57 @@ export function toBusinessVerificationView(
   };
 }
 
-export async function listPendingVerificationsForAdmin(): Promise<AdminVerificationItem[]> {
+export async function listVerificationsForAdmin(params: {
+  search?: string;
+  status?: ProviderVerificationStatus | "all";
+  page?: number;
+  pageSize?: number;
+}): Promise<{
+  items: AdminVerificationItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}> {
   const admin = createAdminClient();
+  const page = Math.max(1, params.page ?? 1);
+  const pageSize = params.pageSize ?? 10;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+  const status = params.status ?? "pending";
 
-  const { data: verifications, error } = await admin
-    .from("provider_verifications")
-    .select("*")
-    .eq("status", "pending")
-    .order("created_at", { ascending: true });
+  let query = admin.from("provider_verifications").select("*", { count: "exact" });
 
-  if (error || !verifications?.length) return [];
+  if (status !== "all") {
+    query = query.eq("status", status);
+  }
+
+  query = query.order("created_at", { ascending: false });
+
+  const term = params.search?.trim().toLowerCase();
+
+  let verifications;
+  let count: number | null = 0;
+
+  if (term) {
+    const { data, error } = await query;
+    if (error || !data?.length) {
+      return { items: [], total: 0, page, pageSize };
+    }
+    verifications = data;
+    count = data.length;
+  } else {
+    const { data, count: total, error } = await query.range(from, to);
+    if (error || !data?.length) {
+      return { items: [], total: total ?? 0, page, pageSize };
+    }
+    verifications = data;
+    count = total;
+  }
 
   const providerIds = verifications.map((row) => row.provider_id);
   const { data: providers } = await admin
     .from("providers")
-    .select("id, name, owner_id")
+    .select("id, name, owner_id, slug")
     .in("id", providerIds)
     .is("deleted_at", null);
 
@@ -115,18 +151,27 @@ export async function listPendingVerificationsForAdmin(): Promise<AdminVerificat
     (profiles ?? []).map((profile) => [profile.user_id, profile.display_name]),
   );
 
-  const items: AdminVerificationItem[] = [];
+  const allItems: AdminVerificationItem[] = [];
 
   for (const verification of verifications) {
     const provider = providerById.get(verification.provider_id);
     if (!provider) continue;
 
-    items.push({
+    const providerName = getLocalizedField(provider.name as LocalizedJson, "en");
+    const ownerEmail = emailByUserId.get(provider.owner_id) ?? "";
+    const ownerName = displayNameByUserId.get(provider.owner_id) ?? "";
+
+    if (term) {
+      const haystack = `${providerName} ${provider.slug} ${ownerEmail} ${ownerName}`.toLowerCase();
+      if (!haystack.includes(term)) continue;
+    }
+
+    allItems.push({
       id: verification.id,
       providerId: verification.provider_id,
-      providerName: provider.name,
+      providerName: provider.name as LocalizedJson,
       ownerId: provider.owner_id,
-      ownerEmail: emailByUserId.get(provider.owner_id) ?? "",
+      ownerEmail,
       ownerDisplayName: displayNameByUserId.get(provider.owner_id) ?? null,
       status: verification.status,
       rejectionReason: verification.rejection_reason,
@@ -137,7 +182,26 @@ export async function listPendingVerificationsForAdmin(): Promise<AdminVerificat
     });
   }
 
-  return items;
+  const total = term ? allItems.length : (count ?? allItems.length);
+  const items = term ? allItems.slice(from, from + pageSize) : allItems;
+
+  return {
+    items,
+    total,
+    page,
+    pageSize,
+  };
+}
+
+/** @deprecated Use listVerificationsForAdmin with status pending */
+export async function listPendingVerificationsForAdmin(): Promise<AdminVerificationItem[]> {
+  const result = await listVerificationsForAdmin({ status: "pending", pageSize: 100 });
+  return result.items;
+}
+
+function getLocalizedField(value: LocalizedJson, locale: string): string {
+  if (locale === "ar") return value.ar || value.en;
+  return value.en || value.ar;
 }
 
 export async function createSignedVerificationUrl(path: string, expiresIn = 3600): Promise<string | null> {

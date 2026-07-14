@@ -17,6 +17,7 @@
     "search": "Search",
     "forBusiness": "For Business",
     "dashboard": "Dashboard",
+    "admin": "Admin",
     "login": "Log in",
     "register": "Sign up",
     "menu": "Menu",
@@ -216,7 +217,8 @@
       "services": "Services",
       "gallery": "Gallery",
       "analytics": "Analytics",
-      "verification": "Verification"
+      "verification": "Verification",
+      "subscription": "Subscription"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -427,21 +429,134 @@
         "documents_incomplete": "Upload all three documents before submitting.",
         "submit_failed": "Could not submit your documents. Please try again."
       }
+    },
+    "subscription": {
+      "title": "Subscription",
+      "subtitle": "Manage your plan, billing, and payment history",
+      "currentPlan": "Current plan",
+      "expiresAt": "Expires on {date}",
+      "noExpiration": "No expiration date",
+      "renew": "Renew",
+      "downgrade": "Downgrade to Free",
+      "cancel": "Cancel subscription",
+      "upgrade": "Upgrade",
+      "current": "Current plan",
+      "freePrice": "Free",
+      "perMonth": "month",
+      "paymentHistory": "Payment history",
+      "noPayments": "No payments yet.",
+      "plans": {
+        "free": "Free",
+        "pro": "Pro",
+        "premium": "Premium"
+      },
+      "status": {
+        "trial": "Trial",
+        "active": "Active",
+        "pending_payment": "Pending payment",
+        "expired": "Expired",
+        "cancelled": "Cancelled"
+      },
+      "paymentStatus": {
+        "pending": "Pending",
+        "paid": "Paid",
+        "failed": "Failed",
+        "cancelled": "Cancelled"
+      },
+      "features": {
+        "maxServices": "Up to {value} services",
+        "maxImages": "Up to {value} images",
+        "verifiedBadge": "Verified badge",
+        "advancedAnalytics": "Advanced analytics",
+        "featuredSection": "Featured section",
+        "premiumBadge": "Premium badge",
+        "unlimitedServices": "Unlimited services"
+      }
     }
   },
   "admin": {
+    "nav": {
+      "title": "Control Center",
+      "menu": "Admin menu",
+      "dashboard": "Dashboard",
+      "providers": "Providers",
+      "verification": "Verification",
+      "searches": "Search analytics",
+      "users": "Users",
+      "subscriptions": "Subscriptions"
+    },
+    "dashboard": {
+      "title": "Admin dashboard",
+      "subtitle": "Platform overview and key metrics",
+      "stats": {
+        "totalProviders": "Total providers",
+        "activeProviders": "Active providers",
+        "pendingReviews": "Pending reviews",
+        "rejectedProviders": "Rejected providers",
+        "totalUsers": "Total users",
+        "totalSearches": "Total searches",
+        "searchesToday": "Searches today"
+      }
+    },
+    "providers": {
+      "title": "Provider management",
+      "subtitle": "Search, filter, and manage all service providers",
+      "empty": "No providers match your filters.",
+      "viewProfile": "View profile",
+      "pagination": "{total} providers total",
+      "filters": {
+        "search": "Search by name or slug…",
+        "allStatuses": "All statuses",
+        "allCities": "All cities",
+        "allCategories": "All categories",
+        "apply": "Apply filters"
+      },
+      "status": {
+        "draft": "Draft",
+        "pending_review": "Pending review",
+        "active": "Active",
+        "suspended": "Suspended",
+        "archived": "Archived"
+      },
+      "actions": {
+        "activate": "Activate",
+        "suspend": "Suspend",
+        "archive": "Archive",
+        "delete": "Delete",
+        "deleteConfirm": "Soft-delete this provider? This cannot be undone easily."
+      },
+      "errors": {
+        "forbidden": "You do not have permission.",
+        "validation_error": "Invalid request.",
+        "update_failed": "Could not update provider.",
+        "delete_failed": "Could not delete provider."
+      }
+    },
     "verification": {
       "title": "Provider verification",
       "subtitle": "Review identity documents and approve businesses for search visibility",
-      "empty": "No pending verification requests.",
+      "empty": "No verification requests match your filters.",
       "approve": "Approve",
       "reject": "Reject",
       "confirmReject": "Confirm rejection",
       "cancel": "Cancel",
       "rejectionReason": "Rejection reason",
       "rejectionPlaceholder": "Explain why the verification was rejected",
+      "pagination": "{total} verifications total",
+      "filters": {
+        "search": "Search business or owner…",
+        "apply": "Apply filters",
+        "status": {
+          "all": "All statuses",
+          "pending": "Pending",
+          "approved": "Approved",
+          "rejected": "Rejected"
+        }
+      },
       "status": {
-        "pending": "Pending"
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
       },
       "documents": {
         "idFront": "ID front",
@@ -455,6 +570,111 @@
         "reject_failed": "Could not reject this business.",
         "validation_error": "Please provide a rejection reason.",
         "url_failed": "Could not open the document."
+      }
+    },
+    "searches": {
+      "title": "Search analytics",
+      "subtitle": "Last 30 days of search activity",
+      "topProblems": "Most searched problems",
+      "noResults": "Searches without results",
+      "byCity": "Searches by city",
+      "perDay": "Searches per day",
+      "count": "Count",
+      "empty": "No search data yet."
+    },
+    "users": {
+      "title": "User management",
+      "subtitle": "Manage accounts, roles, and access",
+      "empty": "No users match your filters.",
+      "pagination": "{total} users total",
+      "filters": {
+        "search": "Search by email or name…",
+        "all": "All users",
+        "business": "Businesses",
+        "admin": "Admins",
+        "apply": "Apply filters"
+      },
+      "status": {
+        "active": "Active",
+        "suspended": "Suspended",
+        "banned": "Banned"
+      },
+      "roles": {
+        "user": "User",
+        "business": "Business",
+        "admin": "Admin",
+        "moderator": "Moderator"
+      },
+      "actions": {
+        "disable": "Disable",
+        "activate": "Activate",
+        "grantRole": "Grant {role}",
+        "revokeRole": "Revoke {role}"
+      },
+      "errors": {
+        "forbidden": "You do not have permission.",
+        "validation_error": "Invalid request.",
+        "update_failed": "Could not update user.",
+        "role_failed": "Could not change role.",
+        "self_action": "You cannot modify your own admin access."
+      }
+    },
+    "subscriptions": {
+      "title": "Subscriptions & payments",
+      "subtitle": "Manage business plans, approve manual payments, and extend subscriptions",
+      "paymentsTitle": "Payments",
+      "subscriptionsTitle": "Subscriptions",
+      "empty": "No subscriptions match your filters.",
+      "noPayments": "No payments match your filters.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "setPro": "Set Pro",
+      "setPremium": "Set Premium",
+      "extend30": "Extend 30 days",
+      "cancel": "Cancel",
+      "pagination": "{total} subscriptions total",
+      "filters": {
+        "search": "Search business…",
+        "apply": "Apply filters",
+        "status": {
+          "all": "All statuses",
+          "trial": "Trial",
+          "active": "Active",
+          "pending_payment": "Pending payment",
+          "expired": "Expired",
+          "cancelled": "Cancelled"
+        },
+        "plan": {
+          "all": "All plans",
+          "free": "Free",
+          "pro": "Pro",
+          "premium": "Premium"
+        },
+        "paymentStatus": {
+          "all": "All payments",
+          "pending": "Pending",
+          "paid": "Paid",
+          "failed": "Failed",
+          "cancelled": "Cancelled"
+        }
+      },
+      "plans": {
+        "free": "Free",
+        "pro": "Pro",
+        "premium": "Premium"
+      },
+      "status": {
+        "trial": "Trial",
+        "active": "Active",
+        "pending_payment": "Pending payment",
+        "expired": "Expired",
+        "cancelled": "Cancelled"
+      },
+      "paymentStatus": {
+        "pending": "Pending",
+        "paid": "Paid",
+        "failed": "Failed",
+        "cancelled": "Cancelled"
       }
     }
   },

@@ -31,8 +31,13 @@ export function isAdminUser(roles: AppRole[]): boolean {
   return hasAnyRole(roles, [ROLES.ADMIN, ROLES.MODERATOR]);
 }
 
+/** Platform admin panel — admin role only (Sprint 6) */
+export function isPlatformAdmin(roles: AppRole[]): boolean {
+  return hasRole(roles, ROLES.ADMIN);
+}
+
 export function getPostLoginPath(roles: AppRole[]): string {
-  if (isAdminUser(roles)) return "/admin";
+  if (isPlatformAdmin(roles)) return "/admin";
   if (isBusinessUser(roles)) return "/business";
   return "/";
 }

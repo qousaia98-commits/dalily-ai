@@ -14,12 +14,13 @@ import {
   completenessFromProvider,
 } from "@/lib/providers/completion";
 import { getOwnedProvider, requireOwnedProvider } from "@/lib/providers/queries";
+import { ensureFreeSubscription } from "@/lib/subscription/repository";
 import {
   ALLOWED_IMAGE_TYPES,
-  MAX_GALLERY_IMAGES,
   MAX_IMAGE_BYTES,
   PROVIDER_MEDIA_BUCKET,
 } from "@/lib/providers/constants";
+import { getProviderPlanLimits } from "@/lib/subscription/get-provider-limits";
 import { buildProviderMediaPath } from "@/lib/providers/storage";
 import {
   createProviderSchema,
@@ -109,25 +110,31 @@ export async function createProviderAction(
     workingHours: [],
   });
 
-  const { error } = await supabase.from("providers").insert({
-    owner_id: authUser.id,
-    slug,
-    name,
-    about,
-    module_id: MODULE_SERVICES_ID,
-    category_id: categoryId,
-    city_id: cityId,
-    phone: parsed.data.phone,
-    whatsapp: parsed.data.phone,
-    email: parsed.data.email,
-    status: "draft",
-    verification_status: "unverified",
-    profile_completeness: completeness,
-    created_by: authUser.id,
-    updated_by: authUser.id,
-  });
+  const { data: created, error } = await supabase
+    .from("providers")
+    .insert({
+      owner_id: authUser.id,
+      slug,
+      name,
+      about,
+      module_id: MODULE_SERVICES_ID,
+      category_id: categoryId,
+      city_id: cityId,
+      phone: parsed.data.phone,
+      whatsapp: parsed.data.phone,
+      email: parsed.data.email,
+      status: "draft",
+      verification_status: "unverified",
+      profile_completeness: completeness,
+      created_by: authUser.id,
+      updated_by: authUser.id,
+    })
+    .select("id")
+    .single();
 
-  if (error) return { success: false, error: "create_failed" };
+  if (error || !created) return { success: false, error: "create_failed" };
+
+  await ensureFreeSubscription(created.id);
 
   await revalidateBusiness();
   return { success: true, message: "created" };
@@ -281,6 +288,11 @@ export async function addServiceAction(
 
   if (!parsed.success) return validationError(parsed.error);
 
+  const limits = await getProviderPlanLimits(provider.id);
+  if (limits.maxServices !== null && provider.services.length >= limits.maxServices) {
+    return { success: false, error: "service_limit" };
+  }
+
   const supabase = await createClient();
   const sortOrder = provider.services.length;
 
@@ -380,7 +392,8 @@ export async function uploadProviderImageAction(
     return { success: false, error: "invalid_file_type" };
   }
 
-  if (parsed.data.kind === "gallery" && provider.gallery.length >= MAX_GALLERY_IMAGES) {
+  const limits = await getProviderPlanLimits(provider.id);
+  if (parsed.data.kind === "gallery" && provider.gallery.length >= limits.maxImages) {
     return { success: false, error: "gallery_limit" };
   }
 

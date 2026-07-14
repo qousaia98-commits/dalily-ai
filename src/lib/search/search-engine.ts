@@ -14,6 +14,7 @@ import {
   relationalSearchProvider,
 } from "@/lib/search/search-provider";
 import { getAuthUser } from "@/lib/auth/session";
+import { getActivePlanSlugsByProviderIds } from "@/lib/subscription/repository";
 
 /**
  * Dalily Search Engine
@@ -52,7 +53,8 @@ export class DalilySearchEngine {
       limit: 50,
     });
 
-    const ranked = rankProviders(rows, { priority }).slice(0, TOP_N);
+    const planSlugsByProviderId = await getActivePlanSlugsByProviderIds(rows.map((row) => row.id));
+    const ranked = rankProviders(rows, { priority, planSlugsByProviderId }).slice(0, TOP_N);
 
     const imageIds = ranked
       .flatMap((row) => [row.avatar_image_id, row.cover_image_id])

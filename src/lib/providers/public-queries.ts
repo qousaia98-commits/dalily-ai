@@ -4,6 +4,7 @@ import { getStoragePublicUrl } from "@/lib/providers/storage";
 import { isServiceCategory } from "@/lib/constants/categories";
 import type { ServiceCategory } from "@/lib/constants/categories";
 import { rankProviders } from "@/lib/search/ranking/rank-providers";
+import { getActivePlanSlugsByProviderIds } from "@/lib/subscription/repository";
 import { fetchActiveProviders, fetchImagePaths } from "@/lib/search/repository/provider-search.repository";
 import { mapProviderRowsToListItems } from "@/lib/search/mapper/provider-list-mapper";
 import type { ProviderListItem } from "@/types/search.types";
@@ -124,7 +125,8 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
 
 export async function getFeaturedProviders(limit = 3): Promise<ProviderListItem[]> {
   const rows = await fetchActiveProviders({ limit: 50 });
-  const ranked = rankProviders(rows).slice(0, limit);
+  const planSlugsByProviderId = await getActivePlanSlugsByProviderIds(rows.map((row) => row.id));
+  const ranked = rankProviders(rows, { planSlugsByProviderId }).slice(0, limit);
 
   const imageIds = ranked
     .flatMap((row) => [row.avatar_image_id, row.cover_image_id])

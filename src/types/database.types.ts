@@ -15,6 +15,25 @@ export type LocalizedJson = { ar: string; en: string };
 export type ImageKind = "avatar" | "cover" | "gallery";
 export type ProblemPriority = "emergency" | "high" | "normal" | "low";
 export type ProviderVerificationStatus = "pending" | "approved" | "rejected";
+export type SubscriptionStatus = "trial" | "active" | "pending_payment" | "expired" | "cancelled";
+export type PaymentProviderType = "manual" | "shamcash" | "future";
+export type PaymentStatus = "pending" | "paid" | "failed" | "cancelled";
+export type InvoiceStatus = "draft" | "issued" | "paid" | "void";
+export type AuditAction =
+  | "provider_approved"
+  | "provider_rejected"
+  | "provider_activated"
+  | "provider_suspended"
+  | "provider_archived"
+  | "provider_deleted"
+  | "user_role_changed"
+  | "user_disabled"
+  | "user_activated"
+  | "payment_approved"
+  | "payment_rejected"
+  | "subscription_extended"
+  | "subscription_cancelled"
+  | "subscription_plan_changed";
 
 export type Database = {
   public: {
@@ -484,6 +503,183 @@ export type Database = {
         };
         Relationships: [];
       };
+      subscription_plans: {
+        Row: {
+          id: string;
+          slug: string;
+          name: LocalizedJson;
+          monthly_price_usd: number;
+          yearly_price_usd: number;
+          features: Json;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          name: LocalizedJson;
+          monthly_price_usd?: number;
+          yearly_price_usd?: number;
+          features?: Json;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          name?: LocalizedJson;
+          monthly_price_usd?: number;
+          yearly_price_usd?: number;
+          features?: Json;
+          is_active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      subscriptions: {
+        Row: {
+          id: string;
+          provider_id: string;
+          plan_id: string;
+          status: SubscriptionStatus;
+          starts_at: string;
+          expires_at: string | null;
+          auto_renew: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider_id: string;
+          plan_id: string;
+          status?: SubscriptionStatus;
+          starts_at?: string;
+          expires_at?: string | null;
+          auto_renew?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          provider_id?: string;
+          plan_id?: string;
+          status?: SubscriptionStatus;
+          starts_at?: string;
+          expires_at?: string | null;
+          auto_renew?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      payments: {
+        Row: {
+          id: string;
+          provider_id: string;
+          subscription_id: string | null;
+          payment_provider: PaymentProviderType;
+          payment_status: PaymentStatus;
+          amount: number;
+          currency: string;
+          external_transaction_id: string | null;
+          paid_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider_id: string;
+          subscription_id?: string | null;
+          payment_provider?: PaymentProviderType;
+          payment_status?: PaymentStatus;
+          amount: number;
+          currency?: string;
+          external_transaction_id?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          provider_id?: string;
+          subscription_id?: string | null;
+          payment_provider?: PaymentProviderType;
+          payment_status?: PaymentStatus;
+          amount?: number;
+          currency?: string;
+          external_transaction_id?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      invoices: {
+        Row: {
+          id: string;
+          provider_id: string;
+          payment_id: string | null;
+          invoice_number: string;
+          subtotal: number;
+          total: number;
+          currency: string;
+          status: InvoiceStatus;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider_id: string;
+          payment_id?: string | null;
+          invoice_number: string;
+          subtotal: number;
+          total: number;
+          currency?: string;
+          status?: InvoiceStatus;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          provider_id?: string;
+          payment_id?: string | null;
+          invoice_number?: string;
+          subtotal?: number;
+          total?: number;
+          currency?: string;
+          status?: InvoiceStatus;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      audit_logs: {
+        Row: {
+          id: string;
+          actor_id: string;
+          action: AuditAction;
+          entity_type: string;
+          entity_id: string;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          actor_id: string;
+          action: AuditAction;
+          entity_type: string;
+          entity_id: string;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          actor_id?: string;
+          action?: AuditAction;
+          entity_type?: string;
+          entity_id?: string;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       search_logs: {
         Row: {
           id: string;
@@ -582,6 +778,11 @@ export type Database = {
       verification_status: VerificationStatus;
       problem_priority: ProblemPriority;
       provider_verification_status: ProviderVerificationStatus;
+      subscription_status: SubscriptionStatus;
+      payment_provider: PaymentProviderType;
+      payment_status: PaymentStatus;
+      invoice_status: InvoiceStatus;
+      audit_action: AuditAction;
     };
     CompositeTypes: {
       [_ in never]: never;
