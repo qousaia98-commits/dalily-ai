@@ -2,9 +2,14 @@ import { createClient } from "@/lib/supabase/server";
 import { CATEGORY_IDS, CITY_IDS } from "@/lib/constants/reference-data";
 import type { ServiceCategory } from "@/lib/constants/categories";
 import { SearchDatabaseError } from "@/lib/search/errors";
-import { getApprovedProviderIds } from "@/lib/verification/queries";
 import type { Database } from "@/types/database.types";
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
+
+/** Identity approved by admin — denormalized on providers when verification is approved. */
+const SEARCH_VISIBLE_VERIFICATION: Database["public"]["Enums"]["verification_status"][] = [
+  "verified",
+  "partially_verified",
+];
 
 export type ProviderSearchFilters = {
   categorySlug?: ServiceCategory;
@@ -25,18 +30,13 @@ export async function fetchActiveProviders(
   const cityId = filters.citySlug ? CITY_IDS[filters.citySlug] : undefined;
 
   const supabase = await createClient();
-  const approvedIds = await getApprovedProviderIds();
-
-  if (approvedIds.size === 0) {
-    return [];
-  }
 
   let query = supabase
     .from("providers")
     .select("*")
     .eq("status", "active")
-    .is("deleted_at", null)
-    .in("id", [...approvedIds]);
+    .in("verification_status", SEARCH_VISIBLE_VERIFICATION)
+    .is("deleted_at", null);
 
   if (categoryId) query = query.eq("category_id", categoryId);
   if (cityId) query = query.eq("city_id", cityId);

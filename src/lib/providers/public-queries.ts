@@ -11,7 +11,6 @@ import type { ProviderListItem } from "@/types/search.types";
 import type { LocalizedText } from "@/types/domain.types";
 import type { LocalizedJson } from "@/types/database.types";
 import { mapProviderRow } from "@/lib/providers/queries";
-import { getApprovedProviderIds } from "@/lib/verification/queries";
 import type { ManagedProvider } from "@/types/provider.types";
 
 const DEFAULT_COVER =
@@ -67,8 +66,12 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
 
   if (error || !provider) return null;
 
-  const approvedIds = await getApprovedProviderIds();
-  if (!approvedIds.has(provider.id)) return null;
+  if (
+    provider.verification_status !== "verified" &&
+    provider.verification_status !== "partially_verified"
+  ) {
+    return null;
+  }
 
   const categorySlug = categorySlugFromId(provider.category_id);
   if (!categorySlug || !isServiceCategory(categorySlug)) return null;
