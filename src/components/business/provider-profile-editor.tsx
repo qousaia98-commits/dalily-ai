@@ -26,9 +26,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SERVICE_CATEGORIES } from "@/lib/constants/categories";
+import { CategorySelect } from "@/components/categories/category-select";
+import type { CategoryGroupWithLeaves } from "@/lib/categories/types";
 import { CITY_IDS } from "@/lib/constants/reference-data";
-import { categorySlugFromId, citySlugFromId } from "@/lib/providers/reference";
 import type { ManagedProvider } from "@/types/provider.types";
 
 const initialState: ProviderActionState = { success: false };
@@ -42,14 +42,25 @@ function resolveError(t: ReturnType<typeof useTranslations>, code?: string) {
   }
 }
 
-export function ProviderProfileEditor({ provider }: { provider: ManagedProvider }) {
+type ProviderProfileEditorProps = {
+  provider: ManagedProvider;
+  categoryGroups: CategoryGroupWithLeaves[];
+  initialCategorySlug: string;
+  initialCitySlug: string;
+};
+
+export function ProviderProfileEditor({
+  provider,
+  categoryGroups,
+  initialCategorySlug,
+  initialCitySlug,
+}: ProviderProfileEditorProps) {
   const t = useTranslations("business.profile");
-  const tCategories = useTranslations("home.categories");
   const tCities = useTranslations("auth.cities");
   const tDays = useTranslations("business.workingHours.days");
 
-  const [category, setCategory] = useState(categorySlugFromId(provider.categoryId) ?? "");
-  const [city, setCity] = useState(citySlugFromId(provider.cityId) ?? "");
+  const [category, setCategory] = useState(initialCategorySlug);
+  const [city, setCity] = useState(initialCitySlug);
   const [hours, setHours] = useState(provider.workingHours);
 
   const [profileState, profileAction, profilePending] = useActionState(
@@ -134,18 +145,11 @@ export function ProviderProfileEditor({ provider }: { provider: ManagedProvider 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>{t("category")}</Label>
-                    <Select value={category} onValueChange={setCategory}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {SERVICE_CATEGORIES.map((slug) => (
-                          <SelectItem key={slug} value={slug}>
-                            {tCategories(slug)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <CategorySelect
+                      groups={categoryGroups}
+                      value={category}
+                      onValueChange={setCategory}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>{t("city")}</Label>

@@ -12,11 +12,8 @@ import {
 } from "@/lib/validations/auth";
 import { generateProviderSlug, localizedName, mapAuthErrorCode } from "@/lib/auth/utils";
 import { getPostLoginPath } from "@/lib/auth/roles";
-import {
-  CATEGORY_IDS,
-  CITY_IDS,
-  MODULE_SERVICES_ID,
-} from "@/lib/constants/reference-data";
+import { resolveCategorySlugToId } from "@/lib/categories/queries";
+import { CITY_IDS, MODULE_SERVICES_ID } from "@/lib/constants/reference-data";
 import type { AppRole } from "@/types/database.types";
 
 export type AuthActionState = {
@@ -232,7 +229,7 @@ export async function registerBusinessAction(
     };
   }
 
-  const categoryId = CATEGORY_IDS[parsed.data.category];
+  const categoryId = await resolveCategorySlugToId(parsed.data.category);
   const cityId = CITY_IDS[parsed.data.city];
 
   if (!categoryId || !cityId) {

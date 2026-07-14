@@ -8,6 +8,7 @@ import {
   Users,
   Menu,
   CreditCard,
+  Tags,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
@@ -18,6 +19,7 @@ import { useState } from "react";
 const navItems = [
   { href: "/admin", icon: LayoutDashboard, key: "dashboard", exact: true },
   { href: "/admin/providers", icon: Building2, key: "providers" },
+  { href: "/admin/categories", icon: Tags, key: "categories" },
   { href: "/admin/verification", icon: ShieldCheck, key: "verification" },
   { href: "/admin/searches", icon: Search, key: "searches" },
   { href: "/admin/users", icon: Users, key: "users" },

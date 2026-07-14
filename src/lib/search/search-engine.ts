@@ -1,6 +1,7 @@
 import { categoryForProblem } from "@/lib/search/engine/problem-catalog";
 import type { SearchEngineInput, SearchEngineResult } from "@/lib/search/engine/types";
 import { SEARCH_TOP_N as TOP_N } from "@/lib/search/engine/types";
+import { getCategoryNameMap, getCategorySlugMap } from "@/lib/categories/queries";
 import { mapProviderRowsToListItems } from "@/lib/search/mapper/provider-list-mapper";
 import {
   type ProblemDetector,
@@ -40,11 +41,13 @@ export class DalilySearchEngine {
     const priority = parsed?.problem?.priority ?? null;
     const citySlug = input.citySlug ?? parsed?.citySlug ?? null;
     const categorySlug =
-      input.categorySlug ?? (problemId ? categoryForProblem(problemId) : undefined);
+      input.categorySlug ?? (problemId && !input.groupSlug ? categoryForProblem(problemId) : undefined);
+    const groupSlug = input.groupSlug;
     const textTerms = parsed?.textTerms ?? "";
 
     const { providers: rows } = await this.searchProvider.search({
-      categorySlug,
+      categorySlug: groupSlug ? undefined : categorySlug,
+      groupSlug,
       citySlug: citySlug ?? undefined,
       textTerms: textTerms || undefined,
       problemId,
@@ -60,8 +63,17 @@ export class DalilySearchEngine {
       .flatMap((row) => [row.avatar_image_id, row.cover_image_id])
       .filter((id): id is string => Boolean(id));
 
-    const imagePathById = await fetchImagePaths(imageIds);
-    const providers = mapProviderRowsToListItems(ranked, imagePathById);
+    const [imagePathById, categorySlugById, categoryNameBySlug] = await Promise.all([
+      fetchImagePaths(imageIds),
+      getCategorySlugMap(),
+      getCategoryNameMap(),
+    ]);
+    const providers = mapProviderRowsToListItems(
+      ranked,
+      imagePathById,
+      categorySlugById,
+      categoryNameBySlug,
+    );
 
     const result: SearchEngineResult = {
       providers,
@@ -69,6 +81,7 @@ export class DalilySearchEngine {
         problemId,
         priority,
         categorySlug: categorySlug ?? null,
+        groupSlug: groupSlug ?? null,
         citySlug,
         textTerms,
       },

@@ -9,6 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CategorySelect } from "@/components/categories/category-select";
+import type { CategoryGroupWithLeaves } from "@/lib/categories/types";
+import { localizedField } from "@/lib/categories/format";
+import { CITY_IDS } from "@/lib/constants/reference-data";
+import type { Locale } from "@/lib/i18n/config";
+import { cn } from "@/lib/utils";
+import { Link } from "@/lib/i18n/routing";
 import {
   Select,
   SelectContent,
@@ -16,11 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SERVICE_CATEGORIES } from "@/lib/constants/categories";
-import { CITY_IDS } from "@/lib/constants/reference-data";
-import type { Locale } from "@/lib/i18n/config";
-import { cn } from "@/lib/utils";
-import { Link } from "@/lib/i18n/routing";
 
 const STEPS = ["business", "contact", "services", "review"] as const;
 const initialState: AuthActionState = { success: false };
@@ -37,9 +39,12 @@ function resolveError(t: ReturnType<typeof useTranslations>, code?: string): str
   }
 }
 
-export function BusinessRegisterWizard() {
+export function BusinessRegisterWizard({
+  categoryGroups,
+}: {
+  categoryGroups: CategoryGroupWithLeaves[];
+}) {
   const t = useTranslations("auth.businessWizard");
-  const tCategories = useTranslations("home.categories");
   const tCities = useTranslations("auth.cities");
   const locale = useLocale() as Locale;
   const [step, setStep] = useState(0);
@@ -59,6 +64,10 @@ export function BusinessRegisterWizard() {
 
   const update = (field: keyof typeof form, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
+
+  const selectedCategory = categoryGroups
+    .flatMap((group) => group.leaves)
+    .find((leaf) => leaf.slug === form.category);
 
   const canNext = () => {
     if (step === 0)
@@ -143,22 +152,13 @@ export function BusinessRegisterWizard() {
               </div>
               <div className="space-y-2">
                 <Label>{t("category")}</Label>
-                <Select
+                <CategorySelect
+                  groups={categoryGroups}
                   value={form.category}
                   onValueChange={(v) => update("category", v)}
+                  placeholder={t("selectCategory")}
                   disabled={isPending}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t("selectCategory")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SERVICE_CATEGORIES.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {tCategories(cat)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                />
               </div>
               <div className="space-y-2">
                 <Label>{t("city")}</Label>
@@ -263,7 +263,7 @@ export function BusinessRegisterWizard() {
               </p>
               <p>
                 <span className="text-muted-foreground">{t("category")}: </span>
-                {form.category ? tCategories(form.category as "plumber") : "—"}
+                {selectedCategory ? localizedField(selectedCategory.name, locale) : "—"}
               </p>
               <p>
                 <span className="text-muted-foreground">{t("city")}: </span>

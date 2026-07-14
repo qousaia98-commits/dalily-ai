@@ -3,7 +3,7 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/queries";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { BusinessSubscriptionPanel } from "@/components/business/business-subscription-panel";
-import { ProviderCreateForm } from "@/components/business/provider-create-form";
+import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 
 export default async function BusinessSubscriptionPage() {
   const t = await getTranslations("business.subscription");
@@ -17,7 +17,7 @@ export default async function BusinessSubscriptionPage() {
           <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="mt-1 text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <ProviderCreateForm />
+        <ProviderCreateFormLoader />
       </div>
     );
   }

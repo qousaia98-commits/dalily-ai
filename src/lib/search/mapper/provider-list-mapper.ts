@@ -1,6 +1,5 @@
-import { categorySlugFromId, citySlugFromId } from "@/lib/providers/reference";
+import { citySlugFromId } from "@/lib/providers/reference";
 import { getStoragePublicUrl } from "@/lib/providers/storage";
-import { isServiceCategory } from "@/lib/constants/categories";
 import type { LocalizedText } from "@/types/domain.types";
 import type { ProviderListItem } from "@/types/search.types";
 import type { Database, LocalizedJson } from "@/types/database.types";
@@ -26,12 +25,17 @@ function toLocalizedText(value: LocalizedJson): LocalizedText {
 export function mapProviderRowsToListItems(
   rows: ProviderRow[],
   imagePathById: Map<string, string>,
+  categorySlugById: Map<string, string>,
+  categoryNameBySlug: Map<string, LocalizedJson>,
 ): ProviderListItem[] {
   const items: ProviderListItem[] = [];
 
   for (const row of rows) {
-    const catSlug = categorySlugFromId(row.category_id);
-    if (!catSlug || !isServiceCategory(catSlug)) continue;
+    const catSlug = categorySlugById.get(row.category_id);
+    if (!catSlug) continue;
+
+    const categoryName = categoryNameBySlug.get(catSlug);
+    if (!categoryName) continue;
 
     const cityKey = citySlugFromId(row.city_id);
     const cityLabel =
@@ -46,6 +50,7 @@ export function mapProviderRowsToListItems(
       slug: row.slug,
       name: toLocalizedText(row.name),
       category: catSlug,
+      categoryLabel: toLocalizedText(categoryName),
       city: cityLabel,
       rating: Number(row.rating_avg),
       reviewCount: row.review_count,

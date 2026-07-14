@@ -26,18 +26,10 @@
   },
   "home": {
     "heroTitle": "Find the service you need",
-    "heroSubtitle": "Plumbers, electricians, doctors, lawyers & more — powered by AI",
+    "heroSubtitle": "Home, health, automotive, food, business & more — find trusted local experts with AI",
     "searchHint": "Describe what you need in your own words",
-    "categoriesTitle": "Popular categories",
+    "categoriesTitle": "Browse services",
     "categorySearchLabel": "Search for {category}",
-    "categories": {
-      "plumber": "Plumber",
-      "electrician": "Electrician",
-      "doctor": "Doctor",
-      "lawyer": "Lawyer",
-      "mechanic": "Mechanic",
-      "cleaner": "Cleaner"
-    },
     "trustBadge": "Verified providers",
     "aiPowered": "Smart search",
     "howItWorks": {
@@ -113,6 +105,7 @@
       "verified": "Verification",
       "sort": "Sort by",
       "allCategories": "All categories",
+      "allInGroup": "All in {group}",
       "allCities": "All cities",
       "allProviders": "All",
       "verifiedOnly": "Verified only",
@@ -483,6 +476,7 @@
       "verification": "Verification",
       "searches": "Search analytics",
       "users": "Users",
+      "categories": "Categories",
       "subscriptions": "Subscriptions"
     },
     "dashboard": {
@@ -617,6 +611,41 @@
         "update_failed": "Could not update user.",
         "role_failed": "Could not change role.",
         "self_action": "You cannot modify your own admin access."
+      }
+    },
+    "categories": {
+      "title": "Category management",
+      "subtitle": "Create, translate, reorder, and enable or disable service categories",
+      "createGroup": "New group",
+      "createCategory": "New category",
+      "createTitle": "Create category",
+      "editTitle": "Edit category",
+      "groupLabel": "Group",
+      "categoryLabel": "Category",
+      "active": "Active",
+      "inactive": "Inactive",
+      "edit": "Edit",
+      "disable": "Disable",
+      "enable": "Enable",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Changes saved.",
+      "order": "Order {value}",
+      "fields": {
+        "slug": "Slug",
+        "icon": "Icon (Lucide name)",
+        "nameEn": "Name (English)",
+        "nameAr": "Name (Arabic)",
+        "descriptionEn": "Description (English)",
+        "descriptionAr": "Description (Arabic)",
+        "sortOrder": "Display order",
+        "group": "Parent group"
+      },
+      "errors": {
+        "forbidden": "You do not have permission.",
+        "validation_error": "Invalid request.",
+        "create_failed": "Could not create category.",
+        "update_failed": "Could not update category."
       }
     },
     "subscriptions": {

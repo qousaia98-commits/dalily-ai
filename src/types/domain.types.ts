@@ -1,4 +1,4 @@
-import type { ServiceCategory } from "@/lib/constants/categories";
+import type { CategorySlug } from "@/lib/categories/types";
 import type { Locale } from "@/lib/i18n/config";
 
 export type LocalizedText = Record<Locale, string>;
@@ -7,7 +7,7 @@ export type MockProvider = {
   id: string;
   slug: string;
   name: LocalizedText;
-  category: ServiceCategory;
+  category: CategorySlug;
   city: LocalizedText;
   district: LocalizedText;
   rating: number;
@@ -39,7 +39,7 @@ export type SortOption = "best_match" | "highest_rated" | "nearest" | "verified"
 
 export type SearchFilters = {
   query?: string;
-  category?: ServiceCategory;
+  category?: CategorySlug;
   city?: string;
   verifiedOnly?: boolean;
   minRating?: number;

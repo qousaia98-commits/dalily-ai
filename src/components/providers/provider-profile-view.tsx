@@ -18,7 +18,6 @@ type ProviderProfileViewProps = {
 export async function ProviderProfileView({ provider }: ProviderProfileViewProps) {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("provider");
-  const tCategories = await getTranslations("home.categories");
 
   const districtLabel = provider.district ? getLocalizedText(provider.district, locale) : null;
   const cityLabel = getLocalizedText(provider.city, locale);
@@ -59,7 +58,9 @@ export async function ProviderProfileView({ provider }: ProviderProfileViewProps
                   <Badge variant="success">{t("verified")}</Badge>
                 ) : null}
               </div>
-              <p className="mt-1 text-muted-foreground">{tCategories(provider.category)}</p>
+              <p className="mt-1 text-muted-foreground">
+                {getLocalizedText(provider.categoryLabel, locale)}
+              </p>
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <StarRating rating={provider.rating} size="md" />

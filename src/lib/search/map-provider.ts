@@ -7,6 +7,7 @@ export function mockProviderToListItem(provider: MockProvider): ProviderListItem
     slug: provider.slug,
     name: provider.name,
     category: provider.category,
+    categoryLabel: { ar: provider.category, en: provider.category },
     city: provider.city,
     rating: provider.rating,
     reviewCount: provider.reviewCount,

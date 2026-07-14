@@ -14,6 +14,7 @@ export class RelationalSearchProvider implements SearchProvider {
   async search(context: ProviderSearchContext): Promise<ProviderSearchResult> {
     const providers = await fetchActiveProviders({
       categorySlug: context.categorySlug,
+      groupSlug: context.groupSlug,
       citySlug: context.citySlug,
       textTerms: context.textTerms,
       verifiedOnly: context.verifiedOnly,

@@ -18,7 +18,6 @@ type ProviderCardProps = {
 
 export async function ProviderCard({ provider, className, style }: ProviderCardProps) {
   const locale = (await getLocale()) as Locale;
-  const t = await getTranslations("home.categories");
   const tProvider = await getTranslations("provider");
 
   return (
@@ -53,7 +52,9 @@ export async function ProviderCard({ provider, className, style }: ProviderCardP
               <h3 className="truncate font-semibold group-hover:text-primary">
                 {getLocalizedText(provider.name, locale)}
               </h3>
-              <p className="text-sm text-muted-foreground">{t(provider.category)}</p>
+              <p className="text-sm text-muted-foreground">
+                {getLocalizedText(provider.categoryLabel, locale)}
+              </p>
             </div>
             <div className="text-end">
               <p className="text-sm font-bold text-primary">{provider.trustScore}%</p>

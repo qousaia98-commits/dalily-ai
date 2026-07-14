@@ -1,11 +1,12 @@
-import type { ServiceCategory } from "@/lib/constants/categories";
+import type { CategorySlug } from "@/lib/categories/types";
 import type { ProblemId, ProblemPriority } from "@/lib/search/engine/types";
 import type { Database } from "@/types/database.types";
 
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
 
 export type ProviderSearchContext = {
-  categorySlug?: ServiceCategory;
+  categorySlug?: CategorySlug;
+  groupSlug?: CategorySlug;
   citySlug?: string;
   textTerms?: string;
   problemId?: ProblemId | null;

@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/queries";
-import { ProviderCreateForm } from "@/components/business/provider-create-form";
+import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { ProviderStatusBadge } from "@/components/business/provider-status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/lib/i18n/routing";
@@ -20,7 +20,7 @@ export default async function BusinessDashboardPage() {
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("title")}</h1>
           <p className="mt-2 text-muted-foreground">{t("noProviderSubtitle")}</p>
         </div>
-        <ProviderCreateForm />
+        <ProviderCreateFormLoader />
       </div>
     );
   }

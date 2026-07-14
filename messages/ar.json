@@ -26,18 +26,10 @@
   },
   "home": {
     "heroTitle": "اعثر على الخدمة التي تحتاجها",
-    "heroSubtitle": "سبّاك، كهربائي، طبيب، محامي والمزيد — مدعوم بالذكاء الاصطناعي",
+    "heroSubtitle": "منزل، صحة، سيارات، طعام، أعمال والمزيد — اعثر على خبراء محليين موثوقين بالذكاء الاصطناعي",
     "searchHint": "اكتب ما تحتاجه بكلماتك الخاصة",
-    "categoriesTitle": "فئات شائعة",
+    "categoriesTitle": "تصفح الخدمات",
     "categorySearchLabel": "ابحث عن {category}",
-    "categories": {
-      "plumber": "سبّاك",
-      "electrician": "كهربائي",
-      "doctor": "طبيب",
-      "lawyer": "محامي",
-      "mechanic": "ميكانيكي",
-      "cleaner": "تنظيف"
-    },
     "trustBadge": "مزودون موثوقون",
     "aiPowered": "بحث ذكي",
     "howItWorks": {
@@ -113,6 +105,7 @@
       "verified": "التحقق",
       "sort": "ترتيب حسب",
       "allCategories": "جميع الفئات",
+      "allInGroup": "الكل في {group}",
       "allCities": "جميع المدن",
       "allProviders": "الكل",
       "verifiedOnly": "موثقون فقط",
@@ -483,6 +476,7 @@
       "verification": "التحقق",
       "searches": "تحليلات البحث",
       "users": "المستخدمون",
+      "categories": "الفئات",
       "subscriptions": "الاشتراكات"
     },
     "dashboard": {
@@ -617,6 +611,41 @@
         "update_failed": "تعذر تحديث المستخدم.",
         "role_failed": "تعذر تغيير الدور.",
         "self_action": "لا يمكنك تعديل صلاحياتك الإدارية."
+      }
+    },
+    "categories": {
+      "title": "إدارة الفئات",
+      "subtitle": "إنشاء الفئات وترجمتها وترتيبها وتفعيلها أو تعطيلها",
+      "createGroup": "مجموعة جديدة",
+      "createCategory": "فئة جديدة",
+      "createTitle": "إنشاء فئة",
+      "editTitle": "تعديل فئة",
+      "groupLabel": "مجموعة",
+      "categoryLabel": "فئة",
+      "active": "نشطة",
+      "inactive": "معطلة",
+      "edit": "تعديل",
+      "disable": "تعطيل",
+      "enable": "تفعيل",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "saved": "تم حفظ التغييرات.",
+      "order": "الترتيب {value}",
+      "fields": {
+        "slug": "المعرّف",
+        "icon": "الأيقونة (Lucide)",
+        "nameEn": "الاسم (إنجليزي)",
+        "nameAr": "الاسم (عربي)",
+        "descriptionEn": "الوصف (إنجليزي)",
+        "descriptionAr": "الوصف (عربي)",
+        "sortOrder": "ترتيب العرض",
+        "group": "المجموعة الأم"
+      },
+      "errors": {
+        "forbidden": "ليس لديك صلاحية.",
+        "validation_error": "طلب غير صالح.",
+        "create_failed": "تعذر إنشاء الفئة.",
+        "update_failed": "تعذر تحديث الفئة."
       }
     },
     "subscriptions": {

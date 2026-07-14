@@ -5,7 +5,7 @@ import {
   getProviderVerificationForOwner,
   toBusinessVerificationView,
 } from "@/lib/verification/queries";
-import { ProviderCreateForm } from "@/components/business/provider-create-form";
+import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { VerificationUploadForm } from "@/components/business/verification-upload-form";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,7 +35,7 @@ export default async function BusinessVerificationPage() {
           <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="mt-1 text-muted-foreground">{t("subtitle")}</p>
         </div>
-        <ProviderCreateForm />
+        <ProviderCreateFormLoader />
       </div>
     );
   }

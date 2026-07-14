@@ -33,7 +33,11 @@ export type AuditAction =
   | "payment_rejected"
   | "subscription_extended"
   | "subscription_cancelled"
-  | "subscription_plan_changed";
+  | "subscription_plan_changed"
+  | "category_created"
+  | "category_updated"
+  | "category_disabled"
+  | "category_enabled";
 
 export type Database = {
   public: {

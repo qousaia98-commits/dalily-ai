@@ -1,8 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
-import { CATEGORY_IDS, CITY_IDS } from "@/lib/constants/reference-data";
-import type { ServiceCategory } from "@/lib/constants/categories";
+import {
+  resolveCategorySlugToId,
+  resolveGroupSlugToLeafIds,
+} from "@/lib/categories/queries";
+import { CITY_IDS } from "@/lib/constants/reference-data";
 import { SearchDatabaseError } from "@/lib/search/errors";
 import type { Database } from "@/types/database.types";
+
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
 
 /** Identity approved by admin — denormalized on providers when verification is approved. */
@@ -12,7 +16,9 @@ const SEARCH_VISIBLE_VERIFICATION: Database["public"]["Enums"]["verification_sta
 ];
 
 export type ProviderSearchFilters = {
-  categorySlug?: ServiceCategory;
+  categorySlug?: string;
+  groupSlug?: string;
+  categoryIds?: string[];
   citySlug?: string;
   textTerms?: string;
   verifiedOnly?: boolean;
@@ -26,7 +32,21 @@ function escapeIlike(term: string): string {
 export async function fetchActiveProviders(
   filters: ProviderSearchFilters,
 ): Promise<ProviderRow[]> {
-  const categoryId = filters.categorySlug ? CATEGORY_IDS[filters.categorySlug] : undefined;
+  let categoryIds = filters.categoryIds;
+
+  if (!categoryIds?.length && filters.categorySlug) {
+    const categoryId = await resolveCategorySlugToId(filters.categorySlug);
+    categoryIds = categoryId ? [categoryId] : [];
+  }
+
+  if (!categoryIds?.length && filters.groupSlug) {
+    categoryIds = await resolveGroupSlugToLeafIds(filters.groupSlug);
+  }
+
+  if (categoryIds && categoryIds.length === 0) {
+    return [];
+  }
+
   const cityId = filters.citySlug ? CITY_IDS[filters.citySlug] : undefined;
 
   const supabase = await createClient();
@@ -38,7 +58,7 @@ export async function fetchActiveProviders(
     .in("verification_status", SEARCH_VISIBLE_VERIFICATION)
     .is("deleted_at", null);
 
-  if (categoryId) query = query.eq("category_id", categoryId);
+  if (categoryIds?.length) query = query.in("category_id", categoryIds);
   if (cityId) query = query.eq("city_id", cityId);
   if (filters.verifiedOnly) query = query.eq("verification_status", "verified");
 

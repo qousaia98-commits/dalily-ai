@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { SERVICE_CATEGORIES } from "@/lib/constants/categories";
 import { CITY_IDS } from "@/lib/constants/reference-data";
 
 export const loginSchema = z.object({
@@ -17,7 +16,7 @@ export const registerSchema = z.object({
 export const registerBusinessSchema = z
   .object({
     businessName: z.string().trim().min(2).max(120),
-    category: z.enum(SERVICE_CATEGORIES),
+    category: z.string().trim().min(1).max(80),
     city: z.enum(Object.keys(CITY_IDS) as [string, ...string[]]),
     phone: z.string().trim().min(7).max(20),
     email: z.string().trim().email(),

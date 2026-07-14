@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
+import { getCategoryNameMap, getCategorySlugMap } from "@/lib/categories/queries";
 import { categorySlugFromId, citySlugFromId } from "@/lib/providers/reference";
 import { getStoragePublicUrl } from "@/lib/providers/storage";
-import { isServiceCategory } from "@/lib/constants/categories";
-import type { ServiceCategory } from "@/lib/constants/categories";
+import type { CategorySlug } from "@/lib/categories/types";
 import { rankProviders } from "@/lib/search/ranking/rank-providers";
 import { getActivePlanSlugsByProviderIds } from "@/lib/subscription/repository";
 import { fetchActiveProviders, fetchImagePaths } from "@/lib/search/repository/provider-search.repository";
@@ -30,7 +30,8 @@ export type PublicProviderProfile = {
   slug: string;
   name: LocalizedJson;
   about: LocalizedJson | null;
-  category: ServiceCategory;
+  category: CategorySlug;
+  categoryLabel: LocalizedText;
   city: LocalizedText;
   district: LocalizedText | null;
   rating: number;
@@ -73,8 +74,12 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     return null;
   }
 
-  const categorySlug = categorySlugFromId(provider.category_id);
-  if (!categorySlug || !isServiceCategory(categorySlug)) return null;
+  const categorySlug = await categorySlugFromId(provider.category_id);
+  if (!categorySlug) return null;
+
+  const categoryNameBySlug = await getCategoryNameMap();
+  const categoryName = categoryNameBySlug.get(categorySlug);
+  if (!categoryName) return null;
 
   const cityKey = citySlugFromId(provider.city_id);
   const cityLabel =
@@ -110,6 +115,7 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     name: provider.name,
     about: provider.about,
     category: categorySlug,
+    categoryLabel: { ar: categoryName.ar, en: categoryName.en },
     city: cityLabel,
     district: parseAddressLine(provider.address_line),
     rating: Number(provider.rating_avg),
@@ -136,7 +142,11 @@ export async function getFeaturedProviders(limit = 3): Promise<ProviderListItem[
     .filter((id): id is string => Boolean(id));
 
   const imagePathById = await fetchImagePaths(imageIds);
-  return mapProviderRowsToListItems(ranked, imagePathById);
+  const [categorySlugById, categoryNameBySlug] = await Promise.all([
+    getCategorySlugMap(),
+    getCategoryNameMap(),
+  ]);
+  return mapProviderRowsToListItems(ranked, imagePathById, categorySlugById, categoryNameBySlug);
 }
 
 export async function getOwnedProviderForVerification(

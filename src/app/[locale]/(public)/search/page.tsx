@@ -1,32 +1,58 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { SearchForm } from "@/components/search/search-form";
-import { SearchFilters } from "@/components/search/search-filters";
+import { SearchFiltersPanel } from "@/components/search/search-filters-panel";
 import { SearchResults } from "@/components/search/search-results";
 import { SearchResultsSkeleton } from "@/components/shared/skeletons";
-import { isServiceCategory } from "@/lib/constants/categories";
+import {
+  getCategoryGroups,
+  getLeafCategories,
+  isValidGroupSlug,
+  isValidLeafCategorySlug,
+} from "@/lib/categories/queries";
+import { localizedField } from "@/lib/categories/format";
+import type { Locale } from "@/lib/i18n/config";
 
 type SearchPageProps = {
   searchParams: Promise<{
     q?: string;
     category?: string;
+    group?: string;
     city?: string;
     verified?: string;
     sort?: string;
   }>;
 };
 
+async function resolveSearchLabel(params: {
+  q?: string;
+  category?: string;
+  group?: string;
+}): Promise<string> {
+  const locale = (await getLocale()) as Locale;
+  const query = params.q?.trim();
+  if (query) return query;
+
+  if (params.category && (await isValidLeafCategorySlug(params.category))) {
+    const leaves = await getLeafCategories();
+    const match = leaves.find((leaf) => leaf.slug === params.category);
+    return match ? localizedField(match.name, locale) : params.category;
+  }
+
+  if (params.group && (await isValidGroupSlug(params.group))) {
+    const groups = await getCategoryGroups();
+    const match = groups.find((group) => group.slug === params.group);
+    return match ? localizedField(match.name, locale) : params.group;
+  }
+
+  return "";
+}
+
 export async function generateMetadata({ searchParams }: SearchPageProps): Promise<Metadata> {
   const params = await searchParams;
   const t = await getTranslations("search");
-  const tCategories = await getTranslations("home.categories");
-
-  const query = params.q?.trim();
-  const label =
-    query || (params.category && isServiceCategory(params.category)
-      ? tCategories(params.category)
-      : "");
+  const label = await resolveSearchLabel(params);
 
   return {
     title: label ? t("meta.titleWithQuery", { query: label }) : t("meta.title"),
@@ -37,13 +63,7 @@ export async function generateMetadata({ searchParams }: SearchPageProps): Promi
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const t = await getTranslations("search");
-  const tCategories = await getTranslations("home.categories");
-
-  const defaultQuery =
-    params.q?.trim() ||
-    (params.category && isServiceCategory(params.category)
-      ? tCategories(params.category)
-      : "");
+  const defaultQuery = await resolveSearchLabel(params);
 
   return (
     <main className="flex flex-1 flex-col px-4 py-8 sm:px-6 sm:py-10">
@@ -60,7 +80,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <div className="flex flex-col gap-8 lg:flex-row">
           <div className="lg:w-64 lg:shrink-0">
             <Suspense fallback={<div className="h-64 animate-pulse rounded-xl bg-muted" />}>
-              <SearchFilters />
+              <SearchFiltersPanel />
             </Suspense>
           </div>
           <div className="min-w-0 flex-1">

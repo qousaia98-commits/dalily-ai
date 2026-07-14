@@ -1,29 +1,34 @@
 "use client";
 
 import { useCallback } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/lib/i18n/routing";
 import { useSearchParams } from "next/navigation";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { localizedField } from "@/lib/categories/format";
+import type { CategoryGroupWithLeaves } from "@/lib/categories/types";
+import type { Locale } from "@/lib/i18n/config";
 import { CITY_IDS } from "@/lib/constants/reference-data";
-import { SERVICE_CATEGORIES } from "@/lib/constants/categories";
 import { cn } from "@/lib/utils";
 
 type SearchFiltersProps = {
+  groups: CategoryGroupWithLeaves[];
   className?: string;
 };
 
-export function SearchFilters({ className }: SearchFiltersProps) {
+export function SearchFilters({ groups, className }: SearchFiltersProps) {
   const t = useTranslations("search.filters");
-  const tCategories = useTranslations("home.categories");
   const tCities = useTranslations("auth.cities");
+  const locale = useLocale() as Locale;
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -33,12 +38,14 @@ export function SearchFilters({ className }: SearchFiltersProps) {
       const params = new URLSearchParams(searchParams.toString());
       if (value) params.set(key, value);
       else params.delete(key);
+      if (key === "category") params.delete("group");
+      if (key === "group") params.delete("category");
       router.replace(`${pathname}?${params.toString()}`);
     },
     [pathname, router, searchParams],
   );
 
-  const category = searchParams.get("category") ?? "all";
+  const category = searchParams.get("category") ?? searchParams.get("group") ?? "all";
   const city = searchParams.get("city") ?? "all";
   const verified = searchParams.get("verified") ?? "all";
 
@@ -52,17 +59,36 @@ export function SearchFilters({ className }: SearchFiltersProps) {
             <Label>{t("category")}</Label>
             <Select
               value={category}
-              onValueChange={(v) => updateParam("category", v === "all" ? null : v)}
+              onValueChange={(v) => {
+                if (v === "all") {
+                  updateParam("category", null);
+                  updateParam("group", null);
+                  return;
+                }
+                if (groups.some(({ group }) => group.slug === v)) {
+                  updateParam("group", v);
+                } else {
+                  updateParam("category", v);
+                }
+              }}
             >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t("allCategories")}</SelectItem>
-                {SERVICE_CATEGORIES.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    {tCategories(cat)}
-                  </SelectItem>
+                {groups.map(({ group, leaves }) => (
+                  <SelectGroup key={group.id}>
+                    <SelectLabel>{localizedField(group.name, locale)}</SelectLabel>
+                    <SelectItem value={group.slug}>
+                      {t("allInGroup", { group: localizedField(group.name, locale) })}
+                    </SelectItem>
+                    {leaves.map((leaf) => (
+                      <SelectItem key={leaf.id} value={leaf.slug}>
+                        {localizedField(leaf.name, locale)}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 ))}
               </SelectContent>
             </Select>

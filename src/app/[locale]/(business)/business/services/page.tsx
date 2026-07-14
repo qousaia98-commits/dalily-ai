@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/queries";
 import { ProviderServicesManager } from "@/components/business/provider-services-manager";
-import { ProviderCreateForm } from "@/components/business/provider-create-form";
+import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 
 export default async function BusinessServicesPage() {
   const t = await getTranslations("business.services");
@@ -16,7 +16,7 @@ export default async function BusinessServicesPage() {
           <h1 className="text-2xl font-bold">{t("title")}</h1>
           <p className="mt-1 text-muted-foreground">{t("noProvider")}</p>
         </div>
-        <ProviderCreateForm />
+        <ProviderCreateFormLoader />
       </div>
     );
   }

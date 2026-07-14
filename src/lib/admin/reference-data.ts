@@ -22,6 +22,8 @@ export async function getAdminCategories(): Promise<AdminFilterOption[]> {
   const { data } = await admin
     .from("categories")
     .select("id, slug, name")
+    .eq("depth", 1)
+    .eq("is_active", true)
     .is("deleted_at", null)
     .order("sort_order", { ascending: true });
 

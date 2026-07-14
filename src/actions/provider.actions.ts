@@ -4,11 +4,8 @@ import { revalidatePath } from "next/cache";
 import { requireAuthUser } from "@/lib/auth/session";
 import { generateProviderSlug } from "@/lib/auth/utils";
 import { createClient } from "@/lib/supabase/server";
-import {
-  CATEGORY_IDS,
-  CITY_IDS,
-  MODULE_SERVICES_ID,
-} from "@/lib/constants/reference-data";
+import { resolveCategorySlugToId } from "@/lib/categories/queries";
+import { CITY_IDS, MODULE_SERVICES_ID } from "@/lib/constants/reference-data";
 import {
   calculateProfileCompleteness,
   completenessFromProvider,
@@ -85,7 +82,7 @@ export async function createProviderAction(
 
   if (!parsed.success) return validationError(parsed.error);
 
-  const categoryId = CATEGORY_IDS[parsed.data.category];
+  const categoryId = await resolveCategorySlugToId(parsed.data.category);
   const cityId = CITY_IDS[parsed.data.city];
   if (!categoryId || !cityId) return { success: false, error: "validation_error" };
 
@@ -158,7 +155,7 @@ export async function updateProviderProfileAction(
 
   if (!parsed.success) return validationError(parsed.error);
 
-  const categoryId = CATEGORY_IDS[parsed.data.category];
+  const categoryId = await resolveCategorySlugToId(parsed.data.category);
   const cityId = CITY_IDS[parsed.data.city];
   if (!categoryId || !cityId) return { success: false, error: "validation_error" };
 

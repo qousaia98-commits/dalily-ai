@@ -1,9 +1,9 @@
-import type { ServiceCategory } from "@/lib/constants/categories";
+import type { CategorySlug } from "@/lib/categories/types";
 import type { ProblemId, ProblemPriority } from "@/lib/search/engine/types";
 
 export type ProblemDefinition = {
   id: ProblemId;
-  category: ServiceCategory;
+  category: CategorySlug;
   priority: ProblemPriority;
   /** All phrases (EN + AR) map to the same canonical ProblemId */
   keywords: string[];
@@ -12,11 +12,12 @@ export type ProblemDefinition = {
 /**
  * Canonical problem catalog.
  * Arabic and English phrases resolve to the same ProblemId.
+ * Category slugs reference leaf categories in the database.
  */
 export const PROBLEM_CATALOG: ProblemDefinition[] = [
   {
     id: "water_leak",
-    category: "plumber",
+    category: "plumbing",
     priority: "emergency",
     keywords: [
       "my sink is leaking",
@@ -40,7 +41,7 @@ export const PROBLEM_CATALOG: ProblemDefinition[] = [
   },
   {
     id: "power_outage",
-    category: "electrician",
+    category: "electrical",
     priority: "emergency",
     keywords: [
       "power is out",
@@ -59,7 +60,7 @@ export const PROBLEM_CATALOG: ProblemDefinition[] = [
   },
   {
     id: "ac_not_cooling",
-    category: "mechanic",
+    category: "hvac",
     priority: "high",
     keywords: [
       "my ac is not cooling",
@@ -80,7 +81,7 @@ export const PROBLEM_CATALOG: ProblemDefinition[] = [
   },
   {
     id: "locked_out",
-    category: "mechanic",
+    category: "locksmith",
     priority: "emergency",
     keywords: [
       "i am locked out",
@@ -97,7 +98,7 @@ export const PROBLEM_CATALOG: ProblemDefinition[] = [
   },
   {
     id: "appliance_leak",
-    category: "mechanic",
+    category: "appliance-repair",
     priority: "high",
     keywords: [
       "my washing machine is leaking",
@@ -116,27 +117,71 @@ export const PROBLEM_CATALOG: ProblemDefinition[] = [
   },
   {
     id: "medical_need",
-    category: "doctor",
+    category: "doctors",
     priority: "normal",
     keywords: ["doctor", "physician", "medical", "clinic", "طبيب", "دكتور", "عيادة"],
   },
   {
     id: "legal_need",
-    category: "lawyer",
+    category: "lawyers",
     priority: "normal",
     keywords: ["lawyer", "attorney", "legal", "court", "محامي", "قانون"],
   },
   {
     id: "vehicle_repair",
-    category: "mechanic",
+    category: "auto-repair",
     priority: "normal",
     keywords: ["mechanic", "car repair", "garage", "engine", "brake", "ميكانيكي", "سيارة"],
   },
   {
     id: "cleaning_need",
-    category: "cleaner",
+    category: "cleaning",
     priority: "low",
     keywords: ["cleaner", "cleaning", "maid", "housekeeping", "تنظيف", "منظف"],
+  },
+  {
+    id: "dental_need",
+    category: "dentists",
+    priority: "normal",
+    keywords: ["dentist", "toothache", "dental", "أسنان", "طبيب أسنان", "وجع أسنان"],
+  },
+  {
+    id: "pharmacy_need",
+    category: "pharmacies",
+    priority: "normal",
+    keywords: ["pharmacy", "medicine", "prescription", "صيدلية", "دواء", "وصفة"],
+  },
+  {
+    id: "tutoring_need",
+    category: "tutors",
+    priority: "low",
+    keywords: ["tutor", "homework help", "private lesson", "مدرس خصوصي", "دروس خصوصية"],
+  },
+  {
+    id: "restaurant_need",
+    category: "restaurants",
+    priority: "low",
+    keywords: ["restaurant", "food delivery", "dining", "مطعم", "طعام", "أكل"],
+  },
+  {
+    id: "it_support_need",
+    category: "it-support",
+    priority: "normal",
+    keywords: [
+      "computer repair",
+      "laptop broken",
+      "it support",
+      "wifi not working",
+      "حاسوب",
+      "لابتوب",
+      "دعم تقني",
+    ],
+  },
+  {
+    id: "photography_need",
+    category: "photographer",
+    priority: "low",
+    keywords: ["photographer", "photo shoot", "wedding photos", "مصور", "تصوير", "صور"],
   },
 ];
 
@@ -148,7 +193,7 @@ export function getProblemDefinition(id: ProblemId): ProblemDefinition {
   return problem;
 }
 
-export function categoryForProblem(id: ProblemId): ServiceCategory {
+export function categoryForProblem(id: ProblemId): CategorySlug {
   return getProblemDefinition(id).category;
 }
 

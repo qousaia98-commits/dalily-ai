@@ -1,12 +1,13 @@
 import type { LocalizedText } from "@/types/domain.types";
-import type { ServiceCategory } from "@/lib/constants/categories";
+import type { CategorySlug } from "@/lib/categories/types";
 import type { ProblemId, ProblemPriority } from "@/lib/search/engine/types";
 
 export type ProviderListItem = {
   id: string;
   slug: string;
   name: LocalizedText;
-  category: ServiceCategory;
+  category: CategorySlug;
+  categoryLabel: LocalizedText;
   city: LocalizedText;
   rating: number;
   reviewCount: number;
@@ -19,7 +20,8 @@ export type ProviderListItem = {
 
 export type SearchProvidersInput = {
   query?: string;
-  categorySlug?: ServiceCategory;
+  categorySlug?: CategorySlug;
+  groupSlug?: CategorySlug;
   citySlug?: string;
   verifiedOnly?: boolean;
   locale?: string;
@@ -30,7 +32,8 @@ export type SearchProvidersResult = {
   parsed: {
     problemId: ProblemId | null;
     priority: ProblemPriority | null;
-    categorySlug: ServiceCategory | null;
+    categorySlug: CategorySlug | null;
+    groupSlug: CategorySlug | null;
     citySlug: string | null;
     textTerms: string;
   };

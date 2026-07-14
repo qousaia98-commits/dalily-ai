@@ -16,14 +16,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SERVICE_CATEGORIES } from "@/lib/constants/categories";
+import { CategorySelect } from "@/components/categories/category-select";
+import type { CategoryGroupWithLeaves } from "@/lib/categories/types";
 import { CITY_IDS } from "@/lib/constants/reference-data";
 
 const initialState: ProviderActionState = { success: false };
 
-export function ProviderCreateForm() {
+type ProviderCreateFormProps = {
+  categoryGroups: CategoryGroupWithLeaves[];
+};
+
+export function ProviderCreateForm({ categoryGroups }: ProviderCreateFormProps) {
   const t = useTranslations("business.create");
-  const tCategories = useTranslations("home.categories");
   const tCities = useTranslations("auth.cities");
   const [category, setCategory] = useState("");
   const [city, setCity] = useState("");
@@ -52,18 +56,13 @@ export function ProviderCreateForm() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>{t("category")}</Label>
-              <Select value={category} onValueChange={setCategory} disabled={isPending}>
-                <SelectTrigger>
-                  <SelectValue placeholder={t("selectCategory")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {SERVICE_CATEGORIES.map((slug) => (
-                    <SelectItem key={slug} value={slug}>
-                      {tCategories(slug)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <CategorySelect
+                groups={categoryGroups}
+                value={category}
+                onValueChange={setCategory}
+                placeholder={t("selectCategory")}
+                disabled={isPending}
+              />
             </div>
             <div className="space-y-2">
               <Label>{t("city")}</Label>

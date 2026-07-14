@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { SERVICE_CATEGORIES } from "@/lib/constants/categories";
 import { CITY_IDS } from "@/lib/constants/reference-data";
 
 const localizedField = z.object({
@@ -15,7 +14,7 @@ const localizedOptional = z.object({
 export const createProviderSchema = z.object({
   nameAr: z.string().trim().min(2).max(120),
   nameEn: z.string().trim().min(2).max(120),
-  category: z.enum(SERVICE_CATEGORIES),
+  category: z.string().trim().min(1).max(80),
   city: z.enum(Object.keys(CITY_IDS) as [string, ...string[]]),
   phone: z.string().trim().min(7).max(20),
   email: z.string().trim().email(),
@@ -28,7 +27,7 @@ export const updateProviderProfileSchema = z.object({
   nameEn: z.string().trim().min(2).max(120),
   aboutAr: z.string().trim().max(2000),
   aboutEn: z.string().trim().max(2000),
-  category: z.enum(SERVICE_CATEGORIES),
+  category: z.string().trim().min(1).max(80),
   city: z.enum(Object.keys(CITY_IDS) as [string, ...string[]]),
 });
 
