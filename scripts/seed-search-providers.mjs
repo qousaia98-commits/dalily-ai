@@ -304,7 +304,7 @@ async function upsertProvider(provider) {
     category_id: provider.category_id,
     city_id: provider.city_id,
     status: "active",
-    verification_status: provider.verification_status,
+    verification_status: "verified",
     trust_score: provider.trust_score,
     rating_avg: provider.rating_avg,
     review_count: provider.review_count,
@@ -317,6 +317,22 @@ async function upsertProvider(provider) {
   if (error) throw new Error(`provider ${provider.slug}: ${error.message}`);
 }
 
+async function upsertApprovedVerification(providerId) {
+  const { error } = await supabase.from("provider_verifications").upsert(
+    {
+      provider_id: providerId,
+      id_front_url: `${providerId}/seed/id_front.jpg`,
+      id_back_url: `${providerId}/seed/id_back.jpg`,
+      selfie_url: `${providerId}/seed/selfie.jpg`,
+      status: "approved",
+      reviewed_at: new Date().toISOString(),
+    },
+    { onConflict: "provider_id" },
+  );
+
+  if (error) throw new Error(`verification ${providerId}: ${error.message}`);
+}
+
 async function main() {
   console.log("Seeding search demo providers...");
 
@@ -326,9 +342,10 @@ async function main() {
 
   for (const provider of PROVIDERS) {
     await upsertProvider(provider);
+    await upsertApprovedVerification(provider.id);
   }
 
-  console.log(`Seeded ${PROVIDERS.length} active providers.`);
+  console.log(`Seeded ${PROVIDERS.length} active providers with approved verifications.`);
   console.log("");
   console.log("Test queries:");
   console.log('  EN /ar/search?q=My sink is leaking');

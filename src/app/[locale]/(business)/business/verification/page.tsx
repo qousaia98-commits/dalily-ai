@@ -1,19 +1,50 @@
-import { CheckCircle2, Clock, FileText, Upload } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { requireAuthUser } from "@/lib/auth/session";
+import { getOwnedProviderForVerification } from "@/lib/providers/public-queries";
+import {
+  getProviderVerificationForOwner,
+  toBusinessVerificationView,
+} from "@/lib/verification/queries";
+import { ProviderCreateForm } from "@/components/business/provider-create-form";
+import { VerificationUploadForm } from "@/components/business/verification-upload-form";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent } from "@/components/ui/card";
+import type { ProviderVerificationStatus } from "@/lib/verification/queries";
+
+function resolveDisplayStatus(
+  providerStatus: string,
+  verificationStatus: ProviderVerificationStatus | null,
+  docsComplete: boolean,
+): "draft" | "pending_review" | "approved" | "rejected" {
+  if (verificationStatus === "approved") return "approved";
+  if (verificationStatus === "rejected") return "rejected";
+  if (verificationStatus === "pending" && docsComplete) return "pending_review";
+  if (providerStatus === "pending_review") return "pending_review";
+  return "draft";
+}
 
 export default async function BusinessVerificationPage() {
   const t = await getTranslations("business.verification");
+  const authUser = await requireAuthUser();
+  const provider = await getOwnedProviderForVerification(authUser.id);
 
-  const steps = [
-    { key: "identity", icon: FileText, done: true },
-    { key: "documents", icon: Upload, done: true },
-    { key: "review", icon: Clock, done: true },
-    { key: "approved", icon: CheckCircle2, done: true },
-  ] as const;
+  if (!provider) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="mt-1 text-muted-foreground">{t("subtitle")}</p>
+        </div>
+        <ProviderCreateForm />
+      </div>
+    );
+  }
+
+  const verificationRow = await getProviderVerificationForOwner(provider.id);
+  const verification = toBusinessVerificationView(verificationRow);
+  const docsComplete =
+    verification.idFrontUploaded && verification.idBackUploaded && verification.selfieUploaded;
+  const displayStatus = resolveDisplayStatus(provider.status, verification.status, docsComplete);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -22,55 +53,35 @@ export default async function BusinessVerificationPage() {
         <p className="mt-1 text-muted-foreground">{t("subtitle")}</p>
       </div>
 
-      <Card className="border-emerald-500/30 bg-emerald-500/5">
+      <Card>
         <CardContent className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <CheckCircle2 className="size-10 text-emerald-600 dark:text-emerald-400" />
-            <div>
-              <Badge variant="success" className="mb-1">
-                {t("status.verified")}
-              </Badge>
-              <p className="text-sm text-muted-foreground">{t("verifiedNote")}</p>
-            </div>
+          <div>
+            <Badge
+              variant={
+                displayStatus === "approved"
+                  ? "success"
+                  : displayStatus === "rejected"
+                    ? "destructive"
+                    : "secondary"
+              }
+              className="mb-2"
+            >
+              {t(`displayStatus.${displayStatus}`)}
+            </Badge>
+            <p className="text-sm text-muted-foreground">{t(`displayNotes.${displayStatus}`)}</p>
           </div>
           <div className="text-end">
-            <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">96%</p>
+            <p className="text-3xl font-bold">{provider.trustScore}%</p>
             <p className="text-sm text-muted-foreground">{t("trustScore")}</p>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("progress")}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <Progress value={100} className="h-2" />
-          <div className="grid gap-4 sm:grid-cols-2">
-            {steps.map(({ key, icon: Icon, done }) => (
-              <div
-                key={key}
-                className="flex items-start gap-3 rounded-lg border p-4"
-              >
-                <div
-                  className={
-                    done
-                      ? "flex size-10 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600"
-                      : "flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground"
-                  }
-                >
-                  <Icon className="size-5" />
-                </div>
-                <div>
-                  <p className="font-medium">{t(`steps.${key}.title`)}</p>
-                  <p className="text-sm text-muted-foreground">{t(`steps.${key}.description`)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <Button variant="outline">{t("reupload")}</Button>
-        </CardContent>
-      </Card>
+      <VerificationUploadForm
+        providerId={provider.id}
+        providerStatus={provider.status}
+        verification={verification}
+      />
     </div>
   );
 }

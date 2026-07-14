@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" fill="none" role="img" aria-label="Dalily typography">
+  <rect width="960" height="520" fill="#FFFFFF"/>
+  <text x="48" y="56" fill="#0B1526" font-family="system-ui, sans-serif" font-size="28" font-weight="700">Dalily Typography</text>
+  <text x="48" y="84" fill="#5C6478" font-family="system-ui, sans-serif" font-size="14">Plus Jakarta Sans · Noto Sans Arabic</text>
+
+  <text x="48" y="150" fill="#0B1526" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="48" font-weight="700" letter-spacing="-0.03em">Dalily</text>
+  <text x="48" y="178" fill="#8A93A8" font-family="system-ui, sans-serif" font-size="12">Display / Logo  48px · Bold · -3% tracking</text>
+
+  <text x="48" y="250" fill="#0B1526" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="32" font-weight="700" letter-spacing="-0.02em">From problem to solution.</text>
+  <text x="48" y="278" fill="#8A93A8" font-family="system-ui, sans-serif" font-size="12">Headline  32px · Bold</text>
+
+  <text x="48" y="340" fill="#151F33" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="18" font-weight="500" style="max-width: 640px">Find trusted local providers through intelligent search.</text>
+  <text x="48" y="368" fill="#8A93A8" font-family="system-ui, sans-serif" font-size="12">Body  18px · Medium</text>
+
+  <text x="48" y="430" fill="#5C6478" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="12" font-weight="600" letter-spacing="0.08em">LABEL · CAPTION · UI</text>
+  <text x="48" y="458" fill="#8A93A8" font-family="system-ui, sans-serif" font-size="12">Caption  12px · Semibold · +8% tracking</text>
+
+  <text x="520" y="250" fill="#0B1526" font-family="'Noto Sans Arabic', Tahoma, sans-serif" font-size="40" font-weight="700">/DJDJ</text>
+  <text x="520" y="310" fill="#151F33" font-family="'Noto Sans Arabic', Tahoma, sans-serif" font-size="24" font-weight="500">EF 'DE4CD) %DI 'D-D</text>
+  <text x="520" y="368" fill="#8A93A8" font-family="system-ui, sans-serif" font-size="12">Arabic  Noto Sans Arabic / IBM Plex Sans Arabic</text>
+</svg>

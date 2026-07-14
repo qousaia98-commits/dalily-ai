@@ -14,6 +14,7 @@ export type VerificationStatus =
 export type LocalizedJson = { ar: string; en: string };
 export type ImageKind = "avatar" | "cover" | "gallery";
 export type ProblemPriority = "emergency" | "high" | "normal" | "low";
+export type ProviderVerificationStatus = "pending" | "approved" | "rejected";
 
 export type Database = {
   public: {
@@ -441,6 +442,48 @@ export type Database = {
         };
         Relationships: [];
       };
+      provider_verifications: {
+        Row: {
+          id: string;
+          provider_id: string;
+          id_front_url: string | null;
+          id_back_url: string | null;
+          selfie_url: string | null;
+          status: ProviderVerificationStatus;
+          rejection_reason: string | null;
+          reviewed_by: string | null;
+          reviewed_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider_id: string;
+          id_front_url?: string | null;
+          id_back_url?: string | null;
+          selfie_url?: string | null;
+          status?: ProviderVerificationStatus;
+          rejection_reason?: string | null;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          provider_id?: string;
+          id_front_url?: string | null;
+          id_back_url?: string | null;
+          selfie_url?: string | null;
+          status?: ProviderVerificationStatus;
+          rejection_reason?: string | null;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       search_logs: {
         Row: {
           id: string;
@@ -538,6 +581,7 @@ export type Database = {
       provider_status: ProviderStatus;
       verification_status: VerificationStatus;
       problem_priority: ProblemPriority;
+      provider_verification_status: ProviderVerificationStatus;
     };
     CompositeTypes: {
       [_ in never]: never;

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" fill="none" role="img" aria-label="Dalily vertical logo">
+  <g transform="translate(76, 16)">
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      fill="#0B1526"
+      d="M12 12.2A3.2 3.2 0 0 1 15.2 9h5.1c10.8 0 14.2 14.8 11.2 29.1H15.2A3.2 3.2 0 0 1 12 34.9V12.2Zm12.4 11.8a5.4 5.4 0 1 0-10.8 0 5.4 5.4 0 0 0 10.8 0Z"
+    />
+    <circle cx="26.6" cy="24" r="2.1" fill="#C4A052"/>
+  </g>
+  <text
+    x="100"
+    y="108"
+    text-anchor="middle"
+    fill="#0B1526"
+    font-family="'Plus Jakarta Sans', 'General Sans', 'Satoshi', Manrope, system-ui, sans-serif"
+    font-size="32"
+    font-weight="700"
+    letter-spacing="-0.02em"
+  >Dalily</text>
+  <text
+    x="100"
+    y="136"
+    text-anchor="middle"
+    fill="#5C6478"
+    font-family="'Noto Sans Arabic', 'IBM Plex Sans Arabic', Tahoma, sans-serif"
+    font-size="20"
+    font-weight="500"
+  >/DJDJ</text>
+  <text
+    x="100"
+    y="168"
+    text-anchor="middle"
+    fill="#8A93A8"
+    font-family="'Plus Jakarta Sans', system-ui, sans-serif"
+    font-size="11"
+    font-weight="500"
+    letter-spacing="0.06em"
+  >FROM PROBLEM TO SOLUTION</text>
+  <text
+    x="100"
+    y="188"
+    text-anchor="middle"
+    fill="#8A93A8"
+    font-family="'Noto Sans Arabic', Tahoma, sans-serif"
+    font-size="13"
+    font-weight="500"
+  >EF 'DE4CD) %DI 'D-D</text>
+</svg>

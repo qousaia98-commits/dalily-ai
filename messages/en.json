@@ -18,7 +18,10 @@
     "forBusiness": "For Business",
     "dashboard": "Dashboard",
     "login": "Log in",
-    "register": "Sign up"
+    "register": "Sign up",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "home": {
     "heroTitle": "Find the service you need",
@@ -151,6 +154,58 @@
       "terms": "Terms of Service"
     },
     "copyright": "© {year} Dalily AI. All rights reserved."
+  },
+  "legal": {
+    "privacy": {
+      "metaTitle": "Privacy Policy — Dalily AI",
+      "metaDescription": "How Dalily AI collects and uses your information.",
+      "title": "Privacy Policy",
+      "updated": "Last updated: July 2026",
+      "intro": "Dalily AI helps people find trusted local service providers. This policy explains what information we collect during the beta and how we use it.",
+      "sections": {
+        "collect": {
+          "title": "Information we collect",
+          "body": "We collect account details (such as email and name), business profile information you submit, search queries, and basic usage data needed to operate the platform."
+        },
+        "use": {
+          "title": "How we use information",
+          "body": "We use your information to provide search results, manage business accounts, improve the service, and keep the platform secure. Search queries may be logged to improve matching quality."
+        },
+        "sharing": {
+          "title": "Sharing",
+          "body": "We do not sell your personal data. Provider contact details you choose to publish may be visible to users. We use infrastructure providers (such as Supabase) to host the service."
+        },
+        "contact": {
+          "title": "Contact",
+          "body": "For privacy questions during the beta, contact the Dalily AI team through your account email or business support channel."
+        }
+      }
+    },
+    "terms": {
+      "metaTitle": "Terms of Service — Dalily AI",
+      "metaDescription": "Terms for using Dalily AI during the beta.",
+      "title": "Terms of Service",
+      "updated": "Last updated: July 2026",
+      "intro": "By using Dalily AI during the beta, you agree to these terms. The service connects users with independent service providers.",
+      "sections": {
+        "service": {
+          "title": "The service",
+          "body": "Dalily AI is a discovery platform. We help you find providers but do not perform the services ourselves. Features may change during the beta."
+        },
+        "accounts": {
+          "title": "Accounts",
+          "body": "You are responsible for your account credentials and for information you submit. Business accounts must provide accurate profile details."
+        },
+        "providers": {
+          "title": "Providers",
+          "body": "Providers listed on Dalily are independent businesses. Users should verify details and agree terms directly with the provider before work begins."
+        },
+        "liability": {
+          "title": "Limitation of liability",
+          "body": "Dalily AI is provided during the beta on an as-is basis. We are not liable for disputes, damages, or service quality between users and providers."
+        }
+      }
+    }
   },
   "business": {
     "nav": {
@@ -330,32 +385,76 @@
       }
     },
     "verification": {
-      "title": "Verification status",
-      "subtitle": "Verify your identity to build customer trust",
+      "title": "Identity verification",
+      "subtitle": "Upload your documents for manual review before your business appears in search",
       "trustScore": "Trust score",
-      "verifiedNote": "Your account is verified and displays the trust badge to all users.",
-      "progress": "Verification steps",
-      "reupload": "Re-upload documents",
-      "status": {
-        "verified": "Verified"
+      "documentsTitle": "Verification documents",
+      "upload": "Upload",
+      "uploaded": "Uploaded",
+      "uploadSuccess": "Document uploaded successfully.",
+      "submitForReview": "Submit for review",
+      "submitSuccess": "Your documents were submitted. We will notify you after review.",
+      "draftHint": "Complete your profile, then submit your documents for admin review.",
+      "approvedBanner": "Your business is verified and visible in search results.",
+      "pendingBanner": "Your documents are under review. You will be notified once an admin decides.",
+      "rejectionTitle": "Verification rejected",
+      "displayStatus": {
+        "draft": "Draft",
+        "pending_review": "Pending review",
+        "approved": "Approved",
+        "rejected": "Rejected"
       },
-      "steps": {
-        "identity": {
-          "title": "Identity verification",
-          "description": "Your personal identity has been confirmed."
-        },
-        "documents": {
-          "title": "Document upload",
-          "description": "Required business documents have been received."
-        },
-        "review": {
-          "title": "Team review",
-          "description": "Your application was reviewed by the Dalily team."
-        },
-        "approved": {
-          "title": "Approval",
-          "description": "Your account was approved as a verified provider."
-        }
+      "displayNotes": {
+        "draft": "Upload all required documents and submit them for review.",
+        "pending_review": "An admin is reviewing your documents. Search visibility starts after approval.",
+        "approved": "Your business is approved and can appear in search results.",
+        "rejected": "Please review the reason below, upload new documents, and submit again."
+      },
+      "documents": {
+        "idFront": "ID front side",
+        "idBack": "ID back side",
+        "selfie": "Selfie holding your ID"
+      },
+      "errors": {
+        "validation_error": "Please check the form and try again.",
+        "file_required": "Please choose a file to upload.",
+        "file_too_large": "File is too large. Maximum size is 5 MB.",
+        "invalid_file_type": "Only JPG, PNG, or WebP images are allowed.",
+        "upload_failed": "Upload failed. Please try again.",
+        "save_failed": "Could not save your document. Please try again.",
+        "already_approved": "Your business is already verified.",
+        "already_submitted": "Your documents are already under review.",
+        "documents_incomplete": "Upload all three documents before submitting.",
+        "submit_failed": "Could not submit your documents. Please try again."
+      }
+    }
+  },
+  "admin": {
+    "verification": {
+      "title": "Provider verification",
+      "subtitle": "Review identity documents and approve businesses for search visibility",
+      "empty": "No pending verification requests.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "confirmReject": "Confirm rejection",
+      "cancel": "Cancel",
+      "rejectionReason": "Rejection reason",
+      "rejectionPlaceholder": "Explain why the verification was rejected",
+      "status": {
+        "pending": "Pending"
+      },
+      "documents": {
+        "idFront": "ID front",
+        "idBack": "ID back",
+        "selfie": "Selfie"
+      },
+      "errors": {
+        "forbidden": "You do not have permission to perform this action.",
+        "not_found": "Verification request not found.",
+        "approve_failed": "Could not approve this business.",
+        "reject_failed": "Could not reject this business.",
+        "validation_error": "Please provide a rejection reason.",
+        "url_failed": "Could not open the document."
       }
     }
   },

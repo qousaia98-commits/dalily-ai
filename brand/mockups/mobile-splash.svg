@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" fill="none" role="img" aria-label="Dalily mobile splash screen">
+  <rect width="390" height="844" fill="#0B1526"/>
+  <g transform="translate(119, 302) scale(3.1)">
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      fill="#FFFFFF"
+      d="M12 12.2A3.2 3.2 0 0 1 15.2 9h5.1c10.8 0 14.2 14.8 11.2 29.1H15.2A3.2 3.2 0 0 1 12 34.9V12.2Zm12.4 11.8a5.4 5.4 0 1 0-10.8 0 5.4 5.4 0 0 0 10.8 0Z"
+    />
+    <circle cx="26.6" cy="24" r="2.1" fill="#C4A052"/>
+  </g>
+  <text
+    x="195"
+    y="500"
+    text-anchor="middle"
+    fill="#FFFFFF"
+    font-family="'Plus Jakarta Sans', system-ui, sans-serif"
+    font-size="34"
+    font-weight="700"
+    letter-spacing="-0.02em"
+  >Dalily</text>
+  <text
+    x="195"
+    y="536"
+    text-anchor="middle"
+    fill="#C8CED9"
+    font-family="'Noto Sans Arabic', Tahoma, sans-serif"
+    font-size="18"
+    font-weight="500"
+  >/DJDJ</text>
+  <text
+    x="195"
+    y="580"
+    text-anchor="middle"
+    fill="#8A93A8"
+    font-family="'Plus Jakarta Sans', system-ui, sans-serif"
+    font-size="12"
+    font-weight="500"
+    letter-spacing="0.06em"
+  >FROM PROBLEM TO SOLUTION</text>
+  <text
+    x="195"
+    y="604"
+    text-anchor="middle"
+    fill="#8A93A8"
+    font-family="'Noto Sans Arabic', Tahoma, sans-serif"
+    font-size="13"
+    font-weight="500"
+  >EF 'DE4CD) %DI 'D-D</text>
+  <rect x="155" y="760" width="80" height="4" rx="2" fill="#C4A052" opacity="0.9"/>
+</svg>

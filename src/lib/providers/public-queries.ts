@@ -1,0 +1,176 @@
+import { createClient } from "@/lib/supabase/server";
+import { categorySlugFromId, citySlugFromId } from "@/lib/providers/reference";
+import { getStoragePublicUrl } from "@/lib/providers/storage";
+import { isServiceCategory } from "@/lib/constants/categories";
+import type { ServiceCategory } from "@/lib/constants/categories";
+import { rankProviders } from "@/lib/search/ranking/rank-providers";
+import { fetchActiveProviders, fetchImagePaths } from "@/lib/search/repository/provider-search.repository";
+import { mapProviderRowsToListItems } from "@/lib/search/mapper/provider-list-mapper";
+import type { ProviderListItem } from "@/types/search.types";
+import type { LocalizedText } from "@/types/domain.types";
+import type { LocalizedJson } from "@/types/database.types";
+import { mapProviderRow } from "@/lib/providers/queries";
+import { getApprovedProviderIds } from "@/lib/verification/queries";
+import type { ManagedProvider } from "@/types/provider.types";
+
+const DEFAULT_COVER =
+  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80";
+const DEFAULT_AVATAR =
+  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80";
+
+const CITY_LABELS: Record<string, LocalizedText> = {
+  damascus: { ar: "دمشق", en: "Damascus" },
+  aleppo: { ar: "حلب", en: "Aleppo" },
+  homs: { ar: "حمص", en: "Homs" },
+  latakia: { ar: "اللاذقية", en: "Latakia" },
+};
+
+export type PublicProviderProfile = {
+  id: string;
+  slug: string;
+  name: LocalizedJson;
+  about: LocalizedJson | null;
+  category: ServiceCategory;
+  city: LocalizedText;
+  district: LocalizedText | null;
+  rating: number;
+  reviewCount: number;
+  trustScore: number;
+  verified: boolean;
+  coverImage: string;
+  avatarImage: string;
+  phone: string | null;
+  whatsapp: string | null;
+  responseTimeHours: number | null;
+  services: LocalizedJson[];
+  gallery: string[];
+};
+
+function parseAddressLine(value: unknown): LocalizedText | null {
+  if (!value || typeof value !== "object") return null;
+  const obj = value as { ar?: string; en?: string };
+  if (!obj.ar && !obj.en) return null;
+  return { ar: obj.ar ?? "", en: obj.en ?? "" };
+}
+
+export async function getPublicProviderById(id: string): Promise<PublicProviderProfile | null> {
+  const supabase = await createClient();
+
+  const { data: provider, error } = await supabase
+    .from("providers")
+    .select("*")
+    .eq("id", id)
+    .eq("status", "active")
+    .is("deleted_at", null)
+    .maybeSingle();
+
+  if (error || !provider) return null;
+
+  const approvedIds = await getApprovedProviderIds();
+  if (!approvedIds.has(provider.id)) return null;
+
+  const categorySlug = categorySlugFromId(provider.category_id);
+  if (!categorySlug || !isServiceCategory(categorySlug)) return null;
+
+  const cityKey = citySlugFromId(provider.city_id);
+  const cityLabel =
+    (cityKey && CITY_LABELS[cityKey]) ||
+    ({ ar: cityKey ?? "", en: cityKey ?? "" } satisfies LocalizedText);
+
+  const [imagesResult, servicesResult] = await Promise.all([
+    supabase.from("images").select("*").eq("provider_id", provider.id).is("deleted_at", null),
+    supabase
+      .from("provider_services")
+      .select("*")
+      .eq("provider_id", provider.id)
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("sort_order"),
+  ]);
+
+  const images = imagesResult.data ?? [];
+  const avatar = images.find((image) => image.id === provider.avatar_image_id);
+  const cover = images.find((image) => image.id === provider.cover_image_id);
+  const gallery = images
+    .filter((image) => image.kind === "gallery")
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .map((image) => getStoragePublicUrl(image.path));
+
+  const activeServices = (servicesResult.data ?? [])
+    .filter((service) => service.is_active)
+    .map((service) => service.name);
+
+  return {
+    id: provider.id,
+    slug: provider.slug,
+    name: provider.name,
+    about: provider.about,
+    category: categorySlug,
+    city: cityLabel,
+    district: parseAddressLine(provider.address_line),
+    rating: Number(provider.rating_avg),
+    reviewCount: provider.review_count,
+    trustScore: provider.trust_score,
+    verified: provider.verification_status === "verified",
+    coverImage: cover ? getStoragePublicUrl(cover.path) : DEFAULT_COVER,
+    avatarImage: avatar ? getStoragePublicUrl(avatar.path) : DEFAULT_AVATAR,
+    phone: provider.phone,
+    whatsapp: provider.whatsapp,
+    responseTimeHours: provider.response_time_hours,
+    services: activeServices,
+    gallery,
+  };
+}
+
+export async function getFeaturedProviders(limit = 3): Promise<ProviderListItem[]> {
+  const rows = await fetchActiveProviders({ limit: 50 });
+  const ranked = rankProviders(rows).slice(0, limit);
+
+  const imageIds = ranked
+    .flatMap((row) => [row.avatar_image_id, row.cover_image_id])
+    .filter((id): id is string => Boolean(id));
+
+  const imagePathById = await fetchImagePaths(imageIds);
+  return mapProviderRowsToListItems(ranked, imagePathById);
+}
+
+export async function getOwnedProviderForVerification(
+  userId: string,
+): Promise<(ManagedProvider & { trustScore: number; ratingAvg: number }) | null> {
+  const supabase = await createClient();
+
+  const { data: provider, error } = await supabase
+    .from("providers")
+    .select("*")
+    .eq("owner_id", userId)
+    .is("deleted_at", null)
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error || !provider) return null;
+
+  const [imagesResult, servicesResult, hoursResult] = await Promise.all([
+    supabase.from("images").select("*").eq("provider_id", provider.id).is("deleted_at", null),
+    supabase
+      .from("provider_services")
+      .select("*")
+      .eq("provider_id", provider.id)
+      .is("deleted_at", null)
+      .order("sort_order"),
+    supabase.from("provider_working_hours").select("*").eq("provider_id", provider.id),
+  ]);
+
+  const mapped = mapProviderRow(
+    provider,
+    imagesResult.data ?? [],
+    servicesResult.data ?? [],
+    hoursResult.data ?? [],
+  );
+
+  return {
+    ...mapped,
+    trustScore: provider.trust_score,
+    ratingAvg: Number(provider.rating_avg),
+  };
+}

@@ -1,12 +1,15 @@
 import { getTranslations } from "next-intl/server";
-import { getFeaturedProviders } from "@/lib/mock/data";
-import { mockProviderToListItem } from "@/lib/search/map-provider";
+import { getFeaturedProviders } from "@/lib/providers/public-queries";
 import { ProviderCard } from "@/components/providers/provider-card";
 import { cn } from "@/lib/utils";
 
 export async function FeaturedProviders({ className }: { className?: string }) {
   const t = await getTranslations("home.featured");
-  const providers = getFeaturedProviders();
+  const providers = await getFeaturedProviders(3);
+
+  if (providers.length === 0) {
+    return null;
+  }
 
   return (
     <section className={cn("bg-muted/30 px-4 py-16 sm:px-6 sm:py-20", className)}>
@@ -16,10 +19,10 @@ export async function FeaturedProviders({ className }: { className?: string }) {
           <p className="mt-3 text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {providers.slice(0, 3).map((provider, index) => (
+          {providers.map((provider, index) => (
             <ProviderCard
               key={provider.id}
-              provider={mockProviderToListItem(provider)}
+              provider={provider}
               className={cn("animate-fade-in-up", `stagger-${index + 1}`)}
             />
           ))}

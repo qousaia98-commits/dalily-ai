@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dalily Brand Kit — Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@500;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: var(--dalily-font-sans);
+        background: var(--dalily-surface);
+        color: var(--dalily-text-primary);
+        line-height: 1.5;
+      }
+      header {
+        background: var(--dalily-navy);
+        color: var(--dalily-white);
+        padding: 3rem 2rem;
+      }
+      header h1 {
+        margin: 0 0 0.5rem;
+        font-size: 2rem;
+        letter-spacing: -0.02em;
+      }
+      header p {
+        margin: 0;
+        color: var(--dalily-muted);
+      }
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      section {
+        margin-bottom: 3rem;
+      }
+      h2 {
+        font-size: 1.25rem;
+        margin: 0 0 1rem;
+        letter-spacing: -0.01em;
+      }
+      .grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      .card {
+        background: var(--dalily-white);
+        border: 1px solid var(--dalily-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+      }
+      .card.dark {
+        background: var(--dalily-navy);
+      }
+      .card img,
+      .card object {
+        width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+      }
+      .label {
+        margin-top: 0.75rem;
+        font-size: 0.8125rem;
+        color: var(--dalily-text-secondary);
+      }
+      .full {
+        grid-column: 1 / -1;
+      }
+      .full img,
+      .full object {
+        max-height: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Dalily Brand Kit</h1>
+      <p>From problem to solution. · من المشكلة إلى الحل</p>
+    </header>
+    <main>
+      <section>
+        <h2>Logos</h2>
+        <div class="grid">
+          <div class="card">
+            <object data="assets/logo-main.svg" type="image/svg+xml" aria-label="Main logo"></object>
+            <div class="label">Main Logo</div>
+          </div>
+          <div class="card">
+            <object data="assets/logo-horizontal.svg" type="image/svg+xml"></object>
+            <div class="label">Horizontal</div>
+          </div>
+          <div class="card">
+            <object data="assets/logo-vertical.svg" type="image/svg+xml"></object>
+            <div class="label">Vertical</div>
+          </div>
+          <div class="card dark">
+            <object data="assets/logo-light.svg" type="image/svg+xml"></object>
+            <div class="label" style="color: var(--dalily-muted)">Light (on dark)</div>
+          </div>
+          <div class="card">
+            <object data="assets/logo-mono.svg" type="image/svg+xml"></object>
+            <div class="label">Monochrome</div>
+          </div>
+          <div class="card">
+            <object data="assets/symbol.svg" type="image/svg+xml" style="max-height: 80px"></object>
+            <div class="label">Symbol only</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>App Icon &amp; Favicon</h2>
+        <div class="grid">
+          <div class="card">
+            <object data="assets/app-icon.svg" type="image/svg+xml" style="max-width: 160px"></object>
+            <div class="label">App Icon 512</div>
+          </div>
+          <div class="card">
+            <object data="assets/favicon.svg" type="image/svg+xml" style="max-width: 64px"></object>
+            <div class="label">Favicon 32</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Brand System</h2>
+        <div class="grid">
+          <div class="card full">
+            <object data="assets/color-palette.svg" type="image/svg+xml"></object>
+            <div class="label">Color Palette</div>
+          </div>
+          <div class="card full">
+            <object data="assets/typography.svg" type="image/svg+xml"></object>
+            <div class="label">Typography</div>
+          </div>
+          <div class="card full">
+            <object data="assets/spacing-rules.svg" type="image/svg+xml"></object>
+            <div class="label">Spacing &amp; Minimum Size</div>
+          </div>
+          <div class="card full">
+            <object data="assets/usage-examples.svg" type="image/svg+xml"></object>
+            <div class="label">Usage Examples</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Mockups</h2>
+        <div class="grid">
+          <div class="card full">
+            <object data="mockups/mobile-splash.svg" type="image/svg+xml"></object>
+            <div class="label">Mobile Splash Screen</div>
+          </div>
+          <div class="card full">
+            <object data="mockups/business-card.svg" type="image/svg+xml"></object>
+            <div class="label">Business Card</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

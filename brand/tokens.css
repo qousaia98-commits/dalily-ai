@@ -1,0 +1,24 @@
+/**
+ * Dalily Brand Design Tokens
+ * Import in design tools or reference when integrating the identity.
+ */
+
+:root {
+  --dalily-navy: #0b1526;
+  --dalily-navy-deep: #151f33;
+  --dalily-gold: #c4a052;
+  --dalily-gold-light: #d4b76a;
+  --dalily-white: #ffffff;
+  --dalily-surface: #f7f8fa;
+  --dalily-border: #e4e7ee;
+  --dalily-muted: #8a93a8;
+  --dalily-text-secondary: #5c6478;
+  --dalily-text-primary: #0b1526;
+
+  --dalily-font-sans: "Plus Jakarta Sans", "General Sans", "Satoshi", Manrope, system-ui,
+    sans-serif;
+  --dalily-font-arabic: "Noto Sans Arabic", "IBM Plex Sans Arabic", Tahoma, sans-serif;
+
+  --dalily-radius-app-icon: 22%;
+  --dalily-clear-space: 1em; /* 1× mark height */
+}

@@ -60,8 +60,16 @@ export async function AppFooter() {
           <div>
             <h3 className="mb-3 text-sm font-semibold">{t("legal")}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>{t("links.privacy")}</li>
-              <li>{t("links.terms")}</li>
+              <li>
+                <Link href="/privacy" className="transition-colors hover:text-foreground">
+                  {t("links.privacy")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="transition-colors hover:text-foreground">
+                  {t("links.terms")}
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

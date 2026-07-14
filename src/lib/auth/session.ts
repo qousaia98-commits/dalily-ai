@@ -44,3 +44,12 @@ export async function requireAuthUser(): Promise<AuthUser> {
   }
   return user;
 }
+
+export async function requireAdminUser(): Promise<AuthUser> {
+  const user = await requireAuthUser();
+  const { isAdminUser } = await import("@/lib/auth/roles");
+  if (!isAdminUser(user.roles)) {
+    throw new Error("FORBIDDEN");
+  }
+  return user;
+}

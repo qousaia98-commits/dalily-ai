@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { CATEGORY_IDS, CITY_IDS } from "@/lib/constants/reference-data";
 import type { ServiceCategory } from "@/lib/constants/categories";
 import { SearchDatabaseError } from "@/lib/search/errors";
+import { getApprovedProviderIds } from "@/lib/verification/queries";
 import type { Database } from "@/types/database.types";
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
 
@@ -24,11 +25,18 @@ export async function fetchActiveProviders(
   const cityId = filters.citySlug ? CITY_IDS[filters.citySlug] : undefined;
 
   const supabase = await createClient();
+  const approvedIds = await getApprovedProviderIds();
+
+  if (approvedIds.size === 0) {
+    return [];
+  }
+
   let query = supabase
     .from("providers")
     .select("*")
     .eq("status", "active")
-    .is("deleted_at", null);
+    .is("deleted_at", null)
+    .in("id", [...approvedIds]);
 
   if (categoryId) query = query.eq("category_id", categoryId);
   if (cityId) query = query.eq("city_id", cityId);
@@ -48,7 +56,8 @@ export async function fetchActiveProviders(
     throw new SearchDatabaseError(error.message, error.code);
   }
 
-  return data ?? [];}
+  return data ?? [];
+}
 
 export async function fetchImagePaths(imageIds: string[]): Promise<Map<string, string>> {
   const map = new Map<string, string>();

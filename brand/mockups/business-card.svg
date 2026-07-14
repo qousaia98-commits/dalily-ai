@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" fill="none" role="img" aria-label="Dalily business card mockup">
+  <rect width="960" height="560" fill="#ECEEF3"/>
+  <text x="48" y="48" fill="#5C6478" font-family="system-ui, sans-serif" font-size="14">Business Card Mockup  85 × 55 mm (3.5 × 2 in)</text>
+
+  <!-- Front -->
+  <rect x="80" y="100" width="360" height="220" rx="12" fill="#0B1526"/>
+  <g transform="translate(112, 132)">
+    <path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M12 12.2A3.2 3.2 0 0 1 15.2 9h5.1c10.8 0 14.2 14.8 11.2 29.1H15.2A3.2 3.2 0 0 1 12 34.9V12.2Zm12.4 11.8a5.4 5.4 0 1 0-10.8 0 5.4 5.4 0 0 0 10.8 0Z"/>
+    <circle cx="26.6" cy="24" r="2.1" fill="#C4A052"/>
+  </g>
+  <text x="172" y="168" fill="#FFFFFF" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="28" font-weight="700">Dalily</text>
+  <text x="172" y="192" fill="#C8CED9" font-family="'Noto Sans Arabic', Tahoma, sans-serif" font-size="13">/DJDJ</text>
+  <text x="112" y="252" fill="#8A93A8" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10" letter-spacing="0.08em">FROM PROBLEM TO SOLUTION</text>
+  <rect x="112" y="268" width="48" height="2" rx="1" fill="#C4A052"/>
+
+  <!-- Back -->
+  <rect x="520" y="100" width="360" height="220" rx="12" fill="#FFFFFF" stroke="#E4E7EE"/>
+  <text x="552" y="148" fill="#0B1526" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="16" font-weight="700">Qusay Abbasi</text>
+  <text x="552" y="172" fill="#5C6478" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="12">Founder &amp; CEO</text>
+  <text x="552" y="210" fill="#151F33" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11">hello@dalily.ai</text>
+  <text x="552" y="232" fill="#151F33" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11">dalily.ai</text>
+  <text x="552" y="254" fill="#151F33" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11">Damascus, Syria</text>
+  <g transform="translate(792, 252) scale(0.7)">
+    <path fill-rule="evenodd" clip-rule="evenodd" fill="#0B1526" d="M12 12.2A3.2 3.2 0 0 1 15.2 9h5.1c10.8 0 14.2 14.8 11.2 29.1H15.2A3.2 3.2 0 0 1 12 34.9V12.2Zm12.4 11.8a5.4 5.4 0 1 0-10.8 0 5.4 5.4 0 0 0 10.8 0Z"/>
+    <circle cx="26.6" cy="24" r="2.1" fill="#C4A052"/>
+  </g>
+
+  <text x="80" y="380" fill="#5C6478" font-family="system-ui, sans-serif" font-size="13">Premium matte navy stock · Gold foil accent line · Rounded corners 3mm</text>
+</svg>
