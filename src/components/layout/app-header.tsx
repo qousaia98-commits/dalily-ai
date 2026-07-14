@@ -18,17 +18,21 @@ export async function AppHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/95 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6">
+      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:h-[4.5rem] sm:px-6">
         <Link
           href="/"
-          className="shrink-0 rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
+          className="justify-self-start rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
           aria-label={t("brand")}
         >
-          <DalilyLogo variant="full" className="hidden sm:inline-flex" />
+          <DalilyLogo variant="horizontal" className="hidden lg:inline-flex" />
+          <DalilyLogo variant="full" className="hidden sm:inline-flex lg:hidden" />
           <DalilyLogo variant="compact" className="sm:hidden" />
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label={tNav("menu")}>
+        <nav
+          className="hidden items-center justify-center gap-1 md:flex"
+          aria-label={tNav("menu")}
+        >
           <Button variant="ghost" size="sm" asChild>
             <Link href="/search">{tNav("search")}</Link>
           </Button>
@@ -48,7 +52,7 @@ export async function AppHeader() {
           )}
         </nav>
 
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center justify-end gap-1 sm:gap-2">
           <PublicMobileNav
             isAuthenticated={Boolean(authUser)}
             isBusinessUser={businessUser}
@@ -57,7 +61,7 @@ export async function AppHeader() {
 
           {authUser ? (
             <>
-              <span className="hidden max-w-[8rem] truncate text-sm text-muted-foreground md:inline">
+              <span className="hidden max-w-[8rem] truncate text-sm text-muted-foreground lg:inline">
                 {authUser.displayName ?? authUser.email}
               </span>
               <div className="hidden md:block">

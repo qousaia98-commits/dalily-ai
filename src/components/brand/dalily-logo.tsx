@@ -4,51 +4,62 @@ import { DalilyMark } from "@/components/brand/dalily-mark";
 
 type DalilyLogoProps = {
   className?: string;
-  /** compact: mark + Dalily | full: mark + Dalily + دليلي | mark: symbol only */
-  variant?: "compact" | "full" | "mark";
-  /** For surfaces with forced light/dark backgrounds (auth splash, OG) */
+  variant?: "compact" | "full" | "horizontal" | "mark";
   onDark?: boolean;
+  markSize?: number;
 };
 
-export function DalilyLogo({ className, variant = "compact", onDark }: DalilyLogoProps) {
+export function DalilyLogo({
+  className,
+  variant = "compact",
+  onDark,
+  markSize,
+}: DalilyLogoProps) {
+  const size =
+    markSize ??
+    (variant === "compact" ? BRAND.logo.markSizeMobile : BRAND.logo.markSizeDesktop);
+
   if (variant === "mark") {
-    return (
-      <DalilyMark
-        className={className}
-        size={36}
-        color={onDark ? "light" : undefined}
-      />
-    );
+    return <DalilyMark className={className} size={size} color={onDark ? "light" : undefined} />;
   }
 
   const titleClass = onDark
-    ? "text-white"
-    : "text-[var(--dalily-navy)] dark:text-white";
-  const arabicClass = onDark
-    ? "text-white/70"
-    : "text-[var(--dalily-text-secondary)] dark:text-white/70";
+    ? "text-[#F7F8FA]"
+    : "text-[var(--dalily-navy)] dark:text-[#F7F8FA]";
+  const taglineMuted = onDark ? "text-[#F7F8FA]/55" : "text-[var(--dalily-muted)]";
+
+  const showArabic = variant === "full" || variant === "horizontal";
+  const showTagline = variant === "horizontal";
 
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <DalilyMark size={36} color={onDark ? "light" : undefined} />
-      <span className="flex flex-col leading-none">
+    <span className={cn("inline-flex items-center gap-3", className)}>
+      <DalilyMark size={size} color={onDark ? "light" : undefined} />
+      <span className="flex min-w-0 flex-col leading-none">
         <span
           className={cn(
-            "font-sans text-base font-bold tracking-tight sm:text-lg",
+            "font-sans text-lg font-bold tracking-tight sm:text-xl",
             titleClass,
           )}
         >
           {BRAND.name}
         </span>
-        {variant === "full" ? (
+        {showArabic ? (
           <span
-            className={cn(
-              "mt-0.5 font-arabic text-xs font-medium sm:text-sm",
-              arabicClass,
-            )}
+            className="mt-0.5 font-arabic text-sm font-medium text-[var(--dalily-gold)]"
             dir="rtl"
           >
             {BRAND.nameAr}
+          </span>
+        ) : null}
+        {showTagline ? (
+          <span
+            className={cn(
+              "mt-1 hidden font-sans text-[10px] font-semibold tracking-[0.16em] uppercase lg:block",
+              taglineMuted,
+            )}
+          >
+            FROM PROBLEM{" "}
+            <span className="text-[var(--dalily-gold)]">TO</span> SOLUTION
           </span>
         ) : null}
       </span>

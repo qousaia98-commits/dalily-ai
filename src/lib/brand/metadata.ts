@@ -43,7 +43,7 @@ export function buildSiteMetadata(params: {
       statusBarStyle: "black-translucent",
     },
     themeColor: [
-      { media: "(prefers-color-scheme: light)", color: BRAND.colors.white },
+      { media: "(prefers-color-scheme: light)", color: BRAND.colors.surface },
       { media: "(prefers-color-scheme: dark)", color: BRAND.colors.navy },
     ],
   };

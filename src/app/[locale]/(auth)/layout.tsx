@@ -11,7 +11,7 @@ export default async function AuthLayout({ children }: { children: React.ReactNo
     <div className="flex min-h-screen flex-col">
       <header className="flex items-center justify-between px-4 py-4 sm:px-6">
         <Link href="/" className="rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={t("brand")}>
-          <DalilyLogo variant="full" />
+          <DalilyLogo variant="horizontal" />
         </Link>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />

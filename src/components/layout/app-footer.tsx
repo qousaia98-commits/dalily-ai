@@ -5,15 +5,13 @@ import { DalilyLogo } from "@/components/brand/dalily-logo";
 
 export async function AppFooter() {
   const t = await getTranslations("footer");
-  const tCommon = await getTranslations("common");
 
   return (
     <footer className="border-t bg-muted/20">
       <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3">
-            <DalilyLogo variant="full" />
-            <p className="text-sm text-muted-foreground">{tCommon("tagline")}</p>
+            <DalilyLogo variant="horizontal" />
             <p className="text-sm text-muted-foreground">{t("description")}</p>
           </div>
 
