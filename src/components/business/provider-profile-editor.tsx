@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import Image from "next/image";
 import { Loader2, Trash2, Upload } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   updateProviderProfileAction,
   updateContactAction,
@@ -13,6 +13,7 @@ import {
   submitProviderForReviewAction,
   type ProviderActionState,
 } from "@/actions/provider.actions";
+import { LocalizedFieldInput } from "@/components/business/localized-field-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,6 +31,8 @@ import { CategorySelect } from "@/components/categories/category-select";
 import type { CategoryGroupWithLeaves } from "@/lib/categories/types";
 import { CITY_IDS } from "@/lib/constants/reference-data";
 import type { ManagedProvider } from "@/types/provider.types";
+import { getLocalizedField } from "@/types/provider.types";
+import type { Locale } from "@/lib/i18n/config";
 
 const initialState: ProviderActionState = { success: false };
 
@@ -58,6 +61,7 @@ export function ProviderProfileEditor({
   const t = useTranslations("business.profile");
   const tCities = useTranslations("auth.cities");
   const tDays = useTranslations("business.workingHours.days");
+  const locale = useLocale() as Locale;
 
   const [category, setCategory] = useState(initialCategorySlug);
   const [city, setCity] = useState(initialCitySlug);
@@ -124,24 +128,18 @@ export function ProviderProfileEditor({
             </CardHeader>
             <CardContent>
               <form action={profileAction} className="space-y-4">
+                <input type="hidden" name="locale" value={locale} />
                 <input type="hidden" name="category" value={category} />
                 <input type="hidden" name="city" value={city} />
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="nameAr">{t("nameAr")}</Label>
-                    <Input
-                      id="nameAr"
-                      name="nameAr"
-                      defaultValue={provider.name.ar}
-                      required
-                      dir="rtl"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="nameEn">{t("nameEn")}</Label>
-                    <Input id="nameEn" name="nameEn" defaultValue={provider.name.en} required />
-                  </div>
-                </div>
+                <LocalizedFieldInput
+                  id="businessName"
+                  name="businessName"
+                  label={t("name")}
+                  defaultValue={getLocalizedField(provider.name, locale)}
+                  existingAr={provider.name.ar}
+                  existingEn={provider.name.en}
+                  required
+                />
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>{t("category")}</Label>
@@ -167,27 +165,16 @@ export function ProviderProfileEditor({
                     </Select>
                   </div>
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="aboutAr">{t("aboutAr")}</Label>
-                    <Textarea
-                      id="aboutAr"
-                      name="aboutAr"
-                      rows={5}
-                      defaultValue={provider.about?.ar ?? ""}
-                      dir="rtl"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="aboutEn">{t("aboutEn")}</Label>
-                    <Textarea
-                      id="aboutEn"
-                      name="aboutEn"
-                      rows={5}
-                      defaultValue={provider.about?.en ?? ""}
-                    />
-                  </div>
-                </div>
+                <LocalizedFieldInput
+                  id="about"
+                  name="about"
+                  label={t("about")}
+                  defaultValue={getLocalizedField(provider.about, locale)}
+                  existingAr={provider.about?.ar ?? ""}
+                  existingEn={provider.about?.en ?? ""}
+                  multiline
+                  rows={5}
+                />
                 {profileState.error ? (
                   <p className="text-sm text-destructive">{resolveError(t, profileState.error)}</p>
                 ) : null}

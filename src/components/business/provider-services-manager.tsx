@@ -10,9 +10,8 @@ import {
   deleteServiceAction,
   type ProviderActionState,
 } from "@/actions/provider.actions";
+import { LocalizedFieldInput } from "@/components/business/localized-field-input";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLocalizedField, type ManagedProvider } from "@/types/provider.types";
 import type { Locale } from "@/lib/i18n/config";
@@ -29,6 +28,7 @@ function EditServiceForm({
   onSaved: () => void;
 }) {
   const t = useTranslations("business.services");
+  const locale = useLocale() as Locale;
   const [state, formAction, pending] = useActionState(updateServiceAction, initialState);
 
   useEffect(() => {
@@ -38,16 +38,17 @@ function EditServiceForm({
   return (
     <form action={formAction} className="space-y-3">
       <input type="hidden" name="serviceId" value={service.id} />
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="space-y-1">
-          <Label>{t("nameAr")}</Label>
-          <Input name="nameAr" defaultValue={service.name.ar} required dir="rtl" />
-        </div>
-        <div className="space-y-1">
-          <Label>{t("nameEn")}</Label>
-          <Input name="nameEn" defaultValue={service.name.en} required />
-        </div>
-      </div>
+      <input type="hidden" name="locale" value={locale} />
+      <LocalizedFieldInput
+        id={`edit-name-${service.id}`}
+        name="name"
+        label={t("name")}
+        defaultValue={getLocalizedField(service.name, locale)}
+        existingAr={service.name.ar}
+        existingEn={service.name.en}
+        required
+        disabled={pending}
+      />
       <div className="flex gap-2">
         <Button type="submit" size="sm" disabled={pending} className="gap-2">
           {pending ? <Loader2 className="size-4 animate-spin" /> : null}
@@ -121,17 +122,15 @@ export function ProviderServicesManager({ provider }: { provider: ManagedProvide
           </ul>
 
           <form action={addAction} className="space-y-3 border-t pt-4">
+            <input type="hidden" name="locale" value={locale} />
             <p className="text-sm font-medium">{t("addNew")}</p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="space-y-1">
-                <Label htmlFor="nameAr">{t("nameAr")}</Label>
-                <Input id="nameAr" name="nameAr" required dir="rtl" />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="nameEn">{t("nameEn")}</Label>
-                <Input id="nameEn" name="nameEn" required />
-              </div>
-            </div>
+            <LocalizedFieldInput
+              id="serviceName"
+              name="name"
+              label={t("name")}
+              required
+              disabled={addPending}
+            />
             {addState.error ? (
               <p className="text-sm text-destructive">{t(`errors.${addState.error}` as "errors.unknown")}</p>
             ) : null}

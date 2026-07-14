@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { CITY_IDS } from "@/lib/constants/reference-data";
+import { locales } from "@/lib/i18n/config";
+
+const localeField = z.enum(locales);
 
 const localizedField = z.object({
   ar: z.string().trim().min(1).max(200),
@@ -12,21 +15,19 @@ const localizedOptional = z.object({
 });
 
 export const createProviderSchema = z.object({
-  nameAr: z.string().trim().min(2).max(120),
-  nameEn: z.string().trim().min(2).max(120),
+  locale: localeField,
+  businessName: z.string().trim().min(2).max(120),
   category: z.string().trim().min(1).max(80),
   city: z.enum(Object.keys(CITY_IDS) as [string, ...string[]]),
   phone: z.string().trim().min(7).max(20),
   email: z.string().trim().email(),
-  aboutAr: z.string().trim().min(10).max(2000),
-  aboutEn: z.string().trim().min(10).max(2000),
+  about: z.string().trim().min(10).max(2000),
 });
 
 export const updateProviderProfileSchema = z.object({
-  nameAr: z.string().trim().min(2).max(120),
-  nameEn: z.string().trim().min(2).max(120),
-  aboutAr: z.string().trim().max(2000),
-  aboutEn: z.string().trim().max(2000),
+  locale: localeField,
+  businessName: z.string().trim().min(2).max(120),
+  about: z.string().trim().max(2000),
   category: z.string().trim().min(1).max(80),
   city: z.enum(Object.keys(CITY_IDS) as [string, ...string[]]),
 });
@@ -41,10 +42,9 @@ export const updateContactSchema = z.object({
 });
 
 export const serviceInputSchema = z.object({
-  nameAr: z.string().trim().min(2).max(120),
-  nameEn: z.string().trim().min(2).max(120),
-  descriptionAr: z.string().trim().max(500).optional().or(z.literal("")),
-  descriptionEn: z.string().trim().max(500).optional().or(z.literal("")),
+  locale: localeField,
+  name: z.string().trim().min(2).max(120),
+  description: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
 export const updateServiceSchema = serviceInputSchema.extend({

@@ -202,6 +202,13 @@
     }
   },
   "business": {
+    "header": {
+      "fallback": "Business Dashboard"
+    },
+    "translation": {
+      "translating": "Translating…",
+      "preview": "Dalily will also save: {text}"
+    },
     "nav": {
       "title": "Business panel",
       "menu": "Menu",
@@ -244,21 +251,20 @@
     "create": {
       "title": "Create provider profile",
       "subtitle": "Set up your business on Dalily",
-      "nameAr": "Business name (Arabic)",
-      "nameEn": "Business name (English)",
+      "name": "Business name",
+      "about": "About your business",
       "category": "Category",
       "city": "City",
       "selectCategory": "Select category",
       "selectCity": "Select city",
       "phone": "Phone number",
       "email": "Email",
-      "aboutAr": "About (Arabic)",
-      "aboutEn": "About (English)",
       "submit": "Create profile",
       "success": "Provider profile created",
       "errors": {
         "provider_exists": "You already have a provider profile",
         "create_failed": "Could not create profile. Please try again",
+        "translation_failed": "Automatic translation failed. Please try again.",
         "validation_error": "Please check all fields",
         "unknown": "Something went wrong"
       }
@@ -271,10 +277,8 @@
       "contactInfo": "Contact information",
       "media": "Images",
       "workingHours": "Working hours",
-      "nameAr": "Business name (Arabic)",
-      "nameEn": "Business name (English)",
-      "aboutAr": "About (Arabic)",
-      "aboutEn": "About (English)",
+      "name": "Business name",
+      "about": "About your business",
       "category": "Category",
       "city": "City",
       "phone": "Phone number",
@@ -299,6 +303,7 @@
       "submitted": "Submitted for review",
       "errors": {
         "validation_error": "Please check the form fields",
+        "translation_failed": "Automatic translation failed. Please try again.",
         "update_failed": "Could not save changes",
         "upload_failed": "Upload failed",
         "file_required": "Please select a file",
@@ -331,8 +336,7 @@
       "list": "Service list",
       "add": "Add service",
       "addNew": "Add new service",
-      "nameAr": "Service name (Arabic)",
-      "nameEn": "Service name (English)",
+      "name": "Service name",
       "edit": "Edit",
       "save": "Save",
       "cancel": "Cancel",
@@ -340,6 +344,8 @@
       "remove": "Remove",
       "errors": {
         "create_failed": "Could not add service",
+        "translation_failed": "Automatic translation failed. Please try again.",
+        "service_limit": "You reached your plan's service limit",
         "validation_error": "Please check the fields",
         "unknown": "Something went wrong"
       }

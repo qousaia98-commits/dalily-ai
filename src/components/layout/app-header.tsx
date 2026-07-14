@@ -9,12 +9,22 @@ import { PublicMobileNav } from "@/components/layout/public-mobile-nav";
 import { DalilyLogo } from "@/components/brand/dalily-logo";
 import { Button } from "@/components/ui/button";
 
-export async function AppHeader() {
+type AppHeaderProps = {
+  /** When set, replaces personal account name (business dashboard). */
+  businessLabel?: string | null;
+};
+
+export async function AppHeader({ businessLabel }: AppHeaderProps = {}) {
   const t = await getTranslations("common");
   const tNav = await getTranslations("nav");
   const authUser = await getAuthUser();
   const businessUser = authUser ? isBusinessUser(authUser.roles) : false;
   const platformAdmin = authUser ? isPlatformAdmin(authUser.roles) : false;
+
+  const accountLabel =
+    businessLabel !== undefined
+      ? businessLabel
+      : (authUser?.displayName ?? authUser?.email ?? null);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/95 backdrop-blur-md">
@@ -56,14 +66,16 @@ export async function AppHeader() {
           <PublicMobileNav
             isAuthenticated={Boolean(authUser)}
             isBusinessUser={businessUser}
-            displayName={authUser?.displayName ?? authUser?.email ?? null}
+            displayName={accountLabel}
           />
 
           {authUser ? (
             <>
-              <span className="hidden max-w-[8rem] truncate text-sm text-muted-foreground lg:inline">
-                {authUser.displayName ?? authUser.email}
-              </span>
+              {accountLabel ? (
+                <span className="hidden max-w-[12rem] truncate text-sm text-muted-foreground lg:inline">
+                  {accountLabel}
+                </span>
+              ) : null}
               <div className="hidden md:block">
                 <LogoutButton />
               </div>

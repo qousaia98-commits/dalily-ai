@@ -28,8 +28,10 @@ import {
   updateServiceSchema,
   workingHoursSchema,
 } from "@/lib/validations/provider";
-import { buildLocalizedField } from "@/types/provider.types";
+import { resolveLocalizedField } from "@/lib/business/resolve-localized-fields";
+import type { Locale } from "@/lib/i18n/config";
 import type { ImageKind } from "@/types/database.types";
+import { buildLocalizedField } from "@/types/provider.types";
 
 export type ProviderActionState = {
   success: boolean;
@@ -61,6 +63,18 @@ function validationError(error: { flatten: () => { fieldErrors: Record<string, s
   };
 }
 
+async function translateOrFail(
+  locale: Locale,
+  sourceText: string,
+  existing = { ar: "", en: "" },
+) {
+  try {
+    return await resolveLocalizedField(locale, sourceText, existing);
+  } catch {
+    return null;
+  }
+}
+
 export async function createProviderAction(
   _prev: ProviderActionState,
   formData: FormData,
@@ -70,14 +84,13 @@ export async function createProviderAction(
   if (existing) return { success: false, error: "provider_exists" };
 
   const parsed = createProviderSchema.safeParse({
-    nameAr: formData.get("nameAr"),
-    nameEn: formData.get("nameEn"),
+    locale: formData.get("locale"),
+    businessName: formData.get("businessName"),
     category: formData.get("category"),
     city: formData.get("city"),
     phone: formData.get("phone"),
     email: formData.get("email"),
-    aboutAr: formData.get("aboutAr"),
-    aboutEn: formData.get("aboutEn"),
+    about: formData.get("about"),
   });
 
   if (!parsed.success) return validationError(parsed.error);
@@ -86,10 +99,14 @@ export async function createProviderAction(
   const cityId = CITY_IDS[parsed.data.city];
   if (!categoryId || !cityId) return { success: false, error: "validation_error" };
 
+  const name = await translateOrFail(parsed.data.locale, parsed.data.businessName);
+  if (!name) return { success: false, error: "translation_failed" };
+
+  const about = await translateOrFail(parsed.data.locale, parsed.data.about);
+  if (!about) return { success: false, error: "translation_failed" };
+
   const supabase = await createClient();
-  const slug = generateProviderSlug(parsed.data.nameEn, authUser.id);
-  const name = buildLocalizedField(parsed.data.nameAr, parsed.data.nameEn);
-  const about = buildLocalizedField(parsed.data.aboutAr, parsed.data.aboutEn);
+  const slug = generateProviderSlug(name.en || parsed.data.businessName, authUser.id);
 
   const completeness = calculateProfileCompleteness({
     name,
@@ -145,10 +162,9 @@ export async function updateProviderProfileAction(
   const provider = await requireOwnedProvider(authUser.id);
 
   const parsed = updateProviderProfileSchema.safeParse({
-    nameAr: formData.get("nameAr"),
-    nameEn: formData.get("nameEn"),
-    aboutAr: formData.get("aboutAr"),
-    aboutEn: formData.get("aboutEn"),
+    locale: formData.get("locale"),
+    businessName: formData.get("businessName"),
+    about: formData.get("about"),
     category: formData.get("category"),
     city: formData.get("city"),
   });
@@ -159,8 +175,15 @@ export async function updateProviderProfileAction(
   const cityId = CITY_IDS[parsed.data.city];
   if (!categoryId || !cityId) return { success: false, error: "validation_error" };
 
-  const name = buildLocalizedField(parsed.data.nameAr, parsed.data.nameEn);
-  const about = buildLocalizedField(parsed.data.aboutAr, parsed.data.aboutEn);
+  const name = await translateOrFail(parsed.data.locale, parsed.data.businessName, provider.name);
+  if (!name) return { success: false, error: "translation_failed" };
+
+  const about = await translateOrFail(
+    parsed.data.locale,
+    parsed.data.about,
+    provider.about ?? { ar: "", en: "" },
+  );
+  if (!about) return { success: false, error: "translation_failed" };
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -277,10 +300,9 @@ export async function addServiceAction(
   const provider = await requireOwnedProvider(authUser.id);
 
   const parsed = serviceInputSchema.safeParse({
-    nameAr: formData.get("nameAr"),
-    nameEn: formData.get("nameEn"),
-    descriptionAr: formData.get("descriptionAr"),
-    descriptionEn: formData.get("descriptionEn"),
+    locale: formData.get("locale"),
+    name: formData.get("name"),
+    description: formData.get("description"),
   });
 
   if (!parsed.success) return validationError(parsed.error);
@@ -290,16 +312,24 @@ export async function addServiceAction(
     return { success: false, error: "service_limit" };
   }
 
+  const name = await translateOrFail(parsed.data.locale, parsed.data.name);
+  if (!name) return { success: false, error: "translation_failed" };
+
+  const description =
+    parsed.data.description && parsed.data.description.trim()
+      ? await translateOrFail(parsed.data.locale, parsed.data.description)
+      : null;
+  if (parsed.data.description && parsed.data.description.trim() && !description) {
+    return { success: false, error: "translation_failed" };
+  }
+
   const supabase = await createClient();
   const sortOrder = provider.services.length;
 
   const { error } = await supabase.from("provider_services").insert({
     provider_id: provider.id,
-    name: buildLocalizedField(parsed.data.nameAr, parsed.data.nameEn),
-    description:
-      parsed.data.descriptionAr || parsed.data.descriptionEn
-        ? buildLocalizedField(parsed.data.descriptionAr ?? "", parsed.data.descriptionEn ?? "")
-        : null,
+    name,
+    description,
     sort_order: sortOrder,
   });
 
@@ -319,23 +349,37 @@ export async function updateServiceAction(
 
   const parsed = updateServiceSchema.safeParse({
     serviceId: formData.get("serviceId"),
-    nameAr: formData.get("nameAr"),
-    nameEn: formData.get("nameEn"),
-    descriptionAr: formData.get("descriptionAr"),
-    descriptionEn: formData.get("descriptionEn"),
+    locale: formData.get("locale"),
+    name: formData.get("name"),
+    description: formData.get("description"),
   });
 
   if (!parsed.success) return validationError(parsed.error);
+
+  const existingService = provider.services.find((service) => service.id === parsed.data.serviceId);
+  if (!existingService) return { success: false, error: "not_found" };
+
+  const name = await translateOrFail(parsed.data.locale, parsed.data.name, existingService.name);
+  if (!name) return { success: false, error: "translation_failed" };
+
+  const description =
+    parsed.data.description && parsed.data.description.trim()
+      ? await translateOrFail(
+          parsed.data.locale,
+          parsed.data.description,
+          existingService.description ?? { ar: "", en: "" },
+        )
+      : null;
+  if (parsed.data.description && parsed.data.description.trim() && !description) {
+    return { success: false, error: "translation_failed" };
+  }
 
   const supabase = await createClient();
   const { error } = await supabase
     .from("provider_services")
     .update({
-      name: buildLocalizedField(parsed.data.nameAr, parsed.data.nameEn),
-      description:
-        parsed.data.descriptionAr || parsed.data.descriptionEn
-          ? buildLocalizedField(parsed.data.descriptionAr ?? "", parsed.data.descriptionEn ?? "")
-          : null,
+      name,
+      description,
     })
     .eq("id", parsed.data.serviceId)
     .eq("provider_id", provider.id);

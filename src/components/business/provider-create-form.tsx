@@ -2,12 +2,12 @@
 
 import { useActionState, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { createProviderAction, type ProviderActionState } from "@/actions/provider.actions";
+import { LocalizedFieldInput } from "@/components/business/localized-field-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -19,6 +19,7 @@ import {
 import { CategorySelect } from "@/components/categories/category-select";
 import type { CategoryGroupWithLeaves } from "@/lib/categories/types";
 import { CITY_IDS } from "@/lib/constants/reference-data";
+import type { Locale } from "@/lib/i18n/config";
 
 const initialState: ProviderActionState = { success: false };
 
@@ -29,6 +30,7 @@ type ProviderCreateFormProps = {
 export function ProviderCreateForm({ categoryGroups }: ProviderCreateFormProps) {
   const t = useTranslations("business.create");
   const tCities = useTranslations("auth.cities");
+  const locale = useLocale() as Locale;
   const [category, setCategory] = useState("");
   const [city, setCity] = useState("");
   const [state, formAction, isPending] = useActionState(createProviderAction, initialState);
@@ -41,18 +43,16 @@ export function ProviderCreateForm({ categoryGroups }: ProviderCreateFormProps) 
       </CardHeader>
       <CardContent>
         <form action={formAction} className="space-y-4">
+          <input type="hidden" name="locale" value={locale} />
           <input type="hidden" name="category" value={category} />
           <input type="hidden" name="city" value={city} />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="nameAr">{t("nameAr")}</Label>
-              <Input id="nameAr" name="nameAr" required dir="rtl" disabled={isPending} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="nameEn">{t("nameEn")}</Label>
-              <Input id="nameEn" name="nameEn" required disabled={isPending} />
-            </div>
-          </div>
+          <LocalizedFieldInput
+            id="businessName"
+            name="businessName"
+            label={t("name")}
+            required
+            disabled={isPending}
+          />
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>{t("category")}</Label>
@@ -90,16 +90,15 @@ export function ProviderCreateForm({ categoryGroups }: ProviderCreateFormProps) 
               <Input id="email" name="email" type="email" required disabled={isPending} />
             </div>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="aboutAr">{t("aboutAr")}</Label>
-              <Textarea id="aboutAr" name="aboutAr" rows={4} required dir="rtl" disabled={isPending} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="aboutEn">{t("aboutEn")}</Label>
-              <Textarea id="aboutEn" name="aboutEn" rows={4} required disabled={isPending} />
-            </div>
-          </div>
+          <LocalizedFieldInput
+            id="about"
+            name="about"
+            label={t("about")}
+            multiline
+            rows={4}
+            required
+            disabled={isPending}
+          />
           {state.error ? (
             <p className="text-sm text-destructive">{t(`errors.${state.error}` as "errors.unknown")}</p>
           ) : null}

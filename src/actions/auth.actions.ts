@@ -10,7 +10,8 @@ import {
   registerSchema,
   registerBusinessSchema,
 } from "@/lib/validations/auth";
-import { generateProviderSlug, localizedName, mapAuthErrorCode } from "@/lib/auth/utils";
+import { generateProviderSlug, mapAuthErrorCode } from "@/lib/auth/utils";
+import { resolveLocalizedField } from "@/lib/business/resolve-localized-fields";
 import { resolveAuthUserAfterSignUp } from "@/lib/auth/resolve-signup-user";
 import { getPostLoginPath } from "@/lib/auth/roles";
 import { resolveCategorySlugToId } from "@/lib/categories/queries";
@@ -421,14 +422,25 @@ export async function registerBusinessAction(
   if (existingProvider) {
     logRegisterStep("create provider", true, { note: "already exists", providerId: existingProvider.id });
   } else {
-    const slug = generateProviderSlug(parsed.data.businessName, authUserId);
-    const about = localizedName(parsed.data.about);
+    let providerName;
+    let providerAbout;
+
+    try {
+      providerName = await resolveLocalizedField(parsed.data.locale, parsed.data.businessName);
+      providerAbout = parsed.data.about
+        ? await resolveLocalizedField(parsed.data.locale, parsed.data.about)
+        : { ar: "", en: "" };
+    } catch (error) {
+      return registerBusinessCaughtFailure(error);
+    }
+
+    const slug = generateProviderSlug(providerName.en || parsed.data.businessName, authUserId);
 
     const { error: providerError } = await admin.from("providers").insert({
       owner_id: authUserId,
       slug,
-      name: localizedName(parsed.data.businessName),
-      about,
+      name: providerName,
+      about: providerAbout,
       module_id: MODULE_SERVICES_ID,
       category_id: categoryId,
       city_id: cityId,
@@ -455,6 +467,7 @@ export async function registerBusinessAction(
   logRegisterStep("success", true);
 
   revalidatePath("/", "layout");
+  revalidatePath("/business", "layout");
 
   if (!hasSession) {
     return {
