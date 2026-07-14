@@ -11,6 +11,7 @@ import {
   registerBusinessSchema,
 } from "@/lib/validations/auth";
 import { generateProviderSlug, localizedName, mapAuthErrorCode } from "@/lib/auth/utils";
+import { resolveAuthUserAfterSignUp } from "@/lib/auth/resolve-signup-user";
 import { getPostLoginPath } from "@/lib/auth/roles";
 import { resolveCategorySlugToId } from "@/lib/categories/queries";
 import { CITY_IDS, MODULE_SERVICES_ID } from "@/lib/constants/reference-data";
@@ -372,14 +373,34 @@ export async function registerBusinessAction(
     return { success: false, error: "Auth signUp returned no user" };
   }
 
-  logRegisterStep("signUp", true, { userId: data.user.id });
-
-  const hasSession = Boolean(data.session);
   const admin = createAdminClient();
+
+  const resolved = await resolveAuthUserAfterSignUp({
+    supabase,
+    admin,
+    signUpUser: data.user,
+    signUpSession: data.session,
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+
+  if (!resolved.ok) {
+    logRegisterStep("signUp", false, { message: resolved.error });
+    return { success: false, error: resolved.error };
+  }
+
+  const authUserId = resolved.userId;
+  const hasSession = resolved.hasSession;
+
+  console.log("[registerBusinessAction] INSERT will use user id", {
+    authUserId,
+    resumed: resolved.resumed,
+    authUsersVerified: true,
+  });
 
   try {
     await bootstrapUserAfterSignUp({
-      userId: data.user.id,
+      userId: authUserId,
       email: parsed.data.email,
       displayName: parsed.data.businessName,
       role: "business",
@@ -393,18 +414,18 @@ export async function registerBusinessAction(
   const { data: existingProvider } = await admin
     .from("providers")
     .select("id")
-    .eq("owner_id", data.user.id)
+    .eq("owner_id", authUserId)
     .is("deleted_at", null)
     .maybeSingle();
 
   if (existingProvider) {
     logRegisterStep("create provider", true, { note: "already exists", providerId: existingProvider.id });
   } else {
-    const slug = generateProviderSlug(parsed.data.businessName, data.user.id);
+    const slug = generateProviderSlug(parsed.data.businessName, authUserId);
     const about = localizedName(parsed.data.about);
 
     const { error: providerError } = await admin.from("providers").insert({
-      owner_id: data.user.id,
+      owner_id: authUserId,
       slug,
       name: localizedName(parsed.data.businessName),
       about,
@@ -417,8 +438,8 @@ export async function registerBusinessAction(
       status: "draft",
       verification_status: "unverified",
       profile_completeness: 40,
-      created_by: data.user.id,
-      updated_by: data.user.id,
+      created_by: authUserId,
+      updated_by: authUserId,
       metadata: {
         services_text: parsed.data.services ?? "",
       },
