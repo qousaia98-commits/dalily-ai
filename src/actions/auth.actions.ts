@@ -14,15 +14,48 @@ import { generateProviderSlug, localizedName, mapAuthErrorCode } from "@/lib/aut
 import { getPostLoginPath } from "@/lib/auth/roles";
 import { resolveCategorySlugToId } from "@/lib/categories/queries";
 import { CITY_IDS, MODULE_SERVICES_ID } from "@/lib/constants/reference-data";
+import {
+  exposeValidationIssues,
+  issuesToFieldErrors,
+  zodIssues,
+  type ValidationIssue,
+} from "@/lib/validations/format-issues";
 import type { AppRole } from "@/types/database.types";
+import {
+  isDuplicateKeyError,
+  logRegisterStep,
+  postgresErrorDetails,
+  stepFailureIssue,
+} from "@/lib/db/postgres-error";
 
 export type AuthActionState = {
   success: boolean;
   error?: string;
   fieldErrors?: Record<string, string[]>;
+  /** Detailed Zod / lookup / DB issues — included in development only */
+  issues?: ValidationIssue[];
+  /** Failed pipeline step (development) */
+  failedStep?: string;
   message?: string;
   redirectTo?: string;
 };
+
+class RegisterStepError extends Error {
+  readonly step: string;
+  readonly code?: string;
+  readonly details?: string;
+  readonly hint?: string;
+
+  constructor(step: string, cause: unknown) {
+    const details = postgresErrorDetails(cause);
+    super(details.message);
+    this.name = "RegisterStepError";
+    this.step = step;
+    this.code = details.code;
+    this.details = details.details;
+    this.hint = details.hint;
+  }
+}
 
 async function createUserRecords(params: {
   userId: string;
@@ -31,7 +64,7 @@ async function createUserRecords(params: {
   role: AppRole;
   locale: string;
   emailVerified: boolean;
-}) {
+}): Promise<void> {
   const client = createAdminClient();
 
   const { error: userError } = await client.from("users").insert({
@@ -41,21 +74,62 @@ async function createUserRecords(params: {
     email_verified_at: params.emailVerified ? new Date().toISOString() : null,
   });
 
-  if (userError) throw userError;
+  if (userError && !isDuplicateKeyError(userError)) throw new RegisterStepError("create user", userError);
+  logRegisterStep(
+    "create user",
+    true,
+    userError && isDuplicateKeyError(userError) ? { note: "already exists" } : undefined,
+  );
 
   const { error: profileError } = await client.from("profiles").insert({
     user_id: params.userId,
     display_name: params.displayName,
   });
 
-  if (profileError) throw profileError;
+  if (profileError && !isDuplicateKeyError(profileError)) {
+    throw new RegisterStepError("create profile", profileError);
+  }
+  logRegisterStep(
+    "create profile",
+    true,
+    profileError && isDuplicateKeyError(profileError) ? { note: "already exists" } : undefined,
+  );
 
   const { error: roleError } = await client.from("user_roles").insert({
     user_id: params.userId,
     role: params.role,
   });
 
-  if (roleError) throw roleError;
+  if (roleError && !isDuplicateKeyError(roleError)) throw new RegisterStepError("create role", roleError);
+  logRegisterStep(
+    "create role",
+    true,
+    roleError && isDuplicateKeyError(roleError) ? { note: "already exists" } : undefined,
+  );
+}
+
+function registerBusinessStepFailure(step: string, error: unknown): AuthActionState {
+  const details = postgresErrorDetails(error);
+  const issue = stepFailureIssue(step, error);
+
+  logRegisterStep(step, false, details);
+
+  return exposeValidationIssues(
+    {
+      success: false,
+      error: details.message,
+      failedStep: step,
+      fieldErrors: { [step]: [details.message] },
+    },
+    [issue],
+  );
+}
+
+function registerBusinessCaughtFailure(error: unknown): AuthActionState {
+  if (error instanceof RegisterStepError) {
+    return registerBusinessStepFailure(error.step, error);
+  }
+  return registerBusinessStepFailure("unknown", error);
 }
 
 /** Post-signUp bootstrap — always uses service role (RLS-safe in server actions). */
@@ -219,21 +293,60 @@ export async function registerBusinessAction(
   });
 
   if (!parsed.success) {
+    const issues = zodIssues(parsed.error);
     const fieldErrors = parsed.error.flatten().fieldErrors as Record<string, string[]>;
     const formErrors = parsed.error.flatten().formErrors;
 
-    return {
-      success: false,
+    console.error("[registerBusinessAction] schema validation failed", {
+      issues,
       fieldErrors,
-      error: formErrors[0] === "password_mismatch" ? "password_mismatch" : "validation_error",
-    };
+      formErrors,
+    });
+
+    return exposeValidationIssues(
+      {
+        success: false,
+        fieldErrors,
+        error: formErrors[0] === "password_mismatch" ? "password_mismatch" : "validation_error",
+      },
+      issues,
+    );
   }
 
   const categoryId = await resolveCategorySlugToId(parsed.data.category);
   const cityId = CITY_IDS[parsed.data.city];
 
   if (!categoryId || !cityId) {
-    return { success: false, error: "validation_error" };
+    const issues: ValidationIssue[] = [];
+    if (!categoryId) {
+      issues.push({
+        field: "category",
+        code: "not_found",
+        message: `Category slug "${parsed.data.category}" not found or inactive in database`,
+      });
+    }
+    if (!cityId) {
+      issues.push({
+        field: "city",
+        code: "not_found",
+        message: `City slug "${parsed.data.city}" not found`,
+      });
+    }
+
+    console.error("[registerBusinessAction] reference lookup failed", {
+      issues,
+      category: parsed.data.category,
+      city: parsed.data.city,
+    });
+
+    return exposeValidationIssues(
+      {
+        success: false,
+        error: "validation_error",
+        fieldErrors: issuesToFieldErrors(issues),
+      },
+      issues,
+    );
   }
 
   const supabase = await createClient();
@@ -250,12 +363,16 @@ export async function registerBusinessAction(
   });
 
   if (error) {
-    return { success: false, error: mapAuthErrorCode(error.message) };
+    logRegisterStep("signUp", false, { message: error.message });
+    return { success: false, error: error.message };
   }
 
   if (!data.user) {
-    return { success: false, error: "unknown" };
+    logRegisterStep("signUp", false, { message: "no user returned" });
+    return { success: false, error: "Auth signUp returned no user" };
   }
+
+  logRegisterStep("signUp", true, { userId: data.user.id });
 
   const hasSession = Boolean(data.session);
   const admin = createAdminClient();
@@ -269,7 +386,20 @@ export async function registerBusinessAction(
       locale: parsed.data.locale,
       hasSession,
     });
+  } catch (error) {
+    return registerBusinessCaughtFailure(error);
+  }
 
+  const { data: existingProvider } = await admin
+    .from("providers")
+    .select("id")
+    .eq("owner_id", data.user.id)
+    .is("deleted_at", null)
+    .maybeSingle();
+
+  if (existingProvider) {
+    logRegisterStep("create provider", true, { note: "already exists", providerId: existingProvider.id });
+  } else {
     const slug = generateProviderSlug(parsed.data.businessName, data.user.id);
     const about = localizedName(parsed.data.about);
 
@@ -294,10 +424,14 @@ export async function registerBusinessAction(
       },
     });
 
-    if (providerError) throw providerError;
-  } catch {
-    return { success: false, error: "profile_creation_failed" };
+    if (providerError) {
+      return registerBusinessStepFailure("create provider", providerError);
+    }
+
+    logRegisterStep("create provider", true);
   }
+
+  logRegisterStep("success", true);
 
   revalidatePath("/", "layout");
 

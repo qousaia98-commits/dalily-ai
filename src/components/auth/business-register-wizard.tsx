@@ -29,8 +29,17 @@ const initialState: AuthActionState = { success: false };
 
 const CITY_SLUGS = Object.keys(CITY_IDS) as string[];
 
+const KNOWN_BUSINESS_ERRORS = new Set([
+  "validation_error",
+  "password_mismatch",
+  "email_taken",
+  "weak_password",
+  "unknown",
+]);
+
 function resolveError(t: ReturnType<typeof useTranslations>, code?: string): string | null {
   if (!code) return null;
+  if (!KNOWN_BUSINESS_ERRORS.has(code)) return code;
   const key = `errors.${code}` as "errors.unknown";
   try {
     return t(key);
@@ -284,6 +293,29 @@ export function BusinessRegisterWizard({
             <p className="text-sm text-destructive" role="alert">
               {errorMessage}
             </p>
+          ) : null}
+
+          {state.failedStep ? (
+            <p className="text-xs text-destructive/80">Failed step: {state.failedStep}</p>
+          ) : null}
+
+          {state.issues && state.issues.length > 0 ? (
+            <div
+              className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-xs text-destructive"
+              role="alert"
+            >
+              <p className="mb-2 font-medium">Validation issues (development)</p>
+              <ul className="space-y-1">
+                {state.issues.map((issue) => (
+                  <li key={`${issue.field}-${issue.code}`}>
+                    <span className="font-mono">{issue.field}</span>
+                    {" → "}
+                    {issue.message}
+                    <span className="text-destructive/70"> ({issue.code})</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ) : null}
 
           <div className="flex justify-between gap-3 pt-4">
