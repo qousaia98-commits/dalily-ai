@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/lib/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,8 +21,13 @@ type SearchFormProps = {
 export function SearchForm({ defaultQuery = "", className, size = "default" }: SearchFormProps) {
   const t = useTranslations("search");
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [query, setQuery] = useState(defaultQuery);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setQuery(defaultQuery);
+  }, [defaultQuery]);
 
   const isCompact = size === "compact";
 
@@ -41,7 +47,9 @@ export function SearchForm({ defaultQuery = "", className, size = "default" }: S
     }
 
     setError(null);
-    router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("q", trimmed);
+    router.push(`/search?${params.toString()}`);
   };
 
   return (

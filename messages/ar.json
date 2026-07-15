@@ -89,7 +89,13 @@
       "medical_need": "حاجة طبية",
       "legal_need": "حاجة قانونية",
       "vehicle_repair": "إصلاح مركبة",
-      "cleaning_need": "تنظيف"
+      "cleaning_need": "تنظيف",
+      "dental_need": "رعاية أسنان",
+      "pharmacy_need": "صيدلية",
+      "tutoring_need": "دروس خصوصية",
+      "restaurant_need": "مطعم",
+      "it_support_need": "دعم تقني",
+      "photography_need": "تصوير"
     },
     "topResults": "أفضل {count} نتائج",
     "error": {
@@ -235,6 +241,14 @@
       "pendingNote": "ملفك قيد المراجعة. سنُعلمك عند الموافقة.",
       "activeNote": "ملفك منشور ومرئي للعملاء."
     },
+    "verificationStatus": {
+      "unverified": "غير موثق",
+      "pending": "قيد المراجعة",
+      "partially_verified": "موثق جزئياً",
+      "verified": "موثق",
+      "rejected": "مرفوض",
+      "expired": "منتهي"
+    },
     "stats": {
       "profileViews": "مشاهدات الملف",
       "searchAppearances": "ظهور في البحث",
@@ -364,7 +378,7 @@
         "file_required": "يرجى اختيار ملف",
         "file_too_large": "الملف كبير جداً (الحد 5 ميجابايت)",
         "invalid_file_type": "نوع ملف غير مدعوم",
-        "gallery_limit": "الحد الأقصى 12 صورة",
+        "gallery_limit": "وصلت إلى حد صور المعرض في خطتك",
         "delete_failed": "تعذر حذف الصورة",
         "not_found": "الصورة غير موجودة",
         "unknown": "حدث خطأ"
@@ -732,6 +746,7 @@
       "errors": {
         "required": "يرجى إدخال البريد وكلمة المرور",
         "invalid_credentials": "بيانات الدخول غير صحيحة",
+        "account_disabled": "تم تعطيل هذا الحساب. تواصل مع الدعم إذا كنت تعتقد أن هذا خطأ.",
         "email_not_confirmed": "يرجى تأكيد بريدك الإلكتروني أولاً",
         "validation_error": "يرجى التحقق من الحقول",
         "unknown": "حدث خطأ. يرجى المحاولة مرة أخرى"

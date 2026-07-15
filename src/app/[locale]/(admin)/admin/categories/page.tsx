@@ -1,8 +1,10 @@
 import { getTranslations } from "next-intl/server";
+import { requireAdminUser } from "@/lib/auth/session";
 import { AdminCategoryManager } from "@/components/admin/admin-category-manager";
 import { getAllCategoriesForAdmin } from "@/lib/categories/queries";
 
 export default async function AdminCategoriesPage() {
+  await requireAdminUser();
   const t = await getTranslations("admin.categories");
   const categories = await getAllCategoriesForAdmin();
 

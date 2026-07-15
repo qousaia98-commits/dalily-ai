@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
+import { redirect } from "@/lib/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
@@ -119,8 +119,9 @@ function registerBusinessStepFailure(step: string, error: unknown): AuthActionSt
   return exposeValidationIssues(
     {
       success: false,
-      error: details.message,
-      failedStep: step,
+      error:
+        process.env.NODE_ENV === "development" ? details.message : "profile_creation_failed",
+      failedStep: process.env.NODE_ENV === "development" ? step : undefined,
       fieldErrors: { [step]: [details.message] },
     },
     [issue],
@@ -188,6 +189,17 @@ export async function loginAction(
     return { success: false, error: "unknown" };
   }
 
+  const { data: userRow } = await supabase
+    .from("users")
+    .select("status")
+    .eq("id", data.user.id)
+    .maybeSingle();
+
+  if (userRow?.status === "suspended" || userRow?.status === "banned") {
+    await supabase.auth.signOut();
+    return { success: false, error: "account_disabled" };
+  }
+
   await supabase
     .from("users")
     .update({ last_login_at: new Date().toISOString() })
@@ -201,9 +213,11 @@ export async function loginAction(
 
   const roles = (rolesResult.data ?? []).map((r) => r.role as AppRole);
   const redirectTo = getPostLoginPath(roles);
+  const locale = await getLocale();
 
   revalidatePath("/", "layout");
-  redirect(redirectTo);
+  redirect({ href: redirectTo, locale });
+  return { success: true };
 }
 
 export async function registerAction(
@@ -248,18 +262,39 @@ export async function registerAction(
     return { success: false, error: "unknown" };
   }
 
-  const hasSession = Boolean(data.session);
+  const admin = createAdminClient();
+  const resolved = await resolveAuthUserAfterSignUp({
+    supabase,
+    admin,
+    signUpUser: data.user,
+    signUpSession: data.session,
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+
+  if (!resolved.ok) {
+    return { success: false, error: mapAuthErrorCode(resolved.error) };
+  }
+
+  const authUserId = resolved.userId;
+  const hasSession = resolved.hasSession;
 
   try {
     await bootstrapUserAfterSignUp({
-      userId: data.user.id,
+      userId: authUserId,
       email: parsed.data.email,
       displayName: parsed.data.name,
       role: "user",
       locale: parsed.data.locale,
       hasSession,
     });
-  } catch {
+  } catch (error) {
+    if (error instanceof RegisterStepError) {
+      return {
+        success: false,
+        error: "profile_creation_failed",
+      };
+    }
     return { success: false, error: "profile_creation_failed" };
   }
 
@@ -272,7 +307,8 @@ export async function registerAction(
     };
   }
 
-  redirect("/");
+  redirect({ href: "/", locale: parsed.data.locale as "ar" | "en" });
+  return { success: true };
 }
 
 export async function registerBusinessAction(
@@ -366,7 +402,7 @@ export async function registerBusinessAction(
 
   if (error) {
     logRegisterStep("signUp", false, { message: error.message });
-    return { success: false, error: error.message };
+    return { success: false, error: mapAuthErrorCode(error.message) };
   }
 
   if (!data.user) {
@@ -422,19 +458,19 @@ export async function registerBusinessAction(
   if (existingProvider) {
     logRegisterStep("create provider", true, { note: "already exists", providerId: existingProvider.id });
   } else {
-    let providerName;
-    let providerAbout;
+    // Translation is optional — never block registration if AI is down.
+    const providerName = await resolveLocalizedField(
+      parsed.data.locale,
+      parsed.data.businessName,
+    );
+    const providerAbout = parsed.data.about
+      ? await resolveLocalizedField(parsed.data.locale, parsed.data.about)
+      : { ar: "", en: "" };
 
-    try {
-      providerName = await resolveLocalizedField(parsed.data.locale, parsed.data.businessName);
-      providerAbout = parsed.data.about
-        ? await resolveLocalizedField(parsed.data.locale, parsed.data.about)
-        : { ar: "", en: "" };
-    } catch (error) {
-      return registerBusinessCaughtFailure(error);
-    }
-
-    const slug = generateProviderSlug(providerName.en || parsed.data.businessName, authUserId);
+    const slug = generateProviderSlug(
+      providerName.en || providerName.ar || parsed.data.businessName,
+      authUserId,
+    );
 
     const { error: providerError } = await admin.from("providers").insert({
       owner_id: authUserId,
@@ -476,7 +512,8 @@ export async function registerBusinessAction(
     };
   }
 
-  redirect("/business");
+  redirect({ href: "/business", locale: parsed.data.locale as "ar" | "en" });
+  return { success: true };
 }
 
 export async function logoutAction(): Promise<void> {
@@ -485,5 +522,5 @@ export async function logoutAction(): Promise<void> {
   revalidatePath("/", "layout");
 
   const locale = await getLocale();
-  redirect(locale === "ar" ? "/" : "/en");
+  redirect({ href: "/", locale });
 }

@@ -39,8 +39,9 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
       ? searchParams.group
       : undefined;
   const city = searchParams.city && searchParams.city !== "all" ? searchParams.city : undefined;
+  const verifiedOnly = searchParams.verified === "true";
 
-  const hasSearch = Boolean(query || category || group || city);
+  const hasSearch = Boolean(query || category || group || city || verifiedOnly);
 
   if (!hasSearch) {
     return (
@@ -84,10 +85,16 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
   }
 
   if (results.length === 0) {
+    const emptyLabel =
+      displayQuery ||
+      (verifiedOnly ? t("filters.verifiedOnly") : "") ||
+      (city ? city : "") ||
+      undefined;
+
     return (
       <>
         <SearchInsight query={query} problemId={parsed.problemId} citySlug={parsed.citySlug} />
-        <SearchEmptyState query={displayQuery || t("empty.queryLabel")} />
+        <SearchEmptyState query={emptyLabel} />
       </>
     );
   }

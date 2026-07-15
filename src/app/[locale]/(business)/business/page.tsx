@@ -10,6 +10,7 @@ import { ArrowRight } from "lucide-react";
 
 export default async function BusinessDashboardPage() {
   const t = await getTranslations("business.dashboard");
+  const tVerification = await getTranslations("business.dashboard.verificationStatus");
   const authUser = await requireAuthUser();
   const provider = await getOwnedProvider(authUser.id);
 
@@ -49,6 +50,11 @@ export default async function BusinessDashboardPage() {
               <div
                 className="h-full rounded-full bg-primary transition-all"
                 style={{ width: `${provider.profileCompleteness}%` }}
+                role="progressbar"
+                aria-valuenow={provider.profileCompleteness}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={t("completion")}
               />
             </div>
             <Button asChild variant="outline" className="gap-2">
@@ -75,7 +81,9 @@ export default async function BusinessDashboardPage() {
             </div>
             <div className="flex justify-between gap-4">
               <span className="text-muted-foreground">{t("verification")}</span>
-              <span className="font-medium">{provider.verificationStatus}</span>
+              <span className="font-medium">
+                {tVerification(provider.verificationStatus)}
+              </span>
             </div>
             {provider.status === "draft" ? (
               <p className="text-muted-foreground">{t("draftNote")}</p>

@@ -2,7 +2,7 @@
 
 import { AlertCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/routing";
 import { Button } from "@/components/ui/button";
 
 type SearchErrorStateProps = {

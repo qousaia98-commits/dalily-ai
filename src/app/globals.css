@@ -139,6 +139,17 @@
   .stagger-2 { animation-delay: 0.2s; }
   .stagger-3 { animation-delay: 0.3s; }
   .stagger-4 { animation-delay: 0.4s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in-up,
+    .animate-fade-in,
+    .animate-mobile-backdrop-in,
+    .animate-mobile-backdrop-out,
+    .animate-mobile-drawer-in,
+    .animate-mobile-drawer-out {
+      animation: none !important;
+    }
+  }
 }
 
 @keyframes fade-in-up {

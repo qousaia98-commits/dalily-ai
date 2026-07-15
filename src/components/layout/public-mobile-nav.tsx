@@ -328,7 +328,7 @@ export function PublicMobileNav({
         aria-label={open ? tNav("closeMenu") : tNav("openMenu")}
         onClick={() => (open ? closeMenu() : openMenu())}
       >
-        <Menu className="size-5" />
+        {open ? <X className="size-5" /> : <Menu className="size-5" />}
       </Button>
 
       {portalRoot && drawer ? createPortal(drawer, portalRoot) : null}

@@ -89,7 +89,13 @@
       "medical_need": "Medical need",
       "legal_need": "Legal need",
       "vehicle_repair": "Vehicle repair",
-      "cleaning_need": "Cleaning"
+      "cleaning_need": "Cleaning",
+      "dental_need": "Dental care",
+      "pharmacy_need": "Pharmacy",
+      "tutoring_need": "Tutoring",
+      "restaurant_need": "Restaurant",
+      "it_support_need": "IT support",
+      "photography_need": "Photography"
     },
     "topResults": "Top {count} matches",
     "error": {
@@ -235,6 +241,14 @@
       "pendingNote": "Your profile is under review. We'll notify you when it's approved.",
       "activeNote": "Your profile is live and visible to customers."
     },
+    "verificationStatus": {
+      "unverified": "Not verified",
+      "pending": "Pending",
+      "partially_verified": "Partially verified",
+      "verified": "Verified",
+      "rejected": "Rejected",
+      "expired": "Expired"
+    },
     "stats": {
       "profileViews": "Profile views",
       "searchAppearances": "Search appearances",
@@ -364,7 +378,7 @@
         "file_required": "Please select a file",
         "file_too_large": "File is too large (max 5 MB)",
         "invalid_file_type": "Invalid file type",
-        "gallery_limit": "Maximum 12 gallery images",
+        "gallery_limit": "Gallery image limit reached for your plan",
         "delete_failed": "Could not remove image",
         "not_found": "Image not found",
         "unknown": "Something went wrong"
@@ -732,6 +746,7 @@
       "errors": {
         "required": "Please enter your email and password",
         "invalid_credentials": "Invalid email or password",
+        "account_disabled": "This account has been disabled. Contact support if you believe this is a mistake.",
         "email_not_confirmed": "Please confirm your email first",
         "validation_error": "Please check the form fields",
         "unknown": "Something went wrong. Please try again"

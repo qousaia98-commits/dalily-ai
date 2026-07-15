@@ -295,7 +295,7 @@ export function BusinessRegisterWizard({
             </p>
           ) : null}
 
-          {state.failedStep ? (
+          {state.failedStep && process.env.NODE_ENV === "development" ? (
             <p className="text-xs text-destructive/80">Failed step: {state.failedStep}</p>
           ) : null}
 

@@ -2,7 +2,7 @@ import { SearchX } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 type SearchEmptyStateProps = {
-  query: string;
+  query?: string;
 };
 
 export async function SearchEmptyState({ query }: SearchEmptyStateProps) {
@@ -16,9 +16,11 @@ export async function SearchEmptyState({ query }: SearchEmptyStateProps) {
       <div className="space-y-2">
         <h2 className="text-lg font-semibold">{t("empty.title")}</h2>
         <p className="max-w-md text-sm text-muted-foreground">{t("empty.description")}</p>
-        <p className="text-sm font-medium text-foreground">
-          {t("empty.queryLabel")}: <span className="text-primary">&ldquo;{query}&rdquo;</span>
-        </p>
+        {query ? (
+          <p className="text-sm font-medium text-foreground">
+            {t("empty.queryLabel")}: <span className="text-primary">&ldquo;{query}&rdquo;</span>
+          </p>
+        ) : null}
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireAuthUser } from "@/lib/auth/session";
+import { getAuthUser } from "@/lib/auth/session";
+import { isBusinessUser } from "@/lib/auth/roles";
 import { generateProviderSlug } from "@/lib/auth/utils";
 import { createClient } from "@/lib/supabase/server";
 import { resolveCategorySlugToId } from "@/lib/categories/queries";
@@ -44,6 +45,17 @@ async function revalidateBusiness() {
   revalidatePath("/business", "layout");
 }
 
+async function requireBusinessOwner() {
+  const authUser = await getAuthUser();
+  if (!authUser) {
+    return { authUser: null, error: "forbidden" as const };
+  }
+  if (!isBusinessUser(authUser.roles)) {
+    return { authUser: null, error: "forbidden" as const };
+  }
+  return { authUser, error: null };
+}
+
 async function syncProfileCompleteness(userId: string) {
   const provider = await requireOwnedProvider(userId);
   const completeness = completenessFromProvider(provider);
@@ -63,23 +75,22 @@ function validationError(error: { flatten: () => { fieldErrors: Record<string, s
   };
 }
 
-async function translateOrFail(
+/** Translation is best-effort; never fails the enclosing business action. */
+async function translateOptional(
   locale: Locale,
   sourceText: string,
   existing = { ar: "", en: "" },
 ) {
-  try {
-    return await resolveLocalizedField(locale, sourceText, existing);
-  } catch {
-    return null;
-  }
+  return resolveLocalizedField(locale, sourceText, existing);
 }
 
 export async function createProviderAction(
   _prev: ProviderActionState,
   formData: FormData,
 ): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const existing = await getOwnedProvider(authUser.id);
   if (existing) return { success: false, error: "provider_exists" };
 
@@ -99,14 +110,11 @@ export async function createProviderAction(
   const cityId = CITY_IDS[parsed.data.city];
   if (!categoryId || !cityId) return { success: false, error: "validation_error" };
 
-  const name = await translateOrFail(parsed.data.locale, parsed.data.businessName);
-  if (!name) return { success: false, error: "translation_failed" };
-
-  const about = await translateOrFail(parsed.data.locale, parsed.data.about);
-  if (!about) return { success: false, error: "translation_failed" };
+  const name = await translateOptional(parsed.data.locale, parsed.data.businessName);
+  const about = await translateOptional(parsed.data.locale, parsed.data.about);
 
   const supabase = await createClient();
-  const slug = generateProviderSlug(name.en || parsed.data.businessName, authUser.id);
+  const slug = generateProviderSlug(name.en || name.ar || parsed.data.businessName, authUser.id);
 
   const completeness = calculateProfileCompleteness({
     name,
@@ -158,7 +166,9 @@ export async function updateProviderProfileAction(
   _prev: ProviderActionState,
   formData: FormData,
 ): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
 
   const parsed = updateProviderProfileSchema.safeParse({
@@ -175,15 +185,12 @@ export async function updateProviderProfileAction(
   const cityId = CITY_IDS[parsed.data.city];
   if (!categoryId || !cityId) return { success: false, error: "validation_error" };
 
-  const name = await translateOrFail(parsed.data.locale, parsed.data.businessName, provider.name);
-  if (!name) return { success: false, error: "translation_failed" };
-
-  const about = await translateOrFail(
+  const name = await translateOptional(parsed.data.locale, parsed.data.businessName, provider.name);
+  const about = await translateOptional(
     parsed.data.locale,
     parsed.data.about,
     provider.about ?? { ar: "", en: "" },
   );
-  if (!about) return { success: false, error: "translation_failed" };
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -209,7 +216,9 @@ export async function updateContactAction(
   _prev: ProviderActionState,
   formData: FormData,
 ): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
 
   const parsed = updateContactSchema.safeParse({
@@ -253,7 +262,9 @@ export async function updateWorkingHoursAction(
   _prev: ProviderActionState,
   formData: FormData,
 ): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
 
   let hoursJson: unknown;
@@ -296,7 +307,9 @@ export async function addServiceAction(
   _prev: ProviderActionState,
   formData: FormData,
 ): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
 
   const parsed = serviceInputSchema.safeParse({
@@ -312,16 +325,12 @@ export async function addServiceAction(
     return { success: false, error: "service_limit" };
   }
 
-  const name = await translateOrFail(parsed.data.locale, parsed.data.name);
-  if (!name) return { success: false, error: "translation_failed" };
+  const name = await translateOptional(parsed.data.locale, parsed.data.name);
 
   const description =
     parsed.data.description && parsed.data.description.trim()
-      ? await translateOrFail(parsed.data.locale, parsed.data.description)
+      ? await translateOptional(parsed.data.locale, parsed.data.description)
       : null;
-  if (parsed.data.description && parsed.data.description.trim() && !description) {
-    return { success: false, error: "translation_failed" };
-  }
 
   const supabase = await createClient();
   const sortOrder = provider.services.length;
@@ -344,7 +353,9 @@ export async function updateServiceAction(
   _prev: ProviderActionState,
   formData: FormData,
 ): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
 
   const parsed = updateServiceSchema.safeParse({
@@ -359,20 +370,16 @@ export async function updateServiceAction(
   const existingService = provider.services.find((service) => service.id === parsed.data.serviceId);
   if (!existingService) return { success: false, error: "not_found" };
 
-  const name = await translateOrFail(parsed.data.locale, parsed.data.name, existingService.name);
-  if (!name) return { success: false, error: "translation_failed" };
+  const name = await translateOptional(parsed.data.locale, parsed.data.name, existingService.name);
 
   const description =
     parsed.data.description && parsed.data.description.trim()
-      ? await translateOrFail(
+      ? await translateOptional(
           parsed.data.locale,
           parsed.data.description,
           existingService.description ?? { ar: "", en: "" },
         )
       : null;
-  if (parsed.data.description && parsed.data.description.trim() && !description) {
-    return { success: false, error: "translation_failed" };
-  }
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -391,7 +398,9 @@ export async function updateServiceAction(
 }
 
 export async function deleteServiceAction(serviceId: string): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
   const supabase = await createClient();
 
@@ -412,7 +421,9 @@ export async function uploadProviderImageAction(
   _prev: ProviderActionState,
   formData: FormData,
 ): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
 
   const parsed = imageUploadSchema.safeParse({
@@ -498,7 +509,9 @@ export async function uploadProviderImageAction(
 }
 
 export async function deleteGalleryImageAction(imageId: string): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
   const supabase = await createClient();
 
@@ -527,7 +540,9 @@ export async function deleteGalleryImageAction(imageId: string): Promise<Provide
 }
 
 export async function deleteProviderAction(): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
   const supabase = await createClient();
 
@@ -548,7 +563,9 @@ export async function deleteProviderAction(): Promise<ProviderActionState> {
 }
 
 export async function submitProviderForReviewAction(): Promise<ProviderActionState> {
-  const authUser = await requireAuthUser();
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
 
   if (provider.profileCompleteness < 60) {

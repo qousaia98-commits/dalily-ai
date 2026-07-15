@@ -289,6 +289,9 @@ export function ProviderProfileEditor({
                   {avatarState.error ? (
                     <p className="mb-2 text-sm text-destructive">{resolveError(t, avatarState.error)}</p>
                   ) : null}
+                  {avatarState.success ? (
+                    <p className="mb-2 text-sm text-emerald-600 dark:text-emerald-400">{t("saved")}</p>
+                  ) : null}
                   <Button type="submit" disabled={avatarPending} className="gap-2">
                     {avatarPending ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
                     {t("uploadAvatar")}
@@ -312,6 +315,9 @@ export function ProviderProfileEditor({
                   <Input type="file" name="file" accept="image/*" required className="mb-3" />
                   {coverState.error ? (
                     <p className="mb-2 text-sm text-destructive">{resolveError(t, coverState.error)}</p>
+                  ) : null}
+                  {coverState.success ? (
+                    <p className="mb-2 text-sm text-emerald-600 dark:text-emerald-400">{t("saved")}</p>
                   ) : null}
                   <Button type="submit" disabled={coverPending} className="gap-2">
                     {coverPending ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}

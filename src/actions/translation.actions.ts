@@ -1,6 +1,8 @@
 "use server";
 
 import { getTranslationService } from "@/lib/translation";
+import { requireAuthUser } from "@/lib/auth/session";
+import { isBusinessUser } from "@/lib/auth/roles";
 import type { Locale } from "@/lib/i18n/config";
 import type { LocalizedJson } from "@/types/database.types";
 
@@ -17,6 +19,12 @@ export async function previewLocalizedFieldAction(
   existingEn: string,
 ): Promise<PreviewTranslationState> {
   try {
+    const authUser = await requireAuthUser();
+    if (!isBusinessUser(authUser.roles)) {
+      return { success: false, error: "forbidden" };
+    }
+
+    // syncField never throws on provider failure — opposite locale may be empty.
     const result = await getTranslationService().syncField({
       sourceLocale,
       sourceText,
@@ -24,9 +32,10 @@ export async function previewLocalizedFieldAction(
     });
     return { success: true, result };
   } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "translation_failed",
-    };
+    console.error("[translation] previewLocalizedFieldAction failed", {
+      message: error instanceof Error ? error.message : String(error),
+    });
+    // Never expose internal API errors to the client.
+    return { success: false, error: "translation_unavailable" };
   }
 }

@@ -4,7 +4,6 @@ import { SearchHero } from "@/components/search/search-hero";
 import { CategoryGrid } from "@/components/search/category-grid";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { FeaturedProviders } from "@/components/landing/featured-providers";
-import { AppFooter } from "@/components/layout/app-footer";
 
 export default async function HomePage() {
   const t = await getTranslations("home");
@@ -47,7 +46,6 @@ export default async function HomePage() {
         <HowItWorks />
         <FeaturedProviders />
       </main>
-      <AppFooter />
     </>
   );
 }

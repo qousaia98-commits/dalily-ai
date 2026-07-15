@@ -19,6 +19,7 @@ type ProviderCardProps = {
 export async function ProviderCard({ provider, className, style }: ProviderCardProps) {
   const locale = (await getLocale()) as Locale;
   const tProvider = await getTranslations("provider");
+  const providerName = getLocalizedText(provider.name, locale);
 
   return (
     <Link href={`/providers/${provider.id}`} className={cn("group block", className)} style={style}>
@@ -26,7 +27,7 @@ export async function ProviderCard({ provider, className, style }: ProviderCardP
         <div className="relative aspect-[16/9] overflow-hidden">
           <Image
             src={provider.coverImage}
-            alt={getLocalizedText(provider.name, locale)}
+            alt={providerName}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -42,7 +43,7 @@ export async function ProviderCard({ provider, className, style }: ProviderCardP
             <div className="relative size-11 shrink-0 overflow-hidden rounded-full ring-2 ring-background">
               <Image
                 src={provider.avatarImage}
-                alt=""
+                alt={providerName}
                 fill
                 className="object-cover"
                 sizes="44px"
@@ -50,7 +51,7 @@ export async function ProviderCard({ provider, className, style }: ProviderCardP
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="truncate font-semibold group-hover:text-primary">
-                {getLocalizedText(provider.name, locale)}
+                {providerName}
               </h3>
               <p className="text-sm text-muted-foreground">
                 {getLocalizedText(provider.categoryLabel, locale)}

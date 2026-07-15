@@ -17,11 +17,8 @@ export function buildSiteMetadata(params: {
     metadataBase: new URL(APP_URL),
     manifest: "/manifest.webmanifest",
     icons: {
-      icon: [
-        { url: "/favicon.svg", type: "image/svg+xml" },
-        { url: "/favicon.ico", sizes: "32x32" },
-      ],
-      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+      icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+      apple: [{ url: "/icon-light.svg", type: "image/svg+xml" }],
     },
     openGraph: {
       type: "website",
@@ -29,13 +26,13 @@ export function buildSiteMetadata(params: {
       siteName: BRAND.name,
       title,
       description,
-      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: BRAND.name }],
+      images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: BRAND.name }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ["/og-image.png"],
+      images: ["/og-image.svg"],
     },
     appleWebApp: {
       capable: true,
