@@ -10,7 +10,7 @@ import { ArrowRight } from "lucide-react";
 
 export default async function BusinessDashboardPage() {
   const t = await getTranslations("business.dashboard");
-  const tVerification = await getTranslations("business.dashboard.verificationStatus");
+  const tVerification = await getTranslations("business.verificationStatus");
   const authUser = await requireAuthUser();
   const provider = await getOwnedProvider(authUser.id);
 
