@@ -534,10 +534,26 @@
       },
       "actions": {
         "activate": "Activate",
+        "approve": "Approve",
+        "reject": "Reject",
         "suspend": "Suspend",
         "archive": "Archive",
         "delete": "Delete",
         "deleteConfirm": "Soft-delete this provider? This cannot be undone easily."
+      },
+      "review": {
+        "back": "Back to list",
+        "about": "About",
+        "noAbout": "No description provided.",
+        "phone": "Phone",
+        "email": "Email",
+        "verification": "Verification",
+        "completeness": "Profile completion",
+        "services": "Services",
+        "noServices": "No services listed.",
+        "gallery": "Gallery",
+        "noGallery": "No gallery images.",
+        "noCover": "No cover image"
       },
       "errors": {
         "forbidden": "You do not have permission.",

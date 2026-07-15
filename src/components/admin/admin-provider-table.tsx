@@ -72,7 +72,7 @@ export function AdminProviderTable({ items }: AdminProviderTableProps) {
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <Button variant="outline" size="sm" asChild className="gap-2">
-                <Link href={`/providers/${item.id}`} target="_blank">
+                <Link href={`/admin/providers/${item.id}`}>
                   <ExternalLink className="size-4" />
                   {t("viewProfile")}
                 </Link>

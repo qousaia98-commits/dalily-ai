@@ -534,10 +534,26 @@
       },
       "actions": {
         "activate": "تفعيل",
+        "approve": "موافقة",
+        "reject": "رفض",
         "suspend": "إيقاف",
         "archive": "أرشفة",
         "delete": "حذف",
         "deleteConfirm": "حذف هذا المزود؟ لا يمكن التراجع بسهولة."
+      },
+      "review": {
+        "back": "العودة للقائمة",
+        "about": "نبذة",
+        "noAbout": "لا يوجد وصف.",
+        "phone": "الهاتف",
+        "email": "البريد",
+        "verification": "التحقق",
+        "completeness": "اكتمال الملف",
+        "services": "الخدمات",
+        "noServices": "لا توجد خدمات.",
+        "gallery": "المعرض",
+        "noGallery": "لا توجد صور في المعرض.",
+        "noCover": "لا توجد صورة غلاف"
       },
       "errors": {
         "forbidden": "ليس لديك صلاحية.",

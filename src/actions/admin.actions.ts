@@ -66,12 +66,14 @@ export async function updateProviderStatusAction(
 
   const auditAction =
     parsedStatus.data === "active"
-      ? "provider_activated"
-      : parsedStatus.data === "suspended"
-        ? "provider_suspended"
-        : parsedStatus.data === "archived"
-          ? "provider_archived"
-          : "provider_activated";
+      ? "provider_approved"
+      : parsedStatus.data === "draft"
+        ? "provider_rejected"
+        : parsedStatus.data === "suspended"
+          ? "provider_suspended"
+          : parsedStatus.data === "archived"
+            ? "provider_archived"
+            : "provider_approved";
 
   await logAdminAudit({
     actorId: authUser.id,
@@ -82,6 +84,7 @@ export async function updateProviderStatusAction(
   });
 
   revalidateAdmin();
+  revalidatePath(`/admin/providers/${parsedId.data}`);
   return { success: true };
 }
 

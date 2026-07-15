@@ -349,3 +349,102 @@ export async function listVerificationsForAdmin(
   const { listVerificationsForAdmin: list } = await import("@/lib/verification/queries");
   return list(params);
 }
+
+export type AdminProviderReview = {
+  id: string;
+  slug: string;
+  name: LocalizedJson;
+  about: LocalizedJson | null;
+  status: ProviderStatus;
+  verificationStatus: string;
+  phone: string | null;
+  whatsapp: string | null;
+  email: string | null;
+  website: string | null;
+  cityName: LocalizedJson;
+  categoryName: LocalizedJson;
+  ownerEmail: string;
+  ownerDisplayName: string | null;
+  avatarUrl: string | null;
+  coverUrl: string | null;
+  gallery: Array<{ id: string; url: string }>;
+  services: Array<{ id: string; name: LocalizedJson }>;
+  createdAt: string;
+  profileCompleteness: number;
+};
+
+/** Admin-only: load any non-deleted provider by id (ignores public status filters). */
+export async function getProviderForAdminReview(
+  providerId: string,
+): Promise<AdminProviderReview | null> {
+  const admin = createAdminClient();
+  const { getStoragePublicUrl } = await import("@/lib/providers/storage");
+
+  const { data: provider, error } = await admin
+    .from("providers")
+    .select("*")
+    .eq("id", providerId)
+    .is("deleted_at", null)
+    .maybeSingle();
+
+  if (error || !provider) return null;
+
+  const [
+    { data: city },
+    { data: category },
+    { data: owner },
+    { data: profile },
+    { data: images },
+    { data: services },
+  ] = await Promise.all([
+    admin.from("cities").select("id, name").eq("id", provider.city_id).maybeSingle(),
+    admin.from("categories").select("id, name").eq("id", provider.category_id).maybeSingle(),
+    admin.from("users").select("id, email").eq("id", provider.owner_id).maybeSingle(),
+    admin
+      .from("profiles")
+      .select("user_id, display_name")
+      .eq("user_id", provider.owner_id)
+      .maybeSingle(),
+    admin.from("images").select("*").eq("provider_id", provider.id).is("deleted_at", null),
+    admin
+      .from("provider_services")
+      .select("id, name")
+      .eq("provider_id", provider.id)
+      .is("deleted_at", null)
+      .order("sort_order"),
+  ]);
+
+  const imageRows = images ?? [];
+  const avatar = imageRows.find((image) => image.id === provider.avatar_image_id);
+  const cover = imageRows.find((image) => image.id === provider.cover_image_id);
+  const gallery = imageRows
+    .filter((image) => image.kind === "gallery")
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .map((image) => ({ id: image.id, url: getStoragePublicUrl(image.path) }));
+
+  return {
+    id: provider.id,
+    slug: provider.slug,
+    name: provider.name as LocalizedJson,
+    about: provider.about as LocalizedJson | null,
+    status: provider.status as ProviderStatus,
+    verificationStatus: provider.verification_status,
+    phone: provider.phone,
+    whatsapp: provider.whatsapp,
+    email: provider.email,
+    website: provider.website,
+    cityName: (city?.name as LocalizedJson) ?? { ar: "", en: "" },
+    categoryName: (category?.name as LocalizedJson) ?? { ar: "", en: "" },
+    ownerEmail: owner?.email ?? "",
+    ownerDisplayName: profile?.display_name ?? null,
+    avatarUrl: avatar ? getStoragePublicUrl(avatar.path) : null,
+    coverUrl: cover ? getStoragePublicUrl(cover.path) : null,
+    gallery,
+    services: (services ?? []).map((service) => ({
+      id: service.id,
+      name: service.name as LocalizedJson,
+    })),
+    createdAt: provider.created_at,
+    profileCompleteness: provider.profile_completeness,
+  };
+}
