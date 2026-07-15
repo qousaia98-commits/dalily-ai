@@ -137,7 +137,11 @@
     "call": "اتصال",
     "whatsapp": "واتساب",
     "contactNote": "سيتم توصيلك مباشرة مع مزود الخدمة.",
-    "respondsIn": "يرد خلال {hours} ساعات"
+    "respondsIn": "يرد خلال {hours} ساعات",
+    "planPro": "PRO",
+    "planPremium": "PREMIUM",
+    "memberSince": "عضو منذ {date}",
+    "healthScore": "الصحة {score}%"
   },
   "footer": {
     "description": "منصة ذكاء اصطناعي لاكتشاف مزودي الخدمات الموثوقين في سوريا.",
@@ -241,24 +245,255 @@
       "pendingNote": "ملفك قيد المراجعة. سنُعلمك عند الموافقة.",
       "activeNote": "ملفك منشور ومرئي للعملاء.",
       "upgradeCard": {
-        "starterEyebrow": "كبّر شغلك",
+        "starterEyebrow": "جاهز لزبائن أكثر؟",
         "starterTitle": "طوّر إلى PRO",
-        "starterBody": "جيب زباين أكثر بظهور أقوى وشارة PRO موثوقة.",
+        "starterBody": "ظهور أقوى، شارة PRO، ونصائح نمو أوضح.",
         "starterCta": "طوّر إلى PRO",
-        "proEyebrow": "خلّيها مميزة",
-        "proTitle": "طوّر إلى PREMIUM",
-        "proBody": "خليك الخيار الأول بمدينتك مع أقصى ظهور.",
+        "proEyebrow": "بدك ظهور أكبر؟",
+        "proTitle": "خلّيك Premium",
+        "proBody": "أول النتائج وظهور مميز للمحلات اللي بدها تقود مدينتها.",
         "proCta": "اشترك بـ PREMIUM",
         "premiumEyebrow": "بريميوم",
-        "premiumTitle": "شكراً إنك بزنس بريميوم",
-        "premiumBody": "عندك أعلى ظهور على دليلي. كمّل كسب الزباين.",
+        "premiumTitle": "شكراً لدعمك لدليلي",
+        "premiumBody": "عندك أقوى ظهور على المنصة.",
         "pendingNote": "دفعك بانتظار التأكيد. خطتك بتفعل بعد موافقة الإدارة."
+      },
+      "paymentStatus": {
+        "reviewTitle": "🟡 الدفع قيد المراجعة",
+        "reviewBody": "استلمنا إشعار الدفع، وهلّق عم نراجعه. غالباً خلال أقل من 24 ساعة.",
+        "activatedTitle": "🟢 تم تفعيل اشتراكك بنجاح.",
+        "activatedBody": "تم التحقق من الدفع واشتراكك صار فعّال.",
+        "rejectedTitle": "🔴 ما قدرنا نتأكد من الحوالة.",
+        "rejectedBody": "ما قدرنا نأكد هالتحويل. فيك تجرب مرة تانية بدفعة جديدة.",
+        "adminNote": "ملاحظة الإدارة",
+        "viewPayment": "عرض تفاصيل الدفع",
+        "tryAgain": "حاول مرة تانية",
+        "plan": "الخطة",
+        "amount": "المبلغ",
+        "reference": "رقم المرجع",
+        "submittedAt": "تاريخ الإرسال",
+        "status": "الحالة الحالية",
+        "statusLabels": {
+          "pending_review": "الدفع قيد المراجعة",
+          "paid": "مقبول",
+          "rejected": "مرفوض"
+        }
+      },
+      "paymentHistory": {
+        "title": "سجل المدفوعات",
+        "empty": "ما في مدفوعات بعد.",
+        "reference": "المرجع",
+        "amount": "المبلغ",
+        "submittedAt": "تاريخ الإرسال",
+        "approvedAt": "تاريخ الموافقة",
+        "rejectedReason": "سبب الرفض",
+        "status": {
+          "pending": "بانتظار الحوالة",
+          "pending_review": "قيد المراجعة",
+          "paid": "مقبول",
+          "failed": "فشل",
+          "cancelled": "ملغى",
+          "rejected": "مرفوض"
+        }
       }
     },
     "welcome": {
-      "title": "أهلاً فيك بدليلي",
-      "subtitle": "تم إنشاء شغلك بنجاح.",
-      "prompt": "اختار كيف بدك تكبر."
+      "title": "مبروك!",
+      "subtitle": "تم إنشاء شغلك بنجاح على دليلي.",
+      "nextTitle": "شو بيحصل هلق؟",
+      "completeProfile": "كمّل ملفك",
+      "discoverEyebrow": "اختياري",
+      "discoverTitle": "اكتشف PRO و PREMIUM",
+      "discoverSubtitle": "كبّر شغلك لما تكون جاهز — مو إجباري أبداً.",
+      "steps": {
+        "verification": {
+          "title": "التحقق",
+          "body": "ابنِ ثقة الزباين بتوثيق شغلك."
+        },
+        "growth": {
+          "title": "النمو",
+          "body": "قوّي ملفك حتى ناس أكثر تلاقيك وتتواصل معك."
+        },
+        "plans": {
+          "title": "الاشتراكات",
+          "body": "طوّر بس إذا بدك ظهور أكبر — Starter بيضل مجاني للأبد."
+        }
+      }
+    },
+    "growth": {
+      "hero": {
+        "eyebrow": "لوحة النمو",
+        "starter": {
+          "title": "أهلاً {name}!",
+          "subtitle": "خلينا نكبّر شغلك سوا."
+        },
+        "pro": {
+          "title": "شغل ممتاز {name}!",
+          "subtitle": "شغلك عم ياخد ظهور أكبر على دليلي."
+        },
+        "premium": {
+          "title": "أنت من البزنسات المميزة بدليلي، {name}.",
+          "subtitle": "الزبائن بيشوفوك أول — كمّل كسب ثقتهم."
+        }
+      },
+      "health": {
+        "title": "صحة الشغل",
+        "subtitle": "كمّل ملفك لتزيد ثقة الزباين.",
+        "label": "النتيجة",
+        "scoreAria": "صحة الشغل {score} من 100",
+        "complete": "ملفك ممتاز.",
+        "cta": "حسّن الملف",
+        "items": {
+          "logo": "الشعار",
+          "cover": "الغلاف",
+          "gallery": "المعرض",
+          "description": "الوصف",
+          "hours": "الدوام",
+          "verification": "موثّق",
+          "phone": "الهاتف",
+          "whatsapp": "واتساب",
+          "categories": "الخدمات",
+          "location": "الموقع"
+        },
+        "suggestions": {
+          "logo": "ضيف شعارك",
+          "cover": "ضيف صورة غلاف",
+          "gallery": "ضيف صور أكثر",
+          "description": "كمّل وصف شغلك",
+          "hours": "حدد أوقات الدوام",
+          "verification": "وثّق شغلك",
+          "phone": "ضيف رقمك",
+          "whatsapp": "ضيف واتساب",
+          "categories": "ضيف خدماتك",
+          "location": "أكد موقعك"
+        }
+      },
+      "insights": {
+        "title": "إحصائيات الأسبوع",
+        "subtitle": "كيف الزباين بيكتشفوا شغلك ويتفاعلوا معك.",
+        "empty": "لسا ما في بيانات — كمّل تقوية ملفك.",
+        "profileViews": "مشاهدات الملف",
+        "phoneClicks": "نقرات الهاتف",
+        "whatsappClicks": "نقرات واتساب",
+        "favorites": "المفضلة",
+        "reviews": "التقييمات",
+        "searchAppearances": "ظهور بالبحث"
+      },
+      "achievements": {
+        "title": "إنجازات الشغل",
+        "subtitle": "الإنجازات بتنفتح أوتوماتيك كل ما تكبر.",
+        "profile_completed": {
+          "title": "ملف مكتمل",
+          "body": "ملفك قوي وموثوق."
+        },
+        "first_review": {
+          "title": "أول تقييم",
+          "body": "الزبائن بلّشوا يشاركوا رأيهم."
+        },
+        "first_contact": {
+          "title": "جاهز للتواصل",
+          "body": "هاتفك أو واتساب جاهزين للزبائن."
+        },
+        "verified": {
+          "title": "شغل موثّق",
+          "body": "شارات الثقة بتخلّيك تتميّز."
+        },
+        "views_100": {
+          "title": "100 ظهور",
+          "body": "طلعت بنتائج البحث 100 مرة."
+        },
+        "views_1000": {
+          "title": "1000 ظهور",
+          "body": "ألف ظهور بالبحث — وصول ممتاز."
+        },
+        "premium_member": {
+          "title": "عضو بريميوم",
+          "body": "أنت بزنس مميز على دليلي."
+        }
+      },
+      "tips": {
+        "title": "نصائح نمو ذكية",
+        "subtitle": "توصيات عملية مع سبب واضح.",
+        "allDone": "كلشي تمام — كمّل خدمة الزباين.",
+        "cta": "صلّح هالشي",
+        "items": {
+          "logo": {
+            "title": "ضيف شعارك",
+            "why": "الشعار الواضح بيبني تميّز وثقة بنتائج البحث."
+          },
+          "cover": {
+            "title": "ضيف صورة غلاف",
+            "why": "غلاف قوي بيخلّي ملفك يبين بريميوم وجذّاب."
+          },
+          "gallery": {
+            "title": "معرض الصور ناقص",
+            "why": "المحلات اللي عندها صور أكثر بتاخد ثقة أكبر من الزباين."
+          },
+          "description": {
+            "title": "كمّل وصف شغلك",
+            "why": "الوصف الواضح بيساعد الزبون يفهم كيف بتحل مشكلته."
+          },
+          "hours": {
+            "title": "كمّل أوقات الدوام",
+            "why": "الزبائن بيتواصلوا أكثر مع المحلات اللي معلنة دوامها."
+          },
+          "verification": {
+            "title": "وثّق شغلك",
+            "why": "المحلات الموثّقة بتبين أكثر موثوقية."
+          },
+          "phone": {
+            "title": "ضيف رقمك",
+            "why": "الهاتف أسرع طريق من الاهتمام للحجز."
+          },
+          "whatsapp": {
+            "title": "ضيف واتساب",
+            "why": "كتير زباين بيفضّلوا واتساب للأسئلة السريعة."
+          },
+          "categories": {
+            "title": "ضيف خدماتك",
+            "why": "الخدمات بتساعد دليلي يطابقك مع البحث المناسب."
+          },
+          "location": {
+            "title": "أكد موقعك",
+            "why": "الزبائن القريبين بيلقوا المحلات المحلية أول."
+          }
+        }
+      },
+      "notifications": {
+        "title": "التنبيهات",
+        "empty": "ما في شي جديد.",
+        "paymentPending": "إيصال الدفع قيد المراجعة.",
+        "proActive": "اشتراك PRO فعّال.",
+        "premiumActive": "اشتراك PREMIUM فعّال.",
+        "verificationApproved": "تم قبول التحقق.",
+        "profileViews": "ملفك طلع بالبحث {count} مرة هالأسبوع.",
+        "firstReview": "وصلك أول تقييم.",
+        "healthHigh": "اكتمال ملفك وصل {score}%."
+      },
+      "trust": {
+        "title": "ليش المحلات بتختار دليلي",
+        "subtitle": "نحنا منساعدك تكبر — مو بس منبيع لك سوفتوير.",
+        "visibility": {
+          "title": "ظهور أكبر",
+          "body": "اطلع قدام زبائن عم يدوروا على حل."
+        },
+        "trust": {
+          "title": "ثقة أكبر",
+          "body": "الشارات والتوثيق بيبينوا مصداقيتك."
+        },
+        "ai": {
+          "title": "تحسين ذكي",
+          "body": "إرشادات بتحسّن كيف الزباين بيلاقوك."
+        },
+        "insights": {
+          "title": "إحصائيات العمل",
+          "body": "افهم كيف الناس بيتواصلوا معك."
+        },
+        "growth": {
+          "title": "نمو حقيقي",
+          "body": "مصمّم للطلب المحلي، مو لأرقام فاضي."
+        }
+      }
     },
     "verificationStatus": {
       "unverified": "غير موثق",
@@ -540,25 +775,52 @@
         "cancelled": "ملغى"
       },
       "paymentStatus": {
-        "pending": "قيد الانتظار",
+        "pending": "بانتظار الحوالة",
+        "pending_review": "قيد مراجعة الدفع",
         "paid": "مدفوع",
         "failed": "فشل",
-        "cancelled": "ملغى"
+        "cancelled": "ملغى",
+        "rejected": "مرفوض"
       },
       "payment": {
         "stepLabel": "الدفع",
         "title": "كمّل الدفع",
         "subtitle": "حوّل المبلغ أدناه لخطة {plan}. الخطّة بتفعل بس بعد موافقة الإدارة.",
-        "amountLabel": "المبلغ المطلوب",
-        "receiver": "المستلم",
-        "account": "الحساب / الآيبان",
+        "planLabel": "الخطة",
+        "amountLabel": "المبلغ",
+        "receiver": "صاحب الحساب",
+        "account": "الآيبان / الحساب",
+        "swift": "SWIFT / BIC",
         "reference": "رقم المرجع",
+        "referenceNotice": "لما تعمل الحوالة، حط هالرقم بخانة الملاحظات أو الوصف.",
         "receiverFallback": "تواصل مع دعم دليلي لتفاصيل البنك",
         "accountFallback": "رح يشاركها معك فريق دليلي",
-        "instructions": "حط رقم المرجع بتحويلتك. بعد الدفع استنى التأكيد — اختيار الخطة ما بفعّلها تلقائياً أبداً.",
+        "instructions": "حوّل المبلغ بالتفاصيل فوق. بعدين أكّد إنك عملت الحوالة.",
+        "transferDone": "عملت الحوالة",
+        "uploadTitle": "ارفع إيصال الدفع",
+        "uploadHint": "ارفع صورة واضحة أو PDF لإيصال التحويل.",
+        "chooseFile": "اختيار ملف الإيصال",
+        "fileTypes": "PDF أو JPG أو PNG · أقصى 10 ميغابايت",
+        "submitReceipt": "إرسال للمراجعة",
+        "backToTransfer": "رجوع",
+        "reviewTitle": "قيد مراجعة الدفع",
+        "reviewBody": "وصلنا إيصالك. الإدارة رح تراجعه قريب. خطتك لسا مو فعّالة.",
         "waitingTitle": "بانتظار تأكيد الدفع",
-        "waitingBody": "الإدارة رح تراجع الدفع وتفعّل اشتراكك. فيك تكمّل بـ Starter لحدّها.",
-        "backToPlans": "رجوع للخطط"
+        "waitingBody": "الإدارة رح تراجع الدفع وتفعّل اشتراكك.",
+        "backToPlans": "رجوع للخطط",
+        "copy": "نسخ",
+        "copyAmount": "نسخ المبلغ",
+        "copyReference": "نسخ المرجع",
+        "copied": "تم النسخ",
+        "errors": {
+          "file_required": "اختار ملف الإيصال.",
+          "file_too_large": "الملف لازم يكون 10 ميغابايت أو أقل.",
+          "invalid_file_type": "مسموح فقط PDF و JPG و PNG.",
+          "upload_failed": "فشل الرفع. جرّب مرة تانية.",
+          "save_failed": "ما قدرنا نحفظ الإيصال.",
+          "payment_not_submittable": "هالدفعة ما عاد فينا نرفع إلها إيصال.",
+          "invalid_payment": "دفعة غير صالحة."
+        }
       },
       "features": {
         "maxServices": "حتى {value} خدمات",
@@ -581,19 +843,114 @@
       "searches": "تحليلات البحث",
       "users": "المستخدمون",
       "categories": "الفئات",
+      "payments": "💳 المدفوعات",
       "subscriptions": "الاشتراكات"
+    },
+    "payments": {
+      "eyebrow": "تحويلات يدوية",
+      "title": "المدفوعات",
+      "subtitle": "قارن رقم المرجع مع الإيصال، وبعدين وافق أو ارفض خلال ثواني.",
+      "empty": "ما في مدفوعات بعد.",
+      "review": "مراجعة",
+      "approve": "الموافقة على الدفع",
+      "reject": "رفض الدفع",
+      "hasReceipt": "إيصال",
+      "noReceipt": "بدون إيصال",
+      "searchPlaceholder": "ابحث باسم الشركة، المالك، المرجع، الإيميل أو الرقم…",
+      "tabs": {
+        "pendingReview": "🟡 قيد المراجعة",
+        "approved": "🟢 مقبولة",
+        "rejected": "🔴 مرفوضة",
+        "all": "⚪ الكل"
+      },
+      "timeline": {
+        "requested": "تم الطلب",
+        "receipt_uploaded": "تم رفع الإيصال",
+        "approved": "تمت الموافقة",
+        "rejected": "تم الرفض"
+      },
+      "dialogs": {
+        "approveTitle": "الموافقة على الدفع؟",
+        "approveBody": "هالإجراء رح يفعّل الاشتراك فوراً.",
+        "rejectTitle": "رفض الدفع؟",
+        "rejectBody": "المحل بضل على Starter. فيك تضيف سبب اختياري.",
+        "cancel": "إلغاء",
+        "confirmApprove": "موافقة",
+        "confirmReject": "رفض"
+      },
+      "columns": {
+        "company": "الشركة",
+        "owner": "المالك",
+        "plan": "الخطة",
+        "amount": "المبلغ",
+        "reference": "المرجع",
+        "receipt": "الإيصال",
+        "requestedAt": "وقت الطلب",
+        "status": "الحالة",
+        "actions": "إجراءات"
+      },
+      "plans": {
+        "free": "Starter",
+        "pro": "PRO",
+        "premium": "PREMIUM"
+      },
+      "status": {
+        "pending": "بانتظار الحوالة",
+        "pending_review": "قيد المراجعة",
+        "paid": "مدفوع",
+        "failed": "فشل",
+        "cancelled": "ملغى",
+        "rejected": "مرفوض"
+      },
+      "detail": {
+        "pageTitle": "تفاصيل الدفع",
+        "title": "تفاصيل التحويل",
+        "businessInfo": "معلومات العمل",
+        "company": "الشركة",
+        "owner": "المالك",
+        "email": "البريد",
+        "phone": "الهاتف",
+        "plan": "الخطة",
+        "amount": "المبلغ",
+        "reference": "المرجع",
+        "requestedAt": "وقت الطلب",
+        "timeline": "مسار الحالة",
+        "receipt": "إيصال الدفع",
+        "openReceipt": "فتح الإيصال",
+        "adminNote": "ملاحظة الإدارة",
+        "rejectNote": "سبب الرفض",
+        "rejectNotePlaceholder": "ملاحظة اختيارية لصاحب المحل",
+        "back": "رجوع للمدفوعات"
+      },
+      "errors": {
+        "forbidden": "غير مسموح.",
+        "approve_failed": "ما قدرنا نوافق على الدفع.",
+        "reject_failed": "ما قدرنا نرفض الدفع.",
+        "validation_error": "ملاحظة غير صالحة.",
+        "unknown": "صار خطأ."
+      }
     },
     "dashboard": {
       "title": "لوحة الإدارة",
       "subtitle": "نظرة عامة على المنصة والمؤشرات الرئيسية",
+      "quick": {
+        "payments": "المدفوعات",
+        "verification": "طابور التحقق",
+        "providers": "المزودون"
+      },
       "stats": {
         "totalProviders": "إجمالي المزودين",
         "activeProviders": "المزودون النشطون",
-        "pendingReviews": "قيد المراجعة",
+        "pendingReviews": "مراجعات المزودين",
         "rejectedProviders": "مرفوضون",
         "totalUsers": "إجمالي المستخدمين",
         "totalSearches": "إجمالي عمليات البحث",
-        "searchesToday": "عمليات البحث اليوم"
+        "searchesToday": "عمليات البحث اليوم",
+        "pendingPayments": "مدفوعات قيد المراجعة",
+        "pendingVerifications": "طابور التحقق",
+        "recentRegistrations": "تسجيلات (7 أيام)",
+        "recentApprovals": "تفعيلات حديثة (7 أيام)",
+        "averageHealthScore": "متوسط صحة الشغل"
       }
     },
     "providers": {
@@ -801,10 +1158,12 @@
         },
         "paymentStatus": {
           "all": "كل المدفوعات",
-          "pending": "قيد الانتظار",
+          "pending": "بانتظار الحوالة",
+          "pending_review": "قيد المراجعة",
           "paid": "مدفوع",
           "failed": "فشل",
-          "cancelled": "ملغى"
+          "cancelled": "ملغى",
+          "rejected": "مرفوض"
         }
       },
       "plans": {
@@ -820,10 +1179,12 @@
         "cancelled": "ملغى"
       },
       "paymentStatus": {
-        "pending": "قيد الانتظار",
+        "pending": "بانتظار الحوالة",
+        "pending_review": "قيد المراجعة",
         "paid": "مدفوع",
         "failed": "فشل",
-        "cancelled": "ملغى"
+        "cancelled": "ملغى",
+        "rejected": "مرفوض"
       }
     }
   },

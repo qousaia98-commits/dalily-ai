@@ -17,7 +17,13 @@ export type ProblemPriority = "emergency" | "high" | "normal" | "low";
 export type ProviderVerificationStatus = "pending" | "approved" | "rejected";
 export type SubscriptionStatus = "trial" | "active" | "pending_payment" | "expired" | "cancelled";
 export type PaymentProviderType = "manual" | "shamcash" | "future";
-export type PaymentStatus = "pending" | "paid" | "failed" | "cancelled";
+export type PaymentStatus =
+  | "pending"
+  | "pending_review"
+  | "paid"
+  | "failed"
+  | "cancelled"
+  | "rejected";
 export type InvoiceStatus = "draft" | "issued" | "paid" | "void";
 export type AuditAction =
   | "provider_approved"
@@ -38,6 +44,8 @@ export type AuditAction =
   | "category_updated"
   | "category_disabled"
   | "category_enabled";
+
+export type PaymentEventType = "requested" | "receipt_uploaded" | "approved" | "rejected";
 
 export type Database = {
   public: {
@@ -588,6 +596,15 @@ export type Database = {
           payment_status: PaymentStatus;
           amount: number;
           currency: string;
+          payment_reference: string;
+          receipt_path: string | null;
+          receipt_mime_type: string | null;
+          submitted_at: string | null;
+          approved_at: string | null;
+          approved_by: string | null;
+          rejected_at: string | null;
+          rejected_by: string | null;
+          admin_note: string | null;
           external_transaction_id: string | null;
           paid_at: string | null;
           created_at: string;
@@ -600,6 +617,15 @@ export type Database = {
           payment_status?: PaymentStatus;
           amount: number;
           currency?: string;
+          payment_reference: string;
+          receipt_path?: string | null;
+          receipt_mime_type?: string | null;
+          submitted_at?: string | null;
+          approved_at?: string | null;
+          approved_by?: string | null;
+          rejected_at?: string | null;
+          rejected_by?: string | null;
+          admin_note?: string | null;
           external_transaction_id?: string | null;
           paid_at?: string | null;
           created_at?: string;
@@ -612,8 +638,44 @@ export type Database = {
           payment_status?: PaymentStatus;
           amount?: number;
           currency?: string;
+          payment_reference?: string;
+          receipt_path?: string | null;
+          receipt_mime_type?: string | null;
+          submitted_at?: string | null;
+          approved_at?: string | null;
+          approved_by?: string | null;
+          rejected_at?: string | null;
+          rejected_by?: string | null;
+          admin_note?: string | null;
           external_transaction_id?: string | null;
           paid_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      payment_events: {
+        Row: {
+          id: string;
+          payment_id: string;
+          event_type: string;
+          actor_id: string | null;
+          note: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          payment_id: string;
+          event_type: string;
+          actor_id?: string | null;
+          note?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          payment_id?: string;
+          event_type?: string;
+          actor_id?: string | null;
+          note?: string | null;
           created_at?: string;
         };
         Relationships: [];

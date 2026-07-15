@@ -15,6 +15,7 @@ export type AdminSubscriptionActionState = {
 
 function revalidate() {
   revalidatePath("/admin/subscriptions");
+  revalidatePath("/admin/payments");
   revalidatePath("/admin");
   revalidatePath("/business/subscription");
 }
@@ -39,17 +40,21 @@ export async function approvePaymentAction(paymentId: string): Promise<AdminSubs
   }
 }
 
-export async function rejectPaymentAction(paymentId: string): Promise<AdminSubscriptionActionState> {
+export async function rejectPaymentAction(
+  paymentId: string,
+  adminNote?: string,
+): Promise<AdminSubscriptionActionState> {
   const authUser = await requireAdminUser();
   if (!isPlatformAdmin(authUser.roles)) return { success: false, error: "forbidden" };
 
   try {
-    await subscriptionService.rejectPayment(paymentId);
+    await subscriptionService.rejectPayment(paymentId, authUser.id, adminNote);
     await logAdminAudit({
       actorId: authUser.id,
       action: "payment_rejected",
       entityType: "payment",
       entityId: paymentId,
+      metadata: { note: adminNote ?? null },
     });
     revalidate();
     return { success: true };

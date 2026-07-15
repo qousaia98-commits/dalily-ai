@@ -1,19 +1,41 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/queries";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
+import { getLocalizedField } from "@/types/provider.types";
+import { calculateBusinessHealth } from "@/lib/business/health-score";
+import { computeAchievements } from "@/lib/business/achievements";
+import { buildGrowthTips } from "@/lib/business/growth-tips";
+import { buildGrowthNotifications } from "@/lib/business/notifications";
+import {
+  getLifetimeSearchAppearances,
+  getWeeklyInsights,
+} from "@/lib/business/insights";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { ProviderStatusBadge } from "@/components/business/provider-status-badge";
+import { GrowthHero } from "@/components/business/growth-hero";
+import { GrowthHealthCard } from "@/components/business/growth-health-card";
+import { GrowthInsightsGrid } from "@/components/business/growth-insights-grid";
+import { GrowthAchievements } from "@/components/business/growth-achievements";
+import { GrowthTipsList } from "@/components/business/growth-tips-list";
+import { GrowthNotifications } from "@/components/business/growth-notifications";
+import { GrowthTrustSection } from "@/components/business/growth-trust-section";
 import { DashboardUpgradeCard } from "@/components/business/dashboard-upgrade-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "@/lib/i18n/routing";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { DashboardPaymentStatusCard } from "@/components/business/dashboard-payment-status-card";
+import { DashboardPaymentHistory } from "@/components/business/dashboard-payment-history";
 import type { PlanSlug } from "@/lib/subscription/types";
+import type { Locale } from "@/lib/i18n/config";
+
+function planLabel(slug: string): string {
+  if (slug === "premium") return "PREMIUM";
+  if (slug === "pro") return "PRO";
+  return "STARTER";
+}
 
 export default async function BusinessDashboardPage() {
   const t = await getTranslations("business.dashboard");
-  const tVerification = await getTranslations("business.verificationStatus");
+  const tSub = await getTranslations("business.subscription");
+  const locale = (await getLocale()) as Locale;
   const authUser = await requireAuthUser();
   const provider = await getOwnedProvider(authUser.id);
 
@@ -29,83 +51,124 @@ export default async function BusinessDashboardPage() {
     );
   }
 
-  const { subscription } = await getSubscriptionPageData(authUser.id);
+  const [{ subscription, payments, pendingPayment }, weekly, lifetimeSearches] =
+    await Promise.all([
+      getSubscriptionPageData(authUser.id),
+      getWeeklyInsights(provider.id, provider.reviewCount),
+      getLifetimeSearchAppearances(provider.id),
+    ]);
+
   const planSlug = (subscription?.planSlug ?? "free") as PlanSlug;
   const subStatus = subscription?.status ?? "active";
+  const health = calculateBusinessHealth(provider);
+  const achievements = computeAchievements({
+    provider,
+    planSlug,
+    searchAppearances: lifetimeSearches,
+  });
+  const tips = buildGrowthTips(provider);
+  const businessName = getLocalizedField(provider.name, locale) || "Business";
+
+  const underReview = payments.find((p) => p.paymentStatus === "pending_review");
+  const recentlyPaid = payments.find(
+    (p) =>
+      p.paymentStatus === "paid" &&
+      p.approvedAt &&
+      Date.now() - new Date(p.approvedAt).getTime() < 1000 * 60 * 60 * 72,
+  );
+  const recentlyRejected = payments.find(
+    (p) =>
+      p.paymentStatus === "rejected" &&
+      p.rejectedAt &&
+      Date.now() - new Date(p.rejectedAt).getTime() < 1000 * 60 * 60 * 72,
+  );
+
+  const statusNotice = underReview
+    ? {
+        status: "pending_review" as const,
+        planLabel: planLabel(pendingPayment?.planSlug ?? planSlug),
+        amount: underReview.amount,
+        currency: underReview.currency,
+        reference: underReview.paymentReference,
+        submittedAt: underReview.submittedAt,
+        approvedAt: underReview.approvedAt,
+        adminNote: underReview.adminNote,
+      }
+    : recentlyPaid
+      ? {
+          status: "paid" as const,
+          planLabel: planLabel(planSlug),
+          amount: recentlyPaid.amount,
+          currency: recentlyPaid.currency,
+          reference: recentlyPaid.paymentReference,
+          submittedAt: recentlyPaid.submittedAt,
+          approvedAt: recentlyPaid.approvedAt,
+          adminNote: recentlyPaid.adminNote,
+        }
+      : recentlyRejected
+        ? {
+            status: "rejected" as const,
+            planLabel: planLabel(recentlyRejected.planSlug),
+            amount: recentlyRejected.amount,
+            currency: recentlyRejected.currency,
+            reference: recentlyRejected.paymentReference,
+            submittedAt: recentlyRejected.submittedAt,
+            approvedAt: recentlyRejected.approvedAt,
+            adminNote: recentlyRejected.adminNote,
+          }
+        : null;
+
+  const notifications = buildGrowthNotifications({
+    healthScore: health.score,
+    searchAppearances: weekly.searchAppearances,
+    planSlug,
+    subscriptionStatus: subStatus,
+    verificationStatus: provider.verificationStatus,
+    reviewCount: provider.reviewCount,
+    hasPendingReviewPayment: Boolean(underReview),
+    recentlyApprovedPayment: Boolean(recentlyPaid),
+  });
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("title")}</h1>
-          <p className="mt-2 text-muted-foreground">{t("subtitle")}</p>
-        </div>
+    <div className="w-full max-w-full space-y-8 overflow-x-hidden animate-fade-in">
+      <div className="flex justify-end">
         <ProviderStatusBadge status={provider.status} />
       </div>
 
+      <GrowthHero planSlug={planSlug} businessName={businessName} />
+
+      {statusNotice ? <DashboardPaymentStatusCard payment={statusNotice} /> : null}
+
+      <GrowthHealthCard health={health} />
+
+      <GrowthInsightsGrid insights={weekly} />
+
+      <GrowthAchievements achievements={achievements} />
+
+      <GrowthTipsList tips={tips} />
+
       <DashboardUpgradeCard planSlug={planSlug} status={subStatus} />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("profileStatus")}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{t("completion")}</span>
-              <span className="font-semibold">{provider.profileCompleteness}%</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-muted">
-              <div
-                className="h-full rounded-full bg-primary transition-all"
-                style={{ width: `${provider.profileCompleteness}%` }}
-                role="progressbar"
-                aria-valuenow={provider.profileCompleteness}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label={t("completion")}
-              />
-            </div>
-            <Button asChild variant="outline" className="gap-2">
-              <Link href="/business/profile">
-                {t("completeProfile")}
-                <ArrowRight className="size-4" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+      <GrowthNotifications items={notifications} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("overview")}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <div className="flex justify-between gap-4">
-              <span className="text-muted-foreground">{t("servicesCount")}</span>
-              <span className="font-medium">{provider.services.length}</span>
-            </div>
-            <div className="flex justify-between gap-4">
-              <span className="text-muted-foreground">{t("galleryCount")}</span>
-              <span className="font-medium">{provider.gallery.length}</span>
-            </div>
-            <div className="flex justify-between gap-4">
-              <span className="text-muted-foreground">{t("verification")}</span>
-              <span className="font-medium">
-                {tVerification(provider.verificationStatus)}
-              </span>
-            </div>
-            {provider.status === "draft" ? (
-              <p className="text-muted-foreground">{t("draftNote")}</p>
-            ) : null}
-            {provider.status === "pending_review" ? (
-              <p className="text-muted-foreground">{t("pendingNote")}</p>
-            ) : null}
-            {provider.status === "active" ? (
-              <p className="text-emerald-600 dark:text-emerald-400">{t("activeNote")}</p>
-            ) : null}
-          </CardContent>
-        </Card>
-      </div>
+      <DashboardPaymentHistory
+        currentPlanLabel={planLabel(planSlug)}
+        currentStatus={tSub(`status.${subStatus}`)}
+        payments={payments.map((p) => ({
+          id: p.id,
+          planLabel: planLabel(p.planSlug),
+          paymentStatus: p.paymentStatus,
+          paymentReference: p.paymentReference,
+          amount: p.amount,
+          currency: p.currency,
+          submittedAt: p.submittedAt,
+          approvedAt: p.approvedAt,
+          adminNote: p.adminNote,
+          createdAt: p.createdAt,
+        }))}
+      />
+
+      <GrowthTrustSection />
     </div>
   );
 }

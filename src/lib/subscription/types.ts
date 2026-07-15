@@ -2,7 +2,7 @@ export type PlanSlug = "free" | "pro" | "premium";
 
 export type PlanFeatures = {
   maxServices: number | null;
-  maxImages: number;
+  maxImages: number | null;
   searchVisible: boolean;
   basicAnalytics: boolean;
   verifiedBadge: boolean;
@@ -47,6 +47,15 @@ export type PaymentRow = {
   paymentStatus: import("@/types/database.types").PaymentStatus;
   amount: number;
   currency: string;
+  paymentReference: string;
+  receiptPath: string | null;
+  receiptMimeType: string | null;
+  submittedAt: string | null;
+  approvedAt: string | null;
+  approvedBy: string | null;
+  rejectedAt: string | null;
+  rejectedBy: string | null;
+  adminNote: string | null;
   externalTransactionId: string | null;
   paidAt: string | null;
   createdAt: string;
@@ -69,6 +78,8 @@ export type CreatePaymentResult = {
   instructions?: {
     receiver: string;
     account: string;
+    swift?: string;
+    bankName?: string;
     amount: number;
     currency: string;
     reference: string;

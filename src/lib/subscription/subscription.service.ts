@@ -1,5 +1,8 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendPaymentApprovedEmail } from "@/lib/email/payment-email";
 import { resolvePaymentProvider } from "@/lib/payment/payment.service";
+import { allocateUniquePaymentReference } from "@/lib/payment/reference";
+import { logPaymentEvent } from "@/lib/payment/payment-events";
 import {
   createInvoiceForPayment,
   ensureFreeSubscription,
@@ -8,6 +11,7 @@ import {
   getPlanBySlug,
 } from "@/lib/subscription/repository";
 import type { PlanSlug } from "@/lib/subscription/types";
+import type { LocalizedJson } from "@/types/database.types";
 
 const SUBSCRIPTION_PERIOD_DAYS = 30;
 
@@ -81,12 +85,18 @@ export class SubscriptionService {
     }
 
     const paymentProvider = resolvePaymentProvider();
+    const reference = await allocateUniquePaymentReference();
     const result = await paymentProvider.createPayment({
       providerId,
       subscriptionId: subscription.id,
       amount,
       currency: "USD",
-      reference: `SUB-${subscription.id.slice(0, 8).toUpperCase()}`,
+      reference,
+    });
+
+    await logPaymentEvent({
+      paymentId: result.paymentId,
+      eventType: "requested",
     });
 
     return { subscriptionId: subscription.id, payment: result };
@@ -136,6 +146,44 @@ export class SubscriptionService {
     return this.upgrade(providerId, current.planSlug as PlanSlug);
   }
 
+  async submitPaymentReceipt(
+    paymentId: string,
+    providerId: string,
+    receiptPath: string,
+    receiptMimeType: string,
+  ) {
+    const admin = createAdminClient();
+    const now = new Date().toISOString();
+
+    const { data: payment } = await admin
+      .from("payments")
+      .select("id, payment_status, provider_id")
+      .eq("id", paymentId)
+      .eq("provider_id", providerId)
+      .maybeSingle();
+
+    if (!payment || payment.payment_status !== "pending") {
+      throw new Error("payment_not_submittable");
+    }
+
+    const { error } = await admin
+      .from("payments")
+      .update({
+        receipt_path: receiptPath,
+        receipt_mime_type: receiptMimeType,
+        submitted_at: now,
+        payment_status: "pending_review",
+      })
+      .eq("id", paymentId);
+
+    if (error) throw new Error("receipt_save_failed");
+    await logPaymentEvent({
+      paymentId,
+      eventType: "receipt_uploaded",
+    });
+    return { paymentId };
+  }
+
   async activateAfterPayment(paymentId: string, actorId?: string) {
     const admin = createAdminClient();
     const now = new Date();
@@ -144,7 +192,7 @@ export class SubscriptionService {
       .from("payments")
       .select("*")
       .eq("id", paymentId)
-      .eq("payment_status", "pending")
+      .in("payment_status", ["pending", "pending_review"])
       .maybeSingle();
 
     if (!payment?.subscription_id) {
@@ -164,9 +212,17 @@ export class SubscriptionService {
       .update({
         payment_status: "paid",
         paid_at: now.toISOString(),
+        approved_at: now.toISOString(),
+        approved_by: actorId ?? null,
         external_transaction_id: verified.externalTransactionId ?? null,
       })
       .eq("id", paymentId);
+
+    await logPaymentEvent({
+      paymentId,
+      eventType: "approved",
+      actorId: actorId ?? null,
+    });
 
     await admin
       .from("subscriptions")
@@ -192,26 +248,84 @@ export class SubscriptionService {
     await applyPlanBenefits(subscription.provider_id, (plan?.slug ?? "free") as PlanSlug, expiresAt);
     await createInvoiceForPayment(paymentId, payment.provider_id, Number(payment.amount), payment.currency);
 
-    return { providerId: subscription.provider_id, planSlug: plan?.slug, actorId };
+    // Confirmation email (best-effort)
+    const { data: provider } = await admin
+      .from("providers")
+      .select("name, owner_id, phone")
+      .eq("id", payment.provider_id)
+      .maybeSingle();
+
+    if (provider?.owner_id) {
+      const { data: authUser } = await admin.auth.admin.getUserById(provider.owner_id);
+      const locale =
+        ((provider.name as LocalizedJson)?.ar ? "ar" : "en") as string;
+      const businessName =
+        (provider.name as LocalizedJson)?.en ||
+        (provider.name as LocalizedJson)?.ar ||
+        "Business";
+      const planLabel = plan?.slug === "premium" ? "PREMIUM" : "PRO";
+
+      await sendPaymentApprovedEmail({
+        to: authUser.user?.email ?? "",
+        businessName,
+        planLabel,
+        amount: Number(payment.amount),
+        currency: payment.currency,
+        reference: payment.payment_reference,
+        locale,
+      });
+    }
+
+    return {
+      providerId: subscription.provider_id,
+      planSlug: plan?.slug,
+      actorId,
+      startsAt: now.toISOString(),
+      expiresAt,
+    };
   }
 
-  async rejectPayment(paymentId: string) {
+  async rejectPayment(paymentId: string, actorId?: string, adminNote?: string) {
     const admin = createAdminClient();
+    const now = new Date().toISOString();
+
     const { data: payment } = await admin
       .from("payments")
-      .select("subscription_id")
+      .select("id, subscription_id, provider_id, payment_status")
       .eq("id", paymentId)
       .maybeSingle();
 
-    await resolvePaymentProvider().cancelPayment(paymentId);
+    if (!payment) throw new Error("payment_not_found");
 
-    if (payment?.subscription_id) {
+    await admin
+      .from("payments")
+      .update({
+        payment_status: "rejected",
+        rejected_at: now,
+        rejected_by: actorId ?? null,
+        admin_note: adminNote?.trim() || null,
+      })
+      .eq("id", paymentId);
+
+    await logPaymentEvent({
+      paymentId,
+      eventType: "rejected",
+      actorId: actorId ?? null,
+      note: adminNote?.trim() || null,
+    });
+
+    if (payment.subscription_id) {
       await admin
         .from("subscriptions")
-        .update({ status: "cancelled" })
+        .update({ status: "cancelled", updated_at: now })
         .eq("id", payment.subscription_id)
         .eq("status", "pending_payment");
     }
+
+    await ensureFreeSubscription(payment.provider_id);
+    await applyPlanBenefits(payment.provider_id, "free", null);
+
+    return { providerId: payment.provider_id };
   }
 
   async expireDueSubscriptions() {

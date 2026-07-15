@@ -57,6 +57,16 @@ export async function ProviderProfileView({ provider }: ProviderProfileViewProps
                 {provider.verified ? (
                   <Badge variant="success">{t("verified")}</Badge>
                 ) : null}
+                {provider.planSlug === "pro" ? (
+                  <Badge className="bg-[var(--dalily-gold)] text-[var(--dalily-navy)] hover:bg-[var(--dalily-gold)]">
+                    {t("planPro")}
+                  </Badge>
+                ) : null}
+                {provider.planSlug === "premium" ? (
+                  <Badge className="bg-[var(--dalily-navy)] text-[var(--dalily-gold)] hover:bg-[var(--dalily-navy)]">
+                    {t("planPremium")}
+                  </Badge>
+                ) : null}
               </div>
               <p className="mt-1 text-muted-foreground">
                 {getLocalizedText(provider.categoryLabel, locale)}
@@ -77,6 +87,8 @@ export async function ProviderProfileView({ provider }: ProviderProfileViewProps
                   {t("respondsIn", { hours: provider.responseTimeHours })}
                 </span>
               ) : null}
+              <span>{t("memberSince", { date: new Date(provider.memberSince).getFullYear() })}</span>
+              <span>{t("healthScore", { score: provider.profileCompleteness })}</span>
             </div>
           </div>
         </div>

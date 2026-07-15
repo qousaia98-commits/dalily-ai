@@ -38,6 +38,9 @@ export type PublicProviderProfile = {
   reviewCount: number;
   trustScore: number;
   verified: boolean;
+  planSlug: import("@/lib/subscription/types").PlanSlug;
+  profileCompleteness: number;
+  memberSince: string;
   coverImage: string;
   avatarImage: string;
   phone: string | null;
@@ -109,6 +112,8 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     .filter((service) => service.is_active)
     .map((service) => service.name);
 
+  const planMap = await getActivePlanSlugsByProviderIds([provider.id]);
+
   return {
     id: provider.id,
     slug: provider.slug,
@@ -122,6 +127,9 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     reviewCount: provider.review_count,
     trustScore: provider.trust_score,
     verified: provider.verification_status === "verified",
+    planSlug: planMap.get(provider.id) ?? "free",
+    profileCompleteness: provider.profile_completeness,
+    memberSince: provider.created_at,
     coverImage: cover ? getStoragePublicUrl(cover.path) : DEFAULT_COVER,
     avatarImage: avatar ? getStoragePublicUrl(avatar.path) : DEFAULT_AVATAR,
     phone: provider.phone,

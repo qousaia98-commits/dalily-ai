@@ -445,7 +445,7 @@ export async function uploadProviderImageAction(
   }
 
   const limits = await getProviderPlanLimits(provider.id);
-  if (parsed.data.kind === "gallery" && provider.gallery.length >= limits.maxImages) {
+  if (parsed.data.kind === "gallery" && limits.maxImages != null && provider.gallery.length >= limits.maxImages) {
     return { success: false, error: "gallery_limit" };
   }
 

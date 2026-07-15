@@ -14,6 +14,11 @@ export type AdminDashboardStats = {
   totalUsers: number;
   totalSearches: number;
   searchesToday: number;
+  pendingPayments: number;
+  pendingVerifications: number;
+  recentRegistrations: number;
+  recentApprovals: number;
+  averageHealthScore: number;
 };
 
 export type AdminProviderItem = {
@@ -73,6 +78,8 @@ function startOfUtcDay(): string {
 export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
   const admin = createAdminClient();
   const todayStart = startOfUtcDay();
+  const weekAgo = new Date();
+  weekAgo.setUTCDate(weekAgo.getUTCDate() - 7);
 
   const [
     providersResult,
@@ -83,6 +90,10 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
     usersResult,
     searchesResult,
     searchesTodayResult,
+    pendingPaymentsResult,
+    recentRegistrationsResult,
+    recentApprovalsResult,
+    healthRows,
   ] = await Promise.all([
     admin.from("providers").select("id", { count: "exact", head: true }).is("deleted_at", null),
     admin
@@ -110,18 +121,47 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
       .from("search_logs")
       .select("id", { count: "exact", head: true })
       .gte("created_at", todayStart),
+    admin
+      .from("payments")
+      .select("id", { count: "exact", head: true })
+      .eq("payment_status", "pending_review"),
+    admin
+      .from("providers")
+      .select("id", { count: "exact", head: true })
+      .is("deleted_at", null)
+      .gte("created_at", weekAgo.toISOString()),
+    admin
+      .from("providers")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "active")
+      .is("deleted_at", null)
+      .gte("updated_at", weekAgo.toISOString()),
+    admin
+      .from("providers")
+      .select("profile_completeness")
+      .is("deleted_at", null)
+      .limit(500),
   ]);
 
-  const rejectedProviders = rejectedProvidersResult.count ?? 0;
+  const completenessValues = (healthRows.data ?? []).map((row) => Number(row.profile_completeness) || 0);
+  const averageHealthScore =
+    completenessValues.length > 0
+      ? Math.round(completenessValues.reduce((a, b) => a + b, 0) / completenessValues.length)
+      : 0;
 
   return {
     totalProviders: providersResult.count ?? 0,
     activeProviders: activeProvidersResult.count ?? 0,
-    pendingReviews: (pendingProvidersResult.count ?? 0) + (pendingVerificationsResult.count ?? 0),
-    rejectedProviders,
+    pendingReviews: pendingProvidersResult.count ?? 0,
+    rejectedProviders: rejectedProvidersResult.count ?? 0,
     totalUsers: usersResult.count ?? 0,
     totalSearches: searchesResult.count ?? 0,
     searchesToday: searchesTodayResult.count ?? 0,
+    pendingPayments: pendingPaymentsResult.count ?? 0,
+    pendingVerifications: pendingVerificationsResult.count ?? 0,
+    recentRegistrations: recentRegistrationsResult.count ?? 0,
+    recentApprovals: recentApprovalsResult.count ?? 0,
+    averageHealthScore,
   };
 }
 

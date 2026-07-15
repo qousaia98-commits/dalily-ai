@@ -4,8 +4,8 @@ import type { CreatePaymentInput, PaymentProvider, VerifyPaymentInput } from "@/
 import type { CreatePaymentResult, VerifyPaymentResult } from "@/lib/subscription/types";
 
 /**
- * Beta payment provider — creates pending payments with platform-configured transfer details.
- * Admin approval activates the subscription (no external API).
+ * Beta payment provider — creates pending payments with a stored unique reference.
+ * Admin approval after receipt review activates the subscription.
  */
 export class ManualPaymentProvider implements PaymentProvider {
   readonly name = "manual";
@@ -23,8 +23,9 @@ export class ManualPaymentProvider implements PaymentProvider {
         payment_status: "pending",
         amount: input.amount,
         currency: input.currency,
+        payment_reference: input.reference,
       })
-      .select("id")
+      .select("id, payment_reference")
       .single();
 
     if (error || !data) {
@@ -36,9 +37,11 @@ export class ManualPaymentProvider implements PaymentProvider {
       instructions: {
         receiver: config.receiver,
         account: config.account,
+        swift: config.swift || undefined,
+        bankName: config.bankName || undefined,
         amount: input.amount,
         currency: input.currency,
-        reference: input.reference,
+        reference: data.payment_reference,
       },
     };
   }
@@ -51,7 +54,10 @@ export class ManualPaymentProvider implements PaymentProvider {
       .eq("id", input.paymentId)
       .maybeSingle();
 
-    if (!payment || payment.payment_status !== "pending") {
+    if (
+      !payment ||
+      (payment.payment_status !== "pending" && payment.payment_status !== "pending_review")
+    ) {
       return { success: false, paymentId: input.paymentId };
     }
 

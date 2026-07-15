@@ -43,6 +43,10 @@ export type ManagedProvider = {
   status: ProviderStatus;
   verificationStatus: VerificationStatus;
   profileCompleteness: number;
+  reviewCount: number;
+  ratingAvg: number;
+  responseTimeHours: number | null;
+  createdAt: string;
   avatarImageId: string | null;
   coverImageId: string | null;
   avatarUrl: string | null;

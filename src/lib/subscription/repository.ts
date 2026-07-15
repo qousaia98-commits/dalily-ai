@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { Database, LocalizedJson } from "@/types/database.types";
 import type { PlanFeatures, PlanSlug, SubscriptionPlanRow } from "@/lib/subscription/types";
+import { listPaymentEvents } from "@/lib/payment/payment-events";
 
 type PlanDbRow = Database["public"]["Tables"]["subscription_plans"]["Row"];
 type SubscriptionDbRow = Database["public"]["Tables"]["subscriptions"]["Row"];
@@ -102,14 +103,48 @@ export async function getPaymentHistory(providerId: string) {
     .order("created_at", { ascending: false })
     .limit(20);
 
+  const subscriptionIds = [
+    ...new Set((data ?? []).map((row) => row.subscription_id).filter(Boolean) as string[]),
+  ];
+
+  const planSlugByPaymentId = new Map<string, PlanSlug>();
+  if (subscriptionIds.length > 0) {
+    const admin = createAdminClient();
+    const { data: subscriptions } = await admin
+      .from("subscriptions")
+      .select("id, plan_id")
+      .in("id", subscriptionIds);
+    const planIds = [...new Set((subscriptions ?? []).map((s) => s.plan_id))];
+    const { data: plans } = await admin.from("subscription_plans").select("id, slug").in("id", planIds);
+    const slugByPlanId = new Map((plans ?? []).map((p) => [p.id, p.slug as PlanSlug]));
+    const planBySubId = new Map(
+      (subscriptions ?? []).map((s) => [s.id, slugByPlanId.get(s.plan_id) ?? "pro"]),
+    );
+    for (const row of data ?? []) {
+      if (row.subscription_id) {
+        planSlugByPaymentId.set(row.id, planBySubId.get(row.subscription_id) ?? "pro");
+      }
+    }
+  }
+
   return (data ?? []).map((row) => ({
     id: row.id,
     amount: Number(row.amount),
     currency: row.currency,
     paymentStatus: row.payment_status,
     paymentProvider: row.payment_provider,
+    paymentReference: row.payment_reference,
+    receiptPath: row.receipt_path,
+    receiptMimeType: row.receipt_mime_type,
+    submittedAt: row.submitted_at,
+    approvedAt: row.approved_at,
+    approvedBy: row.approved_by,
+    rejectedAt: row.rejected_at,
+    rejectedBy: row.rejected_by,
+    adminNote: row.admin_note,
     paidAt: row.paid_at,
     createdAt: row.created_at,
+    planSlug: planSlugByPaymentId.get(row.id) ?? ("pro" as PlanSlug),
   }));
 }
 
@@ -235,25 +270,169 @@ export async function listPaymentsForAdmin(params: {
   }
 
   const providerIds = [...new Set(data.map((row) => row.provider_id))];
-  const { data: providers } = await admin.from("providers").select("id, name").in("id", providerIds);
-  const providerById = new Map((providers ?? []).map((p) => [p.id, p.name as LocalizedJson]));
+  const subscriptionIds = [
+    ...new Set(data.map((row) => row.subscription_id).filter(Boolean) as string[]),
+  ];
+
+  const [{ data: providers }, { data: subscriptions }, { data: plans }] = await Promise.all([
+    admin.from("providers").select("id, name, owner_id, phone, email").in("id", providerIds),
+    subscriptionIds.length
+      ? admin.from("subscriptions").select("id, plan_id").in("id", subscriptionIds)
+      : Promise.resolve({ data: [] as { id: string; plan_id: string }[] }),
+    admin.from("subscription_plans").select("id, slug, name"),
+  ]);
+
+  const ownerIds = [...new Set((providers ?? []).map((p) => p.owner_id))];
+  const { data: profiles } =
+    ownerIds.length > 0
+      ? await admin.from("profiles").select("user_id, display_name").in("user_id", ownerIds)
+      : { data: [] as { user_id: string; display_name: string | null }[] };
+
+  const providerById = new Map((providers ?? []).map((p) => [p.id, p]));
+  const profileByUserId = new Map((profiles ?? []).map((p) => [p.user_id, p]));
+  const planById = new Map((plans ?? []).map((p) => [p.id, p]));
+  const subById = new Map((subscriptions ?? []).map((s) => [s.id, s]));
 
   return {
-    items: data.map((row) => ({
-      id: row.id,
-      providerId: row.provider_id,
-      providerName: providerById.get(row.provider_id) ?? { en: "", ar: "" },
-      subscriptionId: row.subscription_id,
-      paymentProvider: row.payment_provider,
-      paymentStatus: row.payment_status,
-      amount: Number(row.amount),
-      currency: row.currency,
-      paidAt: row.paid_at,
-      createdAt: row.created_at,
-    })),
+    items: data.map((row) => {
+      const provider = providerById.get(row.provider_id);
+      const sub = row.subscription_id ? subById.get(row.subscription_id) : null;
+      const plan = sub ? planById.get(sub.plan_id) : null;
+      const owner = provider ? profileByUserId.get(provider.owner_id) : null;
+      return {
+        id: row.id,
+        providerId: row.provider_id,
+        providerName: (provider?.name as LocalizedJson) ?? { en: "", ar: "" },
+        ownerName: owner?.display_name ?? null,
+        ownerId: provider?.owner_id ?? null,
+        ownerEmail: provider?.email ?? null,
+        phone: provider?.phone ?? null,
+        subscriptionId: row.subscription_id,
+        planSlug: (plan?.slug ?? "pro") as string,
+        planName: (plan?.name as LocalizedJson) ?? { en: "PRO", ar: "PRO" },
+        paymentProvider: row.payment_provider,
+        paymentStatus: row.payment_status,
+        paymentReference: row.payment_reference,
+        receiptPath: row.receipt_path,
+        amount: Number(row.amount),
+        currency: row.currency,
+        paidAt: row.paid_at,
+        submittedAt: row.submitted_at,
+        approvedAt: row.approved_at,
+        rejectedAt: row.rejected_at,
+        adminNote: row.admin_note,
+        createdAt: row.created_at,
+      };
+    }),
     total: count ?? 0,
     page,
     pageSize,
+  };
+}
+
+export async function countPaymentsByStatus() {
+  const admin = createAdminClient();
+  const statuses = ["pending_review", "paid", "rejected"] as const;
+  const counts: Record<string, number> = {
+    pending_review: 0,
+    paid: 0,
+    rejected: 0,
+    all: 0,
+  };
+
+  const { count: allCount } = await admin
+    .from("payments")
+    .select("*", { count: "exact", head: true });
+  counts.all = allCount ?? 0;
+
+  await Promise.all(
+    statuses.map(async (status) => {
+      const { count } = await admin
+        .from("payments")
+        .select("*", { count: "exact", head: true })
+        .eq("payment_status", status);
+      counts[status] = count ?? 0;
+    }),
+  );
+
+  return counts;
+}
+
+export async function getPaymentDetailForAdmin(paymentId: string) {
+  const admin = createAdminClient();
+  const { data: row } = await admin.from("payments").select("*").eq("id", paymentId).maybeSingle();
+  if (!row) return null;
+
+  const { data: provider } = await admin
+    .from("providers")
+    .select("id, name, owner_id, phone, email")
+    .eq("id", row.provider_id)
+    .maybeSingle();
+
+  let ownerEmail: string | null = null;
+  let ownerName: string | null = null;
+
+  if (provider?.owner_id) {
+    const [{ data: profile }, authUser] = await Promise.all([
+      admin.from("profiles").select("display_name").eq("user_id", provider.owner_id).maybeSingle(),
+      admin.auth.admin.getUserById(provider.owner_id),
+    ]);
+    ownerName = profile?.display_name ?? null;
+    ownerEmail = authUser.data.user?.email ?? null;
+  }
+
+  let planSlug = "pro";
+  let planName: LocalizedJson = { en: "PRO", ar: "PRO" };
+  if (row.subscription_id) {
+    const { data: sub } = await admin
+      .from("subscriptions")
+      .select("plan_id")
+      .eq("id", row.subscription_id)
+      .maybeSingle();
+    if (sub) {
+      const plan = await getPlanById(sub.plan_id);
+      if (plan) {
+        planSlug = plan.slug;
+        planName = plan.name;
+      }
+    }
+  }
+
+  let receiptUrl: string | null = null;
+  if (row.receipt_path) {
+    const { data: signed } = await admin.storage
+      .from("payment-receipts")
+      .createSignedUrl(row.receipt_path, 3600);
+    receiptUrl = signed?.signedUrl ?? null;
+  }
+
+  const events = await listPaymentEvents(paymentId);
+
+  return {
+    id: row.id,
+    providerId: row.provider_id,
+    providerName: (provider?.name as LocalizedJson) ?? { en: "", ar: "" },
+    ownerName,
+    ownerEmail: ownerEmail ?? provider?.email ?? null,
+    phone: provider?.phone ?? null,
+    planSlug,
+    planName,
+    amount: Number(row.amount),
+    currency: row.currency,
+    paymentReference: row.payment_reference,
+    paymentStatus: row.payment_status,
+    receiptPath: row.receipt_path,
+    receiptMimeType: row.receipt_mime_type,
+    receiptUrl,
+    adminNote: row.admin_note,
+    submittedAt: row.submitted_at,
+    approvedAt: row.approved_at,
+    approvedBy: row.approved_by,
+    rejectedAt: row.rejected_at,
+    rejectedBy: row.rejected_by,
+    paidAt: row.paid_at,
+    createdAt: row.created_at,
+    events,
   };
 }
 

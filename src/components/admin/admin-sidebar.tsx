@@ -9,6 +9,7 @@ import {
   Menu,
   CreditCard,
   Tags,
+  Banknote,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/admin/verification", icon: ShieldCheck, key: "verification" },
   { href: "/admin/searches", icon: Search, key: "searches" },
   { href: "/admin/users", icon: Users, key: "users" },
+  { href: "/admin/payments", icon: Banknote, key: "payments" },
   { href: "/admin/subscriptions", icon: CreditCard, key: "subscriptions" },
 ] as const;
 

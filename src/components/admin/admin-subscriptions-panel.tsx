@@ -69,7 +69,7 @@ export function AdminSubscriptionsPanel({ subscriptions, payments }: AdminSubscr
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="secondary">{t(`paymentStatus.${payment.paymentStatus}`)}</Badge>
-                  {payment.paymentStatus === "pending" ? (
+                  {payment.paymentStatus === "pending" || payment.paymentStatus === "pending_review" ? (
                     <>
                       <Button size="sm" disabled={pending} onClick={() => run(() => approvePaymentAction(payment.id))}>
                         {pending ? <Loader2 className="size-4 animate-spin" /> : <CheckCircle2 className="size-4" />}

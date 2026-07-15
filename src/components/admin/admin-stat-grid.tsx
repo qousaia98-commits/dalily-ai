@@ -7,7 +7,7 @@ type StatCardProps = {
 
 export function AdminStatCard({ label, value }: StatCardProps) {
   return (
-    <Card>
+    <Card className="rounded-2xl">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">{label}</CardTitle>
       </CardHeader>
@@ -27,28 +27,22 @@ type AdminStatGridProps = {
     totalUsers: number;
     totalSearches: number;
     searchesToday: number;
+    pendingPayments: number;
+    pendingVerifications: number;
+    recentRegistrations: number;
+    recentApprovals: number;
+    averageHealthScore: number;
   };
-  labels: {
-    totalProviders: string;
-    activeProviders: string;
-    pendingReviews: string;
-    rejectedProviders: string;
-    totalUsers: string;
-    totalSearches: string;
-    searchesToday: string;
-  };
+  labels: Record<keyof AdminStatGridProps["stats"], string>;
 };
 
 export function AdminStatGrid({ stats, labels }: AdminStatGridProps) {
+  const keys = Object.keys(labels) as (keyof AdminStatGridProps["stats"])[];
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      <AdminStatCard label={labels.totalProviders} value={stats.totalProviders} />
-      <AdminStatCard label={labels.activeProviders} value={stats.activeProviders} />
-      <AdminStatCard label={labels.pendingReviews} value={stats.pendingReviews} />
-      <AdminStatCard label={labels.rejectedProviders} value={stats.rejectedProviders} />
-      <AdminStatCard label={labels.totalUsers} value={stats.totalUsers} />
-      <AdminStatCard label={labels.totalSearches} value={stats.totalSearches} />
-      <AdminStatCard label={labels.searchesToday} value={stats.searchesToday} />
+      {keys.map((key) => (
+        <AdminStatCard key={key} label={labels[key]} value={stats[key]} />
+      ))}
     </div>
   );
 }

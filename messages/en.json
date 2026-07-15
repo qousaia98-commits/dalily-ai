@@ -137,7 +137,11 @@
     "call": "Call",
     "whatsapp": "WhatsApp",
     "contactNote": "You will be connected directly with the provider.",
-    "respondsIn": "Responds within {hours} hours"
+    "respondsIn": "Responds within {hours} hours",
+    "planPro": "PRO",
+    "planPremium": "PREMIUM",
+    "memberSince": "Member since {date}",
+    "healthScore": "Health {score}%"
   },
   "footer": {
     "description": "AI-powered platform to discover trusted service providers in Syria.",
@@ -241,24 +245,255 @@
       "pendingNote": "Your profile is under review. We'll notify you when it's approved.",
       "activeNote": "Your profile is live and visible to customers.",
       "upgradeCard": {
-        "starterEyebrow": "Grow faster",
+        "starterEyebrow": "Ready for more customers?",
         "starterTitle": "Upgrade to PRO",
-        "starterBody": "Get more customers with higher visibility and a trusted PRO badge.",
+        "starterBody": "Get more visibility, a trusted PRO badge, and smarter growth insights.",
         "starterCta": "Upgrade to PRO",
-        "proEyebrow": "Go exclusive",
-        "proTitle": "Upgrade to PREMIUM",
-        "proBody": "Become the first choice in your city with maximum exposure.",
+        "proEyebrow": "Want even more visibility?",
+        "proTitle": "Become Premium",
+        "proBody": "Top placement and featured exposure for businesses ready to lead their city.",
         "proCta": "Become Premium",
         "premiumEyebrow": "Premium",
-        "premiumTitle": "Thank you for being a Premium Business",
-        "premiumBody": "You already have the highest visibility on Dalily. Keep winning customers.",
+        "premiumTitle": "Thank you for supporting Dalily",
+        "premiumBody": "You already have the strongest visibility on the platform.",
         "pendingNote": "Your payment is waiting for confirmation. Your new plan activates after admin approval."
+      },
+      "paymentStatus": {
+        "reviewTitle": "🟡 Payment under review",
+        "reviewBody": "We have received your payment receipt. Our team is reviewing it. This usually takes less than 24 hours.",
+        "activatedTitle": "🟢 Your subscription has been activated.",
+        "activatedBody": "Your payment was verified and your plan is now active.",
+        "rejectedTitle": "🔴 Payment could not be verified.",
+        "rejectedBody": "We could not confirm this transfer. You can try again with a new payment.",
+        "adminNote": "Admin note",
+        "viewPayment": "View payment details",
+        "tryAgain": "Try again",
+        "plan": "Plan",
+        "amount": "Amount",
+        "reference": "Payment reference",
+        "submittedAt": "Submission date",
+        "status": "Current status",
+        "statusLabels": {
+          "pending_review": "Payment under review",
+          "paid": "Approved",
+          "rejected": "Rejected"
+        }
+      },
+      "paymentHistory": {
+        "title": "Payment History",
+        "empty": "No payments yet.",
+        "reference": "Reference",
+        "amount": "Amount",
+        "submittedAt": "Submitted at",
+        "approvedAt": "Approved at",
+        "rejectedReason": "Rejection reason",
+        "status": {
+          "pending": "Awaiting transfer",
+          "pending_review": "Under review",
+          "paid": "Approved",
+          "failed": "Failed",
+          "cancelled": "Cancelled",
+          "rejected": "Rejected"
+        }
       }
     },
     "welcome": {
-      "title": "Welcome to Dalily",
-      "subtitle": "Your business has been created successfully.",
-      "prompt": "Choose how you want to grow."
+      "title": "Congratulations!",
+      "subtitle": "Your business has been created successfully on Dalily.",
+      "nextTitle": "What happens next",
+      "completeProfile": "Complete your profile",
+      "discoverEyebrow": "Optional",
+      "discoverTitle": "Discover PRO & PREMIUM",
+      "discoverSubtitle": "Grow when you are ready — never required.",
+      "steps": {
+        "verification": {
+          "title": "Verification",
+          "body": "Build trust with customers by verifying your business."
+        },
+        "growth": {
+          "title": "Growth",
+          "body": "Strengthen your profile so more people find and contact you."
+        },
+        "plans": {
+          "title": "Subscriptions",
+          "body": "Upgrade only when you want more visibility — Starter stays free forever."
+        }
+      }
+    },
+    "growth": {
+      "hero": {
+        "eyebrow": "Growth Dashboard",
+        "starter": {
+          "title": "Welcome, {name}!",
+          "subtitle": "Let's grow your business together."
+        },
+        "pro": {
+          "title": "Great work, {name}!",
+          "subtitle": "Your business receives more visibility on Dalily."
+        },
+        "premium": {
+          "title": "You're one of Dalily's featured businesses, {name}.",
+          "subtitle": "Customers see you first — keep winning their trust."
+        }
+      },
+      "health": {
+        "title": "Business Health Score",
+        "subtitle": "Complete your profile to unlock more customer trust.",
+        "label": "Score",
+        "scoreAria": "Business health score {score} out of 100",
+        "complete": "Your profile is in excellent shape.",
+        "cta": "Improve profile",
+        "items": {
+          "logo": "Logo",
+          "cover": "Cover",
+          "gallery": "Gallery",
+          "description": "Description",
+          "hours": "Hours",
+          "verification": "Verified",
+          "phone": "Phone",
+          "whatsapp": "WhatsApp",
+          "categories": "Services",
+          "location": "Location"
+        },
+        "suggestions": {
+          "logo": "Add your logo",
+          "cover": "Add a cover image",
+          "gallery": "Add more photos",
+          "description": "Complete your description",
+          "hours": "Set your working hours",
+          "verification": "Verify your business",
+          "phone": "Add your phone number",
+          "whatsapp": "Add WhatsApp",
+          "categories": "Add your services",
+          "location": "Confirm your location"
+        }
+      },
+      "insights": {
+        "title": "Weekly Insights",
+        "subtitle": "How customers discover and engage with your business.",
+        "empty": "No data yet — keep growing your profile.",
+        "profileViews": "Profile views",
+        "phoneClicks": "Phone clicks",
+        "whatsappClicks": "WhatsApp clicks",
+        "favorites": "Favorites",
+        "reviews": "Reviews",
+        "searchAppearances": "Search appearances"
+      },
+      "achievements": {
+        "title": "Business Achievements",
+        "subtitle": "Milestones unlock automatically as you grow.",
+        "profile_completed": {
+          "title": "Profile Completed",
+          "body": "Your business profile looks strong and trustworthy."
+        },
+        "first_review": {
+          "title": "First Review",
+          "body": "Customers started sharing feedback."
+        },
+        "first_contact": {
+          "title": "First Customer Contact",
+          "body": "Phone or WhatsApp is ready for customers."
+        },
+        "verified": {
+          "title": "Verified Business",
+          "body": "Trust signals help you stand out."
+        },
+        "views_100": {
+          "title": "100 Appearances",
+          "body": "You appeared in search 100 times."
+        },
+        "views_1000": {
+          "title": "1000 Appearances",
+          "body": "A thousand search appearances — excellent reach."
+        },
+        "premium_member": {
+          "title": "Premium Member",
+          "body": "You are a featured Dalily business."
+        }
+      },
+      "tips": {
+        "title": "AI Growth Tips",
+        "subtitle": "Practical recommendations that explain why they matter.",
+        "allDone": "Everything looks great — keep serving customers.",
+        "cta": "Fix this",
+        "items": {
+          "logo": {
+            "title": "Add your logo",
+            "why": "A clear logo builds recognition and trust in search results."
+          },
+          "cover": {
+            "title": "Add a cover image",
+            "why": "Strong cover photos make your profile feel premium and inviting."
+          },
+          "gallery": {
+            "title": "Your gallery is missing photos",
+            "why": "Businesses with more photos receive more customer trust."
+          },
+          "description": {
+            "title": "Complete your description",
+            "why": "Clear descriptions help customers understand how you solve their problems."
+          },
+          "hours": {
+            "title": "Complete your working hours",
+            "why": "Customers contact businesses with opening hours more often."
+          },
+          "verification": {
+            "title": "Verify your business",
+            "why": "Verified businesses appear more trustworthy."
+          },
+          "phone": {
+            "title": "Add your phone number",
+            "why": "Phone contact is the fastest path from interest to booking."
+          },
+          "whatsapp": {
+            "title": "Add WhatsApp",
+            "why": "Many customers prefer WhatsApp for quick questions."
+          },
+          "categories": {
+            "title": "Add your services",
+            "why": "Listed services help Dalily match you with the right searches."
+          },
+          "location": {
+            "title": "Confirm your location",
+            "why": "Local customers find nearby businesses first."
+          }
+        }
+      },
+      "notifications": {
+        "title": "Notifications",
+        "empty": "You're all caught up.",
+        "paymentPending": "Your payment receipt is under review.",
+        "proActive": "Your PRO subscription is active.",
+        "premiumActive": "Your PREMIUM subscription is active.",
+        "verificationApproved": "Your verification has been approved.",
+        "profileViews": "Your profile appeared in search {count} times this week.",
+        "firstReview": "You received your first review.",
+        "healthHigh": "Your profile completion reached {score}%."
+      },
+      "trust": {
+        "title": "Why businesses choose Dalily",
+        "subtitle": "We help you grow — not sell you software features.",
+        "visibility": {
+          "title": "More Visibility",
+          "body": "Appear in front of customers actively searching for help."
+        },
+        "trust": {
+          "title": "More Trust",
+          "body": "Badges and verification build credibility."
+        },
+        "ai": {
+          "title": "AI Optimization",
+          "body": "Guidance that improves how customers discover you."
+        },
+        "insights": {
+          "title": "Business Insights",
+          "body": "Understand how people find and contact you."
+        },
+        "growth": {
+          "title": "Real Customer Growth",
+          "body": "Built for local demand, not vanity metrics."
+        }
+      }
     },
     "verificationStatus": {
       "unverified": "Not verified",
@@ -542,25 +777,52 @@
         "cancelled": "Cancelled"
       },
       "paymentStatus": {
-        "pending": "Pending",
+        "pending": "Awaiting transfer",
+        "pending_review": "Pending payment review",
         "paid": "Paid",
         "failed": "Failed",
-        "cancelled": "Cancelled"
+        "cancelled": "Cancelled",
+        "rejected": "Rejected"
       },
       "payment": {
         "stepLabel": "Payment",
         "title": "Complete your payment",
         "subtitle": "Transfer the amount below for {plan}. Your plan activates only after admin approval.",
-        "amountLabel": "Amount to pay",
-        "receiver": "Receiver",
-        "account": "Account / IBAN",
+        "planLabel": "Plan",
+        "amountLabel": "Amount",
+        "receiver": "Account holder",
+        "account": "IBAN / Account",
+        "swift": "SWIFT / BIC",
         "reference": "Payment reference",
+        "referenceNotice": "Please include this reference when making your bank transfer.",
         "receiverFallback": "Contact Dalily support for bank details",
         "accountFallback": "Will be shared by the Dalily team",
-        "instructions": "Include the payment reference in your transfer. After you pay, wait for confirmation — selecting a plan never activates it automatically.",
+        "instructions": "Transfer the amount using the details above. Then confirm once the transfer is done.",
+        "transferDone": "I have completed the transfer",
+        "uploadTitle": "Upload payment receipt",
+        "uploadHint": "Upload a clear photo or PDF of your transfer receipt.",
+        "chooseFile": "Choose receipt file",
+        "fileTypes": "PDF, JPG or PNG · max 10 MB",
+        "submitReceipt": "Submit for review",
+        "backToTransfer": "Back",
+        "reviewTitle": "Pending Payment Review",
+        "reviewBody": "We received your receipt. An admin will review it soon. Your plan is not active yet.",
         "waitingTitle": "Waiting for payment confirmation",
-        "waitingBody": "An admin will review your payment and activate your subscription. You can keep using Starter until then.",
-        "backToPlans": "Back to plans"
+        "waitingBody": "An admin will review your payment and activate your subscription.",
+        "backToPlans": "Back to plans",
+        "copy": "Copy",
+        "copyAmount": "Copy amount",
+        "copyReference": "Copy reference",
+        "copied": "Copied",
+        "errors": {
+          "file_required": "Please choose a receipt file.",
+          "file_too_large": "File must be 10 MB or smaller.",
+          "invalid_file_type": "Only PDF, JPG and PNG are allowed.",
+          "upload_failed": "Upload failed. Please try again.",
+          "save_failed": "Could not save your receipt.",
+          "payment_not_submittable": "This payment can no longer receive a receipt.",
+          "invalid_payment": "Invalid payment."
+        }
       },
       "features": {
         "maxServices": "Up to {value} services",
@@ -583,19 +845,114 @@
       "searches": "Search analytics",
       "users": "Users",
       "categories": "Categories",
+      "payments": "💳 Payments",
       "subscriptions": "Subscriptions"
+    },
+    "payments": {
+      "eyebrow": "Manual transfers",
+      "title": "Payments",
+      "subtitle": "Compare the bank reference with the receipt, then approve or reject in seconds.",
+      "empty": "No payments yet.",
+      "review": "Review",
+      "approve": "Approve Payment",
+      "reject": "Reject Payment",
+      "hasReceipt": "Receipt",
+      "noReceipt": "No receipt",
+      "searchPlaceholder": "Search by business, owner, reference, email or phone…",
+      "tabs": {
+        "pendingReview": "🟡 Pending Review",
+        "approved": "🟢 Approved",
+        "rejected": "🔴 Rejected",
+        "all": "⚪ All"
+      },
+      "timeline": {
+        "requested": "Requested",
+        "receipt_uploaded": "Receipt uploaded",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "dialogs": {
+        "approveTitle": "Approve Payment?",
+        "approveBody": "This will activate the subscription immediately.",
+        "rejectTitle": "Reject Payment?",
+        "rejectBody": "The business will stay on Starter. You can optionally add a reason.",
+        "cancel": "Cancel",
+        "confirmApprove": "Approve",
+        "confirmReject": "Reject"
+      },
+      "columns": {
+        "company": "Company",
+        "owner": "Owner",
+        "plan": "Plan",
+        "amount": "Amount",
+        "reference": "Reference",
+        "receipt": "Receipt",
+        "requestedAt": "Requested at",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "plans": {
+        "free": "Starter",
+        "pro": "PRO",
+        "premium": "PREMIUM"
+      },
+      "status": {
+        "pending": "Awaiting transfer",
+        "pending_review": "Pending review",
+        "paid": "Paid",
+        "failed": "Failed",
+        "cancelled": "Cancelled",
+        "rejected": "Rejected"
+      },
+      "detail": {
+        "pageTitle": "Payment details",
+        "title": "Transfer details",
+        "businessInfo": "Business information",
+        "company": "Company",
+        "owner": "Owner",
+        "email": "Email",
+        "phone": "Phone",
+        "plan": "Plan",
+        "amount": "Amount",
+        "reference": "Reference",
+        "requestedAt": "Requested at",
+        "timeline": "Status timeline",
+        "receipt": "Payment receipt",
+        "openReceipt": "Open receipt",
+        "adminNote": "Admin note",
+        "rejectNote": "Reason for rejection",
+        "rejectNotePlaceholder": "Optional note for the business owner",
+        "back": "Back to payments"
+      },
+      "errors": {
+        "forbidden": "Not allowed.",
+        "approve_failed": "Could not approve payment.",
+        "reject_failed": "Could not reject payment.",
+        "validation_error": "Invalid note.",
+        "unknown": "Something went wrong."
+      }
     },
     "dashboard": {
       "title": "Admin dashboard",
       "subtitle": "Platform overview and key metrics",
+      "quick": {
+        "payments": "Payments",
+        "verification": "Verification queue",
+        "providers": "Providers"
+      },
       "stats": {
         "totalProviders": "Total providers",
         "activeProviders": "Active providers",
-        "pendingReviews": "Pending reviews",
+        "pendingReviews": "Pending provider reviews",
         "rejectedProviders": "Rejected providers",
         "totalUsers": "Total users",
         "totalSearches": "Total searches",
-        "searchesToday": "Searches today"
+        "searchesToday": "Searches today",
+        "pendingPayments": "Pending payments",
+        "pendingVerifications": "Verification queue",
+        "recentRegistrations": "Registrations (7d)",
+        "recentApprovals": "Recent activations (7d)",
+        "averageHealthScore": "Avg business health"
       }
     },
     "providers": {
@@ -803,10 +1160,12 @@
         },
         "paymentStatus": {
           "all": "All payments",
-          "pending": "Pending",
+          "pending": "Awaiting transfer",
+          "pending_review": "Pending review",
           "paid": "Paid",
           "failed": "Failed",
-          "cancelled": "Cancelled"
+          "cancelled": "Cancelled",
+          "rejected": "Rejected"
         }
       },
       "plans": {
@@ -822,10 +1181,12 @@
         "cancelled": "Cancelled"
       },
       "paymentStatus": {
-        "pending": "Pending",
+        "pending": "Awaiting transfer",
+        "pending_review": "Pending review",
         "paid": "Paid",
         "failed": "Failed",
-        "cancelled": "Cancelled"
+        "cancelled": "Cancelled",
+        "rejected": "Rejected"
       }
     }
   },

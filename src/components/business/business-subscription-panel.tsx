@@ -9,16 +9,14 @@ import {
   downgradeSubscriptionAction,
   renewSubscriptionAction,
   upgradeSubscriptionAction,
+  type PaymentInstructionsData,
 } from "@/actions/subscription.actions";
 import {
   marketingToPlanSlug,
   SubscriptionPlanCards,
   type MarketingPlanId,
 } from "@/components/business/subscription-plan-cards";
-import {
-  SubscriptionPaymentPanel,
-  type PaymentInstructions,
-} from "@/components/business/subscription-payment-panel";
+import { SubscriptionPaymentPanel } from "@/components/business/subscription-payment-panel";
 import type { PlanSlug } from "@/lib/subscription/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,12 +26,13 @@ type BusinessSubscriptionPanelProps = {
   currentPlanSlug: PlanSlug;
   status: string;
   expiresAt: string | null;
-  pendingPayment: PaymentInstructions | null;
+  pendingPayment: PaymentInstructionsData | null;
   payments: {
     id: string;
     amount: number;
     currency: string;
     paymentStatus: string;
+    paymentReference?: string;
     createdAt: string;
   }[];
   mode?: "upgrade" | "welcome";
@@ -54,12 +53,12 @@ export function BusinessSubscriptionPanel({
   const router = useRouter();
   const localeRouter = useLocaleRouter();
   const [pending, startTransition] = useTransition();
-  const [liveInstructions, setLiveInstructions] = useState<PaymentInstructions | null>(null);
-  const [selectedPaidPlan, setSelectedPaidPlan] = useState<"pro" | "premium" | null>(null);
+  const [liveInstructions, setLiveInstructions] = useState<PaymentInstructionsData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const instructions = liveInstructions ?? pendingPayment;
-  const showPayment = Boolean(instructions) && (status === "pending_payment" || Boolean(liveInstructions));
+  const showPayment =
+    Boolean(instructions) && (status === "pending_payment" || Boolean(liveInstructions));
 
   function run(action: () => Promise<unknown>) {
     startTransition(async () => {
@@ -79,12 +78,10 @@ export function BusinessSubscriptionPanel({
       return;
     }
 
-    setSelectedPaidPlan(planId);
     startTransition(async () => {
       const result = await upgradeSubscriptionAction(marketingToPlanSlug(planId));
       if (!result.success) {
         setError(t("errors.upgradeFailed"));
-        setSelectedPaidPlan(null);
         return;
       }
       if (result.paymentInstructions) {
@@ -95,22 +92,15 @@ export function BusinessSubscriptionPanel({
   }
 
   if (showPayment && instructions) {
-    const planLabel =
-      selectedPaidPlan === "premium" || currentPlanSlug === "premium"
-        ? t("plans.premium.name")
-        : t("plans.pro.name");
-
     return (
-      <div className="space-y-8">
+      <div className="w-full max-w-full overflow-x-hidden px-1 sm:px-0">
         <SubscriptionPaymentPanel
           instructions={instructions}
-          planLabel={planLabel}
           onBack={
             mode === "welcome"
               ? undefined
               : () => {
                   setLiveInstructions(null);
-                  setSelectedPaidPlan(null);
                 }
           }
         />
@@ -179,12 +169,18 @@ export function BusinessSubscriptionPanel({
             {payments.length === 0 ? (
               <p className="text-sm text-muted-foreground">{t("noPayments")}</p>
             ) : (
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {payments.map((payment) => (
-                  <li key={payment.id} className="flex items-center justify-between gap-3 text-sm">
-                    <span>
+                  <li
+                    key={payment.id}
+                    className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#E8ECF2] px-3 py-2.5 text-sm"
+                  >
+                    <span className="font-medium">
                       ${payment.amount} {payment.currency}
                     </span>
+                    {payment.paymentReference ? (
+                      <span className="font-mono text-xs text-muted-foreground">{payment.paymentReference}</span>
+                    ) : null}
                     <Badge variant="secondary">{t(`paymentStatus.${payment.paymentStatus}`)}</Badge>
                     <span className="text-muted-foreground">
                       {new Date(payment.createdAt).toLocaleDateString(locale)}
