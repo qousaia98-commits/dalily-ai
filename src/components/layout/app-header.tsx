@@ -66,6 +66,7 @@ export async function AppHeader({ businessLabel }: AppHeaderProps = {}) {
           <PublicMobileNav
             isAuthenticated={Boolean(authUser)}
             isBusinessUser={businessUser}
+            isPlatformAdmin={platformAdmin}
             displayName={accountLabel}
           />
 
@@ -90,8 +91,8 @@ export async function AppHeader({ businessLabel }: AppHeaderProps = {}) {
               </Button>
             </>
           )}
-          <LanguageSwitcher />
-          <ThemeToggle />
+          <LanguageSwitcher className="hidden md:inline-flex" />
+          <ThemeToggle className="hidden md:inline-flex" />
         </div>
       </div>
     </header>
