@@ -601,8 +601,10 @@ export async function registerBusinessAction(
   }
 
   // ── redirect ────────────────────────────────────────────────────────────
-  console.log("[registerBusinessAction] ✓ redirect → /business", { locale: parsed.data.locale });
-  redirect({ href: "/business", locale: parsed.data.locale as "ar" | "en" });
+  console.log("[registerBusinessAction] ✓ redirect → /business/welcome", {
+    locale: parsed.data.locale,
+  });
+  redirect({ href: "/business/welcome", locale: parsed.data.locale as "ar" | "en" });
   return { success: true };
 }
 

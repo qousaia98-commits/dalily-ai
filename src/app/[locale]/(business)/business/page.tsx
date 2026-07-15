@@ -1,12 +1,15 @@
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/queries";
+import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { ProviderStatusBadge } from "@/components/business/provider-status-badge";
+import { DashboardUpgradeCard } from "@/components/business/dashboard-upgrade-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/lib/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import type { PlanSlug } from "@/lib/subscription/types";
 
 export default async function BusinessDashboardPage() {
   const t = await getTranslations("business.dashboard");
@@ -26,6 +29,10 @@ export default async function BusinessDashboardPage() {
     );
   }
 
+  const { subscription } = await getSubscriptionPageData(authUser.id);
+  const planSlug = (subscription?.planSlug ?? "free") as PlanSlug;
+  const subStatus = subscription?.status ?? "active";
+
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -35,6 +42,8 @@ export default async function BusinessDashboardPage() {
         </div>
         <ProviderStatusBadge status={provider.status} />
       </div>
+
+      <DashboardUpgradeCard planSlug={planSlug} status={subStatus} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>

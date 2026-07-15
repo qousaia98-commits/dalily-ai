@@ -224,7 +224,7 @@
       "gallery": "Gallery",
       "analytics": "Analytics",
       "verification": "Verification",
-      "subscription": "Subscription"
+      "upgrade": "⭐ Upgrade"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -239,7 +239,26 @@
       "galleryCount": "Gallery images",
       "draftNote": "Your profile is in draft. Complete it and submit for review.",
       "pendingNote": "Your profile is under review. We'll notify you when it's approved.",
-      "activeNote": "Your profile is live and visible to customers."
+      "activeNote": "Your profile is live and visible to customers.",
+      "upgradeCard": {
+        "starterEyebrow": "Grow faster",
+        "starterTitle": "Upgrade to PRO",
+        "starterBody": "Get more customers with higher visibility and a trusted PRO badge.",
+        "starterCta": "Upgrade to PRO",
+        "proEyebrow": "Go exclusive",
+        "proTitle": "Upgrade to PREMIUM",
+        "proBody": "Become the first choice in your city with maximum exposure.",
+        "proCta": "Become Premium",
+        "premiumEyebrow": "Premium",
+        "premiumTitle": "Thank you for being a Premium Business",
+        "premiumBody": "You already have the highest visibility on Dalily. Keep winning customers.",
+        "pendingNote": "Your payment is waiting for confirmation. Your new plan activates after admin approval."
+      }
+    },
+    "welcome": {
+      "title": "Welcome to Dalily",
+      "subtitle": "Your business has been created successfully.",
+      "prompt": "Choose how you want to grow."
     },
     "verificationStatus": {
       "unverified": "Not verified",
@@ -444,29 +463,81 @@
       }
     },
     "subscription": {
-      "title": "Subscription",
-      "subtitle": "Manage your plan, billing, and payment history",
-      "currentPlan": "Current plan",
+      "title": "Grow your business",
+      "eyebrow": "Visibility · Trust · Growth",
+      "subtitle": "Get more customers on Dalily — not just more features.",
+      "currentPlan": "Your plan",
       "expiresAt": "Expires on {date}",
       "noExpiration": "No expiration date",
       "renew": "Renew",
-      "downgrade": "Downgrade to Free",
+      "downgrade": "Downgrade to Starter",
       "cancel": "Cancel subscription",
       "upgrade": "Upgrade",
       "current": "Current plan",
-      "freePrice": "Free",
+      "freePrice": "FREE",
       "perMonth": "month",
       "paymentHistory": "Payment history",
       "noPayments": "No payments yet.",
+      "errors": {
+        "upgradeFailed": "Could not start the upgrade. Please try again."
+      },
       "plans": {
-        "free": "Free",
-        "pro": "Pro",
-        "premium": "Premium"
+        "starter": {
+          "name": "Starter",
+          "price": "FREE",
+          "headline": "Start your business for free",
+          "subtitle": "Create your profile and let customers find you.",
+          "description": "Perfect if you are just getting started. Everything you need to appear in Dalily.",
+          "cta": "Continue with Starter",
+          "includes": {
+            "profile": "Complete business profile",
+            "photos": "Unlimited photos",
+            "info": "Business information",
+            "reviews": "Customer reviews",
+            "search": "Visible in search"
+          }
+        },
+        "pro": {
+          "name": "PRO",
+          "price": "13 USD",
+          "badge": "MOST POPULAR",
+          "headline": "Get more customers",
+          "subtitle": "Increase your visibility and grow faster.",
+          "description": "Ideal for businesses that want more calls and more customers.",
+          "cta": "Upgrade to PRO",
+          "includes": {
+            "ranking": "Higher ranking in search",
+            "badge": "PRO badge",
+            "visibility": "Better visibility",
+            "stats": "Business statistics",
+            "ai": "AI profile optimization",
+            "priority": "Priority review"
+          }
+        },
+        "premium": {
+          "name": "PREMIUM",
+          "price": "20 USD",
+          "headline": "Become the first choice in your city",
+          "subtitle": "Maximum exposure for businesses that want to dominate.",
+          "description": "Perfect for companies that depend on continuous customer requests.",
+          "cta": "Become Premium",
+          "includes": {
+            "top": "Top search placement",
+            "homepage": "Homepage featured",
+            "badge": "Premium badge",
+            "locations": "Multiple locations",
+            "support": "Priority support",
+            "early": "New features first"
+          }
+        },
+        "free": "Starter",
+        "proLegacy": "PRO",
+        "premiumLegacy": "PREMIUM"
       },
       "status": {
         "trial": "Trial",
         "active": "Active",
-        "pending_payment": "Pending payment",
+        "pending_payment": "Waiting for payment",
         "expired": "Expired",
         "cancelled": "Cancelled"
       },
@@ -475,6 +546,21 @@
         "paid": "Paid",
         "failed": "Failed",
         "cancelled": "Cancelled"
+      },
+      "payment": {
+        "stepLabel": "Payment",
+        "title": "Complete your payment",
+        "subtitle": "Transfer the amount below for {plan}. Your plan activates only after admin approval.",
+        "amountLabel": "Amount to pay",
+        "receiver": "Receiver",
+        "account": "Account / IBAN",
+        "reference": "Payment reference",
+        "receiverFallback": "Contact Dalily support for bank details",
+        "accountFallback": "Will be shared by the Dalily team",
+        "instructions": "Include the payment reference in your transfer. After you pay, wait for confirmation — selecting a plan never activates it automatically.",
+        "waitingTitle": "Waiting for payment confirmation",
+        "waitingBody": "An admin will review your payment and activate your subscription. You can keep using Starter until then.",
+        "backToPlans": "Back to plans"
       },
       "features": {
         "maxServices": "Up to {value} services",

@@ -7,7 +7,7 @@ import {
   Images,
   BarChart3,
   ShieldCheck,
-  CreditCard,
+  Star,
   Menu,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -23,7 +23,7 @@ const navItems = [
   { href: "/business/gallery", icon: Images, key: "gallery" },
   { href: "/business/analytics", icon: BarChart3, key: "analytics" },
   { href: "/business/verification", icon: ShieldCheck, key: "verification" },
-  { href: "/business/subscription", icon: CreditCard, key: "subscription" },
+  { href: "/business/subscription", icon: Star, key: "upgrade" },
 ] as const;
 
 export function BusinessSidebar() {

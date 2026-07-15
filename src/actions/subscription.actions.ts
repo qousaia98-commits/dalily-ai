@@ -4,28 +4,49 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider, requireOwnedProvider } from "@/lib/providers/queries";
+import { getPaymentConfig } from "@/lib/payment/config";
 import { listActivePlans, getPaymentHistory } from "@/lib/subscription/repository";
 import { subscriptionService } from "@/lib/subscription/subscription.service";
 import type { PlanSlug } from "@/lib/subscription/types";
+
+export type PaymentInstructionsData = {
+  receiver: string;
+  account: string;
+  amount: number;
+  currency: string;
+  reference: string;
+};
 
 export type SubscriptionActionState = {
   success: boolean;
   error?: string;
   message?: string;
-  paymentInstructions?: {
-    receiver: string;
-    account: string;
-    amount: number;
-    currency: string;
-    reference: string;
-  };
+  paymentInstructions?: PaymentInstructionsData;
 };
 
 const planSlugSchema = z.enum(["pro", "premium"]);
 
 function revalidate() {
   revalidatePath("/business/subscription");
+  revalidatePath("/business/welcome");
   revalidatePath("/business", "layout");
+}
+
+function buildPendingInstructions(
+  subscriptionId: string | undefined,
+  payments: Awaited<ReturnType<typeof getPaymentHistory>>,
+): PaymentInstructionsData | null {
+  const pending = payments.find((p) => p.paymentStatus === "pending");
+  if (!pending || !subscriptionId) return null;
+
+  const config = getPaymentConfig();
+  return {
+    receiver: config.receiver,
+    account: config.account,
+    amount: pending.amount,
+    currency: pending.currency,
+    reference: `SUB-${subscriptionId.slice(0, 8).toUpperCase()}`,
+  };
 }
 
 export async function getSubscriptionPageData(userId: string) {
@@ -37,7 +58,13 @@ export async function getSubscriptionPageData(userId: string) {
     listActivePlans(),
     getPaymentHistory(provider.id),
   ]);
-  return { provider, subscription, plans, payments };
+
+  const pendingPayment =
+    subscription?.status === "pending_payment"
+      ? buildPendingInstructions(subscription.id, payments)
+      : null;
+
+  return { provider, subscription, plans, payments, pendingPayment };
 }
 
 export async function upgradeSubscriptionAction(
