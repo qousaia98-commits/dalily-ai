@@ -110,18 +110,42 @@ async function createUserRecords(params: {
   );
 }
 
+function logBusinessRegisterException(step: string, error: unknown) {
+  const details = postgresErrorDetails(error);
+  const stack = error instanceof Error ? error.stack : undefined;
+
+  console.error("[registerBusinessAction] ✗ EXCEPTION", {
+    step,
+    message: details.message,
+    code: details.code ?? null,
+    details: details.details ?? null,
+    hint: details.hint ?? null,
+    stack: stack ?? null,
+    raw: error,
+  });
+}
+
 function registerBusinessStepFailure(step: string, error: unknown): AuthActionState {
   const details = postgresErrorDetails(error);
   const issue = stepFailureIssue(step, error);
+  const stack = error instanceof Error ? error.stack : undefined;
 
-  logRegisterStep(step, false, details);
+  logBusinessRegisterException(step, error);
+  logRegisterStep(step, false, {
+    message: details.message,
+    code: details.code,
+    details: details.details,
+    hint: details.hint,
+    stack,
+  });
 
+  // Temporary diagnostics: never hide the original exception from the client UI
+  // while we identify the failing registration step.
   return exposeValidationIssues(
     {
       success: false,
-      error:
-        process.env.NODE_ENV === "development" ? details.message : "profile_creation_failed",
-      failedStep: process.env.NODE_ENV === "development" ? step : undefined,
+      error: details.message,
+      failedStep: step,
       fieldErrors: { [step]: [details.message] },
     },
     [issue],
@@ -317,6 +341,13 @@ export async function registerBusinessAction(
 ): Promise<AuthActionState> {
   const locale = (formData.get("locale") as string) || "ar";
 
+  console.log("[registerBusinessAction] ▶ START", {
+    locale,
+    email: formData.get("email"),
+    category: formData.get("category"),
+    city: formData.get("city"),
+  });
+
   const parsed = registerBusinessSchema.safeParse({
     businessName: formData.get("businessName"),
     category: formData.get("category"),
@@ -335,7 +366,7 @@ export async function registerBusinessAction(
     const fieldErrors = parsed.error.flatten().fieldErrors as Record<string, string[]>;
     const formErrors = parsed.error.flatten().formErrors;
 
-    console.error("[registerBusinessAction] schema validation failed", {
+    console.error("[registerBusinessAction] ✗ schema validation", {
       issues,
       fieldErrors,
       formErrors,
@@ -346,6 +377,7 @@ export async function registerBusinessAction(
         success: false,
         fieldErrors,
         error: formErrors[0] === "password_mismatch" ? "password_mismatch" : "validation_error",
+        failedStep: "schema validation",
       },
       issues,
     );
@@ -371,24 +403,30 @@ export async function registerBusinessAction(
       });
     }
 
-    console.error("[registerBusinessAction] reference lookup failed", {
+    console.error("[registerBusinessAction] ✗ category/city lookup", {
       issues,
       category: parsed.data.category,
       city: parsed.data.city,
+      categoryId,
+      cityId,
     });
 
     return exposeValidationIssues(
       {
         success: false,
         error: "validation_error",
+        failedStep: "category/city lookup",
         fieldErrors: issuesToFieldErrors(issues),
       },
       issues,
     );
   }
 
+  logRegisterStep("category/city lookup", true, { categoryId, cityId });
+
   const supabase = await createClient();
 
+  // ── signUp ──────────────────────────────────────────────────────────────
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
@@ -401,40 +439,73 @@ export async function registerBusinessAction(
   });
 
   if (error) {
-    logRegisterStep("signUp", false, { message: error.message });
-    return { success: false, error: mapAuthErrorCode(error.message) };
+    logBusinessRegisterException("signUp", error);
+    // Temporary: expose original Auth error (do not map away during diagnosis)
+    return {
+      success: false,
+      error: error.message,
+      failedStep: "signUp",
+    };
   }
 
   if (!data.user) {
-    logRegisterStep("signUp", false, { message: "no user returned" });
-    return { success: false, error: "Auth signUp returned no user" };
+    console.error("[registerBusinessAction] ✗ signUp — no user returned");
+    return {
+      success: false,
+      error: "Auth signUp returned no user",
+      failedStep: "signUp",
+    };
   }
 
-  const admin = createAdminClient();
-
-  const resolved = await resolveAuthUserAfterSignUp({
-    supabase,
-    admin,
-    signUpUser: data.user,
-    signUpSession: data.session,
-    email: parsed.data.email,
-    password: parsed.data.password,
+  logRegisterStep("signUp", true, {
+    userId: data.user.id,
+    identityCount: data.user.identities?.length ?? 0,
+    hasSession: Boolean(data.session),
   });
 
-  if (!resolved.ok) {
-    logRegisterStep("signUp", false, { message: resolved.error });
-    return { success: false, error: resolved.error };
+  // ── resolveAuthUserAfterSignUp ───────────────────────────────────────────
+  let admin;
+  try {
+    admin = createAdminClient();
+  } catch (adminError) {
+    return registerBusinessStepFailure("createAdminClient", adminError);
   }
+
+  let resolved;
+  try {
+    resolved = await resolveAuthUserAfterSignUp({
+      supabase,
+      admin,
+      signUpUser: data.user,
+      signUpSession: data.session,
+      email: parsed.data.email,
+      password: parsed.data.password,
+    });
+  } catch (resolveError) {
+    return registerBusinessStepFailure("resolveAuthUserAfterSignUp", resolveError);
+  }
+
+  if (!resolved.ok) {
+    console.error("[registerBusinessAction] ✗ resolveAuthUserAfterSignUp", {
+      error: resolved.error,
+    });
+    return {
+      success: false,
+      error: resolved.error,
+      failedStep: "resolveAuthUserAfterSignUp",
+    };
+  }
+
+  logRegisterStep("resolveAuthUserAfterSignUp", true, {
+    authUserId: resolved.userId,
+    hasSession: resolved.hasSession,
+    resumed: resolved.resumed,
+  });
 
   const authUserId = resolved.userId;
   const hasSession = resolved.hasSession;
 
-  console.log("[registerBusinessAction] INSERT will use user id", {
-    authUserId,
-    resumed: resolved.resumed,
-    authUsersVerified: true,
-  });
-
+  // ── createUserRecords (bootstrap) ───────────────────────────────────────
   try {
     await bootstrapUserAfterSignUp({
       userId: authUserId,
@@ -444,6 +515,7 @@ export async function registerBusinessAction(
       locale: parsed.data.locale,
       hasSession,
     });
+    logRegisterStep("createUserRecords", true, { userId: authUserId });
   } catch (error) {
     return registerBusinessCaughtFailure(error);
   }
@@ -456,22 +528,37 @@ export async function registerBusinessAction(
     .maybeSingle();
 
   if (existingProvider) {
-    logRegisterStep("create provider", true, { note: "already exists", providerId: existingProvider.id });
+    logRegisterStep("createProvider", true, {
+      note: "already exists",
+      providerId: existingProvider.id,
+    });
   } else {
-    // Translation is optional — never block registration if AI is down.
-    const providerName = await resolveLocalizedField(
-      parsed.data.locale,
-      parsed.data.businessName,
-    );
-    const providerAbout = parsed.data.about
-      ? await resolveLocalizedField(parsed.data.locale, parsed.data.about)
-      : { ar: "", en: "" };
+    // ── syncLocalizedField(name) ──────────────────────────────────────────
+    let providerName;
+    try {
+      providerName = await resolveLocalizedField(parsed.data.locale, parsed.data.businessName);
+      logRegisterStep("syncLocalizedField(name)", true, { providerName });
+    } catch (error) {
+      return registerBusinessStepFailure("syncLocalizedField(name)", error);
+    }
+
+    // ── syncLocalizedField(about) ─────────────────────────────────────────
+    let providerAbout: { ar: string; en: string };
+    try {
+      providerAbout = parsed.data.about
+        ? await resolveLocalizedField(parsed.data.locale, parsed.data.about)
+        : { ar: "", en: "" };
+      logRegisterStep("syncLocalizedField(about)", true, { providerAbout });
+    } catch (error) {
+      return registerBusinessStepFailure("syncLocalizedField(about)", error);
+    }
 
     const slug = generateProviderSlug(
       providerName.en || providerName.ar || parsed.data.businessName,
       authUserId,
     );
 
+    // ── createProvider ────────────────────────────────────────────────────
     const { error: providerError } = await admin.from("providers").insert({
       owner_id: authUserId,
       slug,
@@ -494,24 +581,27 @@ export async function registerBusinessAction(
     });
 
     if (providerError) {
-      return registerBusinessStepFailure("create provider", providerError);
+      return registerBusinessStepFailure("createProvider", providerError);
     }
 
-    logRegisterStep("create provider", true);
+    logRegisterStep("createProvider", true, { slug });
   }
 
-  logRegisterStep("success", true);
+  logRegisterStep("pipeline complete", true, { hasSession });
 
   revalidatePath("/", "layout");
   revalidatePath("/business", "layout");
 
   if (!hasSession) {
+    console.log("[registerBusinessAction] ✓ verify_email required — no redirect");
     return {
       success: true,
       message: "verify_email_business",
     };
   }
 
+  // ── redirect ────────────────────────────────────────────────────────────
+  console.log("[registerBusinessAction] ✓ redirect → /business", { locale: parsed.data.locale });
   redirect({ href: "/business", locale: parsed.data.locale as "ar" | "en" });
   return { success: true };
 }
