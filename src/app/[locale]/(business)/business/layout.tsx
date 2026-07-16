@@ -6,6 +6,8 @@ import { getBusinessHeaderLabel } from "@/lib/business/header-label";
 import { getOwnedProvider } from "@/lib/providers/queries";
 import { BusinessSidebar } from "@/components/business/business-sidebar";
 import { AppHeader } from "@/components/layout/app-header";
+import { MobileBottomNavHost } from "@/components/layout/mobile-bottom-nav";
+import { MobileBottomNavSpacer } from "@/components/layout/mobile-bottom-nav-spacer";
 import type { Locale } from "@/lib/i18n/config";
 
 export default async function BusinessLayout({ children }: { children: React.ReactNode }) {
@@ -28,6 +30,8 @@ export default async function BusinessLayout({ children }: { children: React.Rea
           <BusinessSidebar />
           <div className="min-w-0 flex-1">{children}</div>
         </div>
+        <MobileBottomNavSpacer />
+        <MobileBottomNavHost role="business" />
       </div>
     );
   }

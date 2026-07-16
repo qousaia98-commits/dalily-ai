@@ -10,13 +10,30 @@ import { cn } from "@/lib/utils";
 type DashboardUpgradeCardProps = {
   planSlug: PlanSlug;
   status: string;
+  providerApproved?: boolean;
 };
 
-export function DashboardUpgradeCard({ planSlug, status }: DashboardUpgradeCardProps) {
+export function DashboardUpgradeCard({
+  planSlug,
+  status,
+  providerApproved = true,
+}: DashboardUpgradeCardProps) {
   const t = useTranslations("business.dashboard.upgradeCard");
   const isPending = status === "pending_payment";
   const isPremiumActive = planSlug === "premium" && status === "active";
   const isProActive = planSlug === "pro" && status === "active";
+
+  if (!providerApproved) {
+    return (
+      <div className="rounded-3xl border border-dashed border-border bg-muted/30 p-8 text-center">
+        <p className="text-sm font-semibold text-[var(--dalily-navy)]">{t("lockedTitle")}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{t("lockedBody")}</p>
+        <Button asChild variant="outline" className="mt-4">
+          <Link href="/business/verification">{t("lockedCta")}</Link>
+        </Button>
+      </div>
+    );
+  }
 
   if (isPremiumActive) {
     return (

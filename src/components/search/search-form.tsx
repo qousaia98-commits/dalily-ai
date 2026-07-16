@@ -16,9 +16,15 @@ type SearchFormProps = {
   defaultQuery?: string;
   className?: string;
   size?: "default" | "compact";
+  autoFocus?: boolean;
 };
 
-export function SearchForm({ defaultQuery = "", className, size = "default" }: SearchFormProps) {
+export function SearchForm({
+  defaultQuery = "",
+  className,
+  size = "default",
+  autoFocus = false,
+}: SearchFormProps) {
   const t = useTranslations("search");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -69,6 +75,7 @@ export function SearchForm({ defaultQuery = "", className, size = "default" }: S
             aria-invalid={Boolean(error)}
             aria-describedby={error ? "search-error" : undefined}
             maxLength={MAX_QUERY_LENGTH}
+            autoFocus={autoFocus}
             className={cn(
               "rounded-2xl border-border/80 bg-card ps-12 pe-4 shadow-lg shadow-primary/5 transition-shadow focus-visible:shadow-xl focus-visible:shadow-primary/10",
               isCompact ? "h-12 text-base" : "h-14 text-base sm:h-16 sm:text-lg",

@@ -50,29 +50,31 @@ export async function getPlanById(planId: string): Promise<SubscriptionPlanRow |
 
 export async function getCurrentSubscription(providerId: string) {
   const admin = createAdminClient();
-  const { data } = await admin
+  const { data: rows } = await admin
     .from("subscriptions")
     .select("*")
     .eq("provider_id", providerId)
     .in("status", ["trial", "active", "pending_payment"])
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .order("created_at", { ascending: false });
 
-  if (!data) return null;
+  if (!rows?.length) return null;
 
-  const plan = await getPlanById(data.plan_id);
+  const preferred =
+    rows.find((row) => row.status === "active" || row.status === "trial") ??
+    rows[0];
+
+  const plan = await getPlanById(preferred.plan_id);
   return {
-    id: data.id,
-    providerId: data.provider_id,
-    planId: data.plan_id,
+    id: preferred.id,
+    providerId: preferred.provider_id,
+    planId: preferred.plan_id,
     planSlug: (plan?.slug ?? "free") as PlanSlug,
     planName: plan?.name ?? { en: "Free", ar: "مجاني" },
     features: plan?.features ?? ({} as PlanFeatures),
-    status: data.status,
-    startsAt: data.starts_at,
-    expiresAt: data.expires_at,
-    autoRenew: data.auto_renew,
+    status: preferred.status,
+    startsAt: preferred.starts_at,
+    expiresAt: preferred.expires_at,
+    autoRenew: preferred.auto_renew,
     monthlyPriceUsd: plan?.monthlyPriceUsd ?? 0,
     yearlyPriceUsd: plan?.yearlyPriceUsd ?? 0,
   };

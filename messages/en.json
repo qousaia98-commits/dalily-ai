@@ -24,6 +24,142 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
   },
+  "mobileNav": {
+    "a11y": {
+      "label": "Main navigation",
+      "withBadge": "{label}, {count} notifications"
+    },
+    "guest": {
+      "home": "Home",
+      "search": "Search",
+      "aiSearch": "AI Search",
+      "favorites": "Favorites",
+      "account": "Account"
+    },
+    "business": {
+      "dashboard": "Home",
+      "myBusiness": "Business",
+      "messages": "Messages",
+      "growth": "Growth",
+      "account": "Account"
+    },
+    "admin": {
+      "controlCenter": "Home",
+      "approvals": "Approvals",
+      "payments": "Payments",
+      "messages": "Messages",
+      "admin": "Admin"
+    }
+  },
+  "mobilePages": {
+    "ai": {
+      "eyebrow": "AI assistant",
+      "title": "Describe what you need",
+      "subtitle": "Tell Dalily your problem in your own words — we’ll find trusted local experts."
+    },
+    "favorites": {
+      "title": "Favorites",
+      "subtitle": "Saved businesses will appear here. Start exploring to build your list.",
+      "browseCta": "Browse providers",
+      "loginCta": "Log in to save"
+    },
+    "account": {
+      "title": "Account",
+      "subtitle": "Log in, create an account, or adjust language and appearance.",
+      "signedInAs": "Signed in as {name}",
+      "language": "Language",
+      "theme": "Appearance",
+      "links": {
+        "login": "Log in",
+        "loginDesc": "Access your Dalily account",
+        "register": "Sign up",
+        "registerDesc": "Create a personal account",
+        "forBusiness": "For business",
+        "forBusinessDesc": "List your business on Dalily",
+        "business": "Business dashboard",
+        "businessDesc": "Manage your provider profile",
+        "admin": "Control Center",
+        "adminDesc": "Open the admin panel"
+      }
+    },
+    "myBusiness": {
+      "title": "My Business",
+      "subtitle": "Everything related to your business profile.",
+      "links": {
+        "profile": "Business profile",
+        "profileDesc": "Name, contact, and details",
+        "gallery": "Gallery",
+        "galleryDesc": "Photos of your work",
+        "services": "Services",
+        "servicesDesc": "What you offer",
+        "hours": "Working hours",
+        "hoursDesc": "When customers can reach you",
+        "verification": "Verification",
+        "verificationDesc": "Build trust with a verified badge"
+      }
+    },
+    "businessMessages": {
+      "title": "Messages",
+      "subtitle": "Customer and admin messages will live here.",
+      "comingSoon": "Chat is coming soon — you’ll get a badge when something needs attention."
+    },
+    "businessAccount": {
+      "title": "Account",
+      "signedInAs": "Signed in as {name}",
+      "language": "Language",
+      "theme": "Appearance",
+      "notifications": "Notifications",
+      "notificationsHint": "Managed in Growth",
+      "links": {
+        "profile": "Personal profile",
+        "profileDesc": "Your business contact details",
+        "subscription": "Subscription",
+        "subscriptionDesc": "Plan and upgrade options",
+        "payments": "Payments",
+        "paymentsDesc": "Payment status and history"
+      }
+    },
+    "growth": {
+      "title": "Growth",
+      "subtitle": "Insights, health, and tips to grow your business.",
+      "lockedTitle": "Premium statistics",
+      "lockedSubtitle": "Upgrade to unlock deeper insights. Starter still gets your core Growth dashboard above.",
+      "upgradeCta": "View plans",
+      "locked": {
+        "competitors": {
+          "title": "Competitor pulse",
+          "body": "See how you compare in your city and category."
+        },
+        "conversion": {
+          "title": "Conversion insights",
+          "body": "Understand which searches turn into contacts."
+        },
+        "premiumReach": {
+          "title": "Premium reach",
+          "body": "Track featured placement and top-of-search exposure."
+        }
+      }
+    },
+    "adminMessages": {
+      "title": "Messages",
+      "subtitle": "Support and system messages for the platform team.",
+      "comingSoon": "Inbox coming soon. Badges will appear here for unread items."
+    },
+    "adminSettings": {
+      "title": "Admin",
+      "subtitle": "Categories, users, and platform settings.",
+      "links": {
+        "categories": "Categories",
+        "categoriesDesc": "Manage service categories",
+        "users": "Users",
+        "usersDesc": "Accounts and roles",
+        "searches": "Search analytics",
+        "searchesDesc": "What people look for",
+        "subscriptions": "Subscriptions",
+        "subscriptionsDesc": "Plans and billing overview"
+      }
+    }
+  },
   "home": {
     "heroTitle": "Find the service you need",
     "heroSubtitle": "Home, health, automotive, food, business & more — find trusted local experts with AI",
@@ -256,7 +392,10 @@
         "premiumEyebrow": "Premium",
         "premiumTitle": "Thank you for supporting Dalily",
         "premiumBody": "You already have the strongest visibility on the platform.",
-        "pendingNote": "Your payment is waiting for confirmation. Your new plan activates after admin approval."
+        "pendingNote": "Your payment is waiting for confirmation. Your new plan activates after admin approval.",
+        "lockedTitle": "Plans unlock after approval",
+        "lockedBody": "Complete your profile, submit for review, and wait for admin approval before choosing Starter, PRO or PREMIUM.",
+        "lockedCta": "Continue setup"
       },
       "paymentStatus": {
         "reviewTitle": "🟡 Payment under review",
@@ -300,8 +439,20 @@
     "welcome": {
       "title": "Congratulations!",
       "subtitle": "Your business has been created successfully on Dalily.",
-      "nextTitle": "What happens next",
       "completeProfile": "Complete your profile",
+      "submitCta": "Submit for approval",
+      "checklistTitle": "Get approved to unlock plans",
+      "checklistSubtitle": "Complete these steps, then wait for admin approval. Starter, PRO and PREMIUM appear only after approval.",
+      "pendingApproval": "Your business is pending approval. You will receive an email when it is reviewed.",
+      "plansAfterApproval": "Subscription plans unlock only after your business is approved.",
+      "checklist": {
+        "profile": "Complete business profile",
+        "logo": "Upload logo",
+        "cover": "Upload cover",
+        "gallery": "Upload gallery photos",
+        "id": "Upload ID document"
+      },
+      "nextTitle": "What happens next",
       "discoverEyebrow": "Optional",
       "discoverTitle": "Discover PRO & PREMIUM",
       "discoverSubtitle": "Grow when you are ready — never required.",
@@ -578,7 +729,9 @@
         "file_too_large": "File is too large (max 5 MB)",
         "invalid_file_type": "Invalid file type",
         "invalid_hours": "Please set valid opening hours",
-        "incomplete_profile": "Complete at least 60% of your profile first",
+        "incomplete_profile": "Complete your business profile before submitting",
+        "media_incomplete": "Upload logo, cover, and at least one gallery photo first",
+        "id_document_required": "Upload your ID documents before submitting",
         "invalid_status": "Profile cannot be submitted in its current state",
         "submit_failed": "Could not submit for review",
         "delete_failed": "Could not delete profile",
@@ -694,13 +847,14 @@
         "already_approved": "Your business is already verified.",
         "already_submitted": "Your documents are already under review.",
         "documents_incomplete": "Upload all three documents before submitting.",
+        "profile_media_incomplete": "Upload logo, cover, and gallery photos before submitting for approval.",
         "submit_failed": "Could not submit your documents. Please try again."
       }
     },
     "subscription": {
-      "title": "Grow your business",
-      "eyebrow": "Visibility · Trust · Growth",
-      "subtitle": "Get more customers on Dalily — not just more features.",
+      "title": "Grow your business with Dalily",
+      "eyebrow": "Growth",
+      "subtitle": "Choose the plan that helps you reach more customers.",
       "currentPlan": "Your plan",
       "expiresAt": "Expires on {date}",
       "noExpiration": "No expiration date",
@@ -710,57 +864,76 @@
       "upgrade": "Upgrade",
       "current": "Current plan",
       "freePrice": "FREE",
-      "perMonth": "month",
+      "perMonth": "Month",
       "paymentHistory": "Payment history",
       "noPayments": "No payments yet.",
       "errors": {
-        "upgradeFailed": "Could not start the upgrade. Please try again."
+        "upgradeFailed": "Could not start the upgrade. Please try again.",
+        "notApproved": "Plans unlock after your business is approved.",
+        "paymentPending": "You already have a payment under review."
+      },
+      "locked": {
+        "pendingTitle": "Waiting for approval",
+        "pendingBody": "Subscription plans unlock after an admin approves your business. We will email you when that happens.",
+        "draftTitle": "Finish your profile first",
+        "draftBody": "Upload logo, cover, gallery and ID, then submit for approval. Plans appear only after approval.",
+        "completeProfile": "Complete profile",
+        "uploadId": "Upload ID"
       },
       "plans": {
         "starter": {
           "name": "Starter",
           "price": "FREE",
-          "headline": "Start your business for free",
-          "subtitle": "Create your profile and let customers find you.",
-          "description": "Perfect if you are just getting started. Everything you need to appear in Dalily.",
+          "headline": "Start your business for free.",
+          "subtitle": "Everything you need to start.",
+          "description": "Friendly and complete — never a punishment for starting free.",
+          "why": "Build your presence, get found, and connect with customers — at no cost.",
           "cta": "Continue with Starter",
           "includes": {
             "profile": "Complete business profile",
             "photos": "Unlimited photos",
-            "info": "Business information",
             "reviews": "Customer reviews",
-            "search": "Visible in search"
+            "contact": "WhatsApp & phone",
+            "search": "Search visibility",
+            "info": "Business information"
           }
         },
         "pro": {
           "name": "PRO",
           "price": "13 USD",
-          "badge": "MOST POPULAR",
-          "headline": "Get more customers",
-          "subtitle": "Increase your visibility and grow faster.",
-          "description": "Ideal for businesses that want more calls and more customers.",
+          "badge": "Most Popular",
+          "headline": "Get more customers.",
+          "subtitle": "Increase your visibility and receive more customer requests.",
+          "description": "For businesses ready to grow with more discovery and trust.",
+          "why": "More customers will discover your business — and choose you with confidence.",
           "cta": "Upgrade to PRO",
           "includes": {
-            "ranking": "Higher ranking in search",
-            "badge": "PRO badge",
-            "visibility": "Better visibility",
-            "stats": "Business statistics",
-            "ai": "AI profile optimization",
-            "priority": "Priority review"
+            "ranking": "More customers will discover your business",
+            "badge": "PRO badge that builds trust",
+            "insights": "Understand how your business is growing",
+            "visibility": "Stronger placement where people search",
+            "support": "Priority support when you need help",
+            "stats": "Understand how your business is growing",
+            "ai": "Smarter profile guidance",
+            "priority": "Priority support when you need help"
           }
         },
         "premium": {
           "name": "PREMIUM",
           "price": "20 USD",
-          "headline": "Become the first choice in your city",
-          "subtitle": "Maximum exposure for businesses that want to dominate.",
-          "description": "Perfect for companies that depend on continuous customer requests.",
+          "headline": "Become the first choice.",
+          "subtitle": "Maximum visibility for businesses that want to grow faster.",
+          "description": "Luxury visibility for businesses that want to lead their city.",
+          "why": "Stand out first — homepage features, premium trust, and room to expand.",
           "cta": "Become Premium",
           "includes": {
-            "top": "Top search placement",
-            "homepage": "Homepage featured",
+            "everything": "Everything from PRO",
+            "homepage": "Featured on the homepage",
             "badge": "Premium badge",
-            "locations": "Multiple locations",
+            "branches": "Multiple branches",
+            "insights": "Advanced growth insights",
+            "top": "Top search placement",
+            "locations": "Multiple branches",
             "support": "Priority support",
             "early": "New features first"
           }
@@ -832,6 +1005,51 @@
         "featuredSection": "Featured section",
         "premiumBadge": "Premium badge",
         "unlimitedServices": "Unlimited services"
+      },
+      "intro": "No pressure. Pick what fits your business today — upgrade when you are ready to grow.",
+      "hero": {
+        "title": "Grow your business with Dalily.",
+        "subtitle": "Choose the plan that helps you reach more customers."
+      },
+      "summary": {
+        "eyebrow": "Upgrade summary",
+        "continue": "Continue",
+        "back": "Back",
+        "blurb": {
+          "pro": "More customers will discover your business and reach out with confidence.",
+          "premium": "Become the first choice in your city with maximum visibility on Dalily."
+        }
+      },
+      "faq": {
+        "title": "Questions",
+        "subtitle": "Clear answers before you upgrade.",
+        "items": {
+          "active": {
+            "q": "When will my subscription become active?",
+            "a": "After you transfer and upload your receipt, our team reviews it. Your plan activates only after admin approval — never automatically."
+          },
+          "pay": {
+            "q": "How do I pay?",
+            "a": "You transfer the monthly amount manually using the bank details we show, then upload a clear receipt for verification."
+          },
+          "upgrade": {
+            "q": "Can I upgrade later?",
+            "a": "Yes. Start with Starter for free, then move to PRO or PREMIUM whenever you want more customers to find you."
+          },
+          "cancel": {
+            "q": "Can I cancel?",
+            "a": "Yes. You can cancel or move back to Starter from your plan settings. There are no automatic charges."
+          }
+        }
+      },
+      "trust": {
+        "title": "Trusted by local businesses",
+        "items": {
+          "secure": "Secure manual verification",
+          "noAuto": "No automatic charges",
+          "transparent": "Transparent pricing",
+          "support": "Friendly support"
+        }
       }
     }
   },
@@ -841,12 +1059,14 @@
       "menu": "Admin menu",
       "dashboard": "Dashboard",
       "providers": "Providers",
+      "businesses": "Businesses",
       "verification": "Verification",
       "searches": "Search analytics",
       "users": "Users",
       "categories": "Categories",
-      "payments": "💳 Payments",
-      "subscriptions": "Subscriptions"
+      "payments": "Payments",
+      "subscriptions": "Subscription approvals",
+      "messages": "Messages"
     },
     "payments": {
       "eyebrow": "Manual transfers",
@@ -997,6 +1217,30 @@
         "gallery": "Gallery",
         "noGallery": "No gallery images.",
         "noCover": "No cover image"
+      },
+      "subscription": {
+        "title": "Subscription",
+        "currentPlan": "Current plan",
+        "starter": "Starter",
+        "noRequest": "No open payment request.",
+        "requestedPlan": "Requested plan",
+        "amount": "Amount",
+        "reference": "Reference",
+        "status": "Status",
+        "receipt": "Receipt",
+        "viewReceipt": "Open receipt",
+        "noReceipt": "Receipt not uploaded yet.",
+        "rejectNote": "Rejection note (optional)",
+        "approvePro": "Approve PRO",
+        "approvePremium": "Approve PREMIUM",
+        "reject": "Reject",
+        "actionFailed": "Could not update the payment request.",
+        "paymentStatus": {
+          "pending": "Pending payment",
+          "pending_review": "Pending payment review",
+          "paid": "Paid",
+          "rejected": "Rejected"
+        }
       },
       "errors": {
         "forbidden": "You do not have permission.",

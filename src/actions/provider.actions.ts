@@ -568,18 +568,40 @@ export async function submitProviderForReviewAction(): Promise<ProviderActionSta
   const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
 
-  if (provider.profileCompleteness < 60) {
-    return { success: false, error: "incomplete_profile" };
-  }
-
   if (provider.status !== "draft") {
     return { success: false, error: "invalid_status" };
   }
 
+  const { getApprovalReadiness } = await import("@/lib/providers/approval-readiness");
+  const readiness = await getApprovalReadiness(provider);
+
+  if (!readiness.ready) {
+    if (!readiness.hasIdDocument) return { success: false, error: "id_document_required" };
+    if (!readiness.hasLogo || !readiness.hasCover || !readiness.hasGallery) {
+      return { success: false, error: "media_incomplete" };
+    }
+    return { success: false, error: "incomplete_profile" };
+  }
+
   const supabase = await createClient();
+
+  await supabase
+    .from("provider_verifications")
+    .update({
+      status: "pending",
+      rejection_reason: null,
+      reviewed_by: null,
+      reviewed_at: null,
+    })
+    .eq("provider_id", provider.id);
+
   const { error } = await supabase
     .from("providers")
-    .update({ status: "pending_review", updated_by: authUser.id })
+    .update({
+      status: "pending_review",
+      verification_status: "pending",
+      updated_by: authUser.id,
+    })
     .eq("id", provider.id)
     .eq("owner_id", authUser.id);
 

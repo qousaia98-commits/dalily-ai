@@ -149,6 +149,12 @@
     .animate-mobile-drawer-out {
       animation: none !important;
     }
+
+    .motion-safe\:scale-\[0\.92\],
+    .motion-safe\:active\:scale-\[0\.92\],
+    .motion-safe\:scale-110 {
+      transform: none !important;
+    }
   }
 }
 

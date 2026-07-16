@@ -69,12 +69,12 @@ export async function getSubscriptionPageData(userId: string) {
 
   let pendingPayment: PaymentInstructionsData | null = null;
 
-  if (openPayment && subscription?.status === "pending_payment") {
+  if (openPayment) {
     const config = getPaymentConfig();
     pendingPayment = {
       paymentId: openPayment.id,
-      planSlug: (subscription.planSlug ?? "pro") as PlanSlug,
-      planLabel: planLabelFromSlug(subscription.planSlug),
+      planSlug: (openPayment.planSlug ?? "pro") as PlanSlug,
+      planLabel: planLabelFromSlug(openPayment.planSlug),
       receiver: config.receiver,
       account: config.account,
       swift: config.swift || undefined,
@@ -87,7 +87,21 @@ export async function getSubscriptionPageData(userId: string) {
     };
   }
 
-  return { provider, subscription, plans, payments, pendingPayment };
+  // Expose pending_payment status to the UI when a payment request is open,
+  // while currentPlanSlug stays on the active (Starter) plan until approval.
+  const statusForUi = openPayment
+    ? "pending_payment"
+    : (subscription?.status ?? "active");
+
+  return {
+    provider,
+    subscription: subscription
+      ? { ...subscription, status: statusForUi }
+      : subscription,
+    plans,
+    payments,
+    pendingPayment,
+  };
 }
 
 export async function upgradeSubscriptionAction(
@@ -125,7 +139,14 @@ export async function upgradeSubscriptionAction(
           }
         : undefined,
     };
-  } catch {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "upgrade_failed";
+    if (message === "provider_not_approved") {
+      return { success: false, error: "provider_not_approved" };
+    }
+    if (message === "payment_pending" || message === "already_on_plan") {
+      return { success: false, error: message };
+    }
     return { success: false, error: "upgrade_failed" };
   }
 }

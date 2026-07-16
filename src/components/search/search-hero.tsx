@@ -4,7 +4,13 @@ import { useTranslations } from "next-intl";
 import { SearchForm } from "@/components/search/search-form";
 import { cn } from "@/lib/utils";
 
-export function SearchHero({ className }: { className?: string }) {
+export function SearchHero({
+  className,
+  autoFocus = false,
+}: {
+  className?: string;
+  autoFocus?: boolean;
+}) {
   const t = useTranslations("home");
 
   return (
@@ -16,7 +22,7 @@ export function SearchHero({ className }: { className?: string }) {
         />
 
         <div className="relative">
-          <SearchForm />
+          <SearchForm autoFocus={autoFocus} />
           <p className="mt-3 text-center text-sm text-muted-foreground sm:text-start">
             {t("searchHint")}
           </p>

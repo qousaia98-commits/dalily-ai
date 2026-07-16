@@ -18,9 +18,16 @@ import {
   PROVIDER_VERIFICATION_BUCKET,
 } from "@/lib/verification/storage";
 import {
+  sendBusinessApprovedEmail,
+  sendBusinessRejectedEmail,
+} from "@/lib/email/dalily-email";
+import { getProviderOwnerEmailContext } from "@/lib/email/provider-email-context";
+import { ensureFreeSubscription } from "@/lib/subscription/repository";
+import {
   getProviderVerificationForOwner,
   isVerificationComplete,
 } from "@/lib/verification/queries";
+import { getApprovalReadiness } from "@/lib/providers/approval-readiness";
 
 export type VerificationActionState = {
   success: boolean;
@@ -154,6 +161,12 @@ export async function uploadVerificationDocumentAction(
 export async function submitVerificationAction(): Promise<VerificationActionState> {
   const authUser = await requireAuthUser();
   const provider = await requireOwnedProvider(authUser.id);
+  const readiness = await getApprovalReadiness(provider);
+
+  if (!readiness.hasLogo || !readiness.hasCover || !readiness.hasGallery) {
+    return { success: false, error: "profile_media_incomplete" };
+  }
+
   const verification = await getProviderVerificationForOwner(provider.id);
 
   if (!verification || !isVerificationComplete(verification)) {
@@ -242,6 +255,17 @@ export async function approveVerificationAction(
 
   if (providerError) return { success: false, error: "approve_failed" };
 
+  await ensureFreeSubscription(providerId);
+
+  const owner = await getProviderOwnerEmailContext(providerId);
+  if (owner?.email) {
+    await sendBusinessApprovedEmail({
+      to: owner.email,
+      businessName: owner.businessName,
+      locale: owner.locale,
+    });
+  }
+
   await logAdminAudit({
     actorId: authUser.id,
     action: "provider_approved",
@@ -251,6 +275,8 @@ export async function approveVerificationAction(
   });
 
   await revalidateVerificationPaths();
+  revalidatePath("/business/subscription");
+  revalidatePath("/business", "layout");
   return { success: true, message: "approved" };
 }
 
@@ -311,6 +337,16 @@ export async function rejectVerificationAction(
     .eq("id", parsed.data.providerId);
 
   if (providerError) return { success: false, error: "reject_failed" };
+
+  const owner = await getProviderOwnerEmailContext(parsed.data.providerId);
+  if (owner?.email) {
+    await sendBusinessRejectedEmail({
+      to: owner.email,
+      businessName: owner.businessName,
+      reason: parsed.data.rejectionReason,
+      locale: owner.locale,
+    });
+  }
 
   await logAdminAudit({
     actorId: authUser.id,

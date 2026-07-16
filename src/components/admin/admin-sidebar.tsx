@@ -10,6 +10,7 @@ import {
   CreditCard,
   Tags,
   Banknote,
+  Megaphone,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
@@ -19,13 +20,14 @@ import { useState } from "react";
 
 const navItems = [
   { href: "/admin", icon: LayoutDashboard, key: "dashboard", exact: true },
-  { href: "/admin/providers", icon: Building2, key: "providers" },
-  { href: "/admin/categories", icon: Tags, key: "categories" },
-  { href: "/admin/verification", icon: ShieldCheck, key: "verification" },
-  { href: "/admin/searches", icon: Search, key: "searches" },
-  { href: "/admin/users", icon: Users, key: "users" },
+  { href: "/admin/providers", icon: Building2, key: "businesses" },
   { href: "/admin/payments", icon: Banknote, key: "payments" },
   { href: "/admin/subscriptions", icon: CreditCard, key: "subscriptions" },
+  { href: "/admin/messages", icon: Megaphone, key: "messages" },
+  { href: "/admin/verification", icon: ShieldCheck, key: "verification" },
+  { href: "/admin/categories", icon: Tags, key: "categories" },
+  { href: "/admin/searches", icon: Search, key: "searches" },
+  { href: "/admin/users", icon: Users, key: "users" },
 ] as const;
 
 export function AdminSidebar() {
@@ -62,7 +64,7 @@ export function AdminSidebar() {
 
   return (
     <>
-      <div className="mb-4 lg:hidden">
+      <div className="mb-4 hidden md:block lg:hidden">
         <Button variant="outline" size="sm" onClick={() => setMobileOpen(!mobileOpen)} className="gap-2">
           <Menu className="size-4" />
           {t("menu")}

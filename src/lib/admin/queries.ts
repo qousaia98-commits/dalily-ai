@@ -390,6 +390,19 @@ export async function listVerificationsForAdmin(
   return list(params);
 }
 
+export type AdminProviderOpenPayment = {
+  id: string;
+  planSlug: string;
+  amount: number;
+  currency: string;
+  paymentReference: string;
+  paymentStatus: string;
+  receiptUrl: string | null;
+  receiptMimeType: string | null;
+  submittedAt: string | null;
+  createdAt: string;
+};
+
 export type AdminProviderReview = {
   id: string;
   slug: string;
@@ -411,6 +424,8 @@ export type AdminProviderReview = {
   services: Array<{ id: string; name: LocalizedJson }>;
   createdAt: string;
   profileCompleteness: number;
+  currentPlanSlug: string;
+  openPayment: AdminProviderOpenPayment | null;
 };
 
 /** Admin-only: load any non-deleted provider by id (ignores public status filters). */
@@ -419,6 +434,8 @@ export async function getProviderForAdminReview(
 ): Promise<AdminProviderReview | null> {
   const admin = createAdminClient();
   const { getStoragePublicUrl } = await import("@/lib/providers/storage");
+  const { PAYMENT_RECEIPTS_BUCKET } = await import("@/lib/payment/receipt-storage");
+  const { getCurrentSubscription } = await import("@/lib/subscription/repository");
 
   const { data: provider, error } = await admin
     .from("providers")
@@ -436,6 +453,8 @@ export async function getProviderForAdminReview(
     { data: profile },
     { data: images },
     { data: services },
+    subscription,
+    { data: paymentRows },
   ] = await Promise.all([
     admin.from("cities").select("id, name").eq("id", provider.city_id).maybeSingle(),
     admin.from("categories").select("id, name").eq("id", provider.category_id).maybeSingle(),
@@ -452,6 +471,14 @@ export async function getProviderForAdminReview(
       .eq("provider_id", provider.id)
       .is("deleted_at", null)
       .order("sort_order"),
+    getCurrentSubscription(provider.id),
+    admin
+      .from("payments")
+      .select("*")
+      .eq("provider_id", provider.id)
+      .in("payment_status", ["pending", "pending_review"])
+      .order("created_at", { ascending: false })
+      .limit(1),
   ]);
 
   const imageRows = images ?? [];
@@ -461,6 +488,49 @@ export async function getProviderForAdminReview(
     .filter((image) => image.kind === "gallery")
     .sort((a, b) => a.sort_order - b.sort_order)
     .map((image) => ({ id: image.id, url: getStoragePublicUrl(image.path) }));
+
+  const openPaymentRow = paymentRows?.[0] ?? null;
+  let openPayment: AdminProviderOpenPayment | null = null;
+
+  if (openPaymentRow) {
+    let planSlug = "pro";
+    if (openPaymentRow.subscription_id) {
+      const { data: sub } = await admin
+        .from("subscriptions")
+        .select("plan_id")
+        .eq("id", openPaymentRow.subscription_id)
+        .maybeSingle();
+      if (sub?.plan_id) {
+        const { data: plan } = await admin
+          .from("subscription_plans")
+          .select("slug")
+          .eq("id", sub.plan_id)
+          .maybeSingle();
+        planSlug = plan?.slug ?? "pro";
+      }
+    }
+
+    let receiptUrl: string | null = null;
+    if (openPaymentRow.receipt_path) {
+      const { data } = await admin.storage
+        .from(PAYMENT_RECEIPTS_BUCKET)
+        .createSignedUrl(openPaymentRow.receipt_path, 3600);
+      receiptUrl = data?.signedUrl ?? null;
+    }
+
+    openPayment = {
+      id: openPaymentRow.id,
+      planSlug,
+      amount: Number(openPaymentRow.amount),
+      currency: openPaymentRow.currency,
+      paymentReference: openPaymentRow.payment_reference,
+      paymentStatus: openPaymentRow.payment_status,
+      receiptUrl,
+      receiptMimeType: openPaymentRow.receipt_mime_type,
+      submittedAt: openPaymentRow.submitted_at,
+      createdAt: openPaymentRow.created_at,
+    };
+  }
 
   return {
     id: provider.id,
@@ -486,5 +556,7 @@ export async function getProviderForAdminReview(
     })),
     createdAt: provider.created_at,
     profileCompleteness: provider.profile_completeness,
+    currentPlanSlug: subscription?.planSlug ?? "free",
+    openPayment,
   };
 }

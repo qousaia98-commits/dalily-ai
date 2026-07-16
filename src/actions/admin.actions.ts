@@ -6,6 +6,12 @@ import { requireAdminUser } from "@/lib/auth/session";
 import { isPlatformAdmin } from "@/lib/auth/roles";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAdminAudit } from "@/lib/admin/audit";
+import {
+  sendBusinessApprovedEmail,
+  sendBusinessRejectedEmail,
+} from "@/lib/email/dalily-email";
+import { getProviderOwnerEmailContext } from "@/lib/email/provider-email-context";
+import { ensureFreeSubscription } from "@/lib/subscription/repository";
 import type { AppRole, ProviderStatus, UserStatus } from "@/types/database.types";
 
 export type AdminActionState = {
@@ -64,6 +70,29 @@ export async function updateProviderStatusAction(
 
   if (error) return { success: false, error: "update_failed" };
 
+  if (parsedStatus.data === "active") {
+    await ensureFreeSubscription(parsedId.data);
+    const owner = await getProviderOwnerEmailContext(parsedId.data);
+    if (owner?.email) {
+      await sendBusinessApprovedEmail({
+        to: owner.email,
+        businessName: owner.businessName,
+        locale: owner.locale,
+      });
+    }
+  }
+
+  if (parsedStatus.data === "draft") {
+    const owner = await getProviderOwnerEmailContext(parsedId.data);
+    if (owner?.email) {
+      await sendBusinessRejectedEmail({
+        to: owner.email,
+        businessName: owner.businessName,
+        locale: owner.locale,
+      });
+    }
+  }
+
   const auditAction =
     parsedStatus.data === "active"
       ? "provider_approved"
@@ -85,6 +114,8 @@ export async function updateProviderStatusAction(
 
   revalidateAdmin();
   revalidatePath(`/admin/providers/${parsedId.data}`);
+  revalidatePath("/business/subscription");
+  revalidatePath("/business", "layout");
   return { success: true };
 }
 

@@ -15,6 +15,7 @@ export type AdminPaymentActionState = {
 function revalidate() {
   revalidatePath("/admin/payments");
   revalidatePath("/admin/subscriptions");
+  revalidatePath("/admin/providers");
   revalidatePath("/admin");
   revalidatePath("/business/subscription");
   revalidatePath("/business", "layout");

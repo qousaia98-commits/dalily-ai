@@ -5,7 +5,6 @@ import { isBusinessUser, isPlatformAdmin } from "@/lib/auth/roles";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { PublicMobileNav } from "@/components/layout/public-mobile-nav";
 import { DalilyLogo } from "@/components/brand/dalily-logo";
 import { Button } from "@/components/ui/button";
 
@@ -63,13 +62,6 @@ export async function AppHeader({ businessLabel }: AppHeaderProps = {}) {
         </nav>
 
         <div className="flex items-center justify-end gap-1 sm:gap-2">
-          <PublicMobileNav
-            isAuthenticated={Boolean(authUser)}
-            isBusinessUser={businessUser}
-            isPlatformAdmin={platformAdmin}
-            displayName={accountLabel}
-          />
-
           {authUser ? (
             <>
               {accountLabel ? (

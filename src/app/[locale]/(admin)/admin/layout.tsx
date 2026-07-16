@@ -4,6 +4,8 @@ import { getAuthUser } from "@/lib/auth/session";
 import { isPlatformAdmin } from "@/lib/auth/roles";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AppHeader } from "@/components/layout/app-header";
+import { MobileBottomNavHost } from "@/components/layout/mobile-bottom-nav";
+import { MobileBottomNavSpacer } from "@/components/layout/mobile-bottom-nav-spacer";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
@@ -21,6 +23,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <AdminSidebar />
           <main className="min-w-0 flex-1">{children}</main>
         </div>
+        <MobileBottomNavSpacer />
+        <MobileBottomNavHost role="admin" />
       </div>
     );
   }

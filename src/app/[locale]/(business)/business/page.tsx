@@ -147,7 +147,11 @@ export default async function BusinessDashboardPage() {
 
       <GrowthTipsList tips={tips} />
 
-      <DashboardUpgradeCard planSlug={planSlug} status={subStatus} />
+      <DashboardUpgradeCard
+        planSlug={planSlug}
+        status={subStatus}
+        providerApproved={provider.status === "active"}
+      />
 
       <GrowthNotifications items={notifications} />
 

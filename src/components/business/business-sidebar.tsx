@@ -57,7 +57,7 @@ export function BusinessSidebar() {
 
   return (
     <>
-      <div className="mb-4 lg:hidden">
+      <div className="mb-4 hidden md:block lg:hidden">
         <Button variant="outline" size="sm" onClick={() => setMobileOpen(!mobileOpen)} className="gap-2">
           <Menu className="size-4" />
           {t("menu")}

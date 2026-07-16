@@ -15,6 +15,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/lib/i18n/routing";
+import { PlanBadge } from "@/components/shared/plan-badge";
+import { AdminProviderSubscriptionCard } from "@/components/admin/admin-provider-subscription-card";
+import type { PlanSlug } from "@/lib/subscription/types";
 
 type AdminProviderReviewPanelProps = {
   provider: AdminProviderReview;
@@ -29,6 +32,7 @@ function statusVariant(status: string): "default" | "secondary" | "destructive" 
 
 export function AdminProviderReviewPanel({ provider }: AdminProviderReviewPanelProps) {
   const t = useTranslations("admin.providers");
+  const tSub = useTranslations("admin.providers.subscription");
   const locale = useLocale();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -39,6 +43,13 @@ export function AdminProviderReviewPanel({ provider }: AdminProviderReviewPanelP
       router.refresh();
     });
   }
+
+  const planLabel =
+    provider.currentPlanSlug === "free"
+      ? tSub("starter")
+      : provider.currentPlanSlug === "premium"
+        ? "PREMIUM"
+        : "PRO";
 
   return (
     <div className="space-y-6">
@@ -51,6 +62,7 @@ export function AdminProviderReviewPanel({ provider }: AdminProviderReviewPanelP
             <Badge variant={statusVariant(provider.status)}>
               {t(`status.${provider.status}`)}
             </Badge>
+            <PlanBadge planSlug={provider.currentPlanSlug as PlanSlug} label={planLabel} />
           </div>
           <p className="text-sm text-muted-foreground">
             {getLocalizedField(provider.cityName, locale)} ·{" "}
@@ -84,6 +96,11 @@ export function AdminProviderReviewPanel({ provider }: AdminProviderReviewPanelP
           </Button>
         </div>
       </div>
+
+      <AdminProviderSubscriptionCard
+        currentPlanSlug={provider.currentPlanSlug}
+        openPayment={provider.openPayment}
+      />
 
       <div className="relative aspect-[21/9] overflow-hidden rounded-xl bg-muted">
         {provider.coverUrl ? (

@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendPaymentApprovedEmail } from "@/lib/email/payment-email";
+import { sendPlanActivatedEmail, sendPaymentRejectedEmail } from "@/lib/email/dalily-email";
+import { getProviderOwnerEmailContext } from "@/lib/email/provider-email-context";
 import { resolvePaymentProvider } from "@/lib/payment/payment.service";
 import { allocateUniquePaymentReference } from "@/lib/payment/reference";
 import { logPaymentEvent } from "@/lib/payment/payment-events";
@@ -11,7 +12,6 @@ import {
   getPlanBySlug,
 } from "@/lib/subscription/repository";
 import type { PlanSlug } from "@/lib/subscription/types";
-import type { LocalizedJson } from "@/types/database.types";
 
 const SUBSCRIPTION_PERIOD_DAYS = 30;
 
@@ -54,6 +54,18 @@ export class SubscriptionService {
   }
 
   async upgrade(providerId: string, targetPlanSlug: PlanSlug, billingCycle: "monthly" | "yearly" = "monthly") {
+    const admin = createAdminClient();
+    const { data: provider } = await admin
+      .from("providers")
+      .select("id, status")
+      .eq("id", providerId)
+      .is("deleted_at", null)
+      .maybeSingle();
+
+    if (!provider || provider.status !== "active") {
+      throw new Error("provider_not_approved");
+    }
+
     const targetPlan = await getPlanBySlug(targetPlanSlug);
     if (!targetPlan || targetPlan.slug === "free") {
       throw new Error("invalid_plan");
@@ -63,10 +75,19 @@ export class SubscriptionService {
     const amount =
       billingCycle === "yearly" ? targetPlan.yearlyPriceUsd : targetPlan.monthlyPriceUsd;
 
-    const admin = createAdminClient();
-
     if (current && current.status === "active" && current.planSlug === targetPlanSlug) {
       throw new Error("already_on_plan");
+    }
+
+    const { data: openPayments } = await admin
+      .from("payments")
+      .select("id")
+      .eq("provider_id", providerId)
+      .in("payment_status", ["pending", "pending_review"])
+      .limit(1);
+
+    if (openPayments && openPayments.length > 0) {
+      throw new Error("payment_pending");
     }
 
     const { data: subscription, error } = await admin
@@ -245,40 +266,26 @@ export class SubscriptionService {
     if (!subscription) throw new Error("subscription_not_found");
 
     const plan = await getPlanById(subscription.plan_id);
-    await applyPlanBenefits(subscription.provider_id, (plan?.slug ?? "free") as PlanSlug, expiresAt);
+    const planSlug = (plan?.slug ?? "free") as PlanSlug;
+    await applyPlanBenefits(subscription.provider_id, planSlug, expiresAt);
     await createInvoiceForPayment(paymentId, payment.provider_id, Number(payment.amount), payment.currency);
 
-    // Confirmation email (best-effort)
-    const { data: provider } = await admin
-      .from("providers")
-      .select("name, owner_id, phone")
-      .eq("id", payment.provider_id)
-      .maybeSingle();
-
-    if (provider?.owner_id) {
-      const { data: authUser } = await admin.auth.admin.getUserById(provider.owner_id);
-      const locale =
-        ((provider.name as LocalizedJson)?.ar ? "ar" : "en") as string;
-      const businessName =
-        (provider.name as LocalizedJson)?.en ||
-        (provider.name as LocalizedJson)?.ar ||
-        "Business";
-      const planLabel = plan?.slug === "premium" ? "PREMIUM" : "PRO";
-
-      await sendPaymentApprovedEmail({
-        to: authUser.user?.email ?? "",
-        businessName,
-        planLabel,
+    const owner = await getProviderOwnerEmailContext(payment.provider_id);
+    if (owner?.email && (planSlug === "pro" || planSlug === "premium")) {
+      await sendPlanActivatedEmail({
+        to: owner.email,
+        businessName: owner.businessName,
+        planLabel: planSlug === "premium" ? "PREMIUM" : "PRO",
         amount: Number(payment.amount),
         currency: payment.currency,
         reference: payment.payment_reference,
-        locale,
+        locale: owner.locale,
       });
     }
 
     return {
       providerId: subscription.provider_id,
-      planSlug: plan?.slug,
+      planSlug,
       actorId,
       startsAt: now.toISOString(),
       expiresAt,
@@ -291,11 +298,24 @@ export class SubscriptionService {
 
     const { data: payment } = await admin
       .from("payments")
-      .select("id, subscription_id, provider_id, payment_status")
+      .select("id, subscription_id, provider_id, payment_status, amount, currency, payment_reference")
       .eq("id", paymentId)
       .maybeSingle();
 
     if (!payment) throw new Error("payment_not_found");
+
+    let planSlug: PlanSlug = "pro";
+    if (payment.subscription_id) {
+      const { data: sub } = await admin
+        .from("subscriptions")
+        .select("plan_id")
+        .eq("id", payment.subscription_id)
+        .maybeSingle();
+      if (sub?.plan_id) {
+        const plan = await getPlanById(sub.plan_id);
+        planSlug = (plan?.slug ?? "pro") as PlanSlug;
+      }
+    }
 
     await admin
       .from("payments")
@@ -324,6 +344,20 @@ export class SubscriptionService {
 
     await ensureFreeSubscription(payment.provider_id);
     await applyPlanBenefits(payment.provider_id, "free", null);
+
+    const owner = await getProviderOwnerEmailContext(payment.provider_id);
+    if (owner?.email) {
+      await sendPaymentRejectedEmail({
+        to: owner.email,
+        businessName: owner.businessName,
+        planLabel: planSlug === "premium" ? "PREMIUM" : "PRO",
+        amount: Number(payment.amount),
+        currency: payment.currency,
+        reference: payment.payment_reference,
+        adminNote: adminNote?.trim() || undefined,
+        locale: owner.locale,
+      });
+    }
 
     return { providerId: payment.provider_id };
   }

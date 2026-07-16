@@ -2,12 +2,13 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/routing";
 import { Separator } from "@/components/ui/separator";
 import { DalilyLogo } from "@/components/brand/dalily-logo";
+import { cn } from "@/lib/utils";
 
-export async function AppFooter() {
+export async function AppFooter({ className }: { className?: string } = {}) {
   const t = await getTranslations("footer");
 
   return (
-    <footer className="border-t bg-muted/20">
+    <footer className={cn("border-t bg-muted/20", className)}>
       <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3">
