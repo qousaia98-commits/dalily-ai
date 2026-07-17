@@ -81,6 +81,8 @@ export function mapProviderRow(
     ratingAvg: Number(provider.rating_avg),
     responseTimeHours: provider.response_time_hours,
     createdAt: provider.created_at,
+    adminReviewNote: provider.admin_review_note ?? null,
+    changesRequestedAt: provider.changes_requested_at ?? null,
     avatarImageId: provider.avatar_image_id,
     coverImageId: provider.cover_image_id,
     avatarUrl: avatar ? getStoragePublicUrl(avatar.path) : null,

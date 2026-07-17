@@ -12,7 +12,13 @@ import {
   Landmark,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { submitPaymentReceiptAction, type PaymentInstructionsData } from "@/actions/subscription.actions";
+import {
+  confirmPaymentReceiptUploadAction,
+  preparePaymentReceiptUploadAction,
+  type PaymentInstructionsData,
+} from "@/actions/subscription.actions";
+import { uploadPaymentReceiptDirect } from "@/lib/payment/upload-payment-receipt";
+import { validateReceiptMeta } from "@/lib/payment/receipt-storage";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +38,7 @@ export function SubscriptionPaymentPanel({ instructions, onBack }: SubscriptionP
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const isReview = instructions.status === "pending_review" || instructions.hasReceipt;
@@ -49,21 +56,75 @@ export function SubscriptionPaymentPanel({ instructions, onBack }: SubscriptionP
     }
   }
 
+  function onFilePicked(file: File | undefined) {
+    setError(null);
+    setProgress(null);
+    if (!file) {
+      setFileName(null);
+      return;
+    }
+
+    const validated = validateReceiptMeta({
+      fileName: file.name,
+      mimeType: file.type || "",
+      size: file.size,
+    });
+    if (!validated.ok) {
+      setFileName(null);
+      if (fileRef.current) fileRef.current.value = "";
+      setError(t(`errors.${validated.error}`));
+      return;
+    }
+
+    setFileName(file.name);
+  }
+
   function onSubmitReceipt() {
     const file = fileRef.current?.files?.[0];
     if (!file) {
-      setError(t("errors.fileRequired"));
+      setError(t("errors.file_required"));
       return;
     }
+
+    const validated = validateReceiptMeta({
+      fileName: file.name,
+      mimeType: file.type || "",
+      size: file.size,
+    });
+    if (!validated.ok) {
+      setError(t(`errors.${validated.error}`));
+      return;
+    }
+
     setError(null);
-    const formData = new FormData();
-    formData.set("receipt", file);
+    setProgress(0);
+
     startTransition(async () => {
-      const result = await submitPaymentReceiptAction(instructions.paymentId, formData);
+      const result = await uploadPaymentReceiptDirect({
+        paymentId: instructions.paymentId,
+        file,
+        prepare: async (paymentId, meta) => {
+          const prepared = await preparePaymentReceiptUploadAction(paymentId, meta);
+          if (!prepared.success || !prepared.upload) {
+            return { success: false, error: prepared.error ?? "prepare_failed" };
+          }
+          return {
+            success: true,
+            path: prepared.upload.path,
+            token: prepared.upload.token,
+            signedUrl: prepared.upload.signedUrl,
+          };
+        },
+        confirm: async (paymentId, meta) => confirmPaymentReceiptUploadAction(paymentId, meta),
+        onProgress: (p) => setProgress(p.percent),
+      });
+
       if (!result.success) {
+        setProgress(null);
         setError(t(`errors.${result.error ?? "upload_failed"}`));
         return;
       }
+
       window.location.reload();
     });
   }
@@ -83,7 +144,6 @@ export function SubscriptionPaymentPanel({ instructions, onBack }: SubscriptionP
           </p>
         </header>
 
-        {/* Plan + Amount hero */}
         <section className="w-full rounded-2xl bg-[var(--dalily-navy)] px-5 py-8 text-center text-white shadow-[0_16px_40px_-18px_rgba(11,21,38,0.45)]">
           <p className="text-[11px] font-semibold tracking-[0.14em] text-[var(--dalily-gold)] uppercase">
             {t("planLabel")}
@@ -195,21 +255,45 @@ export function SubscriptionPaymentPanel({ instructions, onBack }: SubscriptionP
               type="file"
               accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
               className="sr-only"
-              onChange={(e) => setFileName(e.target.files?.[0]?.name ?? null)}
+              onChange={(e) => onFilePicked(e.target.files?.[0])}
             />
 
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
-              className="mt-5 flex h-28 w-full flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[var(--dalily-gold)]/50 bg-[#FBF8F0] px-4 text-sm text-[var(--dalily-navy)] transition hover:bg-[#F7F1E4]"
+              disabled={pending}
+              className="mt-5 flex h-28 w-full flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[var(--dalily-gold)]/50 bg-[#FBF8F0] px-4 text-sm text-[var(--dalily-navy)] transition hover:bg-[#F7F1E4] disabled:opacity-60"
             >
               <FileUp className="size-6 text-[var(--dalily-gold)]" />
               <span className="font-semibold">{fileName ?? t("chooseFile")}</span>
               <span className="text-xs text-muted-foreground">{t("fileTypes")}</span>
             </button>
 
+            {progress != null ? (
+              <div className="mt-4 space-y-2" aria-live="polite">
+                <div className="flex items-center justify-between text-xs font-medium text-muted-foreground">
+                  <span>{t("uploadProgress")}</span>
+                  <span>{progress}%</span>
+                </div>
+                <div
+                  className="h-2 overflow-hidden rounded-full bg-muted"
+                  role="progressbar"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={progress}
+                >
+                  <div
+                    className="h-full rounded-full bg-[var(--dalily-gold)] transition-[width] duration-200 motion-reduce:transition-none"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+            ) : null}
+
             {error ? (
-              <p className="mt-3 text-sm text-destructive">{error}</p>
+              <p className="mt-3 text-sm text-destructive" role="alert">
+                {error}
+              </p>
             ) : null}
 
             <Button
@@ -219,7 +303,7 @@ export function SubscriptionPaymentPanel({ instructions, onBack }: SubscriptionP
               onClick={onSubmitReceipt}
             >
               {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-              {t("submitReceipt")}
+              {pending ? t("uploading") : t("submitReceipt")}
             </Button>
 
             <Button

@@ -1,42 +1,69 @@
 import Image from "next/image";
-import { MapPin, Clock } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PlanBadge } from "@/components/shared/plan-badge";
 import { StarRating } from "@/components/providers/star-rating";
+import { SerpClickLink } from "@/components/providers/serp-click-link";
 import { getLocalizedText } from "@/types/domain.types";
 import type { ProviderListItem } from "@/types/search.types";
 import type { Locale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
+import { getBenefits } from "@/lib/subscription/benefit-engine";
 
 type ProviderCardProps = {
   provider: ProviderListItem;
   className?: string;
   style?: React.CSSProperties;
+  position?: number;
 };
 
-export async function ProviderCard({ provider, className, style }: ProviderCardProps) {
+export async function ProviderCard({
+  provider,
+  className,
+  style,
+  position,
+}: ProviderCardProps) {
   const locale = (await getLocale()) as Locale;
   const tProvider = await getTranslations("provider");
   const providerName = getLocalizedText(provider.name, locale);
+  const planSlug = provider.planSlug ?? "free";
+  const benefits = getBenefits(planSlug);
+  const health = provider.profileCompleteness ?? provider.trustScore;
 
   return (
-    <Link href={`/providers/${provider.id}`} className={cn("group block", className)} style={style}>
-      <Card className="overflow-hidden py-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+    <SerpClickLink
+      providerId={provider.id}
+      position={position}
+      href={`/providers/${provider.id}`}
+      className={cn("group block", className)}
+      style={style}
+    >
+      <Card
+        className={cn(
+          "overflow-hidden py-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+          benefits.showPremiumSearchAppearance && "ring-1 ring-[var(--dalily-gold)]/40",
+        )}
+      >
         <div className="relative aspect-[16/9] overflow-hidden">
           <Image
             src={provider.coverImage}
             alt={providerName}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
-          {provider.verified ? (
-            <Badge variant="success" className="absolute start-3 top-3">
-              {tProvider("verified")}
-            </Badge>
-          ) : null}
+          <div className="absolute start-3 top-3 flex flex-wrap gap-1.5">
+            {provider.verified ? (
+              <Badge variant="success">{tProvider("verified")}</Badge>
+            ) : null}
+            {benefits.canAppearFeatured ? (
+              <Badge className="bg-[var(--dalily-navy)] text-[var(--dalily-gold)]">
+                {tProvider("featured")}
+              </Badge>
+            ) : null}
+          </div>
         </div>
         <CardContent className="space-y-3 p-4">
           <div className="flex items-start gap-3">
@@ -50,16 +77,17 @@ export async function ProviderCard({ provider, className, style }: ProviderCardP
               />
             </div>
             <div className="min-w-0 flex-1">
-              <h3 className="truncate font-semibold group-hover:text-primary">
-                {providerName}
-              </h3>
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="truncate font-semibold group-hover:text-primary">{providerName}</h3>
+                <PlanBadge planSlug={planSlug} />
+              </div>
               <p className="text-sm text-muted-foreground">
                 {getLocalizedText(provider.categoryLabel, locale)}
               </p>
             </div>
             <div className="text-end">
-              <p className="text-sm font-bold text-primary">{provider.trustScore}%</p>
-              <p className="text-xs text-muted-foreground">{tProvider("trustScore")}</p>
+              <p className="text-sm font-bold text-primary">{health}%</p>
+              <p className="text-xs text-muted-foreground">{tProvider("healthShort")}</p>
             </div>
           </div>
 
@@ -71,14 +99,20 @@ export async function ProviderCard({ provider, className, style }: ProviderCardP
               {getLocalizedText(provider.city, locale)}
             </span>
             {provider.distanceKm != null ? (
+              <span className="flex items-center gap-1 font-medium text-foreground">
+                <MapPin className="size-3.5 text-[var(--dalily-gold)]" aria-hidden />
+                {tProvider("distanceAway", { km: provider.distanceKm })}
+              </span>
+            ) : null}
+            {provider.responseTimeHours != null ? (
               <span className="flex items-center gap-1">
-                <Clock className="size-3.5" />
-                {provider.distanceKm} {tProvider("km")}
+                <Clock className="size-3.5" aria-hidden />
+                {tProvider("respondsIn", { hours: provider.responseTimeHours })}
               </span>
             ) : null}
           </div>
         </CardContent>
       </Card>
-    </Link>
+    </SerpClickLink>
   );
 }

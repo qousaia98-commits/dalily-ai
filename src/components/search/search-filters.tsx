@@ -48,6 +48,8 @@ export function SearchFilters({ groups, className }: SearchFiltersProps) {
   const category = searchParams.get("category") ?? searchParams.get("group") ?? "all";
   const city = searchParams.get("city") ?? "all";
   const verified = searchParams.get("verified") ?? "all";
+  const nearby = searchParams.get("nearby") ?? "city";
+  const sort = searchParams.get("sort") ?? "relevant";
 
   return (
     <aside className={cn("space-y-5", className)}>
@@ -110,6 +112,45 @@ export function SearchFilters({ groups, className }: SearchFiltersProps) {
                     {tCities(slug)}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="nearby-radius">{t("nearby")}</Label>
+            <Select
+              value={nearby}
+              onValueChange={(v) => updateParam("nearby", v === "city" ? null : v)}
+            >
+              <SelectTrigger id="nearby-radius">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="3">{t("nearbyOptions.3")}</SelectItem>
+                <SelectItem value="5">{t("nearbyOptions.5")}</SelectItem>
+                <SelectItem value="10">{t("nearbyOptions.10")}</SelectItem>
+                <SelectItem value="20">{t("nearbyOptions.20")}</SelectItem>
+                <SelectItem value="city">{t("nearbyOptions.city")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="search-sort">{t("sort")}</Label>
+            <Select
+              value={sort}
+              onValueChange={(v) => updateParam("sort", v === "relevant" ? null : v)}
+            >
+              <SelectTrigger id="search-sort">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="relevant">{t("sortOptions.relevant")}</SelectItem>
+                <SelectItem value="nearest">{t("sortOptions.nearest")}</SelectItem>
+                <SelectItem value="rating">{t("sortOptions.rating")}</SelectItem>
+                <SelectItem value="newest">{t("sortOptions.newest")}</SelectItem>
+                <SelectItem value="pro">{t("sortOptions.pro")}</SelectItem>
+                <SelectItem value="premium">{t("sortOptions.premium")}</SelectItem>
               </SelectContent>
             </Select>
           </div>

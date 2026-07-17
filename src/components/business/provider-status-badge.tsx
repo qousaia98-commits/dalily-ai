@@ -5,6 +5,7 @@ import type { ProviderStatus } from "@/types/database.types";
 const variantMap: Record<ProviderStatus, "secondary" | "outline" | "success" | "destructive"> = {
   draft: "secondary",
   pending_review: "outline",
+  changes_requested: "outline",
   active: "success",
   suspended: "destructive",
   archived: "destructive",

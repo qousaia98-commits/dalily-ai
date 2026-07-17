@@ -59,25 +59,40 @@ export async function getCurrentSubscription(providerId: string) {
 
   if (!rows?.length) return null;
 
-  const preferred =
-    rows.find((row) => row.status === "active" || row.status === "trial") ??
-    rows[0];
+  const planIds = [...new Set(rows.map((row) => row.plan_id))];
+  const { data: plans } = await admin.from("subscription_plans").select("id, slug, name, features, monthly_price_usd, yearly_price_usd").in("id", planIds);
+  const planById = new Map((plans ?? []).map((plan) => [plan.id, plan]));
 
-  const plan = await getPlanById(preferred.plan_id);
-  return {
-    id: preferred.id,
-    providerId: preferred.provider_id,
-    planId: preferred.plan_id,
-    planSlug: (plan?.slug ?? "free") as PlanSlug,
-    planName: plan?.name ?? { en: "Free", ar: "مجاني" },
-    features: plan?.features ?? ({} as PlanFeatures),
-    status: preferred.status,
-    startsAt: preferred.starts_at,
-    expiresAt: preferred.expires_at,
-    autoRenew: preferred.auto_renew,
-    monthlyPriceUsd: plan?.monthlyPriceUsd ?? 0,
-    yearlyPriceUsd: plan?.yearlyPriceUsd ?? 0,
+  const tierOf = (planId: string) => {
+    const slug = planById.get(planId)?.slug ?? "free";
+    if (slug === "premium") return 3;
+    if (slug === "pro") return 2;
+    return 1;
   };
+
+  const activeOrTrial = rows.filter((row) => row.status === "active" || row.status === "trial");
+  const preferredPool = activeOrTrial.length > 0 ? activeOrTrial : rows;
+  const preferred = [...preferredPool].sort((a, b) => tierOf(b.plan_id) - tierOf(a.plan_id))[0];
+
+  const plan = preferred ? planById.get(preferred.plan_id) : null;
+  const mapped = plan
+    ? {
+        id: preferred.id,
+        providerId: preferred.provider_id,
+        planId: preferred.plan_id,
+        planSlug: (plan.slug ?? "free") as PlanSlug,
+        planName: (plan.name as { en: string; ar: string }) ?? { en: "Free", ar: "مجاني" },
+        features: (plan.features as PlanFeatures) ?? ({} as PlanFeatures),
+        status: preferred.status,
+        startsAt: preferred.starts_at,
+        expiresAt: preferred.expires_at,
+        autoRenew: preferred.auto_renew,
+        monthlyPriceUsd: Number(plan.monthly_price_usd ?? 0),
+        yearlyPriceUsd: Number(plan.yearly_price_usd ?? 0),
+      }
+    : null;
+
+  return mapped;
 }
 
 export async function ensureFreeSubscription(providerId: string): Promise<void> {
@@ -167,9 +182,18 @@ export async function getActivePlanSlugsByProviderIds(
   const { data: plans } = await admin.from("subscription_plans").select("id, slug").in("id", planIds);
   const slugByPlanId = new Map((plans ?? []).map((plan) => [plan.id, plan.slug as PlanSlug]));
 
+  const tierOf = (slug: PlanSlug) => {
+    if (slug === "premium") return 3;
+    if (slug === "pro") return 2;
+    return 1;
+  };
+
   for (const row of subscriptions ?? []) {
-    const slug = slugByPlanId.get(row.plan_id);
-    if (slug) map.set(row.provider_id, slug);
+    const slug = slugByPlanId.get(row.plan_id) ?? "free";
+    const current = map.get(row.provider_id);
+    if (!current || tierOf(slug) > tierOf(current)) {
+      map.set(row.provider_id, slug);
+    }
   }
 
   for (const id of providerIds) {

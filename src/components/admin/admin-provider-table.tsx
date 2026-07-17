@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Link } from "@/lib/i18n/routing";
+import { PlanBadge } from "@/components/shared/plan-badge";
 
 type AdminProviderTableProps = {
   items: AdminProviderItem[];
@@ -29,6 +30,7 @@ type AdminProviderTableProps = {
 function statusVariant(status: string): "default" | "secondary" | "destructive" | "outline" {
   if (status === "active") return "default";
   if (status === "suspended" || status === "archived") return "destructive";
+  if (status === "changes_requested") return "outline";
   return "secondary";
 }
 
@@ -62,12 +64,14 @@ export function AdminProviderTable({ items }: AdminProviderTableProps) {
               <div className="flex flex-wrap items-center gap-2">
                 <p className="font-semibold">{getLocalizedField(item.name, locale)}</p>
                 <Badge variant={statusVariant(item.status)}>{t(`status.${item.status}`)}</Badge>
+                <PlanBadge planSlug={item.planSlug} />
               </div>
               <p className="text-sm text-muted-foreground">
                 {getLocalizedField(item.cityName, locale)} · {getLocalizedField(item.categoryName, locale)}
               </p>
               <p className="text-sm text-muted-foreground">
                 {item.ownerDisplayName ?? item.ownerEmail}
+                {item.phone ? ` · ${item.phone}` : ""}
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-2">

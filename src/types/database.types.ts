@@ -2,7 +2,13 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 
 export type UserStatus = "active" | "suspended" | "banned";
 export type AppRole = "user" | "business" | "admin" | "moderator";
-export type ProviderStatus = "draft" | "pending_review" | "active" | "suspended" | "archived";
+export type ProviderStatus =
+  | "draft"
+  | "pending_review"
+  | "changes_requested"
+  | "active"
+  | "suspended"
+  | "archived";
 export type VerificationStatus =
   | "unverified"
   | "pending"
@@ -28,6 +34,7 @@ export type InvoiceStatus = "draft" | "issued" | "paid" | "void";
 export type AuditAction =
   | "provider_approved"
   | "provider_rejected"
+  | "provider_changes_requested"
   | "provider_activated"
   | "provider_suspended"
   | "provider_archived"
@@ -188,6 +195,8 @@ export type Database = {
           is_featured: boolean;
           featured_until: string | null;
           metadata: Json;
+          admin_review_note: string | null;
+          changes_requested_at: string | null;
           published_at: string | null;
           created_at: string;
           updated_at: string;
@@ -224,6 +233,8 @@ export type Database = {
           is_featured?: boolean;
           featured_until?: string | null;
           metadata?: Json;
+          admin_review_note?: string | null;
+          changes_requested_at?: string | null;
           published_at?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -260,6 +271,8 @@ export type Database = {
           is_featured?: boolean;
           featured_until?: string | null;
           metadata?: Json;
+          admin_review_note?: string | null;
+          changes_requested_at?: string | null;
           published_at?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -758,6 +771,8 @@ export type Database = {
           priority: ProblemPriority | null;
           result_count: number;
           provider_ids: string[];
+          nearby_radius: string | null;
+          ranking_snapshot: Json;
           locale: string | null;
           created_at: string;
         };
@@ -772,6 +787,8 @@ export type Database = {
           priority?: ProblemPriority | null;
           result_count?: number;
           provider_ids?: string[];
+          nearby_radius?: string | null;
+          ranking_snapshot?: Json;
           locale?: string | null;
           created_at?: string;
         };
@@ -786,7 +803,42 @@ export type Database = {
           priority?: ProblemPriority | null;
           result_count?: number;
           provider_ids?: string[];
+          nearby_radius?: string | null;
+          ranking_snapshot?: Json;
           locale?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      provider_engagement_events: {
+        Row: {
+          id: string;
+          provider_id: string;
+          event_type: string;
+          search_log_id: string | null;
+          position: number | null;
+          metadata: Json;
+          user_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider_id: string;
+          event_type: string;
+          search_log_id?: string | null;
+          position?: number | null;
+          metadata?: Json;
+          user_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          provider_id?: string;
+          event_type?: string;
+          search_log_id?: string | null;
+          position?: number | null;
+          metadata?: Json;
+          user_id?: string | null;
           created_at?: string;
         };
         Relationships: [];

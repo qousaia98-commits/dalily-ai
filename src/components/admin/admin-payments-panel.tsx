@@ -24,16 +24,25 @@ type PaymentRow = {
 
 type TabKey = "pending_review" | "paid" | "rejected" | "all";
 
+function asTab(value: string | undefined): TabKey {
+  if (value === "pending_review" || value === "paid" || value === "rejected" || value === "all") {
+    return value;
+  }
+  return "pending_review";
+}
+
 export function AdminPaymentsPanel({
   payments,
   counts,
+  initialTab,
 }: {
   payments: PaymentRow[];
   counts: Record<string, number>;
+  initialTab?: string;
 }) {
   const t = useTranslations("admin.payments");
   const locale = useLocale();
-  const [tab, setTab] = useState<TabKey>("pending_review");
+  const [tab, setTab] = useState<TabKey>(asTab(initialTab));
   const [query, setQuery] = useState("");
 
   const tabs: { key: TabKey; label: string; count: number }[] = [

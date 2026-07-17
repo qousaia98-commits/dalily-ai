@@ -1,5 +1,8 @@
 import { getTranslations } from "next-intl/server";
+import { PlanBadge } from "@/components/shared/plan-badge";
+import { getBenefits, resolvePlanDisplay } from "@/lib/subscription/benefit-engine";
 import type { PlanSlug } from "@/lib/subscription/types";
+import { cn } from "@/lib/utils";
 
 export async function GrowthHero({
   planSlug,
@@ -9,17 +12,57 @@ export async function GrowthHero({
   businessName: string;
 }) {
   const t = await getTranslations("business.growth.hero");
-  const tier = planSlug === "premium" ? "premium" : planSlug === "pro" ? "pro" : "starter";
+  const benefits = getBenefits(planSlug);
+  const display = resolvePlanDisplay(planSlug);
+  const tier = display.marketingId;
 
   return (
-    <header className="overflow-hidden rounded-3xl border border-[#E8ECF2] bg-[linear-gradient(180deg,#fff_0%,#F7F8FA_100%)] p-6 sm:p-8">
-      <p className="text-xs font-bold tracking-[0.16em] text-[var(--dalily-gold)] uppercase">
-        {t("eyebrow")}
-      </p>
-      <h1 className="mt-3 text-3xl font-bold tracking-tight text-[var(--dalily-navy)] sm:text-4xl">
-        {t(`${tier}.title`, { name: businessName })}
-      </h1>
-      <p className="mt-3 max-w-2xl text-base leading-relaxed text-[#5C6478] sm:text-lg">
+    <header
+      className={cn(
+        "relative overflow-hidden rounded-3xl border p-6 sm:p-8",
+        benefits.showPremiumDashboardTheme
+          ? "border-[var(--dalily-gold)]/40 bg-[linear-gradient(145deg,#0B1526_0%,#1a2744_100%)] text-white shadow-[0_20px_50px_-24px_rgba(11,21,38,0.45)]"
+          : benefits.canUseProBadge
+            ? "border-[var(--dalily-gold)]/35 bg-card dark:bg-card"
+            : "border-border bg-card",
+      )}
+      style={
+        !benefits.showPremiumDashboardTheme && benefits.canUseProBadge
+          ? { backgroundImage: "linear-gradient(180deg, var(--card) 0%, color-mix(in oklab, var(--dalily-gold) 8%, var(--card)) 100%)" }
+          : undefined
+      }
+    >
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute -end-8 -top-8 size-40 rounded-full blur-3xl motion-reduce:hidden",
+          "bg-[var(--dalily-gold)]/20",
+        )}
+      />
+
+      <div className="relative flex min-w-0 flex-wrap items-center gap-3">
+        <h1
+          className={cn(
+            "min-w-0 text-balance text-3xl font-bold tracking-tight sm:text-4xl",
+            benefits.showPremiumDashboardTheme
+              ? "text-white"
+              : "text-foreground",
+          )}
+        >
+          {display.icon === "crown" ? "👑 " : display.icon === "star" ? "⭐ " : ""}
+          {businessName}
+        </h1>
+        <PlanBadge planSlug={planSlug} size="md" />
+      </div>
+
+      <p
+        className={cn(
+          "relative mt-4 max-w-2xl text-base leading-relaxed sm:text-lg",
+          benefits.showPremiumDashboardTheme
+            ? "text-white/75"
+            : "text-muted-foreground",
+        )}
+      >
         {t(`${tier}.subtitle`)}
       </p>
     </header>

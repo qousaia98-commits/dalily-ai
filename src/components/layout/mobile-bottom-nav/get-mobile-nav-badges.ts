@@ -1,15 +1,23 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getAuthUser } from "@/lib/auth/session";
+import { loadBusinessConversations } from "@/lib/business/load-conversations";
+import { countUnreadConversations } from "@/lib/business/conversations";
 import type { MobileNavBadges, MobileNavRole } from "./types";
 
 export async function getMobileNavBadges(role: MobileNavRole): Promise<MobileNavBadges> {
   if (role === "admin") {
     try {
       const admin = createAdminClient();
-      const [approvals, payments] = await Promise.all([
+      const [approvals, changes, payments] = await Promise.all([
         admin
           .from("providers")
           .select("id", { count: "exact", head: true })
           .eq("status", "pending_review")
+          .is("deleted_at", null),
+        admin
+          .from("providers")
+          .select("id", { count: "exact", head: true })
+          .eq("status", "changes_requested")
           .is("deleted_at", null),
         admin
           .from("payments")
@@ -18,7 +26,7 @@ export async function getMobileNavBadges(role: MobileNavRole): Promise<MobileNav
       ]);
 
       return {
-        approvals: approvals.count ?? 0,
+        approvals: (approvals.count ?? 0) + (changes.count ?? 0),
         payments: payments.count ?? 0,
         messages: 0,
       };
@@ -28,8 +36,14 @@ export async function getMobileNavBadges(role: MobileNavRole): Promise<MobileNav
   }
 
   if (role === "business") {
-    // Messaging is not live yet — hide badges until unread counts exist.
-    return { messages: 0 };
+    try {
+      const authUser = await getAuthUser();
+      if (!authUser) return { messages: 0 };
+      const { conversations } = await loadBusinessConversations(authUser.id);
+      return { messages: countUnreadConversations(conversations) };
+    } catch {
+      return { messages: 0 };
+    }
   }
 
   return {};

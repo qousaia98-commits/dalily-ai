@@ -33,7 +33,10 @@ export type PublicProviderProfile = {
   category: CategorySlug;
   categoryLabel: LocalizedText;
   city: LocalizedText;
+  citySlug: string | null;
   district: LocalizedText | null;
+  latitude: number | null;
+  longitude: number | null;
   rating: number;
   reviewCount: number;
   trustScore: number;
@@ -122,7 +125,10 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     category: categorySlug,
     categoryLabel: { ar: categoryName.ar, en: categoryName.en },
     city: cityLabel,
+    citySlug: cityKey ?? null,
     district: parseAddressLine(provider.address_line),
+    latitude: provider.latitude,
+    longitude: provider.longitude,
     rating: Number(provider.rating_avg),
     reviewCount: provider.review_count,
     trustScore: provider.trust_score,
@@ -154,7 +160,13 @@ export async function getFeaturedProviders(limit = 3): Promise<ProviderListItem[
     getCategorySlugMap(),
     getCategoryNameMap(),
   ]);
-  return mapProviderRowsToListItems(ranked, imagePathById, categorySlugById, categoryNameBySlug);
+  return mapProviderRowsToListItems(
+    ranked,
+    imagePathById,
+    categorySlugById,
+    categoryNameBySlug,
+    planSlugsByProviderId,
+  );
 }
 
 export async function getOwnedProviderForVerification(

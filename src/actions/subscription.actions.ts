@@ -1,17 +1,17 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider, requireOwnedProvider } from "@/lib/providers/queries";
 import { getPaymentConfig } from "@/lib/payment/config";
 import {
-  ALLOWED_RECEIPT_TYPES,
   buildPaymentReceiptPath,
-  MAX_RECEIPT_BYTES,
+  isOwnedReceiptPath,
   PAYMENT_RECEIPTS_BUCKET,
+  validateReceiptMeta,
 } from "@/lib/payment/receipt-storage";
 import { listActivePlans, getPaymentHistory } from "@/lib/subscription/repository";
+import { revalidateSubscriptionSurfaces } from "@/lib/subscription/revalidate";
 import { subscriptionService } from "@/lib/subscription/subscription.service";
 import type { PlanSlug } from "@/lib/subscription/types";
 import { createClient } from "@/lib/supabase/server";
@@ -36,15 +36,30 @@ export type SubscriptionActionState = {
   error?: string;
   message?: string;
   paymentInstructions?: PaymentInstructionsData;
+  /** Direct-upload prepare payload (never includes file bytes). */
+  upload?: {
+    path: string;
+    token: string;
+    signedUrl: string;
+  };
 };
 
 const planSlugSchema = z.enum(["pro", "premium"]);
 
-function revalidate() {
-  revalidatePath("/business/subscription");
-  revalidatePath("/business/welcome");
-  revalidatePath("/business", "layout");
-  revalidatePath("/admin/payments");
+const receiptMetaSchema = z.object({
+  fileName: z.string().trim().min(1).max(255),
+  mimeType: z.string().trim().min(3).max(100),
+  size: z.number().int().positive(),
+});
+
+const receiptConfirmSchema = z.object({
+  path: z.string().trim().min(8).max(500),
+  mimeType: z.string().trim().min(3).max(100),
+  size: z.number().int().positive(),
+});
+
+function revalidate(providerSlug?: string | null) {
+  revalidateSubscriptionSurfaces({ providerSlug });
 }
 
 function planLabelFromSlug(slug: string): string {
@@ -87,8 +102,6 @@ export async function getSubscriptionPageData(userId: string) {
     };
   }
 
-  // Expose pending_payment status to the UI when a payment request is open,
-  // while currentPlanSlug stays on the active (Starter) plan until approval.
   const statusForUi = openPayment
     ? "pending_payment"
     : (subscription?.status ?? "active");
@@ -118,7 +131,7 @@ export async function upgradeSubscriptionAction(
     const result = await subscriptionService.upgrade(provider.id, parsed.data, billingCycle);
     const config = getPaymentConfig();
     const instructions = result.payment.instructions;
-    revalidate();
+    revalidate(provider.slug);
     return {
       success: true,
       message: "upgrade_pending",
@@ -151,52 +164,140 @@ export async function upgradeSubscriptionAction(
   }
 }
 
-export async function submitPaymentReceiptAction(
+/**
+ * Step 1: validate metadata + ownership, return a signed upload target.
+ * File bytes never enter this action.
+ */
+export async function preparePaymentReceiptUploadAction(
   paymentId: string,
-  formData: FormData,
+  meta: { fileName: string; mimeType: string; size: number },
 ): Promise<SubscriptionActionState> {
   const authUser = await requireAuthUser();
   const provider = await requireOwnedProvider(authUser.id);
 
   const idParsed = z.string().uuid().safeParse(paymentId);
-  if (!idParsed.success) return { success: false, error: "invalid_payment" };
+  const metaParsed = receiptMetaSchema.safeParse(meta);
+  if (!idParsed.success || !metaParsed.success) {
+    return { success: false, error: "invalid_payment" };
+  }
 
-  const file = formData.get("receipt");
-  if (!(file instanceof File) || file.size === 0) {
-    return { success: false, error: "file_required" };
-  }
-  if (file.size > MAX_RECEIPT_BYTES) {
-    return { success: false, error: "file_too_large" };
-  }
-  if (!ALLOWED_RECEIPT_TYPES.includes(file.type as (typeof ALLOWED_RECEIPT_TYPES)[number])) {
-    return { success: false, error: "invalid_file_type" };
-  }
+  const validated = validateReceiptMeta(metaParsed.data);
+  if (!validated.ok) return { success: false, error: validated.error };
 
   const history = await getPaymentHistory(provider.id);
-  const payment = history.find((p) => p.id === paymentId);
+  const payment = history.find((p) => p.id === idParsed.data);
   if (!payment || payment.paymentStatus !== "pending") {
     return { success: false, error: "payment_not_submittable" };
   }
+  if (payment.receiptPath) {
+    return { success: false, error: "duplicate_receipt" };
+  }
+
+  const path = buildPaymentReceiptPath(
+    authUser.id,
+    provider.id,
+    idParsed.data,
+    metaParsed.data.fileName,
+  );
 
   const supabase = await createClient();
-  const path = buildPaymentReceiptPath(authUser.id, provider.id, paymentId, file.name);
-  const buffer = Buffer.from(await file.arrayBuffer());
-
-  const { error: uploadError } = await supabase.storage
+  const { data, error } = await supabase.storage
     .from(PAYMENT_RECEIPTS_BUCKET)
-    .upload(path, buffer, { contentType: file.type, upsert: false });
+    .createSignedUploadUrl(path);
 
-  if (uploadError) return { success: false, error: "upload_failed" };
+  if (error || !data?.signedUrl || !data.token) {
+    return { success: false, error: "prepare_failed" };
+  }
+
+  return {
+    success: true,
+    upload: {
+      path: data.path || path,
+      token: data.token,
+      signedUrl: data.signedUrl,
+    },
+  };
+}
+
+/**
+ * Step 2: after direct Storage upload, persist path/mime/size only.
+ */
+export async function confirmPaymentReceiptUploadAction(
+  paymentId: string,
+  meta: { path: string; mimeType: string; size: number },
+): Promise<SubscriptionActionState> {
+  const authUser = await requireAuthUser();
+  const provider = await requireOwnedProvider(authUser.id);
+
+  const idParsed = z.string().uuid().safeParse(paymentId);
+  const metaParsed = receiptConfirmSchema.safeParse(meta);
+  if (!idParsed.success || !metaParsed.success) {
+    return { success: false, error: "invalid_payment" };
+  }
+
+  const validated = validateReceiptMeta({
+    fileName: metaParsed.data.path.split("/").pop() || "receipt",
+    mimeType: metaParsed.data.mimeType,
+    size: metaParsed.data.size,
+  });
+  if (!validated.ok) return { success: false, error: validated.error };
+
+  if (
+    !isOwnedReceiptPath(
+      metaParsed.data.path,
+      authUser.id,
+      provider.id,
+      idParsed.data,
+    )
+  ) {
+    return { success: false, error: "invalid_payment" };
+  }
+
+  const history = await getPaymentHistory(provider.id);
+  const payment = history.find((p) => p.id === idParsed.data);
+  if (!payment || payment.paymentStatus !== "pending") {
+    return { success: false, error: "payment_not_submittable" };
+  }
+  if (payment.receiptPath) {
+    return { success: false, error: "duplicate_receipt" };
+  }
+
+  // Owner has no SELECT on receipts — verify object exists via admin client.
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const admin = createAdminClient();
+  const { data: signed } = await admin.storage
+    .from(PAYMENT_RECEIPTS_BUCKET)
+    .createSignedUrl(metaParsed.data.path, 60);
+
+  if (!signed?.signedUrl) {
+    return { success: false, error: "upload_failed" };
+  }
 
   try {
-    await subscriptionService.submitPaymentReceipt(paymentId, provider.id, path, file.type);
-  } catch {
-    await supabase.storage.from(PAYMENT_RECEIPTS_BUCKET).remove([path]);
+    await subscriptionService.submitPaymentReceipt(
+      idParsed.data,
+      provider.id,
+      metaParsed.data.path,
+      validated.mimeType,
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (message === "duplicate_receipt") {
+      return { success: false, error: "duplicate_receipt" };
+    }
     return { success: false, error: "save_failed" };
   }
 
-  revalidate();
+  revalidate(provider.slug);
   return { success: true, message: "pending_review" };
+}
+
+/**
+ * @deprecated File bodies must not go through Server Actions.
+ * Use preparePaymentReceiptUploadAction + confirmPaymentReceiptUploadAction.
+ */
+export async function submitPaymentReceiptAction(): Promise<SubscriptionActionState> {
+  return { success: false, error: "use_direct_upload" };
 }
 
 export async function downgradeSubscriptionAction(): Promise<SubscriptionActionState> {
@@ -205,7 +306,7 @@ export async function downgradeSubscriptionAction(): Promise<SubscriptionActionS
 
   try {
     await subscriptionService.downgrade(provider.id);
-    revalidate();
+    revalidate(provider.slug);
     return { success: true, message: "downgraded" };
   } catch {
     return { success: false, error: "downgrade_failed" };
@@ -218,7 +319,7 @@ export async function cancelSubscriptionAction(): Promise<SubscriptionActionStat
 
   try {
     await subscriptionService.cancel(provider.id);
-    revalidate();
+    revalidate(provider.slug);
     return { success: true, message: "cancelled" };
   } catch {
     return { success: false, error: "cancel_failed" };
@@ -235,7 +336,7 @@ export async function renewSubscriptionAction(): Promise<SubscriptionActionState
     const config = getPaymentConfig();
     const instructions = result.payment.instructions;
     const slug = (before?.planSlug ?? "pro") as PlanSlug;
-    revalidate();
+    revalidate(provider.slug);
     return {
       success: true,
       message: "renew_pending",

@@ -48,6 +48,12 @@ export type SearchEngineInput = {
   verifiedOnly?: boolean;
   locale?: string;
   userId?: string | null;
+  /** Ephemeral user location — never permanently stored */
+  userLat?: number | null;
+  userLng?: number | null;
+  /** Radius in km, or "city" for entire city */
+  nearbyRadius?: 3 | 5 | 10 | 20 | "city" | null;
+  sort?: import("@/lib/geo/distance").SearchSort;
 };
 
 export type SearchEngineResult = {
@@ -60,6 +66,11 @@ export type SearchEngineResult = {
     citySlug: string | null;
     textTerms: string;
   };
+  nearby?: {
+    active: boolean;
+    radiusKm: number | "city" | null;
+    hasUserLocation: boolean;
+  };
 };
 
-export const SEARCH_TOP_N = 3;
+export const SEARCH_TOP_N = 12;

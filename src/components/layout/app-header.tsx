@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/routing";
 import { getAuthUser } from "@/lib/auth/session";
@@ -11,9 +12,14 @@ import { Button } from "@/components/ui/button";
 type AppHeaderProps = {
   /** When set, replaces personal account name (business dashboard). */
   businessLabel?: string | null;
+  /** Optional plan badge next to business label. */
+  businessPlanBadge?: ReactNode;
 };
 
-export async function AppHeader({ businessLabel }: AppHeaderProps = {}) {
+export async function AppHeader({
+  businessLabel,
+  businessPlanBadge,
+}: AppHeaderProps = {}) {
   const t = await getTranslations("common");
   const tNav = await getTranslations("nav");
   const authUser = await getAuthUser();
@@ -65,8 +71,9 @@ export async function AppHeader({ businessLabel }: AppHeaderProps = {}) {
           {authUser ? (
             <>
               {accountLabel ? (
-                <span className="hidden max-w-[12rem] truncate text-sm text-muted-foreground lg:inline">
-                  {accountLabel}
+                <span className="hidden max-w-[16rem] items-center gap-2 truncate text-sm text-muted-foreground lg:inline-flex">
+                  <span className="truncate">{accountLabel}</span>
+                  {businessPlanBadge}
                 </span>
               ) : null}
               <div className="hidden md:block">

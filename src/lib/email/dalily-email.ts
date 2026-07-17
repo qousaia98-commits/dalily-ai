@@ -99,6 +99,30 @@ export async function sendBusinessRejectedEmail(
   });
 }
 
+export async function sendBusinessChangesRequestedEmail(
+  input: LocaleInput & { note: string },
+) {
+  const isAr = input.locale === "ar";
+  return sendEmail({
+    tag: "business_changes_requested",
+    to: input.to,
+    subject: isAr
+      ? `مطلوب تعديلات على نشاطك — ${input.businessName}`
+      : `Changes requested for your business — ${input.businessName}`,
+    html: isAr
+      ? `<p>مرحباً ${input.businessName}،</p>
+         <p>راجع فريق دليلي طلبك ويحتاج تعديلات قبل الموافقة.</p>
+         <p><strong>المطلوب:</strong><br/>${input.note}</p>
+         <p>حدّث ملفك وأعد الإرسال للمراجعة.</p>
+         <p>دليلي</p>`
+      : `<p>Hi ${input.businessName},</p>
+         <p>Our team reviewed your submission and needs a few changes before approval.</p>
+         <p><strong>Please complete:</strong><br/>${input.note}</p>
+         <p>Update your profile and resubmit for review.</p>
+         <p>— Dalily</p>`,
+  });
+}
+
 export async function sendPlanActivatedEmail(
   input: LocaleInput & {
     planLabel: "PRO" | "PREMIUM";

@@ -1,26 +1,24 @@
-import { TrendingUp, TrendingDown, Eye, Search, MousePointer, Heart } from "lucide-react";
+import { Eye, Search, MousePointer, Heart } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MOCK_BUSINESS_STATS } from "@/lib/mock/data";
-import { cn } from "@/lib/utils";
+import type { WeeklyInsights } from "@/lib/business/insights";
 
 const statConfig = [
-  { key: "profileViews" as const, icon: Eye, dataKey: "profileViews" as const, changeKey: "profileViewsChange" as const },
-  { key: "searchAppearances" as const, icon: Search, dataKey: "searchAppearances" as const, changeKey: "searchAppearancesChange" as const },
-  { key: "contactClicks" as const, icon: MousePointer, dataKey: "contactClicks" as const, changeKey: "contactClicksChange" as const },
-  { key: "favorites" as const, icon: Heart, dataKey: "favorites" as const, changeKey: "favoritesChange" as const },
+  { key: "profileViews" as const, icon: Eye, field: "profileViews" as const },
+  { key: "searchAppearances" as const, icon: Search, field: "searchAppearances" as const },
+  { key: "contactClicks" as const, icon: MousePointer, field: "contactClicks" as const },
+  { key: "favorites" as const, icon: Heart, field: "favorites" as const },
 ];
 
-export async function BusinessStatsCards() {
+/** Real analytics only — never mock or invent values. */
+export async function BusinessStatsCards({ insights }: { insights: WeeklyInsights }) {
   const t = await getTranslations("business.stats");
-  const stats = MOCK_BUSINESS_STATS;
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {statConfig.map(({ key, icon: Icon, dataKey, changeKey }) => {
-        const value = stats[dataKey];
-        const change = stats[changeKey];
-        const positive = change >= 0;
+      {statConfig.map(({ key, icon: Icon, field }) => {
+        const raw = insights[field];
+        const value = raw == null ? null : Number(raw);
 
         return (
           <Card key={key} className="py-4">
@@ -31,17 +29,12 @@ export async function BusinessStatsCards() {
               <Icon className="size-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{value.toLocaleString()}</p>
-              <p
-                className={cn(
-                  "mt-1 flex items-center gap-1 text-xs font-medium",
-                  positive ? "text-emerald-600 dark:text-emerald-400" : "text-red-500",
-                )}
-              >
-                {positive ? <TrendingUp className="size-3" /> : <TrendingDown className="size-3" />}
-                {positive ? "+" : ""}
-                {change}%
+              <p className="text-2xl font-bold">
+                {value == null ? "—" : value.toLocaleString()}
               </p>
+              {value == null ? (
+                <p className="mt-1 text-xs text-muted-foreground">{t("waitingReal")}</p>
+              ) : null}
             </CardContent>
           </Card>
         );

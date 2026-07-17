@@ -568,7 +568,7 @@ export async function submitProviderForReviewAction(): Promise<ProviderActionSta
   const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
 
-  if (provider.status !== "draft") {
+  if (provider.status !== "draft" && provider.status !== "changes_requested") {
     return { success: false, error: "invalid_status" };
   }
 
@@ -600,6 +600,8 @@ export async function submitProviderForReviewAction(): Promise<ProviderActionSta
     .update({
       status: "pending_review",
       verification_status: "pending",
+      admin_review_note: null,
+      changes_requested_at: null,
       updated_by: authUser.id,
     })
     .eq("id", provider.id)

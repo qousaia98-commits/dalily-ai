@@ -1,10 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdminUser } from "@/lib/auth/session";
 import { isPlatformAdmin } from "@/lib/auth/roles";
 import { logAdminAudit } from "@/lib/admin/audit";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { revalidateSubscriptionSurfaces } from "@/lib/subscription/revalidate";
 import { subscriptionService } from "@/lib/subscription/subscription.service";
 import type { PlanSlug } from "@/lib/subscription/types";
 
@@ -13,11 +14,14 @@ export type AdminSubscriptionActionState = {
   error?: string;
 };
 
-function revalidate() {
-  revalidatePath("/admin/subscriptions");
-  revalidatePath("/admin/payments");
-  revalidatePath("/admin");
-  revalidatePath("/business/subscription");
+async function providerSlug(providerId: string): Promise<string | null> {
+  const admin = createAdminClient();
+  const { data } = await admin.from("providers").select("slug").eq("id", providerId).maybeSingle();
+  return data?.slug ?? null;
+}
+
+async function revalidateForProvider(providerId: string) {
+  revalidateSubscriptionSurfaces({ providerSlug: await providerSlug(providerId) });
 }
 
 export async function approvePaymentAction(paymentId: string): Promise<AdminSubscriptionActionState> {
@@ -33,7 +37,7 @@ export async function approvePaymentAction(paymentId: string): Promise<AdminSubs
       entityId: paymentId,
       metadata: { providerId: result.providerId, planSlug: result.planSlug ?? null },
     });
-    revalidate();
+    revalidateSubscriptionSurfaces({ providerSlug: result.providerSlug });
     return { success: true };
   } catch {
     return { success: false, error: "approve_failed" };
@@ -48,7 +52,7 @@ export async function rejectPaymentAction(
   if (!isPlatformAdmin(authUser.roles)) return { success: false, error: "forbidden" };
 
   try {
-    await subscriptionService.rejectPayment(paymentId, authUser.id, adminNote);
+    const result = await subscriptionService.rejectPayment(paymentId, authUser.id, adminNote);
     await logAdminAudit({
       actorId: authUser.id,
       action: "payment_rejected",
@@ -56,7 +60,7 @@ export async function rejectPaymentAction(
       entityId: paymentId,
       metadata: { note: adminNote ?? null },
     });
-    revalidate();
+    revalidateSubscriptionSurfaces({ providerSlug: result.providerSlug });
     return { success: true };
   } catch {
     return { success: false, error: "reject_failed" };
@@ -87,7 +91,7 @@ export async function extendSubscriptionAction(
       entityId: parsed.data.providerId,
       metadata: { days: parsed.data.days },
     });
-    revalidate();
+    await revalidateForProvider(parsed.data.providerId);
     return { success: true };
   } catch {
     return { success: false, error: "extend_failed" };
@@ -108,7 +112,7 @@ export async function cancelSubscriptionAdminAction(
       entityType: "provider",
       entityId: providerId,
     });
-    revalidate();
+    await revalidateForProvider(providerId);
     return { success: true };
   } catch {
     return { success: false, error: "cancel_failed" };
@@ -136,7 +140,7 @@ export async function changePlanAdminAction(
       entityId: providerId,
       metadata: { planSlug: parsed.data },
     });
-    revalidate();
+    await revalidateForProvider(providerId);
     return { success: true };
   } catch {
     return { success: false, error: "change_failed" };

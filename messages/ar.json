@@ -240,10 +240,21 @@
       "description": "تعذّر تحميل النتائج حالياً. تحقق من الاتصال وحاول مرة أخرى.",
       "retry": "إعادة المحاولة"
     },
+    "nearby": {
+      "title": "تسمح لدليلي تستخدم موقعك؟",
+      "body": "منستخدم موقعك بس لنلاقي أعمال قريبة منك.",
+      "allow": "سماح",
+      "deny": "لاحقاً",
+      "active": "عم نعرض أعمال قريبة حسب موقعك",
+      "clear": "المدينة فقط",
+      "unsupported": "الموقع غير مدعوم على هاد الجهاز.",
+      "saveFailed": "ما قدرنا نحفظ الموقع. حاول مرة تانية."
+    },
     "filters": {
       "title": "الفلاتر",
       "category": "الفئة",
       "city": "المدينة",
+      "nearby": "قريب",
       "verified": "التحقق",
       "sort": "ترتيب حسب",
       "allCategories": "جميع الفئات",
@@ -251,10 +262,22 @@
       "allCities": "جميع المدن",
       "allProviders": "الكل",
       "verifiedOnly": "موثقون فقط",
+      "nearbyOptions": {
+        "3": "3 كم",
+        "5": "5 كم",
+        "10": "10 كم",
+        "20": "20 كم",
+        "city": "كل المدينة"
+      },
       "sortOptions": {
+        "relevant": "الأكثر صلة",
+        "nearest": "الأقرب",
+        "rating": "الأعلى تقييماً",
+        "newest": "الأحدث",
+        "pro": "PRO",
+        "premium": "PREMIUM",
         "best_match": "الأفضل تطابقاً",
         "highest_rated": "الأعلى تقييماً",
-        "nearest": "الأقرب",
         "verified": "الموثقون أولاً"
       }
     }
@@ -264,6 +287,11 @@
     "verified": "موثق",
     "reviews": "تقييم",
     "km": "كم",
+    "distanceAway": "يبعد {km} كم",
+    "distanceFromYou": "يبعد {km} كم عنك",
+    "openRoute": "فتح المسار",
+    "openRouteAria": "فتح الاتجاهات في الخرائط",
+    "routeTitle": "الاتجاهات",
     "about": "نبذة",
     "services": "الخدمات",
     "gallery": "معرض الصور",
@@ -277,7 +305,9 @@
     "planPro": "PRO",
     "planPremium": "PREMIUM",
     "memberSince": "عضو منذ {date}",
-    "healthScore": "الصحة {score}%"
+    "healthScore": "الصحة {score}%",
+    "healthShort": "الصحة",
+    "featured": "مميز"
   },
   "footer": {
     "description": "منصة ذكاء اصطناعي لاكتشاف مزودي الخدمات الموثوقين في سوريا.",
@@ -364,7 +394,8 @@
       "gallery": "المعرض",
       "analytics": "الإحصائيات",
       "verification": "التحقق",
-      "upgrade": "⭐ تطوير"
+      "upgrade": "⭐ تطوير",
+      "messages": "الرسائل"
     },
     "dashboard": {
       "title": "لوحة التحكم",
@@ -434,6 +465,40 @@
           "cancelled": "ملغى",
           "rejected": "مرفوض"
         }
+      },
+      "keyStats": {
+        "title": "هذا الأسبوع",
+        "subtitle": "كيف وضع نشاطك هلق.",
+        "health": "الصحة {score}%",
+        "searchAppearances": "ظهور بالبحث",
+        "profileViews": "مشاهدات الملف",
+        "contactClicks": "نقرات التواصل",
+        "favorites": "المفضلة",
+        "empty": "التتبع قريباً",
+        "unlockPro": "افتح مع PRO"
+      },
+      "todayOverview": {
+        "title": "نظرة اليوم",
+        "subtitle": "الشي المهم هلق.",
+        "profileViews": "مشاهدات الملف",
+        "messages": "الرسائل",
+        "contacts": "تواصلات جديدة",
+        "growth": "النمو"
+      },
+      "growth": {
+        "title": "النمو",
+        "bodyUnlocked": "صحة الملف {score}% · {searches} ظهور بالبحث هالأسبوع.",
+        "bodyLocked": "رقّي حتى تفتح رؤى النمو والتحليلات.",
+        "cta": "فتح النمو"
+      },
+      "quickActions": {
+        "title": "إجراءات سريعة",
+        "profile": "تعديل الملف",
+        "services": "إدارة الخدمات",
+        "public": "الملف العام",
+        "messages": "الرسائل",
+        "verification": "التحقق",
+        "upgrade": "ترقية"
       }
     },
     "welcome": {
@@ -475,16 +540,16 @@
       "hero": {
         "eyebrow": "لوحة النمو",
         "starter": {
-          "title": "أهلاً {name}!",
-          "subtitle": "خلينا نكبّر شغلك سوا."
+          "title": "أهلاً، {name}!",
+          "subtitle": "نمّي نشاطك مع دليلي."
         },
         "pro": {
-          "title": "شغل ممتاز {name}!",
-          "subtitle": "شغلك عم ياخد ظهور أكبر على دليلي."
+          "title": "شغل ممتاز، {name}!",
+          "subtitle": "نشاطك عم يكبر. كمّل وصولك لزبائن أكتر."
         },
         "premium": {
-          "title": "أنت من البزنسات المميزة بدليلي، {name}.",
-          "subtitle": "الزبائن بيشوفوك أول — كمّل كسب ثقتهم."
+          "title": "أنت من أعمال دليلي Premium، {name}.",
+          "subtitle": "شكراً لثقتك بدليلي."
         }
       },
       "health": {
@@ -619,7 +684,8 @@
         "verificationApproved": "تم قبول التحقق.",
         "profileViews": "ملفك طلع بالبحث {count} مرة هالأسبوع.",
         "firstReview": "وصلك أول تقييم.",
-        "healthHigh": "اكتمال ملفك وصل {score}%."
+        "healthHigh": "اكتمال ملفك وصل {score}%.",
+        "changesRequested": "طلبت الإدارة تعديلات على طلبك."
       },
       "trust": {
         "title": "ليش المحلات بتختار دليلي",
@@ -655,17 +721,19 @@
       "expired": "منتهي"
     },
     "stats": {
-      "profileViews": "مشاهدات الملف",
-      "searchAppearances": "ظهور في البحث",
-      "contactClicks": "نقرات التواصل",
-      "favorites": "المفضلة"
+      "profileViews": "زبائن اكتشفوك",
+      "searchAppearances": "مرات ظهورك بالبحث",
+      "contactClicks": "زبائن تواصلوا معك",
+      "favorites": "محفوظ عند الزباين",
+      "waitingReal": "بانتظار نشاط زبائن حقيقي"
     },
     "status": {
       "draft": "مسودة",
       "pending_review": "قيد المراجعة",
       "active": "نشط",
       "suspended": "موقوف",
-      "archived": "مؤرشف"
+      "archived": "مؤرشف",
+      "changes_requested": "مطلوب تعديلات"
     },
     "create": {
       "title": "إنشاء ملف مزود",
@@ -792,10 +860,17 @@
       }
     },
     "analytics": {
-      "title": "الإحصائيات",
-      "subtitle": "تابع أداء ملفك على المنصة",
-      "weeklyViews": "المشاهدات الأسبوعية",
-      "views": "مشاهدة",
+      "title": "النمو",
+      "subtitle": "شوف كيف دليلي بيساعدك توصل لزباين أكثر — أرقام حقيقية فقط.",
+      "weeklyViews": "اكتشاف هالأسبوع",
+      "views": "اكتشاف",
+      "needsProvider": "أنشئ ملف نشاطك حتى تشوف النمو.",
+      "realViewsHint": "مشاهدات حقيقية من الزباين هالأسبوع.",
+      "noDataYet": "ما في نشاط زبائن هالأسبوع بعد. الأرقام بتظهر لما الناس تلاقوك.",
+      "impressionsLabel": "مرات الظهور",
+      "clicksLabel": "نقرات النتائج",
+      "contactsLabel": "تواصلات",
+      "appearancesLabel": "ظهور",
       "days": {
         "mon": "إث",
         "tue": "ثل",
@@ -804,6 +879,53 @@
         "fri": "جم",
         "sat": "سب",
         "sun": "أح"
+      },
+      "locks": {
+        "chartTitle": "شوف كيف الزباين بيكتشفوك",
+        "chartBody": "PRO بيفتح اكتشافك الأسبوعي ونمو التواصل.",
+        "unlockPro": "جيب زباين أكثر مع PRO",
+        "premiumOnly": "لـ Premium فقط",
+        "profileAnalytics": {
+          "title": "شوف كيف لقاك الزباين",
+          "body": "افهم أي بحث بيوصل لملفك."
+        },
+        "growthInsights": {
+          "title": "كبر أسرع",
+          "body": "اتجاهات نمو أسبوعية بتوري فرصة حقيقية."
+        },
+        "featuredPlacement": {
+          "title": "خليك الخيار الأول",
+          "body": "ظهور مميز بالصفحة الرئيسية لأقصى وصول."
+        },
+        "competitors": {
+          "title": "اعرف سباق مدينتك",
+          "body": "قارن وضعك بمدينتك وفئتك."
+        },
+        "conversion": {
+          "title": "حوّل الاكتشاف لتواصل",
+          "body": "افهم أي بحث بيصير محادثة حقيقية."
+        },
+        "premiumReach": {
+          "title": "أقصى ظهور",
+          "body": "تتبّع الظهور المميز وأعلى نتائج البحث."
+        }
+      },
+      "advanced": {
+        "visitorCities": {
+          "title": "من وين بيجوا الزباين",
+          "body": "مدن بتكتشف نشاطك.",
+          "empty": "ما في بيانات مدن بعد."
+        },
+        "popularTerms": {
+          "title": "شو عم يدور الزباين",
+          "body": "استعلامات بتوصل لملفك.",
+          "empty": "ما في كلمات بحث بعد."
+        },
+        "weeklyReport": {
+          "title": "متوسط مسافة الزبون",
+          "body": "قديش بعيدين الزباين لما بيلاقوك.",
+          "empty": "رؤى المسافة بتظهر مع البحث القريب."
+        }
       }
     },
     "verification": {
@@ -876,17 +998,18 @@
         "starter": {
           "name": "Starter",
           "price": "مجاناً",
-          "headline": "ابدأ شغلك مجاناً.",
-          "subtitle": "كل اللي بتحتاجه حتى تبدأ.",
-          "description": "ودّي وكاملة — مو عقاب لأنك بلّشت مجاناً.",
-          "why": "ابنِ حضورك، خلي الناس تلاقوك، وتواصل مع الزباين — بدون أي تكلفة.",
+          "headline": "ابدأ شغلك على دليلي.",
+          "subtitle": "ابنِ الثقة. خلّي الناس تكتشفك.",
+          "description": "حضور كامل حتى يلاقوك الزباين ويتواصلوا معك — مجاناً للأبد.",
+          "why": "ابنِ الثقة، ظهر بالبحث، وخلّي الزباين يوصلوك.",
           "cta": "كمّل بالخطة المجانية",
           "includes": {
             "profile": "ملف نشاط كامل",
-            "photos": "صور بلا حدود",
-            "reviews": "تقييمات الزباين",
-            "contact": "واتساب وهاتف",
-            "search": "ظهور في البحث",
+            "photos": "صور بتوري شغلك",
+            "reviews": "تقييمات بتبني الثقة",
+            "contact": "واتساب وهاتف — الزباين بيوصلوك",
+            "search": "ظهور بنتائج البحث",
+            "reach": "الزباين بيقدروا يتواصلوا معك",
             "info": "معلومات النشاط"
           }
         },
@@ -894,38 +1017,41 @@
           "name": "PRO",
           "price": "13 USD",
           "badge": "الأكثر اختياراً",
-          "headline": "جيب زباين أكثر.",
-          "subtitle": "خلي ناس أكثر تشوف شغلك ويصير يوصلك زباين أكثر.",
-          "description": "للأنشطة الجاهزة تكبر مع ظهور وثقة أكبر.",
-          "why": "ناس أكثر رح تشوف شغلك وتختارك بثقة.",
+          "headline": "جيب زباين أكثر",
+          "subtitle": "زيد ظهورك واستقبل فرص أكثر.",
+          "description": "ظهور أعلى بالبحث حتى يكتشفك زباين أكثر.",
+          "why": "ناس أكثر بتشوفك. فرص أكثر. نمو قابل للقياس.",
           "cta": "اشترك بـ PRO",
           "includes": {
-            "ranking": "ناس أكثر رح تشوف شغلك",
+            "ranking": "ظهور أعلى بالبحث",
             "badge": "شارة PRO بتبني الثقة",
-            "insights": "اعرف كيف عم يكبر شغلك",
-            "visibility": "ظهور أقوى وين ما الناس عم تدور",
+            "insights": "افهم كيف عم يكبر شغلك",
+            "visibility": "شوف كم زبون اكتشفك",
+            "contacts": "إحصائيات تواصل بتوري اهتمام حقيقي",
+            "priority": "أولوية ظهور وين ما الناس عم تدور",
             "support": "دعم بأولوية لما تحتاج",
-            "stats": "اعرف كيف عم يكبر شغلك",
-            "ai": "إرشاد أذكى للملف",
-            "priority": "دعم بأولوية لما تحتاج"
+            "stats": "افهم كيف عم يكبر شغلك",
+            "ai": "إرشاد أذكى للملف"
           }
         },
         "premium": {
           "name": "PREMIUM",
           "price": "20 USD",
-          "headline": "خليك الخيار الأول.",
-          "subtitle": "إذا بدك أكبر ظهور ممكن لشغلك.",
-          "description": "ظهور مميّز للأنشطة اللي بدها تقود مدينتها.",
-          "why": "ظهر أولاً — تميّز بالصفحة الرئيسية، ثقة بريميوم، ومساحة للتوسّع.",
+          "headline": "خليك الخيار الأول",
+          "subtitle": "أقصى ظهور للأنشطة الجاهزة تقود.",
+          "description": "كل شي من PRO — مع تميّز بالصفحة الرئيسية ورؤى نمو أعمق.",
+          "why": "ظهر أولاً — أقصى وصول وثقة بريميوم ومساحة للتوسّع.",
           "cta": "اشترك بـ PREMIUM",
           "includes": {
             "everything": "كل شي من PRO",
             "homepage": "تميّز بالصفحة الرئيسية",
             "badge": "شارة Premium",
+            "maxVisibility": "أقصى ظهور بالبحث",
+            "insights": "اتجاهات البحث ومدن الزوار",
+            "campaigns": "حملات بريميوم مستقبلية",
             "branches": "فروع متعددة",
-            "insights": "رؤى نمو متقدمة",
             "top": "أعلى ظهور بالبحث",
-            "locations": "فروع متعددة",
+            "locations": "مدن الزوار",
             "support": "دعم بأولوية",
             "early": "ميزات جديدة أولاً"
           }
@@ -978,14 +1104,19 @@
         "copyReference": "نسخ المرجع",
         "copied": "تم النسخ",
         "errors": {
-          "file_required": "اختار ملف الإيصال.",
+          "file_required": "رجاءً اختر ملف الإيصال.",
           "file_too_large": "الملف لازم يكون 10 ميغابايت أو أقل.",
           "invalid_file_type": "مسموح فقط PDF و JPG و PNG.",
-          "upload_failed": "فشل الرفع. جرّب مرة تانية.",
+          "upload_failed": "فشل الرفع. حاول مرة تانية.",
           "save_failed": "ما قدرنا نحفظ الإيصال.",
-          "payment_not_submittable": "هالدفعة ما عاد فينا نرفع إلها إيصال.",
-          "invalid_payment": "دفعة غير صالحة."
-        }
+          "payment_not_submittable": "هالدفعة ما عاد تقبل إيصال.",
+          "invalid_payment": "دفعة غير صالحة.",
+          "duplicate_receipt": "تم رفع إيصال لهالدفعة مسبقاً.",
+          "prepare_failed": "ما قدرنا نبدأ الرفع. حاول مرة تانية.",
+          "use_direct_upload": "رجاءً ارفع الإيصال من زر الرفع."
+        },
+        "uploadProgress": "تقدم الرفع",
+        "uploading": "جارٍ الرفع…"
       },
       "features": {
         "maxServices": "حتى {value} خدمات",
@@ -1049,6 +1180,122 @@
           "support": "دعم سريع"
         }
       }
+    },
+    "changesRequired": {
+      "title": "مطلوب تعديلات",
+      "subtitle": "راجع فريق دليلي طلبك. كمّل النقاط التالية.",
+      "noteLabel": "ملاحظة الإدارة",
+      "cta": "متابعة التحقق"
+    },
+    "messages": {
+      "eyebrow": "الوارد",
+      "title": "الرسائل",
+      "subtitle": "تحديثات دليلي ومحادثات الزبائن بمكان واحد.",
+      "listLabel": "الإشعارات",
+      "previewTitle": "آخر الرسائل",
+      "viewAll": "فتح الرسائل",
+      "emptyTitle": "ما في شي جديد",
+      "emptyBody": "تحديثات دليلي والزبائن بتظهر هون.",
+      "unread": "غير مقروء",
+      "sources": {
+        "dalily": "دليلي",
+        "customer": "زبون",
+        "admin": "إدارة"
+      },
+      "businessApproved": {
+        "title": "تم اعتماد النشاط",
+        "body": "نشاطك صار ظاهر على دليلي."
+      },
+      "changesRequested": {
+        "title": "مطلوب تعديلات",
+        "body": "حدّث طلبك.",
+        "bodyWithNote": "حدّث طلبك: {note}"
+      },
+      "paymentReceived": {
+        "title": "تم استلام الدفعة",
+        "body": "وصلنا إيصال دفعة {plan} وعم نراجعها."
+      },
+      "proActivated": {
+        "title": "تم تفعيل PRO",
+        "body": "خطة PRO صارت فعالة. استمتع بظهور أقوى ورؤى أفضل."
+      },
+      "premiumActivated": {
+        "title": "تم تفعيل PREMIUM",
+        "body": "أهلاً في PREMIUM — أقصى ظهور وتحليلات متقدمة صارت مفتوحة."
+      },
+      "subscriptionExpiring": {
+        "title": "الاشتراك قرب ينتهي",
+        "body": "جدّد قريب حتى تحافظ على مزايا خطتك."
+      },
+      "newFeature": {
+        "title": "ميزة جديدة",
+        "body": "اكتشف تحليلات النمو المفتوحة حسب خطتك."
+      },
+      "verificationCompleted": {
+        "title": "اكتمل التحقق",
+        "body": "تم التحقق من نشاطك بنجاح."
+      },
+      "newReview": {
+        "title": "تقييمات جديدة",
+        "body": "عندك {count} تقييمات على ملفك."
+      },
+      "newMessage": {
+        "title": "رسالة جديدة",
+        "body": "زبون بعتلك رسالة."
+      },
+      "newInquiry": {
+        "title": "استفسار جديد",
+        "body": "زبون سأل عن خدماتك."
+      },
+      "newBooking": {
+        "title": "طلب حجز جديد",
+        "body": "زبون طلب حجز."
+      },
+      "openMessages": "فتح الرسائل",
+      "dalilyName": "دليلي",
+      "dalilySubtitle": "تحديثات دليلي الرسمية",
+      "customerSubtitle": "محادثة زبون",
+      "customerHint": "محادثات الزبائن بتظهر هون لما يبعتوا لك.",
+      "back": "رجوع للمحادثات",
+      "threadLabel": "رسائل مع {name}",
+      "composerHint": "الردود رح تصير متاحة مع الرسائل المباشرة.",
+      "searchPlaceholder": "ابحث بالاسم أو الهاتف أو النشاط…",
+      "searchEmpty": "ما في محادثات مطابقة.",
+      "unreadCount": "{count} غير مقروء",
+      "dalilyWelcome": {
+        "body": "أهلاً في رسائل دليلي. التحديثات المهمة عن نشاطك بتظهر بهالمحادثة."
+      }
+    },
+    "locationInsights": {
+      "title": "رؤى الموقع",
+      "subtitle": "من وين بيكتشفوك الزباين — مسافات فقط، بدون GPS دقيق.",
+      "topArea": "أغلب الزوار من",
+      "avgDistance": "متوسط مسافة الزبون",
+      "nearbyWeek": "عمليات بحث قريبة هالأسبوع",
+      "peakDay": "يوم الذروة",
+      "cityShare": "نسبة المدينة الأولى",
+      "kmValue": "{km} كم",
+      "unavailable": "—",
+      "premiumNote": "بريميوم بيفتح أنماط موقع أعمق.",
+      "upgradeHint": "رقّي لبريميوم لأيام الذروة ونسبة المدينة."
+    },
+    "growthPotential": {
+      "title": "هالأسبوع — إمكانات نموك",
+      "subtitle": "محسوبة من عمليات بحث حقيقية بمحرك ترتيب دليلي.",
+      "categorySearches": "عمليات بحث بفئتك",
+      "yourAppearances": "ظهر نشاطك",
+      "withPro": "⭐ مع PRO",
+      "withPremium": "👑 مع PREMIUM",
+      "impressions": "مرات الظهور",
+      "ctaPro": "جيب زباين أكثر مع PRO",
+      "ctaPremium": "خليك الخيار الأول",
+      "premiumTitle": "أنت أصلاً على أعلى خطة بدليلي",
+      "premiumBody": "الظهور الحقيقي لهالأسبوع من PREMIUM.",
+      "emptyTitle": "ما في بيانات نمو بعد",
+      "emptyBody": "لما الزباين يبلّشوا يدوروا، رؤى النمو بتظهر هون.",
+      "emptyHint": "أرقام النمو بتظهر لما الزباين يدوروا على فئتك.",
+      "legacyHint": "عم نعرض ظهور حقيقي. محاكاة الترقية بتشتغل مع عمليات البحث الجديدة.",
+      "realCalc": "مبنية على {count} لقطة ترتيب حقيقية هالأسبوع."
     }
   },
   "admin": {
@@ -1180,18 +1427,27 @@
       "viewProfile": "عرض الملف",
       "pagination": "{total} مزود إجمالاً",
       "filters": {
-        "search": "ابحث بالاسم أو المعرف…",
+        "search": "ابحث بالاسم، المالك، البريد، الهاتف، المدينة، المعرّف…",
         "allStatuses": "كل الحالات",
         "allCities": "كل المدن",
         "allCategories": "كل الفئات",
-        "apply": "تطبيق الفلاتر"
+        "apply": "تطبيق الفلاتر",
+        "allPlans": "كل الخطط",
+        "planStarter": "Starter",
+        "planPro": "PRO",
+        "planPremium": "PREMIUM",
+        "sort": "الترتيب",
+        "newest": "الأحدث",
+        "oldest": "الأقدم",
+        "rejected": "مرفوض"
       },
       "status": {
         "draft": "مسودة",
         "pending_review": "قيد المراجعة",
         "active": "نشط",
         "suspended": "موقوف",
-        "archived": "مؤرشف"
+        "archived": "مؤرشف",
+        "changes_requested": "مطلوب تعديلات"
       },
       "actions": {
         "activate": "تفعيل",
@@ -1429,6 +1685,148 @@
         "failed": "فشل",
         "cancelled": "ملغى",
         "rejected": "مرفوض"
+      }
+    },
+    "controlCenter": {
+      "hero": {
+        "eyebrow": "مركز التحكم",
+        "title": "أهلاً بعودتك. نظرة اليوم.",
+        "subtitleAttention": "{count} عناصر تحتاج انتباهك اليوم.",
+        "subtitleClear": "كل شي تمام حالياً — شغل ممتاز.",
+        "pendingBusinesses": "أعمال معلّقة",
+        "pendingPayments": "مدفوعات معلّقة",
+        "changesRequested": "تعديلات مطلوبة",
+        "registrationsWeek": "تسجيلات (7 أيام)",
+        "unreadMessages": "رسائل غير مقروءة",
+        "approvalsToday": "اعتمادات اليوم"
+      },
+      "tasks": {
+        "title": "مهام اليوم",
+        "businesses": {
+          "title": "أعمال بانتظار المراجعة",
+          "body": "راجع واعتمد الطلبات الجديدة."
+        },
+        "payments": {
+          "title": "مدفوعات بانتظار المراجعة",
+          "body": "تحقق من الإيصالات وفعّل الخطط."
+        },
+        "changes": {
+          "title": "تعديلات مطلوبة",
+          "body": "أعمال لسا عم تحدّث وثائقها."
+        },
+        "messages": {
+          "title": "الرسائل",
+          "body": "ملاحظات دعم ونظام غير مقروءة."
+        },
+        "open": "فتح"
+      },
+      "stats": {
+        "title": "إحصاءات",
+        "pendingBusinesses": "أعمال معلّقة",
+        "approvedToday": "اعتُمدت اليوم",
+        "changesRequested": "بانتظار تعديلات",
+        "pendingPayments": "مدفوعات بانتظار",
+        "revenue": "إيراد هذا الشهر",
+        "starter": "Starter",
+        "pro": "PRO",
+        "premium": "PREMIUM"
+      },
+      "activity": {
+        "title": "النشاط",
+        "empty": "ما في نشاط حديث بعد.",
+        "by": "بواسطة {name}",
+        "system": "النظام",
+        "actions": {
+          "provider_approved": "تم اعتماد نشاط",
+          "provider_rejected": "تم رفض نشاط",
+          "provider_changes_requested": "طُلبت تعديلات",
+          "payment_approved": "تم اعتماد دفعة",
+          "payment_rejected": "تم رفض دفعة",
+          "provider_suspended": "تم تعليق نشاط",
+          "provider_archived": "تم أرشفة نشاط"
+        }
+      },
+      "marketplace": {
+        "title": "نبض السوق",
+        "subtitle": "بحث وتفاعل حقيقي هالأسبوع.",
+        "searches": "عمليات البحث",
+        "impressions": "مرات الظهور",
+        "conversions": "تواصلات",
+        "avgDistance": "متوسط مسافة الزبون",
+        "topCategories": "أكثر الفئات بحثاً",
+        "topCities": "أكثر المدن بحثاً",
+        "mostViewed": "الأكثر مشاهدة",
+        "mostActive": "الأكثر نشاطاً",
+        "empty": "ما في بيانات هالأسبوع بعد."
+      }
+    },
+    "review": {
+      "back": "رجوع للأعمال",
+      "sectionsLabel": "أقسام المراجعة",
+      "tabs": {
+        "info": "معلومات",
+        "assets": "وسائط",
+        "verify": "تحقق"
+      },
+      "infoTitle": "معلومات النشاط",
+      "assetsTitle": "وسائط النشاط",
+      "verificationTitle": "التحقق",
+      "checklistTitle": "قائمة التحقق",
+      "decisionTitle": "قرار الإدارة",
+      "approve": "اعتماد النشاط",
+      "requestChanges": "طلب تعديلات",
+      "reject": "رفض النشاط",
+      "changesDialogTitle": "طلب تعديلات",
+      "changesDialogBody": "اشرح بالضبط شو لازم يصلّح النشاط.",
+      "rejectDialogTitle": "رفض النشاط",
+      "rejectDialogBody": "اشرح ليش ما فينا نعتمد هالنشاط.",
+      "changesPlaceholder": "رجاءً ارفع هوية أوضح…",
+      "rejectPlaceholder": "سبب الرفض…",
+      "cancel": "إلغاء",
+      "confirm": "حفظ",
+      "cover": "الغلاف",
+      "logo": "الشعار",
+      "logoHint": "شعار النشاط",
+      "gallery": "المعرض",
+      "about": "الوصف",
+      "noCover": "ما في صورة غلاف",
+      "noGallery": "ما في صور معرض",
+      "idFront": "وجه الهوية",
+      "idBack": "ظهر الهوية",
+      "selfie": "صورة سيلفي مع الهوية",
+      "missingDoc": "وثيقة ناقصة",
+      "zoomCover": "فتح الغلاف بملء الشاشة",
+      "zoomLogo": "فتح الشعار بملء الشاشة",
+      "zoomGallery": "فتح صورة المعرض بملء الشاشة",
+      "zoomId": "فتح وثيقة الهوية بملء الشاشة",
+      "closePreview": "إغلاق المعاينة",
+      "fields": {
+        "name": "اسم النشاط",
+        "owner": "المالك",
+        "category": "الفئة",
+        "city": "المدينة",
+        "phone": "الهاتف",
+        "email": "البريد",
+        "registered": "تاريخ التسجيل",
+        "status": "الحالة الحالية",
+        "plan": "الخطة الحالية"
+      },
+      "checklist": {
+        "companyInfo": "معلومات الشركة",
+        "logo": "الشعار",
+        "cover": "الغلاف",
+        "gallery": "المعرض",
+        "openingHours": "ساعات العمل",
+        "location": "الموقع",
+        "phone": "الهاتف",
+        "description": "الوصف",
+        "idDocument": "وثيقة الهوية"
+      },
+      "errors": {
+        "forbidden": "ما عندك صلاحية.",
+        "validation_error": "اكتب ملاحظة أطول شوي.",
+        "update_failed": "ما قدرنا نحفظ القرار.",
+        "unknown": "صار خطأ ما."
       }
     }
   },

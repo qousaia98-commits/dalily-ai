@@ -1,25 +1,16 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdminUser } from "@/lib/auth/session";
 import { isPlatformAdmin } from "@/lib/auth/roles";
 import { logAdminAudit } from "@/lib/admin/audit";
+import { revalidateSubscriptionSurfaces } from "@/lib/subscription/revalidate";
 import { subscriptionService } from "@/lib/subscription/subscription.service";
 
 export type AdminPaymentActionState = {
   success: boolean;
   error?: string;
 };
-
-function revalidate() {
-  revalidatePath("/admin/payments");
-  revalidatePath("/admin/subscriptions");
-  revalidatePath("/admin/providers");
-  revalidatePath("/admin");
-  revalidatePath("/business/subscription");
-  revalidatePath("/business", "layout");
-}
 
 export async function approvePaymentAction(paymentId: string): Promise<AdminPaymentActionState> {
   const authUser = await requireAdminUser();
@@ -34,7 +25,7 @@ export async function approvePaymentAction(paymentId: string): Promise<AdminPaym
       entityId: paymentId,
       metadata: { providerId: result.providerId, planSlug: result.planSlug ?? null },
     });
-    revalidate();
+    revalidateSubscriptionSurfaces({ providerSlug: result.providerSlug });
     return { success: true };
   } catch {
     return { success: false, error: "approve_failed" };
@@ -64,7 +55,7 @@ export async function rejectPaymentAction(
       entityId: paymentId,
       metadata: { providerId: result.providerId, note: note.data || null },
     });
-    revalidate();
+    revalidateSubscriptionSurfaces({ providerSlug: result.providerSlug });
     return { success: true };
   } catch {
     return { success: false, error: "reject_failed" };

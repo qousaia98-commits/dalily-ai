@@ -1,4 +1,5 @@
 import type { PlanSlug } from "@/lib/subscription/types";
+import { getBenefits } from "@/lib/subscription/benefit-engine";
 
 export type GrowthNotification = {
   id: string;
@@ -13,31 +14,33 @@ export function buildGrowthNotifications(input: {
   planSlug: PlanSlug;
   subscriptionStatus: string;
   verificationStatus: string;
+  providerStatus?: string;
   reviewCount: number;
   hasPendingReviewPayment: boolean;
   recentlyApprovedPayment: boolean;
+  changesRequested?: boolean;
 }): GrowthNotification[] {
   const items: GrowthNotification[] = [];
+  const benefits = getBenefits(input.planSlug);
 
+  if (input.changesRequested || input.providerStatus === "changes_requested") {
+    items.push({ id: "changes_requested", tone: "gold", messageKey: "changesRequested" });
+  }
   if (input.hasPendingReviewPayment) {
     items.push({ id: "payment_pending", tone: "gold", messageKey: "paymentPending" });
   }
-  if (
-    input.recentlyApprovedPayment ||
-    (input.subscriptionStatus === "active" && input.planSlug !== "free")
-  ) {
-    if (input.planSlug === "pro" || input.planSlug === "premium") {
-      items.push({
-        id: "plan_active",
-        tone: "success",
-        messageKey: input.planSlug === "premium" ? "premiumActive" : "proActive",
-      });
-    }
+  // Temporary only — never permanent "PRO/PREMIUM activated" while plan stays active.
+  if (input.recentlyApprovedPayment && benefits.canUseProBadge) {
+    items.push({
+      id: "plan_active",
+      tone: "success",
+      messageKey: benefits.canUsePremiumBadge ? "premiumActive" : "proActive",
+    });
   }
   if (input.verificationStatus === "verified") {
     items.push({ id: "verified", tone: "success", messageKey: "verificationApproved" });
   }
-  if (input.searchAppearances > 0) {
+  if (benefits.canViewProfileViews && input.searchAppearances > 0) {
     items.push({
       id: "views",
       tone: "info",

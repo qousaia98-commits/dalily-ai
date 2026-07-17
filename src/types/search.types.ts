@@ -13,9 +13,12 @@ export type ProviderListItem = {
   reviewCount: number;
   trustScore: number;
   verified: boolean;
+  planSlug?: import("@/lib/subscription/types").PlanSlug;
   coverImage: string;
   avatarImage: string;
   distanceKm?: number | null;
+  profileCompleteness?: number;
+  responseTimeHours?: number | null;
 };
 
 export type SearchProvidersInput = {

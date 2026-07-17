@@ -240,10 +240,21 @@
       "description": "We could not load results right now. Please check your connection and try again.",
       "retry": "Try again"
     },
+    "nearby": {
+      "title": "Allow Dalily to use your location?",
+      "body": "We only use your location to find nearby businesses.",
+      "allow": "Allow",
+      "deny": "Not now",
+      "active": "Showing nearby businesses based on your location",
+      "clear": "Use city only",
+      "unsupported": "Location is not supported on this device.",
+      "saveFailed": "Could not save location. Please try again."
+    },
     "filters": {
       "title": "Filters",
       "category": "Category",
       "city": "City",
+      "nearby": "Nearby",
       "verified": "Verification",
       "sort": "Sort by",
       "allCategories": "All categories",
@@ -251,10 +262,22 @@
       "allCities": "All cities",
       "allProviders": "All",
       "verifiedOnly": "Verified only",
+      "nearbyOptions": {
+        "3": "3 km",
+        "5": "5 km",
+        "10": "10 km",
+        "20": "20 km",
+        "city": "Entire city"
+      },
       "sortOptions": {
+        "relevant": "Most relevant",
+        "nearest": "Nearest",
+        "rating": "Best rated",
+        "newest": "Newest",
+        "pro": "PRO",
+        "premium": "PREMIUM",
         "best_match": "Best match",
         "highest_rated": "Highest rated",
-        "nearest": "Nearest",
         "verified": "Verified first"
       }
     }
@@ -264,6 +287,11 @@
     "verified": "Verified",
     "reviews": "reviews",
     "km": "km",
+    "distanceAway": "{km} km away",
+    "distanceFromYou": "{km} km away from you",
+    "openRoute": "Open Route",
+    "openRouteAria": "Open directions in maps",
+    "routeTitle": "Directions",
     "about": "About",
     "services": "Services",
     "gallery": "Gallery",
@@ -277,7 +305,9 @@
     "planPro": "PRO",
     "planPremium": "PREMIUM",
     "memberSince": "Member since {date}",
-    "healthScore": "Health {score}%"
+    "healthScore": "Health {score}%",
+    "healthShort": "Health",
+    "featured": "Featured"
   },
   "footer": {
     "description": "AI-powered platform to discover trusted service providers in Syria.",
@@ -364,7 +394,8 @@
       "gallery": "Gallery",
       "analytics": "Analytics",
       "verification": "Verification",
-      "upgrade": "⭐ Upgrade"
+      "upgrade": "⭐ Upgrade",
+      "messages": "Messages"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -434,6 +465,40 @@
           "cancelled": "Cancelled",
           "rejected": "Rejected"
         }
+      },
+      "keyStats": {
+        "title": "This week",
+        "subtitle": "How your business is doing right now.",
+        "health": "Health {score}%",
+        "searchAppearances": "Search appearances",
+        "profileViews": "Profile views",
+        "contactClicks": "Contact clicks",
+        "favorites": "Favorites",
+        "empty": "Tracking soon",
+        "unlockPro": "Unlock with PRO"
+      },
+      "todayOverview": {
+        "title": "Today's Overview",
+        "subtitle": "What matters right now.",
+        "profileViews": "Profile Views",
+        "messages": "Messages",
+        "contacts": "New Contacts",
+        "growth": "Growth"
+      },
+      "growth": {
+        "title": "Growth",
+        "bodyUnlocked": "Health score {score}% · {searches} search appearances this week.",
+        "bodyLocked": "Upgrade to unlock full growth insights and analytics.",
+        "cta": "Open Growth"
+      },
+      "quickActions": {
+        "title": "Quick actions",
+        "profile": "Edit Profile",
+        "services": "Manage Services",
+        "public": "Public Profile",
+        "messages": "Messages",
+        "verification": "Verification",
+        "upgrade": "Upgrade"
       }
     },
     "welcome": {
@@ -476,15 +541,15 @@
         "eyebrow": "Growth Dashboard",
         "starter": {
           "title": "Welcome, {name}!",
-          "subtitle": "Let's grow your business together."
+          "subtitle": "Grow your business with Dalily."
         },
         "pro": {
           "title": "Great work, {name}!",
-          "subtitle": "Your business receives more visibility on Dalily."
+          "subtitle": "Your business is growing. Keep reaching more customers."
         },
         "premium": {
-          "title": "You're one of Dalily's featured businesses, {name}.",
-          "subtitle": "Customers see you first — keep winning their trust."
+          "title": "You're one of Dalily's Premium Businesses, {name}.",
+          "subtitle": "Thank you for trusting Dalily."
         }
       },
       "health": {
@@ -619,7 +684,8 @@
         "verificationApproved": "Your verification has been approved.",
         "profileViews": "Your profile appeared in search {count} times this week.",
         "firstReview": "You received your first review.",
-        "healthHigh": "Your profile completion reached {score}%."
+        "healthHigh": "Your profile completion reached {score}%.",
+        "changesRequested": "The admin requested changes to your submission."
       },
       "trust": {
         "title": "Why businesses choose Dalily",
@@ -655,17 +721,19 @@
       "expired": "Expired"
     },
     "stats": {
-      "profileViews": "Profile views",
-      "searchAppearances": "Search appearances",
-      "contactClicks": "Contact clicks",
-      "favorites": "Favorites"
+      "profileViews": "Customers who discovered you",
+      "searchAppearances": "Times you appeared in search",
+      "contactClicks": "Customers who contacted you",
+      "favorites": "Saved by customers",
+      "waitingReal": "Waiting for real customer activity"
     },
     "status": {
       "draft": "Draft",
       "pending_review": "Pending review",
       "active": "Active",
       "suspended": "Suspended",
-      "archived": "Archived"
+      "archived": "Archived",
+      "changes_requested": "Changes requested"
     },
     "create": {
       "title": "Create provider profile",
@@ -792,10 +860,17 @@
       }
     },
     "analytics": {
-      "title": "Analytics",
-      "subtitle": "Track how your profile performs on the platform",
-      "weeklyViews": "Weekly profile views",
-      "views": "views",
+      "title": "Growth",
+      "subtitle": "See how Dalily helps you reach more customers — real numbers only.",
+      "weeklyViews": "This week’s discovery",
+      "views": "discoveries",
+      "needsProvider": "Create your business profile to see growth.",
+      "realViewsHint": "Real profile views from customers this week.",
+      "noDataYet": "No customer activity yet this week. Numbers appear as people find you.",
+      "impressionsLabel": "Search impressions",
+      "clicksLabel": "Result clicks",
+      "contactsLabel": "Contacts",
+      "appearancesLabel": "Appearances",
       "days": {
         "mon": "Mon",
         "tue": "Tue",
@@ -804,6 +879,53 @@
         "fri": "Fri",
         "sat": "Sat",
         "sun": "Sun"
+      },
+      "locks": {
+        "chartTitle": "See how customers discover you",
+        "chartBody": "PRO unlocks your weekly discovery and contact growth.",
+        "unlockPro": "Get more customers with PRO",
+        "premiumOnly": "Premium only",
+        "profileAnalytics": {
+          "title": "See how customers found you",
+          "body": "Understand which searches lead to your profile."
+        },
+        "growthInsights": {
+          "title": "Grow faster",
+          "body": "Weekly growth trends that show real opportunity."
+        },
+        "featuredPlacement": {
+          "title": "Become the first choice",
+          "body": "Homepage featured exposure for maximum reach."
+        },
+        "competitors": {
+          "title": "Know your city race",
+          "body": "See how you compare in your city and category."
+        },
+        "conversion": {
+          "title": "Turn discovery into contacts",
+          "body": "Understand which searches become real conversations."
+        },
+        "premiumReach": {
+          "title": "Maximum visibility",
+          "body": "Track featured placement and top-of-search exposure."
+        }
+      },
+      "advanced": {
+        "visitorCities": {
+          "title": "Where customers come from",
+          "body": "Cities that discover your business.",
+          "empty": "No visitor city data yet."
+        },
+        "popularTerms": {
+          "title": "What customers search",
+          "body": "Queries that lead to your profile.",
+          "empty": "No search terms yet."
+        },
+        "weeklyReport": {
+          "title": "Average customer distance",
+          "body": "How far customers are when they find you.",
+          "empty": "Distance insights appear with nearby searches."
+        }
       }
     },
     "verification": {
@@ -884,17 +1006,18 @@
         "starter": {
           "name": "Starter",
           "price": "FREE",
-          "headline": "Start your business for free.",
-          "subtitle": "Everything you need to start.",
-          "description": "Friendly and complete — never a punishment for starting free.",
-          "why": "Build your presence, get found, and connect with customers — at no cost.",
+          "headline": "Start your business on Dalily.",
+          "subtitle": "Build trust. Get discovered.",
+          "description": "A complete presence so customers can find and contact you — free forever.",
+          "why": "Build trust, appear in search, and let customers reach you.",
           "cta": "Continue with Starter",
           "includes": {
             "profile": "Complete business profile",
-            "photos": "Unlimited photos",
-            "reviews": "Customer reviews",
-            "contact": "WhatsApp & phone",
-            "search": "Search visibility",
+            "photos": "Photos that show your work",
+            "reviews": "Customer reviews that build trust",
+            "contact": "WhatsApp & phone — customers can reach you",
+            "search": "Appear in search results",
+            "reach": "Customers can contact you directly",
             "info": "Business information"
           }
         },
@@ -902,38 +1025,41 @@
           "name": "PRO",
           "price": "13 USD",
           "badge": "Most Popular",
-          "headline": "Get more customers.",
-          "subtitle": "Increase your visibility and receive more customer requests.",
-          "description": "For businesses ready to grow with more discovery and trust.",
-          "why": "More customers will discover your business — and choose you with confidence.",
+          "headline": "Get More Customers",
+          "subtitle": "Increase your visibility and receive more opportunities.",
+          "description": "Higher search visibility so more customers discover your business.",
+          "why": "More businesses discover you. More opportunities. Measurable growth.",
           "cta": "Upgrade to PRO",
           "includes": {
-            "ranking": "More customers will discover your business",
+            "ranking": "Higher search visibility",
             "badge": "PRO badge that builds trust",
-            "insights": "Understand how your business is growing",
-            "visibility": "Stronger placement where people search",
+            "insights": "Understand how your business grows",
+            "visibility": "See how many customers discovered you",
+            "contacts": "Contact statistics that show real interest",
+            "priority": "Priority visibility where people search",
             "support": "Priority support when you need help",
-            "stats": "Understand how your business is growing",
-            "ai": "Smarter profile guidance",
-            "priority": "Priority support when you need help"
+            "stats": "Understand how your business grows",
+            "ai": "Smarter profile guidance"
           }
         },
         "premium": {
           "name": "PREMIUM",
           "price": "20 USD",
-          "headline": "Become the first choice.",
-          "subtitle": "Maximum visibility for businesses that want to grow faster.",
-          "description": "Luxury visibility for businesses that want to lead their city.",
-          "why": "Stand out first — homepage features, premium trust, and room to expand.",
+          "headline": "Become the First Choice",
+          "subtitle": "Maximum visibility for businesses ready to lead.",
+          "description": "Everything from PRO — plus homepage features and deeper growth insights.",
+          "why": "Stand out first — maximum reach, premium trust, and room to expand.",
           "cta": "Become Premium",
           "includes": {
             "everything": "Everything from PRO",
             "homepage": "Featured on the homepage",
             "badge": "Premium badge",
+            "maxVisibility": "Maximum visibility in search",
+            "insights": "Search trends & visitor cities",
+            "campaigns": "Future Premium campaigns",
             "branches": "Multiple branches",
-            "insights": "Advanced growth insights",
             "top": "Top search placement",
-            "locations": "Multiple branches",
+            "locations": "Visitor cities",
             "support": "Priority support",
             "early": "New features first"
           }
@@ -994,8 +1120,13 @@
           "upload_failed": "Upload failed. Please try again.",
           "save_failed": "Could not save your receipt.",
           "payment_not_submittable": "This payment can no longer receive a receipt.",
-          "invalid_payment": "Invalid payment."
-        }
+          "invalid_payment": "Invalid payment.",
+          "duplicate_receipt": "A receipt was already uploaded for this payment.",
+          "prepare_failed": "Could not start the upload. Please try again.",
+          "use_direct_upload": "Please upload the receipt using the upload button."
+        },
+        "uploadProgress": "Upload progress",
+        "uploading": "Uploading…"
       },
       "features": {
         "maxServices": "Up to {value} services",
@@ -1051,6 +1182,122 @@
           "support": "Friendly support"
         }
       }
+    },
+    "changesRequired": {
+      "title": "Changes Required",
+      "subtitle": "The admin reviewed your submission. Please complete the following items.",
+      "noteLabel": "Admin note",
+      "cta": "Continue Verification"
+    },
+    "messages": {
+      "eyebrow": "Inbox",
+      "title": "Messages",
+      "subtitle": "Dalily updates and customer chats in one place.",
+      "listLabel": "Notifications",
+      "previewTitle": "Latest messages",
+      "viewAll": "Open Messages",
+      "emptyTitle": "You are all caught up",
+      "emptyBody": "New updates from Dalily and customers will appear here.",
+      "unread": "Unread",
+      "sources": {
+        "dalily": "Dalily",
+        "customer": "Customer",
+        "admin": "Admin"
+      },
+      "businessApproved": {
+        "title": "Business approved",
+        "body": "Your business is live on Dalily."
+      },
+      "changesRequested": {
+        "title": "Changes requested",
+        "body": "Please update your submission.",
+        "bodyWithNote": "Please update your submission: {note}"
+      },
+      "paymentReceived": {
+        "title": "Payment received",
+        "body": "We received your {plan} payment receipt and are reviewing it."
+      },
+      "proActivated": {
+        "title": "PRO activated",
+        "body": "Your PRO plan is now active. Enjoy more visibility and insights."
+      },
+      "premiumActivated": {
+        "title": "PREMIUM activated",
+        "body": "Welcome to PREMIUM — maximum visibility and advanced analytics are unlocked."
+      },
+      "subscriptionExpiring": {
+        "title": "Subscription expiring soon",
+        "body": "Renew soon to keep your plan benefits."
+      },
+      "newFeature": {
+        "title": "New feature available",
+        "body": "Explore Growth analytics unlocked by your plan."
+      },
+      "verificationCompleted": {
+        "title": "Verification completed",
+        "body": "Your business verification is complete."
+      },
+      "newReview": {
+        "title": "New reviews",
+        "body": "You have {count} reviews on your profile."
+      },
+      "newMessage": {
+        "title": "New message",
+        "body": "A customer sent you a message."
+      },
+      "newInquiry": {
+        "title": "New inquiry",
+        "body": "A customer asked about your services."
+      },
+      "newBooking": {
+        "title": "New booking request",
+        "body": "A customer requested a booking."
+      },
+      "openMessages": "Open Messages",
+      "dalilyName": "Dalily",
+      "dalilySubtitle": "Official Dalily updates",
+      "customerSubtitle": "Customer conversation",
+      "customerHint": "Customer chats will appear here when people message you.",
+      "back": "Back to conversations",
+      "threadLabel": "Messages with {name}",
+      "composerHint": "Replies will be available when realtime messaging launches.",
+      "searchPlaceholder": "Search by name, phone, or business…",
+      "searchEmpty": "No conversations match your search.",
+      "unreadCount": "{count} unread",
+      "dalilyWelcome": {
+        "body": "Welcome to Dalily Messages. Important updates about your business will appear in this chat."
+      }
+    },
+    "locationInsights": {
+      "title": "Location insights",
+      "subtitle": "Where customers discover you — distances only, never exact GPS.",
+      "topArea": "Most visitors came from",
+      "avgDistance": "Average customer distance",
+      "nearbyWeek": "Nearby searches this week",
+      "peakDay": "Peak search day",
+      "cityShare": "Share from top city",
+      "kmValue": "{km} km",
+      "unavailable": "—",
+      "premiumNote": "Premium unlocks deeper location patterns.",
+      "upgradeHint": "Upgrade to Premium for peak days and city share."
+    },
+    "growthPotential": {
+      "title": "This week — your growth potential",
+      "subtitle": "Calculated from real searches using Dalily’s ranking engine.",
+      "categorySearches": "Searches in your category",
+      "yourAppearances": "Your business appeared",
+      "withPro": "⭐ With PRO",
+      "withPremium": "👑 With PREMIUM",
+      "impressions": "Impressions",
+      "ctaPro": "Get more customers with PRO",
+      "ctaPremium": "Become the first choice",
+      "premiumTitle": "You already use Dalily’s highest plan",
+      "premiumBody": "This week’s real visibility from PREMIUM.",
+      "emptyTitle": "No growth data yet",
+      "emptyBody": "Once customers begin searching, your growth insights will appear here.",
+      "emptyHint": "Growth numbers appear as customers search your category.",
+      "legacyHint": "Showing real appearances. Upgrade simulations unlock as new searches are logged.",
+      "realCalc": "Based on {count} real ranking snapshots this week."
     }
   },
   "admin": {
@@ -1182,18 +1429,27 @@
       "viewProfile": "View profile",
       "pagination": "{total} providers total",
       "filters": {
-        "search": "Search by name or slug…",
+        "search": "Search name, owner, email, phone, city, ID…",
         "allStatuses": "All statuses",
         "allCities": "All cities",
         "allCategories": "All categories",
-        "apply": "Apply filters"
+        "apply": "Apply filters",
+        "allPlans": "All plans",
+        "planStarter": "Starter",
+        "planPro": "PRO",
+        "planPremium": "PREMIUM",
+        "sort": "Sort",
+        "newest": "Newest",
+        "oldest": "Oldest",
+        "rejected": "Rejected"
       },
       "status": {
         "draft": "Draft",
         "pending_review": "Pending review",
         "active": "Active",
         "suspended": "Suspended",
-        "archived": "Archived"
+        "archived": "Archived",
+        "changes_requested": "Changes requested"
       },
       "actions": {
         "activate": "Activate",
@@ -1431,6 +1687,148 @@
         "failed": "Failed",
         "cancelled": "Cancelled",
         "rejected": "Rejected"
+      }
+    },
+    "controlCenter": {
+      "hero": {
+        "eyebrow": "Control Center",
+        "title": "Welcome back. Today's Overview.",
+        "subtitleAttention": "{count} items need your attention today.",
+        "subtitleClear": "You are clear for now — great work.",
+        "pendingBusinesses": "Pending businesses",
+        "pendingPayments": "Pending payments",
+        "changesRequested": "Changes requested",
+        "registrationsWeek": "Registrations (7d)",
+        "unreadMessages": "Unread messages",
+        "approvalsToday": "Today's approvals"
+      },
+      "tasks": {
+        "title": "Today's Tasks",
+        "businesses": {
+          "title": "Businesses Waiting",
+          "body": "Review and approve new submissions."
+        },
+        "payments": {
+          "title": "Payments Waiting",
+          "body": "Verify receipts and activate plans."
+        },
+        "changes": {
+          "title": "Changes Requested",
+          "body": "Businesses still updating documents."
+        },
+        "messages": {
+          "title": "Messages",
+          "body": "Unread support and system notes."
+        },
+        "open": "Open"
+      },
+      "stats": {
+        "title": "Statistics",
+        "pendingBusinesses": "Pending businesses",
+        "approvedToday": "Approved today",
+        "changesRequested": "Waiting for changes",
+        "pendingPayments": "Payments waiting",
+        "revenue": "Revenue this month",
+        "starter": "Starter",
+        "pro": "PRO",
+        "premium": "PREMIUM"
+      },
+      "activity": {
+        "title": "Activity",
+        "empty": "No recent activity yet.",
+        "by": "By {name}",
+        "system": "System",
+        "actions": {
+          "provider_approved": "Business approved",
+          "provider_rejected": "Business rejected",
+          "provider_changes_requested": "Changes requested",
+          "payment_approved": "Payment approved",
+          "payment_rejected": "Payment rejected",
+          "provider_suspended": "Business suspended",
+          "provider_archived": "Business archived"
+        }
+      },
+      "marketplace": {
+        "title": "Marketplace pulse",
+        "subtitle": "Real search and engagement this week.",
+        "searches": "Searches",
+        "impressions": "Search impressions",
+        "conversions": "Contacts",
+        "avgDistance": "Avg customer distance",
+        "topCategories": "Most searched categories",
+        "topCities": "Most searched cities",
+        "mostViewed": "Most viewed businesses",
+        "mostActive": "Most active businesses",
+        "empty": "No data yet this week."
+      }
+    },
+    "review": {
+      "back": "Back to businesses",
+      "sectionsLabel": "Review sections",
+      "tabs": {
+        "info": "Info",
+        "assets": "Assets",
+        "verify": "Verify"
+      },
+      "infoTitle": "Business information",
+      "assetsTitle": "Business assets",
+      "verificationTitle": "Verification",
+      "checklistTitle": "Checklist",
+      "decisionTitle": "Admin decision",
+      "approve": "Approve Business",
+      "requestChanges": "Request Changes",
+      "reject": "Reject Business",
+      "changesDialogTitle": "Request changes",
+      "changesDialogBody": "Explain exactly what the business should fix.",
+      "rejectDialogTitle": "Reject business",
+      "rejectDialogBody": "Explain why this business cannot be approved.",
+      "changesPlaceholder": "Please upload a clearer ID document…",
+      "rejectPlaceholder": "Reason for rejection…",
+      "cancel": "Cancel",
+      "confirm": "Save",
+      "cover": "Cover",
+      "logo": "Logo",
+      "logoHint": "Business logo",
+      "gallery": "Gallery",
+      "about": "Description",
+      "noCover": "No cover image",
+      "noGallery": "No gallery images",
+      "idFront": "ID front",
+      "idBack": "ID back",
+      "selfie": "Selfie with ID",
+      "missingDoc": "Missing document",
+      "zoomCover": "Open cover fullscreen",
+      "zoomLogo": "Open logo fullscreen",
+      "zoomGallery": "Open gallery image fullscreen",
+      "zoomId": "Open ID document fullscreen",
+      "closePreview": "Close preview",
+      "fields": {
+        "name": "Business name",
+        "owner": "Owner",
+        "category": "Category",
+        "city": "City",
+        "phone": "Phone",
+        "email": "Email",
+        "registered": "Registration date",
+        "status": "Current status",
+        "plan": "Current plan"
+      },
+      "checklist": {
+        "companyInfo": "Company information",
+        "logo": "Logo",
+        "cover": "Cover",
+        "gallery": "Gallery",
+        "openingHours": "Opening hours",
+        "location": "Location",
+        "phone": "Phone",
+        "description": "Description",
+        "idDocument": "ID document"
+      },
+      "errors": {
+        "forbidden": "You do not have permission.",
+        "validation_error": "Please enter a longer note.",
+        "update_failed": "Could not save the decision.",
+        "unknown": "Something went wrong."
       }
     }
   },

@@ -4,6 +4,7 @@ import type {
   LocalizedJson,
   ProviderStatus,
   UserStatus,
+  VerificationStatus,
 } from "@/types/database.types";
 
 export type AdminDashboardStats = {
@@ -34,6 +35,8 @@ export type AdminProviderItem = {
   ownerId: string;
   ownerEmail: string;
   ownerDisplayName: string | null;
+  phone: string | null;
+  planSlug: string;
   createdAt: string;
 };
 
@@ -168,8 +171,11 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
 export async function listProvidersForAdmin(params: {
   search?: string;
   status?: ProviderStatus;
+  verificationStatus?: VerificationStatus;
   cityId?: string;
   categoryId?: string;
+  plan?: "starter" | "pro" | "premium";
+  sort?: "newest" | "oldest";
   page?: number;
   pageSize?: number;
 }): Promise<AdminProviderListResult> {
@@ -178,23 +184,77 @@ export async function listProvidersForAdmin(params: {
   const pageSize = params.pageSize ?? DEFAULT_PAGE_SIZE;
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
+  const ascending = params.sort === "oldest";
 
   let query = admin
     .from("providers")
-    .select("id, slug, name, status, verification_status, city_id, category_id, owner_id, created_at", {
-      count: "exact",
-    })
+    .select(
+      "id, slug, name, status, verification_status, city_id, category_id, owner_id, phone, email, created_at",
+      { count: "exact" },
+    )
     .is("deleted_at", null)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending });
 
   if (params.status) query = query.eq("status", params.status);
+  if (params.verificationStatus) {
+    query = query.eq("verification_status", params.verificationStatus);
+  }
   if (params.cityId) query = query.eq("city_id", params.cityId);
   if (params.categoryId) query = query.eq("category_id", params.categoryId);
 
   const term = params.search?.trim();
   if (term) {
     const pattern = `%${term}%`;
-    query = query.or(`slug.ilike.${pattern},name->>en.ilike.${pattern},name->>ar.ilike.${pattern}`);
+    const ownerIdsFromSearch = new Set<string>();
+
+    const [{ data: emailMatches }, { data: profileMatches }] = await Promise.all([
+      admin.from("users").select("id").ilike("email", pattern).limit(50),
+      admin.from("profiles").select("user_id").ilike("display_name", pattern).limit(50),
+    ]);
+    for (const row of emailMatches ?? []) ownerIdsFromSearch.add(row.id);
+    for (const row of profileMatches ?? []) ownerIdsFromSearch.add(row.user_id);
+
+    const filters = [
+      `slug.ilike.${pattern}`,
+      `name->>en.ilike.${pattern}`,
+      `name->>ar.ilike.${pattern}`,
+      `phone.ilike.${pattern}`,
+      `email.ilike.${pattern}`,
+    ];
+
+    if (/^[0-9a-f-]{36}$/i.test(term)) {
+      filters.push(`id.eq.${term}`);
+    }
+    if (ownerIdsFromSearch.size > 0) {
+      filters.push(`owner_id.in.(${[...ownerIdsFromSearch].join(",")})`);
+    }
+
+    query = query.or(filters.join(","));
+  }
+
+  if (params.plan) {
+    const wantedSlug =
+      params.plan === "starter" ? "free" : params.plan === "premium" ? "premium" : "pro";
+    const { data: planRow } = await admin
+      .from("subscription_plans")
+      .select("id")
+      .eq("slug", wantedSlug)
+      .maybeSingle();
+
+    if (planRow?.id) {
+      const { data: planSubs } = await admin
+        .from("subscriptions")
+        .select("provider_id")
+        .eq("plan_id", planRow.id)
+        .eq("status", "active");
+      const ids = [...new Set((planSubs ?? []).map((s) => s.provider_id))];
+      if (ids.length === 0) {
+        return { items: [], total: 0, page, pageSize };
+      }
+      query = query.in("id", ids);
+    } else if (wantedSlug === "free") {
+      // No free plan row: treat as providers without an active paid sub (handled after fetch)
+    }
   }
 
   const { data: providers, count, error } = await query.range(from, to);
@@ -205,14 +265,36 @@ export async function listProvidersForAdmin(params: {
   const cityIds = [...new Set(providers.map((p) => p.city_id))];
   const categoryIds = [...new Set(providers.map((p) => p.category_id))];
   const ownerIds = [...new Set(providers.map((p) => p.owner_id))];
+  const providerIds = providers.map((p) => p.id);
 
-  const [{ data: cities }, { data: categories }, { data: users }, { data: profiles }] =
-    await Promise.all([
-      admin.from("cities").select("id, name").in("id", cityIds),
-      admin.from("categories").select("id, name").in("id", categoryIds),
-      admin.from("users").select("id, email").in("id", ownerIds),
-      admin.from("profiles").select("user_id, display_name").in("user_id", ownerIds),
-    ]);
+  const [
+    { data: cities },
+    { data: categories },
+    { data: users },
+    { data: profiles },
+    { data: subscriptions },
+  ] = await Promise.all([
+    admin.from("cities").select("id, name").in("id", cityIds),
+    admin.from("categories").select("id, name").in("id", categoryIds),
+    admin.from("users").select("id, email").in("id", ownerIds),
+    admin.from("profiles").select("user_id, display_name").in("user_id", ownerIds),
+    admin
+      .from("subscriptions")
+      .select("provider_id, plan_id, status")
+      .in("provider_id", providerIds)
+      .eq("status", "active"),
+  ]);
+
+  const planIds = [...new Set((subscriptions ?? []).map((s) => s.plan_id))];
+  const { data: plans } = planIds.length
+    ? await admin.from("subscription_plans").select("id, slug").in("id", planIds)
+    : { data: [] as { id: string; slug: string }[] };
+
+  const slugByPlanId = new Map((plans ?? []).map((p) => [p.id, p.slug]));
+  const planByProvider = new Map<string, string>();
+  for (const sub of subscriptions ?? []) {
+    planByProvider.set(sub.provider_id, slugByPlanId.get(sub.plan_id) ?? "free");
+  }
 
   const cityById = new Map((cities ?? []).map((c) => [c.id, c.name as LocalizedJson]));
   const categoryById = new Map((categories ?? []).map((c) => [c.id, c.name as LocalizedJson]));
@@ -232,6 +314,8 @@ export async function listProvidersForAdmin(params: {
     ownerId: provider.owner_id,
     ownerEmail: emailById.get(provider.owner_id) ?? "",
     ownerDisplayName: nameById.get(provider.owner_id) ?? null,
+    phone: provider.phone,
+    planSlug: planByProvider.get(provider.id) ?? "free",
     createdAt: provider.created_at,
   }));
 
@@ -414,6 +498,8 @@ export type AdminProviderReview = {
   whatsapp: string | null;
   email: string | null;
   website: string | null;
+  cityId: string;
+  categoryId: string;
   cityName: LocalizedJson;
   categoryName: LocalizedJson;
   ownerEmail: string;
@@ -426,6 +512,16 @@ export type AdminProviderReview = {
   profileCompleteness: number;
   currentPlanSlug: string;
   openPayment: AdminProviderOpenPayment | null;
+  adminReviewNote: string | null;
+  changesRequestedAt: string | null;
+  hoursConfigured: boolean;
+  idDocuments: {
+    idFrontUrl: string | null;
+    idBackUrl: string | null;
+    selfieUrl: string | null;
+    status: string | null;
+  };
+  checklist: import("@/lib/admin/control-center").ReviewChecklist;
 };
 
 /** Admin-only: load any non-deleted provider by id (ignores public status filters). */
@@ -435,7 +531,10 @@ export async function getProviderForAdminReview(
   const admin = createAdminClient();
   const { getStoragePublicUrl } = await import("@/lib/providers/storage");
   const { PAYMENT_RECEIPTS_BUCKET } = await import("@/lib/payment/receipt-storage");
+  const { PROVIDER_VERIFICATION_BUCKET } = await import("@/lib/verification/storage");
   const { getCurrentSubscription } = await import("@/lib/subscription/repository");
+  const { buildReviewChecklist } = await import("@/lib/admin/control-center");
+  const { isVerificationComplete } = await import("@/lib/verification/queries");
 
   const { data: provider, error } = await admin
     .from("providers")
@@ -453,6 +552,8 @@ export async function getProviderForAdminReview(
     { data: profile },
     { data: images },
     { data: services },
+    { data: hours },
+    { data: verification },
     subscription,
     { data: paymentRows },
   ] = await Promise.all([
@@ -471,6 +572,8 @@ export async function getProviderForAdminReview(
       .eq("provider_id", provider.id)
       .is("deleted_at", null)
       .order("sort_order"),
+    admin.from("provider_working_hours").select("id, is_closed, opens_at, closes_at").eq("provider_id", provider.id),
+    admin.from("provider_verifications").select("*").eq("provider_id", provider.id).maybeSingle(),
     getCurrentSubscription(provider.id),
     admin
       .from("payments")
@@ -488,6 +591,24 @@ export async function getProviderForAdminReview(
     .filter((image) => image.kind === "gallery")
     .sort((a, b) => a.sort_order - b.sort_order)
     .map((image) => ({ id: image.id, url: getStoragePublicUrl(image.path) }));
+
+  const hoursConfigured = (hours ?? []).filter(
+    (h) => h.is_closed || (h.opens_at && h.closes_at),
+  ).length >= 5;
+
+  async function signVerificationPath(path: string | null): Promise<string | null> {
+    if (!path) return null;
+    const { data } = await admin.storage
+      .from(PROVIDER_VERIFICATION_BUCKET)
+      .createSignedUrl(path, 3600);
+    return data?.signedUrl ?? null;
+  }
+
+  const [idFrontUrl, idBackUrl, selfieUrl] = await Promise.all([
+    signVerificationPath(verification?.id_front_url ?? null),
+    signVerificationPath(verification?.id_back_url ?? null),
+    signVerificationPath(verification?.selfie_url ?? null),
+  ]);
 
   const openPaymentRow = paymentRows?.[0] ?? null;
   let openPayment: AdminProviderOpenPayment | null = null;
@@ -532,6 +653,23 @@ export async function getProviderForAdminReview(
     };
   }
 
+  const avatarUrl = avatar ? getStoragePublicUrl(avatar.path) : null;
+  const coverUrl = cover ? getStoragePublicUrl(cover.path) : null;
+  const hasIdDocument = isVerificationComplete(verification ?? null);
+
+  const checklist = buildReviewChecklist({
+    name: provider.name as LocalizedJson,
+    about: provider.about as LocalizedJson | null,
+    phone: provider.phone,
+    cityId: provider.city_id,
+    categoryId: provider.category_id,
+    avatarUrl,
+    coverUrl,
+    galleryCount: gallery.length,
+    hoursConfigured,
+    hasIdDocument,
+  });
+
   return {
     id: provider.id,
     slug: provider.slug,
@@ -543,12 +681,14 @@ export async function getProviderForAdminReview(
     whatsapp: provider.whatsapp,
     email: provider.email,
     website: provider.website,
+    cityId: provider.city_id,
+    categoryId: provider.category_id,
     cityName: (city?.name as LocalizedJson) ?? { ar: "", en: "" },
     categoryName: (category?.name as LocalizedJson) ?? { ar: "", en: "" },
     ownerEmail: owner?.email ?? "",
     ownerDisplayName: profile?.display_name ?? null,
-    avatarUrl: avatar ? getStoragePublicUrl(avatar.path) : null,
-    coverUrl: cover ? getStoragePublicUrl(cover.path) : null,
+    avatarUrl,
+    coverUrl,
     gallery,
     services: (services ?? []).map((service) => ({
       id: service.id,
@@ -558,5 +698,15 @@ export async function getProviderForAdminReview(
     profileCompleteness: provider.profile_completeness,
     currentPlanSlug: subscription?.planSlug ?? "free",
     openPayment,
+    adminReviewNote: provider.admin_review_note ?? null,
+    changesRequestedAt: provider.changes_requested_at ?? null,
+    hoursConfigured,
+    idDocuments: {
+      idFrontUrl,
+      idBackUrl,
+      selfieUrl,
+      status: verification?.status ?? null,
+    },
+    checklist,
   };
 }

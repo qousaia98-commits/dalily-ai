@@ -43,6 +43,8 @@ function makeProvider(overrides: Partial<ProviderRow>): ProviderRow {
     deleted_at: null,
     created_by: null,
     updated_by: null,
+    admin_review_note: null,
+    changes_requested_at: null,
     ...overrides,
   };
 }

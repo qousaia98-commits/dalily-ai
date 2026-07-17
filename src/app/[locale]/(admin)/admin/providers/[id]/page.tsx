@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireAdminUser } from "@/lib/auth/session";
 import { getProviderForAdminReview } from "@/lib/admin/queries";
-import { AdminProviderReviewPanel } from "@/components/admin/admin-provider-review-panel";
+import { AdminBusinessReviewWorkspace } from "@/components/admin/admin-business-review-workspace";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -14,9 +14,5 @@ export default async function AdminProviderReviewPage({ params }: PageProps) {
 
   if (!provider) notFound();
 
-  return (
-    <div className="animate-fade-in">
-      <AdminProviderReviewPanel provider={provider} />
-    </div>
-  );
+  return <AdminBusinessReviewWorkspace provider={provider} />;
 }

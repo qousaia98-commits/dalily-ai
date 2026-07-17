@@ -2,8 +2,13 @@ import { getTranslations } from "next-intl/server";
 import { countPaymentsByStatus, listPaymentsForAdmin } from "@/lib/subscription/repository";
 import { AdminPaymentsPanel } from "@/components/admin/admin-payments-panel";
 
-export default async function AdminPaymentsPage() {
+type PageProps = {
+  searchParams: Promise<{ tab?: string }>;
+};
+
+export default async function AdminPaymentsPage({ searchParams }: PageProps) {
   const t = await getTranslations("admin.payments");
+  const params = await searchParams;
 
   const [{ items }, counts] = await Promise.all([
     listPaymentsForAdmin({ status: "all", pageSize: 200 }),
@@ -22,7 +27,7 @@ export default async function AdminPaymentsPage() {
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{t("subtitle")}</p>
       </div>
 
-      <AdminPaymentsPanel payments={items} counts={counts} />
+      <AdminPaymentsPanel payments={items} counts={counts} initialTab={params.tab} />
     </div>
   );
 }

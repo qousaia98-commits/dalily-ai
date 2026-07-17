@@ -3,38 +3,26 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/queries";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { getLocalizedField } from "@/types/provider.types";
-import { calculateBusinessHealth } from "@/lib/business/health-score";
-import { computeAchievements } from "@/lib/business/achievements";
-import { buildGrowthTips } from "@/lib/business/growth-tips";
-import { buildGrowthNotifications } from "@/lib/business/notifications";
+import { getWeeklyInsights } from "@/lib/business/insights";
 import {
-  getLifetimeSearchAppearances,
-  getWeeklyInsights,
-} from "@/lib/business/insights";
+  countUnreadConversations,
+} from "@/lib/business/conversations";
+import { loadBusinessConversations } from "@/lib/business/load-conversations";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
-import { ProviderStatusBadge } from "@/components/business/provider-status-badge";
 import { GrowthHero } from "@/components/business/growth-hero";
-import { GrowthHealthCard } from "@/components/business/growth-health-card";
-import { GrowthInsightsGrid } from "@/components/business/growth-insights-grid";
-import { GrowthAchievements } from "@/components/business/growth-achievements";
-import { GrowthTipsList } from "@/components/business/growth-tips-list";
-import { GrowthNotifications } from "@/components/business/growth-notifications";
-import { GrowthTrustSection } from "@/components/business/growth-trust-section";
-import { DashboardUpgradeCard } from "@/components/business/dashboard-upgrade-card";
-import { DashboardPaymentStatusCard } from "@/components/business/dashboard-payment-status-card";
-import { DashboardPaymentHistory } from "@/components/business/dashboard-payment-history";
+import { DashboardTodayOverview } from "@/components/business/dashboard-today-overview";
+import { DashboardQuickActions } from "@/components/business/dashboard-quick-actions";
+import { DashboardConversationsPreview } from "@/components/business/conversation-list";
+import { ChangesRequiredCard } from "@/components/business/changes-required-card";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
 
-function planLabel(slug: string): string {
-  if (slug === "premium") return "PREMIUM";
-  if (slug === "pro") return "PRO";
-  return "STARTER";
-}
-
+/**
+ * Business homepage — calm, 5-second overview.
+ * Heavy growth / analytics live on /business/analytics.
+ */
 export default async function BusinessDashboardPage() {
   const t = await getTranslations("business.dashboard");
-  const tSub = await getTranslations("business.subscription");
   const locale = (await getLocale()) as Locale;
   const authUser = await requireAuthUser();
   const provider = await getOwnedProvider(authUser.id);
@@ -43,7 +31,9 @@ export default async function BusinessDashboardPage() {
     return (
       <div className="space-y-8 animate-fade-in">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("title")}</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            {t("title")}
+          </h1>
           <p className="mt-2 text-muted-foreground">{t("noProviderSubtitle")}</p>
         </div>
         <ProviderCreateFormLoader />
@@ -51,128 +41,47 @@ export default async function BusinessDashboardPage() {
     );
   }
 
-  const [{ subscription, payments, pendingPayment }, weekly, lifetimeSearches] =
-    await Promise.all([
-      getSubscriptionPageData(authUser.id),
-      getWeeklyInsights(provider.id, provider.reviewCount),
-      getLifetimeSearchAppearances(provider.id),
-    ]);
+  // Lightweight only — no growth-potential / location / snapshot queries
+  const [{ subscription }, { conversations }, weekly] = await Promise.all([
+    getSubscriptionPageData(authUser.id),
+    loadBusinessConversations(authUser.id),
+    getWeeklyInsights(provider.id, provider.reviewCount),
+  ]);
 
   const planSlug = (subscription?.planSlug ?? "free") as PlanSlug;
-  const subStatus = subscription?.status ?? "active";
-  const health = calculateBusinessHealth(provider);
-  const achievements = computeAchievements({
-    provider,
-    planSlug,
-    searchAppearances: lifetimeSearches,
-  });
-  const tips = buildGrowthTips(provider);
   const businessName = getLocalizedField(provider.name, locale) || "Business";
+  const unreadMessages = countUnreadConversations(conversations);
 
-  const underReview = payments.find((p) => p.paymentStatus === "pending_review");
-  const recentlyPaid = payments.find(
-    (p) =>
-      p.paymentStatus === "paid" &&
-      p.approvedAt &&
-      Date.now() - new Date(p.approvedAt).getTime() < 1000 * 60 * 60 * 72,
-  );
-  const recentlyRejected = payments.find(
-    (p) =>
-      p.paymentStatus === "rejected" &&
-      p.rejectedAt &&
-      Date.now() - new Date(p.rejectedAt).getTime() < 1000 * 60 * 60 * 72,
-  );
-
-  const statusNotice = underReview
-    ? {
-        status: "pending_review" as const,
-        planLabel: planLabel(pendingPayment?.planSlug ?? planSlug),
-        amount: underReview.amount,
-        currency: underReview.currency,
-        reference: underReview.paymentReference,
-        submittedAt: underReview.submittedAt,
-        approvedAt: underReview.approvedAt,
-        adminNote: underReview.adminNote,
-      }
-    : recentlyPaid
-      ? {
-          status: "paid" as const,
-          planLabel: planLabel(planSlug),
-          amount: recentlyPaid.amount,
-          currency: recentlyPaid.currency,
-          reference: recentlyPaid.paymentReference,
-          submittedAt: recentlyPaid.submittedAt,
-          approvedAt: recentlyPaid.approvedAt,
-          adminNote: recentlyPaid.adminNote,
-        }
-      : recentlyRejected
-        ? {
-            status: "rejected" as const,
-            planLabel: planLabel(recentlyRejected.planSlug),
-            amount: recentlyRejected.amount,
-            currency: recentlyRejected.currency,
-            reference: recentlyRejected.paymentReference,
-            submittedAt: recentlyRejected.submittedAt,
-            approvedAt: recentlyRejected.approvedAt,
-            adminNote: recentlyRejected.adminNote,
-          }
-        : null;
-
-  const notifications = buildGrowthNotifications({
-    healthScore: health.score,
-    searchAppearances: weekly.searchAppearances,
-    planSlug,
-    subscriptionStatus: subStatus,
-    verificationStatus: provider.verificationStatus,
-    reviewCount: provider.reviewCount,
-    hasPendingReviewPayment: Boolean(underReview),
-    recentlyApprovedPayment: Boolean(recentlyPaid),
-  });
+  const showVerification =
+    provider.verificationStatus !== "verified" ||
+    provider.status === "draft" ||
+    provider.status === "pending_review" ||
+    provider.status === "changes_requested";
 
   return (
     <div className="w-full max-w-full space-y-8 overflow-x-hidden animate-fade-in">
-      <div className="flex justify-end">
-        <ProviderStatusBadge status={provider.status} />
-      </div>
-
       <GrowthHero planSlug={planSlug} businessName={businessName} />
 
-      {statusNotice ? <DashboardPaymentStatusCard payment={statusNotice} /> : null}
+      {provider.status === "changes_requested" && provider.adminReviewNote ? (
+        <ChangesRequiredCard note={provider.adminReviewNote} />
+      ) : null}
 
-      <GrowthHealthCard health={health} />
+      <DashboardTodayOverview
+        data={{
+          profileViews: weekly.profileViews ?? 0,
+          unreadMessages,
+          newContacts: weekly.contactClicks ?? 0,
+          growthAppearances: weekly.searchAppearances,
+        }}
+      />
 
-      <GrowthInsightsGrid insights={weekly} />
+      <DashboardConversationsPreview conversations={conversations} />
 
-      <GrowthAchievements achievements={achievements} />
-
-      <GrowthTipsList tips={tips} />
-
-      <DashboardUpgradeCard
+      <DashboardQuickActions
         planSlug={planSlug}
-        status={subStatus}
-        providerApproved={provider.status === "active"}
+        publicHref={provider.status === "active" ? `/providers/${provider.id}` : null}
+        showVerification={showVerification}
       />
-
-      <GrowthNotifications items={notifications} />
-
-      <DashboardPaymentHistory
-        currentPlanLabel={planLabel(planSlug)}
-        currentStatus={tSub(`status.${subStatus}`)}
-        payments={payments.map((p) => ({
-          id: p.id,
-          planLabel: planLabel(p.planSlug),
-          paymentStatus: p.paymentStatus,
-          paymentReference: p.paymentReference,
-          amount: p.amount,
-          currency: p.currency,
-          submittedAt: p.submittedAt,
-          approvedAt: p.approvedAt,
-          adminNote: p.adminNote,
-          createdAt: p.createdAt,
-        }))}
-      />
-
-      <GrowthTrustSection />
     </div>
   );
 }

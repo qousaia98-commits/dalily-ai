@@ -9,15 +9,19 @@ import {
   ShieldCheck,
   Star,
   Menu,
+  MessageCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { PlanBadge } from "@/components/shared/plan-badge";
 import { useState } from "react";
+import type { PlanSlug } from "@/lib/subscription/types";
 
 const navItems = [
-  { href: "/business", icon: LayoutDashboard, key: "dashboard" },
+  { href: "/business", icon: LayoutDashboard, key: "dashboard", exact: true },
+  { href: "/business/messages", icon: MessageCircle, key: "messages", badgeKey: "messages" as const },
   { href: "/business/profile", icon: User, key: "profile" },
   { href: "/business/services", icon: Wrench, key: "services" },
   { href: "/business/gallery", icon: Images, key: "gallery" },
@@ -26,15 +30,37 @@ const navItems = [
   { href: "/business/subscription", icon: Star, key: "upgrade" },
 ] as const;
 
-export function BusinessSidebar() {
+type BusinessSidebarProps = {
+  planSlug?: PlanSlug | string;
+  businessName?: string | null;
+  badges?: { messages?: number };
+};
+
+export function BusinessSidebar({
+  planSlug = "free",
+  businessName,
+  badges = {},
+}: BusinessSidebarProps) {
   const t = useTranslations("business.nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const NavContent = () => (
-    <nav className="flex flex-col gap-1">
-      {navItems.map(({ href, icon: Icon, key }) => {
-        const active = pathname === href || (href !== "/business" && pathname.startsWith(href));
+    <nav className="flex flex-col gap-1" aria-label={t("title")}>
+      {businessName ? (
+        <div className="mb-3 space-y-2 rounded-2xl border border-border bg-muted/40 px-3 py-3">
+          <p className="truncate text-sm font-bold text-foreground">{businessName}</p>
+          <PlanBadge planSlug={planSlug} />
+        </div>
+      ) : null}
+      {navItems.map((item) => {
+        const { href, icon: Icon, key } = item;
+        const exact = "exact" in item && item.exact;
+        const badgeKey = "badgeKey" in item ? item.badgeKey : undefined;
+        const badgeCount = badgeKey ? (badges[badgeKey] ?? 0) : 0;
+        const active = exact
+          ? pathname === href
+          : pathname === href || pathname.startsWith(`${href}/`);
         return (
           <Link
             key={href}
@@ -48,7 +74,12 @@ export function BusinessSidebar() {
             )}
           >
             <Icon className="size-4 shrink-0" />
-            {t(key)}
+            <span className="flex-1">{t(key)}</span>
+            {badgeCount > 0 ? (
+              <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-[var(--dalily-gold)] px-1.5 py-0.5 text-[0.625rem] font-bold text-[var(--dalily-navy)]">
+                {badgeCount > 99 ? "99+" : badgeCount}
+              </span>
+            ) : null}
           </Link>
         );
       })}
@@ -70,7 +101,7 @@ export function BusinessSidebar() {
       </div>
 
       <aside className="hidden w-56 shrink-0 lg:block">
-        <div className="sticky top-20 rounded-xl border bg-card p-4">
+        <div className="sticky top-20 rounded-xl border border-border bg-card p-4">
           <p className="mb-4 px-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
             {t("title")}
           </p>

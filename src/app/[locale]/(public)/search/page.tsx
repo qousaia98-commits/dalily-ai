@@ -22,6 +22,7 @@ type SearchPageProps = {
     city?: string;
     verified?: string;
     sort?: string;
+    nearby?: string;
   }>;
 };
 

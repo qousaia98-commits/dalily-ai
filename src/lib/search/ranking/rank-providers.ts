@@ -1,10 +1,13 @@
 import type { PlanSlug } from "@/lib/subscription/types";
-import { planTierRank } from "@/lib/subscription/limits";
 import type { Database } from "@/types/database.types";
+import type { ProblemPriority } from "@/lib/search/engine/types";
+import type { SearchSort } from "@/lib/geo/distance";
 import {
-  calculateDalilyScore,
-  type DalilyScoreContext,
-} from "@/lib/search/ranking/dalily-score";
+  rankCandidates,
+  type RankedCandidate,
+  type RankingSnapshotEntry,
+  toRankingSnapshot,
+} from "@/lib/search/ranking/ranking-engine";
 
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
 
@@ -12,46 +15,60 @@ export type ScoredProvider = {
   provider: ProviderRow;
   dalilyScore: number;
   planTier: number;
+  distanceKm: number | null;
+  combinedScore: number;
 };
 
-export type RankProvidersContext = DalilyScoreContext & {
+export type RankProvidersContext = {
+  priority?: ProblemPriority | null;
+  planSlug?: PlanSlug;
   planSlugsByProviderId?: Map<string, PlanSlug>;
+  planOverrideByProviderId?: Map<string, PlanSlug>;
+  userLat?: number | null;
+  userLng?: number | null;
+  distanceByProviderId?: Map<string, number | null>;
+  sort?: SearchSort;
+};
+
+export type RankProvidersResult = {
+  providers: ProviderRow[];
+  candidates: RankedCandidate[];
+  snapshot: RankingSnapshotEntry[];
 };
 
 /**
- * Rank strategy:
- * 1. Plan tier — Premium > PRO > Starter
- * 2. Within tier — quality Dalily Score (rating, reviews via trust/rating,
- *    completeness, verification, freshness) — never payment alone.
+ * Canonical ranking entry — delegates to ranking-engine (single algorithm).
  */
+export function rankProvidersDetailed(
+  rows: ProviderRow[],
+  context: RankProvidersContext = {},
+): RankProvidersResult {
+  const planMap = new Map(context.planSlugsByProviderId);
+  if (context.planSlug) {
+    for (const row of rows) {
+      if (!planMap.has(row.id)) planMap.set(row.id, context.planSlug);
+    }
+  }
+
+  const candidates = rankCandidates(rows, {
+    priority: context.priority,
+    planSlugsByProviderId: planMap,
+    planOverrideByProviderId: context.planOverrideByProviderId,
+    distanceByProviderId: context.distanceByProviderId,
+    sort: context.sort,
+  });
+
+  return {
+    providers: candidates.map((c) => c.provider),
+    candidates,
+    snapshot: toRankingSnapshot(candidates),
+  };
+}
+
+/** Back-compat wrapper — same algorithm as rankProvidersDetailed. */
 export function rankProviders(
   rows: ProviderRow[],
   context: RankProvidersContext = {},
 ): ProviderRow[] {
-  const scored: ScoredProvider[] = rows.map((provider) => {
-    const planSlug =
-      context.planSlugsByProviderId?.get(provider.id) ?? context.planSlug ?? "free";
-    return {
-      provider,
-      planTier: planTierRank(planSlug),
-      dalilyScore: calculateDalilyScore(provider, {
-        priority: context.priority,
-        planSlug,
-      }),
-    };
-  });
-
-  scored.sort((a, b) => {
-    if (b.planTier !== a.planTier) return b.planTier - a.planTier;
-    if (b.dalilyScore !== a.dalilyScore) return b.dalilyScore - a.dalilyScore;
-    if (b.provider.review_count !== a.provider.review_count) {
-      return b.provider.review_count - a.provider.review_count;
-    }
-    if (Number(b.provider.rating_avg) !== Number(a.provider.rating_avg)) {
-      return Number(b.provider.rating_avg) - Number(a.provider.rating_avg);
-    }
-    return new Date(b.provider.updated_at).getTime() - new Date(a.provider.updated_at).getTime();
-  });
-
-  return scored.map((item) => item.provider);
+  return rankProvidersDetailed(rows, context).providers;
 }

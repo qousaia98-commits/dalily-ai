@@ -16,5 +16,6 @@ export function mockProviderToListItem(provider: MockProvider): ProviderListItem
     coverImage: provider.coverImage,
     avatarImage: provider.avatarImage,
     distanceKm: provider.distanceKm,
+    planSlug: "free",
   };
 }

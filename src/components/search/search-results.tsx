@@ -1,9 +1,11 @@
+import { cookies } from "next/headers";
 import { getLocale, getTranslations } from "next-intl/server";
 import { runDalilySearch } from "@/lib/search/search-engine";
 import { ProviderCard } from "@/components/providers/provider-card";
 import { SearchEmptyState } from "@/components/search/search-empty-state";
 import { SearchErrorState } from "@/components/search/search-error-state";
 import { SearchInsight } from "@/components/search/search-insight";
+import { NearbyLocationPrompt } from "@/components/search/nearby-location-prompt";
 import {
   getCategoryGroups,
   getLeafCategories,
@@ -13,6 +15,11 @@ import {
 import { localizedField } from "@/lib/categories/format";
 import type { Locale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
+import {
+  NEARBY_LOC_COOKIE,
+  parseNearbyLocCookie,
+} from "@/lib/business/message-read-state";
+import { parseNearbyRadius, parseSearchSort } from "@/lib/geo/distance";
 
 type SearchResultsProps = {
   searchParams: {
@@ -22,12 +29,15 @@ type SearchResultsProps = {
     city?: string;
     verified?: string;
     sort?: string;
+    nearby?: string;
   };
 };
 
 export async function SearchResults({ searchParams }: SearchResultsProps) {
   const t = await getTranslations("search");
   const locale = (await getLocale()) as Locale;
+  const jar = await cookies();
+  const nearbyLoc = parseNearbyLocCookie(jar.get(NEARBY_LOC_COOKIE)?.value);
 
   const query = searchParams.q?.trim() ?? "";
   const category =
@@ -40,14 +50,26 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
       : undefined;
   const city = searchParams.city && searchParams.city !== "all" ? searchParams.city : undefined;
   const verifiedOnly = searchParams.verified === "true";
+  const nearbyRadius = parseNearbyRadius(searchParams.nearby) ?? (nearbyLoc ? 10 : "city");
+  const sort = parseSearchSort(searchParams.sort);
 
   const hasSearch = Boolean(query || category || group || city || verifiedOnly);
 
+  const locationPrompt = (
+    <NearbyLocationPrompt
+      hasStoredLocation={Boolean(nearbyLoc)}
+      className="mb-4"
+    />
+  );
+
   if (!hasSearch) {
     return (
-      <p className="rounded-2xl border border-border bg-muted/30 px-4 py-6 text-center text-sm text-muted-foreground">
-        {t("prompt")}
-      </p>
+      <div>
+        {locationPrompt}
+        <p className="rounded-2xl border border-border bg-muted/30 px-4 py-6 text-center text-sm text-muted-foreground">
+          {t("prompt")}
+        </p>
+      </div>
     );
   }
 
@@ -62,6 +84,10 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
       citySlug: city,
       verifiedOnly: searchParams.verified === "true",
       locale,
+      userLat: nearbyLoc?.lat ?? null,
+      userLng: nearbyLoc?.lng ?? null,
+      nearbyRadius,
+      sort,
     });
     results = searchResult.providers;
     parsed = searchResult.parsed;
@@ -69,7 +95,12 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
     if (process.env.NODE_ENV === "development") {
       console.error("[search]", error);
     }
-    return <SearchErrorState />;
+    return (
+      <div>
+        {locationPrompt}
+        <SearchErrorState />
+      </div>
+    );
   }
 
   let displayQuery = query;
@@ -93,6 +124,7 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
 
     return (
       <>
+        {locationPrompt}
         <SearchInsight query={query} problemId={parsed.problemId} citySlug={parsed.citySlug} />
         <SearchEmptyState query={emptyLabel} />
       </>
@@ -101,6 +133,7 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
 
   return (
     <div>
+      {locationPrompt}
       <SearchInsight query={query} problemId={parsed.problemId} citySlug={parsed.citySlug} />
       <p className="mb-6 text-sm text-muted-foreground">
         {t("topResults", { count: results.length })}
@@ -111,6 +144,7 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
           <ProviderCard
             key={provider.id}
             provider={provider}
+            position={index + 1}
             className={cn("animate-fade-in-up", `stagger-${Math.min(index + 1, 4)}`)}
           />
         ))}

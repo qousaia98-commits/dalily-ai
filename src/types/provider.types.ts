@@ -47,6 +47,8 @@ export type ManagedProvider = {
   ratingAvg: number;
   responseTimeHours: number | null;
   createdAt: string;
+  adminReviewNote: string | null;
+  changesRequestedAt: string | null;
   avatarImageId: string | null;
   coverImageId: string | null;
   avatarUrl: string | null;

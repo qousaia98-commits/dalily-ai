@@ -32,7 +32,14 @@ function revalidateAdmin() {
 }
 
 const providerIdSchema = z.string().uuid();
-const providerStatusSchema = z.enum(["active", "suspended", "archived", "pending_review", "draft"]);
+const providerStatusSchema = z.enum([
+  "active",
+  "suspended",
+  "archived",
+  "pending_review",
+  "changes_requested",
+  "draft",
+]);
 
 export async function updateProviderStatusAction(
   providerId: string,

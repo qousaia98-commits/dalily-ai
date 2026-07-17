@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowRight, Crown, Heart, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
+import { getBenefits } from "@/lib/subscription/benefit-engine";
 import type { PlanSlug } from "@/lib/subscription/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,15 +14,19 @@ type DashboardUpgradeCardProps = {
   providerApproved?: boolean;
 };
 
+/**
+ * Upgrade CTA for Starter → PRO and PRO → PREMIUM.
+ * Premium active: no permanent success card (celebration lives in temporary notifications).
+ */
 export function DashboardUpgradeCard({
   planSlug,
   status,
   providerApproved = true,
 }: DashboardUpgradeCardProps) {
   const t = useTranslations("business.dashboard.upgradeCard");
+  const benefits = getBenefits(planSlug);
   const isPending = status === "pending_payment";
-  const isPremiumActive = planSlug === "premium" && status === "active";
-  const isProActive = planSlug === "pro" && status === "active";
+  const isProActive = benefits.canUseProBadge && !benefits.canUsePremiumBadge && status === "active";
 
   if (!providerApproved) {
     return (
@@ -35,29 +40,13 @@ export function DashboardUpgradeCard({
     );
   }
 
-  if (isPremiumActive) {
-    return (
-      <div className="relative overflow-hidden rounded-3xl border border-[var(--dalily-gold)]/40 bg-[linear-gradient(145deg,#0B1526_0%,#1a2744_100%)] p-8 text-white shadow-[0_16px_40px_-18px_rgba(11,21,38,0.45)]">
-        <div className="flex items-start gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--dalily-gold)]/20 text-[var(--dalily-gold)]">
-            <Crown className="size-6" />
-          </span>
-          <div>
-            <p className="text-xs font-bold tracking-[0.14em] text-[var(--dalily-gold)] uppercase">
-              {t("premiumEyebrow")}
-            </p>
-            <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
-              {t("premiumTitle")} <Heart className="inline size-5 fill-current text-rose-400" />
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-white/70">{t("premiumBody")}</p>
-          </div>
-        </div>
-      </div>
-    );
+  // Premium: never show a permanent "activated successfully" card.
+  if (benefits.canUsePremiumBadge && status === "active") {
+    return null;
   }
 
   const dark = isProActive;
-  const Icon = isProActive ? Crown : Sparkles;
+  const Icon = isProActive ? Star : Sparkles;
 
   return (
     <div

@@ -3,6 +3,7 @@ import { getStoragePublicUrl } from "@/lib/providers/storage";
 import type { LocalizedText } from "@/types/domain.types";
 import type { ProviderListItem } from "@/types/search.types";
 import type { Database, LocalizedJson } from "@/types/database.types";
+import type { PlanSlug } from "@/lib/subscription/types";
 
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
 
@@ -27,6 +28,8 @@ export function mapProviderRowsToListItems(
   imagePathById: Map<string, string>,
   categorySlugById: Map<string, string>,
   categoryNameBySlug: Map<string, LocalizedJson>,
+  planSlugsByProviderId?: Map<string, PlanSlug>,
+  distanceByProviderId?: Map<string, number | null>,
 ): ProviderListItem[] {
   const items: ProviderListItem[] = [];
 
@@ -45,6 +48,12 @@ export function mapProviderRowsToListItems(
     const avatarPath = row.avatar_image_id ? imagePathById.get(row.avatar_image_id) : undefined;
     const coverPath = row.cover_image_id ? imagePathById.get(row.cover_image_id) : undefined;
 
+    const rawDistance = distanceByProviderId?.get(row.id);
+    const distanceKm =
+      rawDistance != null && Number.isFinite(rawDistance)
+        ? Math.round(rawDistance * 10) / 10
+        : null;
+
     items.push({
       id: row.id,
       slug: row.slug,
@@ -56,9 +65,12 @@ export function mapProviderRowsToListItems(
       reviewCount: row.review_count,
       trustScore: row.trust_score,
       verified: row.verification_status === "verified",
+      planSlug: planSlugsByProviderId?.get(row.id) ?? "free",
       coverImage: coverPath ? getStoragePublicUrl(coverPath) : DEFAULT_COVER,
       avatarImage: avatarPath ? getStoragePublicUrl(avatarPath) : DEFAULT_AVATAR,
-      distanceKm: null,
+      distanceKm,
+      profileCompleteness: row.profile_completeness,
+      responseTimeHours: row.response_time_hours,
     });
   }
 

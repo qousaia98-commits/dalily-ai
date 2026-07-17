@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { MapPin, Phone, MessageCircle, Clock } from "lucide-react";
+import { cookies } from "next/headers";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getLocalizedText } from "@/types/domain.types";
 import type { Locale } from "@/lib/i18n/config";
@@ -7,9 +8,19 @@ import type { PublicProviderProfile } from "@/lib/providers/public-queries";
 import { TrustScore } from "@/components/providers/trust-score";
 import { StarRating } from "@/components/providers/star-rating";
 import { Badge } from "@/components/ui/badge";
+import { PlanBadge } from "@/components/shared/plan-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { OpenRouteButton } from "@/components/providers/open-route-button";
+import { TrackProfileView } from "@/components/providers/track-profile-view";
+import { TrackContactClick } from "@/components/providers/track-contact-click";
+import {
+  NEARBY_LOC_COOKIE,
+  parseNearbyLocCookie,
+} from "@/lib/business/message-read-state";
+import { haversineKm, formatDistanceKm } from "@/lib/geo/distance";
+import { CITY_CENTROIDS } from "@/lib/geo/city-centroids";
 
 type ProviderProfileViewProps = {
   provider: PublicProviderProfile;
@@ -18,6 +29,28 @@ type ProviderProfileViewProps = {
 export async function ProviderProfileView({ provider }: ProviderProfileViewProps) {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("provider");
+  const jar = await cookies();
+  const nearbyLoc = parseNearbyLocCookie(jar.get(NEARBY_LOC_COOKIE)?.value);
+
+  const destLat =
+    provider.latitude ??
+    (provider.citySlug ? CITY_CENTROIDS[provider.citySlug]?.lat : null) ??
+    null;
+  const destLng =
+    provider.longitude ??
+    (provider.citySlug ? CITY_CENTROIDS[provider.citySlug]?.lng : null) ??
+    null;
+
+  let distanceKm: number | null = null;
+  if (
+    nearbyLoc &&
+    destLat != null &&
+    destLng != null &&
+    Number.isFinite(destLat) &&
+    Number.isFinite(destLng)
+  ) {
+    distanceKm = haversineKm(nearbyLoc.lat, nearbyLoc.lng, destLat, destLng);
+  }
 
   const districtLabel = provider.district ? getLocalizedText(provider.district, locale) : null;
   const cityLabel = getLocalizedText(provider.city, locale);
@@ -25,6 +58,7 @@ export async function ProviderProfileView({ provider }: ProviderProfileViewProps
 
   return (
     <div className="animate-fade-in">
+      <TrackProfileView providerId={provider.id} />
       <div className="relative h-48 overflow-hidden sm:h-64 md:h-72">
         <Image
           src={provider.coverImage}
@@ -57,14 +91,10 @@ export async function ProviderProfileView({ provider }: ProviderProfileViewProps
                 {provider.verified ? (
                   <Badge variant="success">{t("verified")}</Badge>
                 ) : null}
-                {provider.planSlug === "pro" ? (
-                  <Badge className="bg-[var(--dalily-gold)] text-[var(--dalily-navy)] hover:bg-[var(--dalily-gold)]">
-                    {t("planPro")}
-                  </Badge>
-                ) : null}
+                <PlanBadge planSlug={provider.planSlug} size="md" />
                 {provider.planSlug === "premium" ? (
-                  <Badge className="bg-[var(--dalily-navy)] text-[var(--dalily-gold)] hover:bg-[var(--dalily-navy)]">
-                    {t("planPremium")}
+                  <Badge className="border border-[var(--dalily-gold)]/50 bg-[var(--dalily-gold)]/10 text-[var(--dalily-navy)]">
+                    {t("featured")}
                   </Badge>
                 ) : null}
               </div>
@@ -81,6 +111,12 @@ export async function ProviderProfileView({ provider }: ProviderProfileViewProps
                 <MapPin className="size-4" />
                 {locationLabel}
               </span>
+              {distanceKm != null ? (
+                <span className="flex items-center gap-1 font-medium text-foreground">
+                  <MapPin className="size-4 text-[var(--dalily-gold)]" aria-hidden />
+                  {t("distanceFromYou", { km: formatDistanceKm(distanceKm) })}
+                </span>
+              ) : null}
               {provider.responseTimeHours != null ? (
                 <span className="flex items-center gap-1">
                   <Clock className="size-4" />
@@ -127,7 +163,7 @@ export async function ProviderProfileView({ provider }: ProviderProfileViewProps
                         src={image}
                         alt={getLocalizedText(provider.name, locale)}
                         fill
-                        className="object-cover transition-transform hover:scale-105"
+                        className="object-cover transition-transform hover:scale-105 motion-reduce:hover:scale-100"
                         sizes="(max-width: 640px) 50vw, 33vw"
                       />
                     </div>
@@ -157,6 +193,22 @@ export async function ProviderProfileView({ provider }: ProviderProfileViewProps
               </CardContent>
             </Card>
 
+            {destLat != null && destLng != null ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle>{t("routeTitle")}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {distanceKm != null ? (
+                    <p className="text-sm text-muted-foreground">
+                      {t("distanceFromYou", { km: formatDistanceKm(distanceKm) })}
+                    </p>
+                  ) : null}
+                  <OpenRouteButton lat={destLat} lng={destLng} />
+                </CardContent>
+              </Card>
+            ) : null}
+
             {(provider.phone || provider.whatsapp) && (
               <Card>
                 <CardHeader>
@@ -165,22 +217,26 @@ export async function ProviderProfileView({ provider }: ProviderProfileViewProps
                 <CardContent className="space-y-3">
                   {provider.phone ? (
                     <Button className="w-full gap-2" size="lg" asChild>
-                      <a href={`tel:${provider.phone}`}>
+                      <TrackContactClick
+                        providerId={provider.id}
+                        channel="phone"
+                        href={`tel:${provider.phone}`}
+                      >
                         <Phone className="size-4" />
                         {t("call")}
-                      </a>
+                      </TrackContactClick>
                     </Button>
                   ) : null}
                   {provider.whatsapp ? (
                     <Button variant="outline" className="w-full gap-2" size="lg" asChild>
-                      <a
+                      <TrackContactClick
+                        providerId={provider.id}
+                        channel="whatsapp"
                         href={`https://wa.me/${provider.whatsapp.replace(/\D/g, "")}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         <MessageCircle className="size-4" />
                         {t("whatsapp")}
-                      </a>
+                      </TrackContactClick>
                     </Button>
                   ) : null}
                   <Separator />

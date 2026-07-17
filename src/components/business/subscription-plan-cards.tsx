@@ -33,9 +33,9 @@ const MARKETING_BY_SLUG: Record<PlanSlug, MarketingPlanId> = {
 
 /** Outcome-focused benefit keys (i18n under plans.*.includes) */
 const featureKeys: Record<MarketingPlanId, string[]> = {
-  starter: ["profile", "photos", "reviews", "contact", "search"],
-  pro: ["ranking", "badge", "insights", "visibility", "support"],
-  premium: ["everything", "homepage", "badge", "branches", "insights"],
+  starter: ["profile", "photos", "reviews", "contact", "search", "reach"],
+  pro: ["ranking", "badge", "insights", "visibility", "contacts", "priority"],
+  premium: ["everything", "homepage", "badge", "maxVisibility", "insights", "campaigns"],
 };
 
 type SubscriptionPlanCardsProps = {
