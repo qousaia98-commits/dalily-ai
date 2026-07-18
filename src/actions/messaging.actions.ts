@@ -34,6 +34,8 @@ export async function markConversationReadAction(
   revalidatePath("/business", "layout");
   revalidatePath("/business/messages");
   revalidatePath(`/business/messages/${conversationId}`);
+  revalidatePath("/messages");
+  revalidatePath(`/messages/${conversationId}`);
   return { success: true };
 }
 

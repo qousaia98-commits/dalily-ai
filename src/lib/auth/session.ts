@@ -1,5 +1,8 @@
+import { redirect } from "@/lib/i18n/routing";
+import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import type { AppRole } from "@/types/database.types";
+import type { Locale } from "@/lib/i18n/config";
 
 export type AuthUser = {
   id: string;
@@ -37,18 +40,29 @@ export async function getAuthUser(): Promise<AuthUser | null> {
   };
 }
 
+/**
+ * For Server Components / pages: redirects to login instead of throwing 500.
+ */
 export async function requireAuthUser(): Promise<AuthUser> {
   const user = await getAuthUser();
   if (!user) {
+    const locale = (await getLocale()) as Locale;
+    redirect({ href: "/login", locale });
+    // unreachable — satisfies TypeScript
     throw new Error("UNAUTHORIZED");
   }
   return user;
 }
 
+/**
+ * For Server Components / pages: redirects home if not admin.
+ */
 export async function requireAdminUser(): Promise<AuthUser> {
   const user = await requireAuthUser();
   const { isPlatformAdmin } = await import("@/lib/auth/roles");
   if (!isPlatformAdmin(user.roles)) {
+    const locale = (await getLocale()) as Locale;
+    redirect({ href: "/", locale });
     throw new Error("FORBIDDEN");
   }
   return user;

@@ -25,12 +25,16 @@ export function ConversationListClient({
   conversations,
   activeId,
   compact = false,
+  messagesPath = "/business/messages",
+  namespace = "business.messages",
 }: {
   conversations: BusinessConversation[];
   activeId?: string;
   compact?: boolean;
+  messagesPath?: string;
+  namespace?: string;
 }) {
-  const t = useTranslations("business.messages");
+  const t = useTranslations(namespace);
   const locale = useLocale();
   const [query, setQuery] = useState("");
 
@@ -81,7 +85,7 @@ export function ConversationListClient({
             return (
               <li key={c.id}>
                 <Link
-                  href={`/business/messages/${c.id}`}
+                  href={`${messagesPath}/${c.id}`}
                   className={cn(
                     "flex items-center gap-3 rounded-2xl border px-3 py-3 transition",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)]",

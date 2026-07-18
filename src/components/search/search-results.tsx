@@ -19,6 +19,10 @@ import {
   NEARBY_LOC_COOKIE,
   parseNearbyLocCookie,
 } from "@/lib/business/message-read-state";
+import {
+  LOC_PREF_COOKIE,
+  parseLocationPreference,
+} from "@/lib/geo/location-preference";
 import { parseNearbyRadius, parseSearchSort } from "@/lib/geo/distance";
 
 type SearchResultsProps = {
@@ -38,6 +42,8 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
   const locale = (await getLocale()) as Locale;
   const jar = await cookies();
   const nearbyLoc = parseNearbyLocCookie(jar.get(NEARBY_LOC_COOKIE)?.value);
+  const locationPreference = parseLocationPreference(jar.get(LOC_PREF_COOKIE)?.value);
+  const locationEnabled = locationPreference === "enabled";
 
   const query = searchParams.q?.trim() ?? "";
   const category =
@@ -50,7 +56,9 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
       : undefined;
   const city = searchParams.city && searchParams.city !== "all" ? searchParams.city : undefined;
   const verifiedOnly = searchParams.verified === "true";
-  const nearbyRadius = parseNearbyRadius(searchParams.nearby) ?? (nearbyLoc ? 10 : "city");
+  const nearbyRadius =
+    parseNearbyRadius(searchParams.nearby) ??
+    (locationEnabled && nearbyLoc ? 10 : "city");
   const sort = parseSearchSort(searchParams.sort);
 
   const hasSearch = Boolean(query || category || group || city || verifiedOnly);
@@ -58,6 +66,7 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
   const locationPrompt = (
     <NearbyLocationPrompt
       hasStoredLocation={Boolean(nearbyLoc)}
+      locationEnabled={locationEnabled}
       className="mb-4"
     />
   );
@@ -84,8 +93,8 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
       citySlug: city,
       verifiedOnly: searchParams.verified === "true",
       locale,
-      userLat: nearbyLoc?.lat ?? null,
-      userLng: nearbyLoc?.lng ?? null,
+      userLat: locationEnabled ? (nearbyLoc?.lat ?? null) : null,
+      userLng: locationEnabled ? (nearbyLoc?.lng ?? null) : null,
       nearbyRadius,
       sort,
     });

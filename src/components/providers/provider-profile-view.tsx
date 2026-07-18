@@ -13,24 +13,43 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { OpenRouteButton } from "@/components/providers/open-route-button";
+import { SendRequestButton } from "@/components/providers/send-request-button";
 import { TrackProfileView } from "@/components/providers/track-profile-view";
 import { TrackContactClick } from "@/components/providers/track-contact-click";
 import {
   NEARBY_LOC_COOKIE,
   parseNearbyLocCookie,
 } from "@/lib/business/message-read-state";
+import {
+  LOC_PREF_COOKIE,
+  parseLocationPreference,
+} from "@/lib/geo/location-preference";
 import { haversineKm, formatDistanceKm } from "@/lib/geo/distance";
 import { CITY_CENTROIDS } from "@/lib/geo/city-centroids";
 
 type ProviderProfileViewProps = {
   provider: PublicProviderProfile;
+  isLoggedIn?: boolean;
+  hasPendingRequest?: boolean;
+  acceptingRequests?: boolean;
+  estimatedResponseHours?: number;
 };
 
-export async function ProviderProfileView({ provider }: ProviderProfileViewProps) {
+export async function ProviderProfileView({
+  provider,
+  isLoggedIn = false,
+  hasPendingRequest = false,
+  acceptingRequests = true,
+  estimatedResponseHours,
+}: ProviderProfileViewProps) {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("provider");
   const jar = await cookies();
-  const nearbyLoc = parseNearbyLocCookie(jar.get(NEARBY_LOC_COOKIE)?.value);
+  const locationEnabled =
+    parseLocationPreference(jar.get(LOC_PREF_COOKIE)?.value) === "enabled";
+  const nearbyLoc = locationEnabled
+    ? parseNearbyLocCookie(jar.get(NEARBY_LOC_COOKIE)?.value)
+    : null;
 
   const destLat =
     provider.latitude ??
@@ -179,6 +198,32 @@ export async function ProviderProfileView({ provider }: ProviderProfileViewProps
           </div>
 
           <div className="space-y-4">
+            <Card className="border-[var(--dalily-gold)]/25 bg-[color-mix(in_oklab,var(--dalily-gold)_6%,var(--card))]">
+              <CardHeader>
+                <CardTitle>{t("requestService")}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-muted-foreground">{t("requestServiceBody")}</p>
+                {estimatedResponseHours ? (
+                  <p className="text-xs text-muted-foreground">
+                    {t("estimatedResponse", { hours: estimatedResponseHours })}
+                  </p>
+                ) : null}
+                {!acceptingRequests ? (
+                  <p className="rounded-2xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+                    {t("notAccepting")}
+                  </p>
+                ) : (
+                  <SendRequestButton
+                    providerId={provider.id}
+                    providerName={getLocalizedText(provider.name, locale)}
+                    isLoggedIn={isLoggedIn}
+                    hasPendingRequest={hasPendingRequest}
+                  />
+                )}
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader>
                 <CardTitle>{t("trustScore")}</CardTitle>

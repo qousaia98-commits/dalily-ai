@@ -1,8 +1,12 @@
 import { getOwnedProvider } from "@/lib/providers/queries";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { buildBusinessNotifications } from "@/lib/business/notification-inbox";
-import { buildBusinessConversations } from "@/lib/business/conversations";
+import {
+  applyConversationReadState,
+  buildBusinessConversations,
+} from "@/lib/business/conversations";
 import { MSG_READ_COOKIE, parseMsgReadCookie } from "@/lib/business/message-read-state";
+import { loadConversationsForBusiness } from "@/lib/messaging/queries";
 import type { PlanSlug } from "@/lib/subscription/types";
 import { cookies } from "next/headers";
 
@@ -61,8 +65,17 @@ export async function loadBusinessConversations(userId: string) {
       reviewCount: provider.reviewCount,
     });
 
+    const dalilyConversations = buildBusinessConversations({ notifications, readMap });
+    const customerConversations = applyConversationReadState(
+      await loadConversationsForBusiness(userId),
+      readMap,
+    );
+    const conversations = [...customerConversations, ...dalilyConversations].sort(
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    );
+
     return {
-      conversations: buildBusinessConversations({ notifications, readMap }),
+      conversations,
       planSlug,
       provider,
     };
@@ -76,8 +89,16 @@ export async function loadBusinessConversations(userId: string) {
       changesRequestedAt: provider.changesRequestedAt,
       reviewCount: provider.reviewCount,
     });
+    const dalilyConversations = buildBusinessConversations({ notifications, readMap });
+    const customerConversations = applyConversationReadState(
+      await loadConversationsForBusiness(userId),
+      readMap,
+    );
+    const conversations = [...customerConversations, ...dalilyConversations].sort(
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    );
     return {
-      conversations: buildBusinessConversations({ notifications, readMap }),
+      conversations,
       planSlug: "free" as PlanSlug,
       provider,
     };

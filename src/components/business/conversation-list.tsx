@@ -9,13 +9,17 @@ export async function ConversationList({
   conversations,
   activeId,
   compact = false,
+  messagesPath = "/business/messages",
+  namespace = "business.messages",
 }: {
   conversations: BusinessConversation[];
   activeId?: string;
   locale?: string;
   compact?: boolean;
+  messagesPath?: string;
+  namespace?: string;
 }) {
-  const t = await getTranslations("business.messages");
+  const t = await getTranslations(namespace);
 
   if (conversations.length === 0 && !compact) {
     return (
@@ -32,6 +36,8 @@ export async function ConversationList({
       conversations={conversations}
       activeId={activeId}
       compact={compact}
+      messagesPath={messagesPath}
+      namespace={namespace}
     />
   );
 }

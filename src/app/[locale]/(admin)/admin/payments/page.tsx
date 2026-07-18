@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { requireAdminUser } from "@/lib/auth/session";
 import { countPaymentsByStatus, listPaymentsForAdmin } from "@/lib/subscription/repository";
 import { AdminPaymentsPanel } from "@/components/admin/admin-payments-panel";
 
@@ -7,6 +8,7 @@ type PageProps = {
 };
 
 export default async function AdminPaymentsPage({ searchParams }: PageProps) {
+  await requireAdminUser();
   const t = await getTranslations("admin.payments");
   const params = await searchParams;
 

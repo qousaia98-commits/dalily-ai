@@ -31,14 +31,14 @@
     },
     "guest": {
       "home": "الرئيسية",
-      "search": "بحث",
-      "aiSearch": "بحث ذكي",
+      "aiAssistant": "المساعد الذكي",
+      "messages": "الرسائل",
       "favorites": "المفضلة",
       "account": "الحساب"
     },
     "business": {
       "dashboard": "الرئيسية",
-      "myBusiness": "نشاطي",
+      "requests": "الطلبات",
       "messages": "الرسائل",
       "growth": "النمو",
       "account": "الحساب"
@@ -79,7 +79,11 @@
         "business": "لوحة الأعمال",
         "businessDesc": "إدارة ملف مزود الخدمة",
         "admin": "مركز التحكم",
-        "adminDesc": "فتح لوحة الإدارة"
+        "adminDesc": "فتح لوحة الإدارة",
+        "myRequests": "طلباتي",
+        "myRequestsDesc": "تتبع طلبات الخدمة والعروض",
+        "requestSettings": "إعدادات الطلبات",
+        "requestSettingsDesc": "تحكم بكيفية تواصل الزبائن معك"
       }
     },
     "myBusiness": {
@@ -158,6 +162,53 @@
         "subscriptions": "الاشتراكات",
         "subscriptionsDesc": "الخطط ونظرة على الفوترة"
       }
+    }
+  },
+  "customer": {
+    "messages": {
+      "eyebrow": "الوارد",
+      "title": "الرسائل",
+      "subtitle": "محادثاتك مع الأعمال المحلية في مكان واحد.",
+      "guestSubtitle": "سجّل الدخول لرؤية محادثاتك مع الأعمال والردود في صندوق واحد.",
+      "loginCta": "تسجيل الدخول",
+      "browseCta": "ابحث عن أعمال",
+      "listLabel": "المحادثات",
+      "emptyTitle": "لا محادثات بعد",
+      "emptyBody": "تواصل مع عمل من البحث أو الملف — ستظهر محادثاتك هنا.",
+      "searchPlaceholder": "ابحث باسم العمل…",
+      "searchEmpty": "لا توجد محادثات مطابقة.",
+      "unreadCount": "{count} غير مقروء",
+      "back": "العودة للمحادثات",
+      "threadLabel": "محادثة مع {name}",
+      "businessSubtitle": "محادثة مع عمل",
+      "dalilySubtitle": "تحديثات دليلي الرسمية",
+      "composerHint": "الردود ستتوفر عند إطلاق المراسلة الفورية.",
+      "customerHint": "راسل الأعمال مباشرة من ملفهم لبدء محادثة."
+    }
+  },
+  "location": {
+    "onboarding": {
+      "title": "اعثر على أعمال قريبة منك",
+      "body": "دليلي يستخدم موقعك فقط لعرض الأعمال القريبة.",
+      "privacy": "لن نشارك موقعك الدقيق أبداً.",
+      "allow": "السماح بالموقع",
+      "notNow": "ليس الآن",
+      "dismiss": "إغلاق",
+      "unsupported": "الموقع غير مدعوم على هذا الجهاز.",
+      "saveFailed": "تعذر حفظ الموقع. حاول مرة أخرى."
+    },
+    "settings": {
+      "title": "الموقع",
+      "description": "عند التفعيل، يعطي دليلي أولوية للأعمال القريبة في البحث. لا نخزّن إحداثيات GPS بشكل دائم — فقط جلسة قصيرة لحساب المسافة.",
+      "statusEnabled": "مفعّل",
+      "statusDisabled": "معطّل",
+      "enable": "تفعيل الموقع",
+      "disable": "تعطيل الموقع",
+      "update": "تحديث الموقع الحالي",
+      "activeNote": "البحث القريب نشط لهذه الجلسة.",
+      "unsupported": "الموقع غير مدعوم على هذا الجهاز.",
+      "permissionDenied": "رفض المتصفح إذن الموقع.",
+      "saveFailed": "تعذر تحديث الموقع. حاول مرة أخرى."
     }
   },
   "home": {
@@ -248,7 +299,12 @@
       "active": "عم نعرض أعمال قريبة حسب موقعك",
       "clear": "المدينة فقط",
       "unsupported": "الموقع غير مدعوم على هاد الجهاز.",
-      "saveFailed": "ما قدرنا نحفظ الموقع. حاول مرة تانية."
+      "saveFailed": "ما قدرنا نحفظ الموقع. حاول مرة تانية.",
+      "permissionDenied": "تم رفض إذن الموقع.",
+      "cityMode": "البحث حسب المدينة. فعّل الموقع من إعدادات الحساب لنتائج قريبة.",
+      "enableFromSettings": "تفعيل الموقع",
+      "refreshHint": "الموقع مفعّل — حدّث لإيجاد أعمال قريبة.",
+      "refresh": "تحديث الموقع"
     },
     "filters": {
       "title": "الفلاتر",
@@ -298,6 +354,10 @@
     "reviewsSection": "التقييمات",
     "noReviews": "لا توجد تقييمات بعد.",
     "contact": "تواصل",
+    "requestService": "إرسال طلب",
+    "requestServiceBody": "صف ما تحتاجه — سيراجع العمل طلبك قبل فتح المحادثة.",
+    "notAccepting": "هذا العمل لا يقبل طلبات جديدة حالياً.",
+    "estimatedResponse": "عادة يرد خلال {hours} ساعات",
     "call": "اتصال",
     "whatsapp": "واتساب",
     "contactNote": "سيتم توصيلك مباشرة مع مزود الخدمة.",
@@ -308,6 +368,52 @@
     "healthScore": "الصحة {score}%",
     "healthShort": "الصحة",
     "featured": "مميز"
+  },
+  "serviceRequest": {
+    "sendRequest": "إرسال طلب",
+    "eyebrow": "طلب خدمة",
+    "formTitle": "طلب إلى {business}",
+    "close": "إغلاق",
+    "submit": "إرسال الطلب",
+    "submitting": "جاري الإرسال…",
+    "pendingNotice": "لديك بالفعل طلب قيد الانتظار مع هذا العمل.",
+    "privacyNote": "يُرسل طلبك بشكل خاص. تفتح المحادثة فقط بعد قبول العمل.",
+    "fields": {
+      "title": "العنوان",
+      "titlePlaceholder": "مثال: تجديد المطبخ، إصلاح الحمام",
+      "description": "الوصف",
+      "descriptionPlaceholder": "صف بالضبط ما تحتاجه. كلما زادت التفاصيل، كان من الأسهل على العمل مساعدتك.",
+      "preferredDate": "التاريخ المفضل (اختياري)",
+      "preferredTime": "الوقت المفضل (اختياري)",
+      "budget": "الميزانية (اختياري)",
+      "budgetPlaceholder": "الميزانية التقديرية",
+      "location": "الموقع (اختياري)",
+      "locationPlaceholder": "العنوان أو المنطقة",
+      "photos": "الصور (اختياري)",
+      "photosAdd": "إضافة صور",
+      "photosSelected": "{count} صورة محددة",
+      "photosHint": "حتى 6 صور — JPG أو PNG أو WebP، بحد أقصى 5 ميجابايت لكل صورة."
+    },
+    "errors": {
+      "title": "يرجى إدخال عنوان قصير (3 أحرف على الأقل).",
+      "description": "يرجى وصف طلبك (10 أحرف على الأقل).",
+      "login_required": "يرجى تسجيل الدخول لإرسال طلب.",
+      "pending_exists": "لديك بالفعل طلب قيد الانتظار مع هذا العمل.",
+      "provider_not_found": "هذا العمل غير متاح.",
+      "create_failed": "تعذر إرسال طلبك. حاول مرة أخرى.",
+      "not_accepting": "هذا العمل لا يقبل طلبات جديدة حالياً.",
+      "provider_at_capacity": "هذا العمل لديه طلبات معلقة كثيرة. حاول لاحقاً."
+    },
+    "successSent": "تم إرسال طلبك بنجاح.",
+    "viewRequest": "عرض الطلب",
+    "viewRequests": "طلباتي"
+  },
+  "messaging": {
+    "composer": {
+      "placeholder": "اكتب رسالة…",
+      "send": "إرسال رسالة",
+      "error": "تعذر إرسال الرسالة. حاول مرة أخرى."
+    }
   },
   "footer": {
     "description": "منصة ذكاء اصطناعي لاكتشاف مزودي الخدمات الموثوقين في سوريا.",
@@ -395,7 +501,56 @@
       "analytics": "الإحصائيات",
       "verification": "التحقق",
       "upgrade": "⭐ تطوير",
-      "messages": "الرسائل"
+      "messages": "الرسائل",
+      "requests": "الطلبات",
+      "settings": "الإعدادات"
+    },
+    "requests": {
+      "eyebrow": "الوارد",
+      "title": "طلبات الخدمة",
+      "subtitle": "أدر كل طلب من المراجعة حتى الإنجاز.",
+      "listLabel": "الطلبات",
+      "searchPlaceholder": "ابحث بالزبون أو العنوان…",
+      "emptyTitle": "لا طلبات في هذا التبويب",
+      "emptyBody": "ستظهر هنا الطلبات المطابقة لهذا الفلتر.",
+      "noProvider": "أنشئ ملف عملك لاستقبال الطلبات.",
+      "fromCustomer": "من {name}",
+      "accept": "قبول",
+      "reject": "رفض",
+      "tabs": {
+        "pending": "معلق",
+        "accepted": "مقبول",
+        "quoted": "عرض سعر",
+        "in_progress": "قيد التنفيذ",
+        "completed": "مكتمل",
+        "rejected": "مرفوض",
+        "disputed": "نزاع"
+      },
+      "status": {
+        "pending": "معلق",
+        "accepted": "مقبول",
+        "quoted": "عرض سعر مرسل",
+        "quote_accepted": "تم قبول العرض",
+        "quote_declined": "تم رفض العرض",
+        "in_progress": "قيد التنفيذ",
+        "completed_by_business": "بانتظار التأكيد",
+        "completed": "مكتمل",
+        "disputed": "نزاع",
+        "reviewed": "تم التقييم",
+        "rejected": "مرفوض",
+        "cancelled": "ملغى"
+      },
+      "preferredDate": "التاريخ المفضل",
+      "preferredTime": "الوقت المفضل",
+      "budget": "الميزانية",
+      "location": "الموقع",
+      "photoCount": "{count} صورة مرفقة",
+      "errors": {
+        "accept_failed": "تعذر قبول الطلب.",
+        "reject_failed": "تعذر رفض الطلب.",
+        "not_pending": "هذا الطلب لم يعد معلقاً.",
+        "forbidden": "لا يمكنك إدارة هذا الطلب."
+      }
     },
     "dashboard": {
       "title": "لوحة التحكم",
@@ -1296,6 +1451,30 @@
       "emptyHint": "أرقام النمو بتظهر لما الزباين يدوروا على فئتك.",
       "legacyHint": "عم نعرض ظهور حقيقي. محاكاة الترقية بتشتغل مع عمليات البحث الجديدة.",
       "realCalc": "مبنية على {count} لقطة ترتيب حقيقية هالأسبوع."
+    },
+    "requestSettings": {
+      "eyebrow": "الإعدادات",
+      "title": "إعدادات الطلبات",
+      "subtitle": "تحكم بكيفية تواصل الزبائن مع عملك.",
+      "noProvider": "أنشئ ملف عمل أولاً.",
+      "accepting": "قبول طلبات جديدة",
+      "acceptingHint": "عطّل لإيقاف طلبات الخدمة الجديدة.",
+      "vacation": "وضع الإجازة",
+      "vacationHint": "إيقاف استقبال الطلبات مؤقتاً.",
+      "maxPending": "الحد الأقصى للطلبات المعلقة",
+      "responseHours": "وقت الرد المتوقع (ساعات)",
+      "autoReject": "رسالة الرفض التلقائي",
+      "autoRejectPlaceholder": "تظهر عند الامتلاء أو عدم التوفر…",
+      "save": "حفظ الإعدادات",
+      "saving": "جاري الحفظ…",
+      "saved": "تم حفظ الإعدادات.",
+      "errors": {
+        "settings_failed": "تعذر حفظ الإعدادات.",
+        "validation_error": "يرجى التحقق من الحقول.",
+        "login_required": "يرجى تسجيل الدخول للمتابعة.",
+        "forbidden": "لا يمكنك تغيير هذه الإعدادات.",
+        "failed": "حدث خطأ ما."
+      }
     }
   },
   "admin": {
@@ -1311,7 +1490,8 @@
       "payments": "المدفوعات",
       "subscriptions": "موافقات الاشتراك",
       "businesses": "الأعمال",
-      "messages": "الرسائل"
+      "messages": "الرسائل",
+      "marketplace": "السوق"
     },
     "payments": {
       "eyebrow": "تحويلات يدوية",
@@ -1828,6 +2008,24 @@
         "update_failed": "ما قدرنا نحفظ القرار.",
         "unknown": "صار خطأ ما."
       }
+    },
+    "marketplace": {
+      "eyebrow": "السوق",
+      "title": "لوحة السوق",
+      "subtitle": "تحليلات دورة الطلب حتى التقييم عبر دليلي.",
+      "totalRequests": "إجمالي الطلبات",
+      "acceptanceRate": "معدل القبول",
+      "quoteAcceptanceRate": "قبول العروض",
+      "completionRate": "معدل الإنجاز",
+      "disputeRate": "معدل النزاعات",
+      "avgResponse": "متوسط وقت الرد",
+      "avgCompletion": "متوسط وقت الإنجاز",
+      "avgRating": "متوسط التقييم",
+      "topBusinesses": "أبرز الأعمال",
+      "activeCustomers": "أكثر الزبائن نشاطاً",
+      "daily": "طلبات يومية",
+      "monthly": "طلبات شهرية",
+      "empty": "لا توجد بيانات بعد."
     }
   },
   "auth": {
@@ -1928,5 +2126,198 @@
     "description": "واجهنا مشكلة أثناء تحميل هذه الصفحة. يرجى المحاولة مرة أخرى.",
     "retry": "إعادة المحاولة",
     "backHome": "العودة للرئيسية"
+  },
+  "marketplace": {
+    "summary": "ملخص الطلب",
+    "nextStep": "الخطوة التالية",
+    "preferredDate": "التاريخ المفضل",
+    "budget": "الميزانية",
+    "location": "الموقع",
+    "fromCustomer": "من {name}",
+    "withBusiness": "مع {name}",
+    "openChat": "فتح المحادثة",
+    "pinnedSummary": "ملخص الطلب المثبت",
+    "chatLocked": "تفتح المحادثة بعد قبول العمل لطلبك.",
+    "timeline": {
+      "label": "خط زمني للطلب",
+      "currentHint": "الخطوة الحالية",
+      "request_sent": "تم إرسال الطلب",
+      "under_review": "قيد المراجعة",
+      "accepted": "مقبول",
+      "quote_sent": "تم إرسال العرض",
+      "quote_accepted": "تم قبول العرض",
+      "chat_active": "المحادثة نشطة",
+      "service_completed": "اكتملت الخدمة",
+      "customer_confirmed": "أكد الزبون",
+      "reviewed": "تم التقييم"
+    },
+    "status": {
+      "pending": "معلق",
+      "accepted": "مقبول",
+      "quoted": "عرض سعر مرسل",
+      "quote_accepted": "تم قبول العرض",
+      "quote_declined": "تم رفض العرض",
+      "in_progress": "قيد التنفيذ",
+      "completed_by_business": "بانتظار التأكيد",
+      "completed": "مكتمل",
+      "disputed": "نزاع",
+      "reviewed": "تم التقييم",
+      "rejected": "مرفوض",
+      "cancelled": "ملغى"
+    },
+    "next": {
+      "reviewRequest": "راجع الطلب ثم اقبله أو ارفضه.",
+      "waitForReview": "بانتظار مراجعة العمل لطلبك.",
+      "sendQuoteOrChat": "أرسل عرض سعر اختياري أو ابدأ المحادثة.",
+      "waitQuoteOrChat": "يمكنك المحادثة. بانتظار عرض سعر اختياري.",
+      "decideQuote": "اقبل العرض أو ارفضه أو اطلب تعديلات.",
+      "waitQuoteDecision": "بانتظار قرار الزبون بشأن العرض.",
+      "completeWhenDone": "عند انتهاء العمل، علّمه كمكتمل.",
+      "chatAndWait": "تواصل مع العمل حتى اكتمال الخدمة.",
+      "confirmOrReport": "أكد الإنجاز أو أبلغ عن مشكلة.",
+      "waitCustomerConfirm": "بانتظار تأكيد الزبون للإنجاز.",
+      "leaveReview": "اترك تقييماً لإغلاق سير العمل.",
+      "waitReview": "بانتظار تقييم الزبون.",
+      "resolveDispute": "حل النزاع عبر المحادثة.",
+      "closed": "اكتمل سير العمل.",
+      "rejected": "تم رفض هذا الطلب.",
+      "cancelled": "تم إلغاء هذا الطلب.",
+      "generic": "تابع سير طلب الخدمة."
+    },
+    "quote": {
+      "title": "عرض السعر",
+      "sendTitle": "إرسال عرض سعر",
+      "price": "السعر الإجمالي",
+      "currency": "العملة",
+      "duration": "المدة التقديرية",
+      "durationPlaceholder": "مثال: يومان",
+      "notes": "ملاحظات (اختياري)",
+      "send": "إرسال العرض",
+      "sending": "جاري الإرسال…",
+      "accept": "قبول العرض",
+      "decline": "رفض العرض",
+      "requestChanges": "طلب تعديلات",
+      "status": "العرض"
+    },
+    "complete": {
+      "cta": "إكمال الخدمة",
+      "confirmBody": "هل أنت متأكد؟ سيُطلب من الزبون التأكيد.",
+      "confirm": "نعم، أكمل",
+      "cancel": "إلغاء"
+    },
+    "confirm": {
+      "title": "قام العمل بتحديد هذه الخدمة كمكتملة.",
+      "body": "أكّد إذا انجز العمل، أو أبلغ عن مشكلة.",
+      "confirm": "تأكيد الإنجاز",
+      "report": "الإبلاغ عن مشكلة",
+      "disputeNote": "صف المشكلة",
+      "submitDispute": "إرسال بلاغ"
+    },
+    "review": {
+      "title": "التقييم",
+      "formTitle": "اترك تقييماً",
+      "rating": "التقييم العام (1–5)",
+      "comment": "تعليق",
+      "recommend": "هل توصي بهذا العمل؟",
+      "recommendSkip": "أفضل عدم الإجابة",
+      "recommendYes": "نعم",
+      "recommendNo": "لا",
+      "submit": "إرسال التقييم",
+      "submitting": "جاري الإرسال…"
+    },
+    "myRequests": {
+      "eyebrow": "السجل",
+      "title": "طلباتي",
+      "subtitle": "تتبع كل طلب خدمة من البداية حتى التقييم.",
+      "emptyTitle": "لا طلبات بعد",
+      "emptyBody": "ابحث عن عمل وأرسل طلباً للبدء.",
+      "browse": "تصفح الأعمال",
+      "status": {
+        "pending": "معلق",
+        "accepted": "مقبول",
+        "quoted": "عرض سعر مرسل",
+        "quote_accepted": "تم قبول العرض",
+        "quote_declined": "تم رفض العرض",
+        "in_progress": "قيد التنفيذ",
+        "completed_by_business": "بانتظار التأكيد",
+        "completed": "مكتمل",
+        "disputed": "نزاع",
+        "reviewed": "تم التقييم",
+        "rejected": "مرفوض",
+        "cancelled": "ملغى"
+      }
+    },
+    "errors": {
+      "failed": "حدث خطأ ما.",
+      "invalid_status": "هذا الإجراء غير متاح للحالة الحالية.",
+      "not_found": "الطلب غير موجود.",
+      "not_accepting": "هذا العمل لا يقبل طلبات حالياً.",
+      "provider_at_capacity": "هذا العمل لديه طلبات معلقة كثيرة.",
+      "quote_failed": "تعذر إرسال العرض.",
+      "quote_not_found": "العرض غير موجود.",
+      "review_failed": "تعذر إرسال التقييم.",
+      "login_required": "يرجى تسجيل الدخول للمتابعة.",
+      "forbidden": "لا يمكنك تنفيذ هذا الإجراء.",
+      "not_pending": "هذا الطلب لم يعد معلقاً.",
+      "accept_failed": "تعذر قبول الطلب.",
+      "reject_failed": "تعذر رفض الطلب.",
+      "validation_error": "يرجى التحقق من الحقول.",
+      "chat_locked": "المحادثة غير متاحة لهذا الطلب بعد.",
+      "create_failed": "تعذر إنشاء الطلب.",
+      "pending_exists": "لديك بالفعل طلب معلق مع هذا العمل.",
+      "self_request": "لا يمكنك إرسال طلب إلى عملك الخاص.",
+      "settings_failed": "تعذر حفظ الإعدادات.",
+      "provider_not_found": "العمل غير موجود."
+    }
+  },
+  "notifications": {
+    "newRequest": {
+      "title": "طلب جديد",
+      "body": "طلب خدمة جديد: {title}"
+    },
+    "requestAccepted": {
+      "title": "تم قبول الطلب",
+      "body": "تم قبول طلبك «{title}»."
+    },
+    "requestRejected": {
+      "title": "تم رفض الطلب",
+      "body": "تم رفض طلبك «{title}»."
+    },
+    "quoteReceived": {
+      "title": "عرض سعر جديد",
+      "body": "عرض لـ «{title}»: {price} {currency}"
+    },
+    "quoteAccepted": {
+      "title": "تم قبول العرض",
+      "body": "قبل الزبون عرض السعر لـ «{title}»."
+    },
+    "quoteDeclined": {
+      "title": "تم رفض العرض",
+      "body": "رفض الزبون عرض السعر لـ «{title}»."
+    },
+    "quoteChanges": {
+      "title": "طلب تعديل العرض",
+      "body": "طلب الزبون تعديلات على عرض «{title}»."
+    },
+    "serviceCompleted": {
+      "title": "اكتملت الخدمة",
+      "body": "تم تعليم «{title}» كمكتمل. يرجى التأكيد."
+    },
+    "completionConfirmed": {
+      "title": "تم تأكيد الإنجاز",
+      "body": "أكد الزبون إنجاز «{title}»."
+    },
+    "disputed": {
+      "title": "تم الإبلاغ عن مشكلة",
+      "body": "أبلغ الزبون عن مشكلة في «{title}»."
+    },
+    "newReview": {
+      "title": "تقييم جديد",
+      "body": "تقييم جديد {rating}★ لـ «{title}»."
+    },
+    "newMessage": {
+      "title": "رسالة جديدة",
+      "body": "لديك رسالة جديدة."
+    }
   }
 }

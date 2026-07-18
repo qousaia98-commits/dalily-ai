@@ -31,14 +31,14 @@
     },
     "guest": {
       "home": "Home",
-      "search": "Search",
-      "aiSearch": "AI Search",
+      "aiAssistant": "AI Assistant",
+      "messages": "Messages",
       "favorites": "Favorites",
       "account": "Account"
     },
     "business": {
       "dashboard": "Home",
-      "myBusiness": "Business",
+      "requests": "Requests",
       "messages": "Messages",
       "growth": "Growth",
       "account": "Account"
@@ -79,7 +79,11 @@
         "business": "Business dashboard",
         "businessDesc": "Manage your provider profile",
         "admin": "Control Center",
-        "adminDesc": "Open the admin panel"
+        "adminDesc": "Open the admin panel",
+        "myRequests": "My Requests",
+        "myRequestsDesc": "Track your service requests and quotes",
+        "requestSettings": "Request settings",
+        "requestSettingsDesc": "Manage how customers contact you"
       }
     },
     "myBusiness": {
@@ -158,6 +162,53 @@
         "subscriptions": "Subscriptions",
         "subscriptionsDesc": "Plans and billing overview"
       }
+    }
+  },
+  "customer": {
+    "messages": {
+      "eyebrow": "Inbox",
+      "title": "Messages",
+      "subtitle": "Your conversations with local businesses in one place.",
+      "guestSubtitle": "Log in to see your chats with businesses and get replies in one inbox.",
+      "loginCta": "Log in",
+      "browseCta": "Find businesses",
+      "listLabel": "Conversations",
+      "emptyTitle": "No conversations yet",
+      "emptyBody": "Contact a business from search or a profile — your chats will appear here.",
+      "searchPlaceholder": "Search by business name…",
+      "searchEmpty": "No conversations match your search.",
+      "unreadCount": "{count} unread",
+      "back": "Back to conversations",
+      "threadLabel": "Chat with {name}",
+      "businessSubtitle": "Business conversation",
+      "dalilySubtitle": "Official Dalily updates",
+      "composerHint": "Replies will be available when realtime messaging launches.",
+      "customerHint": "Message businesses directly from their profile to start a chat."
+    }
+  },
+  "location": {
+    "onboarding": {
+      "title": "Find businesses near you",
+      "body": "Dalily uses your location only to show nearby businesses.",
+      "privacy": "We never share your exact location.",
+      "allow": "Allow Location",
+      "notNow": "Not Now",
+      "dismiss": "Close",
+      "unsupported": "Location is not supported on this device.",
+      "saveFailed": "Could not save location. Please try again."
+    },
+    "settings": {
+      "title": "Location",
+      "description": "When enabled, Dalily prioritizes nearby businesses in search. Your exact GPS position is never stored permanently — only a short-lived session used for distance.",
+      "statusEnabled": "Enabled",
+      "statusDisabled": "Disabled",
+      "enable": "Enable location",
+      "disable": "Disable location",
+      "update": "Update current location",
+      "activeNote": "Nearby search is active for this session.",
+      "unsupported": "Location is not supported on this device.",
+      "permissionDenied": "Location permission was denied by your browser.",
+      "saveFailed": "Could not update location. Please try again."
     }
   },
   "home": {
@@ -248,7 +299,12 @@
       "active": "Showing nearby businesses based on your location",
       "clear": "Use city only",
       "unsupported": "Location is not supported on this device.",
-      "saveFailed": "Could not save location. Please try again."
+      "saveFailed": "Could not save location. Please try again.",
+      "permissionDenied": "Location permission was denied.",
+      "cityMode": "Searching by city. Enable location in Account settings for nearby results.",
+      "enableFromSettings": "Enable location",
+      "refreshHint": "Location is enabled — refresh to find businesses near you.",
+      "refresh": "Update location"
     },
     "filters": {
       "title": "Filters",
@@ -298,6 +354,10 @@
     "reviewsSection": "Reviews",
     "noReviews": "No reviews yet.",
     "contact": "Contact",
+    "requestService": "Send Request",
+    "requestServiceBody": "Describe what you need — the business will review your request before you can chat.",
+    "notAccepting": "This business is not accepting new requests right now.",
+    "estimatedResponse": "Usually responds within {hours} hours",
     "call": "Call",
     "whatsapp": "WhatsApp",
     "contactNote": "You will be connected directly with the provider.",
@@ -308,6 +368,245 @@
     "healthScore": "Health {score}%",
     "healthShort": "Health",
     "featured": "Featured"
+  },
+  "serviceRequest": {
+    "sendRequest": "Send Request",
+    "eyebrow": "Service request",
+    "formTitle": "Request from {business}",
+    "close": "Close",
+    "submit": "Send Request",
+    "submitting": "Sending…",
+    "pendingNotice": "You already have a pending request with this business.",
+    "privacyNote": "Your request is sent privately. Chat opens only after the business accepts.",
+    "fields": {
+      "title": "Title",
+      "titlePlaceholder": "e.g. Kitchen renovation, Bathroom repair",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe exactly what you need. The more details you provide, the easier it is for the business to help you.",
+      "preferredDate": "Preferred date (optional)",
+      "preferredTime": "Preferred time (optional)",
+      "budget": "Budget (optional)",
+      "budgetPlaceholder": "Estimated budget",
+      "location": "Location (optional)",
+      "locationPlaceholder": "Address or area",
+      "photos": "Photos (optional)",
+      "photosAdd": "Add photos",
+      "photosSelected": "{count} photo(s) selected",
+      "photosHint": "Up to 6 photos — JPG, PNG or WebP, max 5 MB each."
+    },
+    "errors": {
+      "title": "Please enter a short title (at least 3 characters).",
+      "description": "Please describe your request (at least 10 characters).",
+      "login_required": "Please log in to send a request.",
+      "pending_exists": "You already have a pending request with this business.",
+      "provider_not_found": "This business is not available.",
+      "create_failed": "Could not send your request. Please try again.",
+      "not_accepting": "This business is not accepting new requests right now.",
+      "provider_at_capacity": "This business has too many pending requests. Try again later."
+    },
+    "successSent": "Your request was sent successfully.",
+    "viewRequest": "View request",
+    "viewRequests": "My requests"
+  },
+  "messaging": {
+    "composer": {
+      "placeholder": "Type a message…",
+      "send": "Send message",
+      "error": "Could not send message. Please try again."
+    }
+  },
+  "marketplace": {
+    "summary": "Request summary",
+    "nextStep": "Next step",
+    "preferredDate": "Preferred date",
+    "budget": "Budget",
+    "location": "Location",
+    "fromCustomer": "From {name}",
+    "withBusiness": "With {name}",
+    "openChat": "Open chat",
+    "pinnedSummary": "Pinned request",
+    "chatLocked": "Chat unlocks after the business accepts your request.",
+    "timeline": {
+      "label": "Request timeline",
+      "currentHint": "Current step",
+      "request_sent": "Request sent",
+      "under_review": "Under review",
+      "accepted": "Accepted",
+      "quote_sent": "Quote sent",
+      "quote_accepted": "Quote accepted",
+      "chat_active": "Chat active",
+      "service_completed": "Service completed",
+      "customer_confirmed": "Customer confirmed",
+      "reviewed": "Reviewed"
+    },
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "quoted": "Quoted",
+      "quote_accepted": "Quote accepted",
+      "quote_declined": "Quote declined",
+      "in_progress": "In progress",
+      "completed_by_business": "Awaiting confirmation",
+      "completed": "Completed",
+      "disputed": "Disputed",
+      "reviewed": "Reviewed",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "next": {
+      "reviewRequest": "Review and accept or reject this request.",
+      "waitForReview": "Waiting for the business to review your request.",
+      "sendQuoteOrChat": "Send an optional quote or start chatting.",
+      "waitQuoteOrChat": "You can chat. Waiting for an optional quote.",
+      "decideQuote": "Accept, decline, or request changes to the quote.",
+      "waitQuoteDecision": "Waiting for the customer to decide on the quote.",
+      "completeWhenDone": "Mark the service complete when finished.",
+      "chatAndWait": "Chat with the business until the work is done.",
+      "confirmOrReport": "Confirm completion or report a problem.",
+      "waitCustomerConfirm": "Waiting for the customer to confirm completion.",
+      "leaveReview": "Leave a review to close the workflow.",
+      "waitReview": "Waiting for the customer review.",
+      "resolveDispute": "Resolve the dispute in chat.",
+      "closed": "This workflow is complete.",
+      "rejected": "This request was rejected.",
+      "cancelled": "This request was cancelled.",
+      "generic": "Continue the service workflow."
+    },
+    "quote": {
+      "title": "Quote",
+      "sendTitle": "Send a quote",
+      "price": "Total price",
+      "currency": "Currency",
+      "duration": "Estimated duration",
+      "durationPlaceholder": "e.g. 2 days",
+      "notes": "Notes (optional)",
+      "send": "Send quote",
+      "sending": "Sending…",
+      "accept": "Accept quote",
+      "decline": "Decline quote",
+      "requestChanges": "Request changes",
+      "status": "Quote"
+    },
+    "complete": {
+      "cta": "Complete Service",
+      "confirmBody": "Are you sure? The customer will be asked to confirm.",
+      "confirm": "Yes, complete",
+      "cancel": "Cancel"
+    },
+    "confirm": {
+      "title": "Your business has marked this service as completed.",
+      "body": "Confirm if the work is done, or report a problem.",
+      "confirm": "Confirm Completion",
+      "report": "Report a Problem",
+      "disputeNote": "Describe the problem",
+      "submitDispute": "Submit problem report"
+    },
+    "review": {
+      "title": "Review",
+      "formTitle": "Leave a review",
+      "rating": "Overall rating (1–5)",
+      "comment": "Comment",
+      "recommend": "Recommend this business?",
+      "recommendSkip": "Prefer not to say",
+      "recommendYes": "Yes",
+      "recommendNo": "No",
+      "submit": "Submit review",
+      "submitting": "Submitting…"
+    },
+    "myRequests": {
+      "eyebrow": "History",
+      "title": "My Requests",
+      "subtitle": "Track every service request from start to review.",
+      "emptyTitle": "No requests yet",
+      "emptyBody": "Find a business and send a request to get started.",
+      "browse": "Browse businesses",
+      "status": {
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "quoted": "Quoted",
+        "quote_accepted": "Quote accepted",
+        "quote_declined": "Quote declined",
+        "in_progress": "In progress",
+        "completed_by_business": "Awaiting confirmation",
+        "completed": "Completed",
+        "disputed": "Disputed",
+        "reviewed": "Reviewed",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+      }
+    },
+    "errors": {
+      "failed": "Something went wrong.",
+      "invalid_status": "This action is not available for the current status.",
+      "not_found": "Request not found.",
+      "not_accepting": "This business is not accepting requests right now.",
+      "provider_at_capacity": "This business has too many pending requests.",
+      "quote_failed": "Could not send quote.",
+      "quote_not_found": "Quote not found.",
+      "review_failed": "Could not submit review.",
+      "login_required": "Please log in to continue.",
+      "forbidden": "You cannot perform this action.",
+      "not_pending": "This request is no longer pending.",
+      "accept_failed": "Could not accept the request.",
+      "reject_failed": "Could not reject the request.",
+      "validation_error": "Please check the form fields.",
+      "chat_locked": "Chat is not available for this request yet.",
+      "create_failed": "Could not create the request.",
+      "pending_exists": "You already have a pending request with this business.",
+      "self_request": "You cannot send a request to your own business.",
+      "settings_failed": "Could not save settings.",
+      "provider_not_found": "Business not found."
+    }
+  },
+  "notifications": {
+    "newRequest": {
+      "title": "New request",
+      "body": "New service request: {title}"
+    },
+    "requestAccepted": {
+      "title": "Request accepted",
+      "body": "Your request “{title}” was accepted."
+    },
+    "requestRejected": {
+      "title": "Request rejected",
+      "body": "Your request “{title}” was rejected."
+    },
+    "quoteReceived": {
+      "title": "Quote received",
+      "body": "Quote for “{title}”: {price} {currency}"
+    },
+    "quoteAccepted": {
+      "title": "Quote accepted",
+      "body": "Customer accepted the quote for “{title}”."
+    },
+    "quoteDeclined": {
+      "title": "Quote declined",
+      "body": "Customer declined the quote for “{title}”."
+    },
+    "quoteChanges": {
+      "title": "Quote changes requested",
+      "body": "Customer requested changes for “{title}”."
+    },
+    "serviceCompleted": {
+      "title": "Service completed",
+      "body": "“{title}” was marked completed. Please confirm."
+    },
+    "completionConfirmed": {
+      "title": "Completion confirmed",
+      "body": "Customer confirmed completion for “{title}”."
+    },
+    "disputed": {
+      "title": "Problem reported",
+      "body": "Customer reported a problem on “{title}”."
+    },
+    "newReview": {
+      "title": "New review",
+      "body": "New {rating}★ review for “{title}”."
+    },
+    "newMessage": {
+      "title": "New message",
+      "body": "You have a new message."
+    }
   },
   "footer": {
     "description": "AI-powered platform to discover trusted service providers in Syria.",
@@ -395,7 +694,80 @@
       "analytics": "Analytics",
       "verification": "Verification",
       "upgrade": "⭐ Upgrade",
-      "messages": "Messages"
+      "messages": "Messages",
+      "requests": "Requests",
+      "settings": "Settings"
+    },
+    "requests": {
+      "eyebrow": "Inbox",
+      "title": "Service Requests",
+      "subtitle": "Manage every request from review to completion.",
+      "listLabel": "Requests",
+      "searchPlaceholder": "Search by customer, title…",
+      "emptyTitle": "No requests in this tab",
+      "emptyBody": "Requests matching this filter will appear here.",
+      "noProvider": "Create your business profile to receive requests.",
+      "fromCustomer": "From {name}",
+      "accept": "Accept",
+      "reject": "Reject",
+      "tabs": {
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "quoted": "Quoted",
+        "in_progress": "In Progress",
+        "completed": "Completed",
+        "rejected": "Rejected",
+        "disputed": "Disputed"
+      },
+      "status": {
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "quoted": "Quoted",
+        "quote_accepted": "Quote accepted",
+        "quote_declined": "Quote declined",
+        "in_progress": "In progress",
+        "completed_by_business": "Awaiting confirmation",
+        "completed": "Completed",
+        "disputed": "Disputed",
+        "reviewed": "Reviewed",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+      },
+      "preferredDate": "Preferred date",
+      "preferredTime": "Preferred time",
+      "budget": "Budget",
+      "location": "Location",
+      "photoCount": "{count} photo(s) attached",
+      "errors": {
+        "accept_failed": "Could not accept request.",
+        "reject_failed": "Could not reject request.",
+        "not_pending": "This request is no longer pending.",
+        "forbidden": "You cannot manage this request."
+      }
+    },
+    "requestSettings": {
+      "eyebrow": "Settings",
+      "title": "Request settings",
+      "subtitle": "Control how customers can contact your business.",
+      "noProvider": "Create a business profile first.",
+      "accepting": "Accepting new requests",
+      "acceptingHint": "Turn off to pause new service requests.",
+      "vacation": "Vacation mode",
+      "vacationHint": "Temporarily stop receiving requests.",
+      "maxPending": "Maximum pending requests",
+      "responseHours": "Estimated response time (hours)",
+      "autoReject": "Automatic rejection message",
+      "autoRejectPlaceholder": "Shown when you are at capacity or unavailable…",
+      "save": "Save settings",
+      "saving": "Saving…",
+      "saved": "Settings saved.",
+      "errors": {
+        "settings_failed": "Could not save settings.",
+        "validation_error": "Please check the form fields.",
+        "login_required": "Please log in to continue.",
+        "forbidden": "You cannot change these settings.",
+        "failed": "Something went wrong."
+      }
     },
     "dashboard": {
       "title": "Dashboard",
@@ -1313,7 +1685,26 @@
       "categories": "Categories",
       "payments": "Payments",
       "subscriptions": "Subscription approvals",
-      "messages": "Messages"
+      "messages": "Messages",
+      "marketplace": "Marketplace"
+    },
+    "marketplace": {
+      "eyebrow": "Marketplace",
+      "title": "Marketplace Dashboard",
+      "subtitle": "Request-to-review lifecycle analytics across Dalily.",
+      "totalRequests": "Total requests",
+      "acceptanceRate": "Acceptance rate",
+      "quoteAcceptanceRate": "Quote acceptance",
+      "completionRate": "Completion rate",
+      "disputeRate": "Dispute rate",
+      "avgResponse": "Avg response time",
+      "avgCompletion": "Avg completion time",
+      "avgRating": "Average rating",
+      "topBusinesses": "Top businesses",
+      "activeCustomers": "Most active customers",
+      "daily": "Daily requests",
+      "monthly": "Monthly requests",
+      "empty": "No data yet."
     },
     "payments": {
       "eyebrow": "Manual transfers",

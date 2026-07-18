@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { requireAdminUser } from "@/lib/auth/session";
 import { getPaymentDetailForAdmin } from "@/lib/subscription/repository";
 import { AdminPaymentDetailPanel } from "@/components/admin/admin-payment-detail-panel";
 
@@ -8,6 +9,7 @@ export default async function AdminPaymentDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireAdminUser();
   const t = await getTranslations("admin.payments");
   const { id } = await params;
   const payment = await getPaymentDetailForAdmin(id);

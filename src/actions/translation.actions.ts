@@ -32,6 +32,11 @@ export async function previewLocalizedFieldAction(
     });
     return { success: true, result };
   } catch (error) {
+    // Never swallow Next.js redirect() from requireAuthUser
+    const digest = (error as { digest?: string } | null)?.digest;
+    if (typeof digest === "string" && digest.startsWith("NEXT_REDIRECT")) {
+      throw error;
+    }
     console.error("[translation] previewLocalizedFieldAction failed", {
       message: error instanceof Error ? error.message : String(error),
     });

@@ -8,9 +8,14 @@ const intlMiddleware = createMiddleware(routing);
 export async function middleware(request: NextRequest) {
   const supabaseResponse = await updateSession(request);
 
+  // Auth redirects (login, role gates) must win over intl rewrite.
+  if (supabaseResponse.status >= 300 && supabaseResponse.status < 400) {
+    return supabaseResponse;
+  }
+
   const intlResponse = intlMiddleware(request);
 
-  // Merge Supabase cookies into the intl response
+  // Merge Supabase session cookies into the intl response
   supabaseResponse.cookies.getAll().forEach((cookie) => {
     intlResponse.cookies.set(cookie.name, cookie.value);
   });

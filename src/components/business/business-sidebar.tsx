@@ -10,6 +10,8 @@ import {
   Star,
   Menu,
   MessageCircle,
+  Inbox,
+  Settings,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
@@ -21,19 +23,21 @@ import type { PlanSlug } from "@/lib/subscription/types";
 
 const navItems = [
   { href: "/business", icon: LayoutDashboard, key: "dashboard", exact: true },
+  { href: "/business/requests", icon: Inbox, key: "requests", badgeKey: "requests" as const },
   { href: "/business/messages", icon: MessageCircle, key: "messages", badgeKey: "messages" as const },
   { href: "/business/profile", icon: User, key: "profile" },
   { href: "/business/services", icon: Wrench, key: "services" },
   { href: "/business/gallery", icon: Images, key: "gallery" },
   { href: "/business/analytics", icon: BarChart3, key: "analytics" },
   { href: "/business/verification", icon: ShieldCheck, key: "verification" },
+  { href: "/business/settings", icon: Settings, key: "settings" },
   { href: "/business/subscription", icon: Star, key: "upgrade" },
 ] as const;
 
 type BusinessSidebarProps = {
   planSlug?: PlanSlug | string;
   businessName?: string | null;
-  badges?: { messages?: number };
+  badges?: { messages?: number; requests?: number };
 };
 
 export function BusinessSidebar({

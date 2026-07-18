@@ -1,13 +1,12 @@
 import {
-  Building2,
   CheckCircle2,
   CreditCard,
   Heart,
   Home,
+  Inbox,
   LayoutDashboard,
   Megaphone,
   MessageCircle,
-  Search,
   Sparkles,
   TrendingUp,
   UserRound,
@@ -16,8 +15,15 @@ import type { MobileNavItemConfig, MobileNavRole } from "./types";
 
 export const GUEST_NAV_ITEMS: readonly MobileNavItemConfig[] = [
   { id: "home", href: "/", icon: Home, labelKey: "home", exact: true },
-  { id: "search", href: "/search", icon: Search, labelKey: "search" },
-  { id: "ai", href: "/ai", icon: Sparkles, labelKey: "aiSearch" },
+  { id: "ai", href: "/ai", icon: Sparkles, labelKey: "aiAssistant" },
+  {
+    id: "messages",
+    href: "/messages",
+    icon: MessageCircle,
+    labelKey: "messages",
+    badgeKey: "messages",
+    matchPrefixes: ["/messages"],
+  },
   { id: "favorites", href: "/favorites", icon: Heart, labelKey: "favorites" },
   { id: "account", href: "/account", icon: UserRound, labelKey: "account" },
 ] as const;
@@ -31,18 +37,11 @@ export const BUSINESS_NAV_ITEMS: readonly MobileNavItemConfig[] = [
     exact: true,
   },
   {
-    id: "myBusiness",
-    href: "/business/my-business",
-    icon: Building2,
-    labelKey: "myBusiness",
-    matchPrefixes: [
-      "/business/my-business",
-      "/business/profile",
-      "/business/gallery",
-      "/business/services",
-      "/business/verification",
-      "/business/welcome",
-    ],
+    id: "requests",
+    href: "/business/requests",
+    icon: Inbox,
+    labelKey: "requests",
+    badgeKey: "requests",
   },
   {
     id: "messages",

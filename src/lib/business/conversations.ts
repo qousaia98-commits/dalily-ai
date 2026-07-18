@@ -12,6 +12,8 @@ export type ConversationMessage = {
   createdAt: string;
   from: "dalily" | "customer" | "business";
   read: boolean;
+  isSystem?: boolean;
+  eventType?: string | null;
 };
 
 export type BusinessConversation = {
@@ -30,6 +32,7 @@ export type BusinessConversation = {
   /** Future realtime typing indicator */
   isTyping?: boolean;
   messages: ConversationMessage[];
+  serviceRequestId?: string | null;
 };
 
 /**
@@ -106,12 +109,14 @@ export function applyConversationReadState(
 ): BusinessConversation[] {
   return conversations.map((c) => {
     const lastReadAt = readMap[c.id];
-    if (!lastReadAt) return c;
-    const threshold = new Date(lastReadAt).getTime();
-    const messages = c.messages.map((m) => ({
-      ...m,
-      read: new Date(m.createdAt).getTime() <= threshold ? true : m.read,
-    }));
+    const threshold = lastReadAt ? new Date(lastReadAt).getTime() : 0;
+    const messages = c.messages.map((m) => {
+      if (m.read) return m;
+      if (threshold > 0 && new Date(m.createdAt).getTime() <= threshold) {
+        return { ...m, read: true };
+      }
+      return m;
+    });
     const unreadCount = messages.filter((m) => !m.read).length;
     return {
       ...c,

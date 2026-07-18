@@ -54,6 +54,20 @@ export type AuditAction =
 
 export type PaymentEventType = "requested" | "receipt_uploaded" | "approved" | "rejected";
 
+export type ServiceRequestStatus =
+  | "pending"
+  | "accepted"
+  | "quoted"
+  | "quote_accepted"
+  | "quote_declined"
+  | "in_progress"
+  | "completed_by_business"
+  | "completed"
+  | "disputed"
+  | "reviewed"
+  | "rejected"
+  | "cancelled";
+
 export type Database = {
   public: {
     Tables: {
@@ -843,6 +857,399 @@ export type Database = {
         };
         Relationships: [];
       };
+      service_requests: {
+        Row: {
+          id: string;
+          customer_id: string;
+          provider_id: string;
+          title: string;
+          description: string;
+          preferred_date: string | null;
+          preferred_time: string | null;
+          budget: number | null;
+          location_text: string | null;
+          status: ServiceRequestStatus;
+          accepted_at: string | null;
+          rejected_at: string | null;
+          quoted_at: string | null;
+          quote_accepted_at: string | null;
+          quote_declined_at: string | null;
+          in_progress_at: string | null;
+          completed_by_business_at: string | null;
+          completed_at: string | null;
+          confirmed_at: string | null;
+          reviewed_at: string | null;
+          disputed_at: string | null;
+          dispute_note: string | null;
+          response_time_seconds: number | null;
+          completion_time_seconds: number | null;
+          currency: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          customer_id: string;
+          provider_id: string;
+          title: string;
+          description: string;
+          preferred_date?: string | null;
+          preferred_time?: string | null;
+          budget?: number | null;
+          location_text?: string | null;
+          status?: ServiceRequestStatus;
+          accepted_at?: string | null;
+          rejected_at?: string | null;
+          quoted_at?: string | null;
+          quote_accepted_at?: string | null;
+          quote_declined_at?: string | null;
+          in_progress_at?: string | null;
+          completed_by_business_at?: string | null;
+          completed_at?: string | null;
+          confirmed_at?: string | null;
+          reviewed_at?: string | null;
+          disputed_at?: string | null;
+          dispute_note?: string | null;
+          response_time_seconds?: number | null;
+          completion_time_seconds?: number | null;
+          currency?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          customer_id?: string;
+          provider_id?: string;
+          title?: string;
+          description?: string;
+          preferred_date?: string | null;
+          preferred_time?: string | null;
+          budget?: number | null;
+          location_text?: string | null;
+          status?: ServiceRequestStatus;
+          accepted_at?: string | null;
+          rejected_at?: string | null;
+          quoted_at?: string | null;
+          quote_accepted_at?: string | null;
+          quote_declined_at?: string | null;
+          in_progress_at?: string | null;
+          completed_by_business_at?: string | null;
+          completed_at?: string | null;
+          confirmed_at?: string | null;
+          reviewed_at?: string | null;
+          disputed_at?: string | null;
+          dispute_note?: string | null;
+          response_time_seconds?: number | null;
+          completion_time_seconds?: number | null;
+          currency?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      service_request_images: {
+        Row: {
+          id: string;
+          request_id: string;
+          bucket: string;
+          path: string;
+          mime_type: string | null;
+          size_bytes: number | null;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          request_id: string;
+          bucket?: string;
+          path: string;
+          mime_type?: string | null;
+          size_bytes?: number | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          request_id?: string;
+          bucket?: string;
+          path?: string;
+          mime_type?: string | null;
+          size_bytes?: number | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      conversations: {
+        Row: {
+          id: string;
+          provider_id: string;
+          customer_id: string;
+          service_request_id: string | null;
+          last_message_at: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider_id: string;
+          customer_id: string;
+          service_request_id?: string | null;
+          last_message_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          provider_id?: string;
+          customer_id?: string;
+          service_request_id?: string | null;
+          last_message_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      messages: {
+        Row: {
+          id: string;
+          conversation_id: string;
+          sender_id: string;
+          body_text: string;
+          is_system: boolean;
+          event_type: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          conversation_id: string;
+          sender_id: string;
+          body_text: string;
+          is_system?: boolean;
+          event_type?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          conversation_id?: string;
+          sender_id?: string;
+          body_text?: string;
+          is_system?: boolean;
+          event_type?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      quotes: {
+        Row: {
+          id: string;
+          service_request_id: string;
+          provider_id: string;
+          price: number;
+          currency: string;
+          estimated_duration_text: string | null;
+          notes: string | null;
+          status: string;
+          created_at: string;
+          updated_at: string;
+          responded_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          service_request_id: string;
+          provider_id: string;
+          price: number;
+          currency?: string;
+          estimated_duration_text?: string | null;
+          notes?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+          responded_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          service_request_id?: string;
+          provider_id?: string;
+          price?: number;
+          currency?: string;
+          estimated_duration_text?: string | null;
+          notes?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+          responded_at?: string | null;
+        };
+        Relationships: [];
+      };
+      quote_items: {
+        Row: {
+          id: string;
+          quote_id: string;
+          label: string;
+          amount: number;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          quote_id: string;
+          label: string;
+          amount?: number;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          quote_id?: string;
+          label?: string;
+          amount?: number;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      service_reviews: {
+        Row: {
+          id: string;
+          service_request_id: string;
+          provider_id: string;
+          customer_id: string;
+          rating: number;
+          comment: string | null;
+          recommend: boolean | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          service_request_id: string;
+          provider_id: string;
+          customer_id: string;
+          rating: number;
+          comment?: string | null;
+          recommend?: boolean | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          service_request_id?: string;
+          provider_id?: string;
+          customer_id?: string;
+          rating?: number;
+          comment?: string | null;
+          recommend?: boolean | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      service_review_images: {
+        Row: {
+          id: string;
+          review_id: string;
+          bucket: string;
+          path: string;
+          mime_type: string | null;
+          size_bytes: number | null;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          review_id: string;
+          bucket?: string;
+          path: string;
+          mime_type?: string | null;
+          size_bytes?: number | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          review_id?: string;
+          bucket?: string;
+          path?: string;
+          mime_type?: string | null;
+          size_bytes?: number | null;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      provider_request_settings: {
+        Row: {
+          provider_id: string;
+          accepting_requests: boolean;
+          max_pending_requests: number;
+          auto_reject_message: string | null;
+          vacation_mode: boolean;
+          estimated_response_hours: number;
+          updated_at: string;
+          created_at: string;
+        };
+        Insert: {
+          provider_id: string;
+          accepting_requests?: boolean;
+          max_pending_requests?: number;
+          auto_reject_message?: string | null;
+          vacation_mode?: boolean;
+          estimated_response_hours?: number;
+          updated_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          provider_id?: string;
+          accepting_requests?: boolean;
+          max_pending_requests?: number;
+          auto_reject_message?: string | null;
+          vacation_mode?: boolean;
+          estimated_response_hours?: number;
+          updated_at?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      marketplace_notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          type: string;
+          title_key: string;
+          body_key: string;
+          body_params: Json;
+          href: string | null;
+          service_request_id: string | null;
+          conversation_id: string | null;
+          read_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          type: string;
+          title_key: string;
+          body_key: string;
+          body_params?: Json;
+          href?: string | null;
+          service_request_id?: string | null;
+          conversation_id?: string | null;
+          read_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          type?: string;
+          title_key?: string;
+          body_key?: string;
+          body_params?: Json;
+          href?: string | null;
+          service_request_id?: string | null;
+          conversation_id?: string | null;
+          read_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       modules: {
         Row: {
           id: string;
@@ -887,7 +1294,36 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      accept_service_request: {
+        Args: { p_request_id: string; p_actor_id: string };
+        Returns: string;
+      };
+      reject_service_request: {
+        Args: { p_request_id: string; p_actor_id: string };
+        Returns: undefined;
+      };
+      post_system_message: {
+        Args: {
+          p_conversation_id: string;
+          p_actor_id: string;
+          p_body: string;
+          p_event_type: string;
+        };
+        Returns: string;
+      };
+      notify_marketplace_user: {
+        Args: {
+          p_user_id: string;
+          p_type: string;
+          p_title_key: string;
+          p_body_key: string;
+          p_body_params?: Json;
+          p_href?: string | null;
+          p_request_id?: string | null;
+          p_conversation_id?: string | null;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       user_status: UserStatus;
@@ -901,6 +1337,7 @@ export type Database = {
       payment_status: PaymentStatus;
       invoice_status: InvoiceStatus;
       audit_action: AuditAction;
+      service_request_status: ServiceRequestStatus;
     };
     CompositeTypes: {
       [_ in never]: never;

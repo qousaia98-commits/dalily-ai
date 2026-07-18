@@ -6,6 +6,7 @@ import { getBusinessHeaderLabel } from "@/lib/business/header-label";
 import { getOwnedProvider } from "@/lib/providers/queries";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
 import { countUnreadConversations } from "@/lib/business/conversations";
+import { countPendingRequestsForOwner } from "@/lib/service-requests/queries";
 import { BusinessSidebar } from "@/components/business/business-sidebar";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileBottomNavHost } from "@/components/layout/mobile-bottom-nav";
@@ -29,12 +30,14 @@ export default async function BusinessLayout({ children }: { children: React.Rea
 
     let planSlug: PlanSlug = "free";
     let unreadMessages = 0;
+    let pendingRequests = 0;
 
     if (provider) {
       try {
         const loaded = await loadBusinessConversations(authUser.id);
         planSlug = loaded.planSlug;
         unreadMessages = countUnreadConversations(loaded.conversations);
+        pendingRequests = await countPendingRequestsForOwner(authUser.id);
       } catch {
         planSlug = "free";
       }
@@ -52,7 +55,7 @@ export default async function BusinessLayout({ children }: { children: React.Rea
           <BusinessSidebar
             planSlug={planSlug}
             businessName={provider ? businessLabel : null}
-            badges={{ messages: unreadMessages }}
+            badges={{ messages: unreadMessages, requests: pendingRequests }}
           />
           <div className="min-w-0 flex-1">{children}</div>
         </div>

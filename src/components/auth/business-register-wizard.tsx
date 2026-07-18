@@ -295,14 +295,14 @@ export function BusinessRegisterWizard({
             </p>
           ) : null}
 
-          {state.failedStep ? (
+          {process.env.NODE_ENV === "development" && state.failedStep ? (
             <p className="text-xs text-destructive/80" role="status">
               Failed step: {state.failedStep}
               {state.error ? ` — ${state.error}` : ""}
             </p>
           ) : null}
 
-          {state.issues && state.issues.length > 0 ? (
+          {process.env.NODE_ENV === "development" && state.issues && state.issues.length > 0 ? (
             <div
               className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-xs text-destructive"
               role="alert"

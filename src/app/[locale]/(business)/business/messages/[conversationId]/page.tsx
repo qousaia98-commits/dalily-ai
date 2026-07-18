@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { findConversation } from "@/lib/business/conversations";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
+import { getRequestByConversationId } from "@/lib/service-requests/queries";
 import { ConversationList } from "@/components/business/conversation-list";
 import { ConversationThread } from "@/components/business/conversation-thread";
 import { PlanBadge } from "@/components/shared/plan-badge";
@@ -21,6 +22,8 @@ export default async function BusinessConversationPage({ params }: PageProps) {
 
   if (!conversation) notFound();
 
+  const request = await getRequestByConversationId(conversationId);
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-4 overflow-x-hidden animate-fade-in">
       <div className="flex flex-wrap items-center gap-2">
@@ -36,7 +39,11 @@ export default async function BusinessConversationPage({ params }: PageProps) {
             locale={locale}
           />
         </div>
-        <ConversationThread conversation={conversation} />
+        <ConversationThread
+          conversation={conversation}
+          request={request}
+          userId={authUser.id}
+        />
       </div>
     </div>
   );

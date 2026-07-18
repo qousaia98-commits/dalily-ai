@@ -1,7 +1,9 @@
 import { Megaphone } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { requireAdminUser } from "@/lib/auth/session";
 
 export default async function AdminMessagesPage() {
+  await requireAdminUser();
   const t = await getTranslations("mobilePages.adminMessages");
 
   return (
