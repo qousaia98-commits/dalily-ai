@@ -1420,7 +1420,19 @@
         "upgradeFailed": "Could not start the upgrade. Please try again.",
         "notApproved": "Plans unlock after your business is approved.",
         "paymentPending": "You already have a payment under review.",
-        "paymentNotConfigured": "Paid upgrades are temporarily unavailable. Please try again later or contact support."
+        "paymentNotConfigured": "Paid upgrades are temporarily unavailable. Please try again later or contact support.",
+        "downgradeFailed": "Could not switch to Starter. Please try again."
+      },
+      "lowerPlanHint": "Included in your higher plan",
+      "paymentPendingHint": "Finish your pending payment first",
+      "downgradeConfirm": {
+        "eyebrow": "Downgrade",
+        "title": "Switch back to Starter?",
+        "body": "This is a downgrade. You will lose Pro/Premium visibility benefits immediately and return to the free Starter plan.",
+        "cta": "Switch to Starter",
+        "confirm": "Yes, switch to Starter",
+        "cancel": "Keep my plan",
+        "working": "Switching…"
       },
       "locked": {
         "pendingTitle": "Waiting for approval",

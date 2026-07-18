@@ -63,6 +63,7 @@ export function BusinessSubscriptionPanel({
   const [summaryPlan, setSummaryPlan] = useState<Extract<MarketingPlanId, "pro" | "premium"> | null>(
     null,
   );
+  const [downgradeConfirm, setDowngradeConfirm] = useState(false);
 
   const instructions = liveInstructions ?? pendingPayment;
   const showPayment =
@@ -79,17 +80,36 @@ export function BusinessSubscriptionPanel({
     setError(null);
 
     if (planId === "starter") {
+      // Welcome flow: choosing Free continues onboarding.
       if (mode === "welcome") {
         if (onStarterContinue) onStarterContinue();
         else localeRouter.push("/business");
-      } else {
-        localeRouter.push("/business");
+        return;
       }
+
+      // Already on Free — nothing to do (CTA should not show).
+      if (currentPlanSlug === "free") return;
+
+      // Paid → Free is a downgrade: stay on page and ask for confirmation.
+      setDowngradeConfirm(true);
       return;
     }
 
     // Do NOT open payment immediately — show upgrade summary first.
     setSummaryPlan(planId);
+  }
+
+  function confirmDowngrade() {
+    setError(null);
+    startTransition(async () => {
+      const result = await downgradeSubscriptionAction();
+      if (!result.success) {
+        setError(t("errors.downgradeFailed"));
+        return;
+      }
+      setDowngradeConfirm(false);
+      router.refresh();
+    });
   }
 
   function confirmUpgrade() {
@@ -155,6 +175,54 @@ export function BusinessSubscriptionPanel({
             setError(null);
           }}
         />
+      </div>
+    );
+  }
+
+  if (downgradeConfirm) {
+    return (
+      <div className="mx-auto w-full max-w-lg space-y-5 rounded-3xl border border-[#E8ECF2] bg-white p-6 shadow-[0_12px_40px_-20px_rgba(11,21,38,0.18)] sm:p-8">
+        {error ? (
+          <p
+            role="alert"
+            className="rounded-2xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive"
+          >
+            {error}
+          </p>
+        ) : null}
+        <div className="space-y-2 text-center sm:text-start">
+          <p className="text-xs font-bold tracking-[0.14em] text-[var(--dalily-gold)] uppercase">
+            {t("downgradeConfirm.eyebrow")}
+          </p>
+          <h2 className="text-xl font-bold text-[var(--dalily-navy)] sm:text-2xl">
+            {t("downgradeConfirm.title")}
+          </h2>
+          <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {t("downgradeConfirm.body")}
+          </p>
+        </div>
+        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            className="min-h-11 rounded-2xl"
+            disabled={pending}
+            onClick={() => {
+              setDowngradeConfirm(false);
+              setError(null);
+            }}
+          >
+            {t("downgradeConfirm.cancel")}
+          </Button>
+          <Button
+            type="button"
+            className="min-h-11 rounded-2xl"
+            disabled={pending}
+            onClick={confirmDowngrade}
+          >
+            {pending ? t("downgradeConfirm.working") : t("downgradeConfirm.confirm")}
+          </Button>
+        </div>
       </div>
     );
   }

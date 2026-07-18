@@ -82,7 +82,10 @@ export function SubscriptionPlanCards({
         const isExpanded = expanded === planId;
         const isCurrent =
           currentMarketing === planId && (status === "active" || status === "trial");
-        const showStarterCta = isStarter && (mode === "welcome" || !isCurrent);
+        const isLowerThanCurrent = rankPlan(planId) < rankPlan(currentMarketing);
+        const showStarterCta =
+          isStarter &&
+          (mode === "welcome" || (mode === "upgrade" && isLowerThanCurrent && !paymentLocked));
         const showPaidCta =
           !isStarter &&
           !paymentLocked &&
@@ -249,7 +252,11 @@ export function SubscriptionPlanCards({
                       <Button
                         type="button"
                         disabled={pending || (paymentLocked && !isStarter)}
-                        aria-label={t(`plans.${planId}.cta`)}
+                        aria-label={
+                          isStarter && mode === "upgrade" && isLowerThanCurrent
+                            ? t("downgradeConfirm.cta")
+                            : t(`plans.${planId}.cta`)
+                        }
                         onClick={(event) => {
                           event.stopPropagation();
                           onSelectPlan(planId);
@@ -265,9 +272,15 @@ export function SubscriptionPlanCards({
                         )}
                         variant={isStarter ? "outline" : "default"}
                       >
-                        {pending ? <Loader2 className="size-5 animate-spin" /> : t(`plans.${planId}.cta`)}
+                        {pending ? (
+                          <Loader2 className="size-5 animate-spin" />
+                        ) : isStarter && mode === "upgrade" && isLowerThanCurrent ? (
+                          t("downgradeConfirm.cta")
+                        ) : (
+                          t(`plans.${planId}.cta`)
+                        )}
                       </Button>
-                    ) : (
+                    ) : isCurrent ? (
                       <div
                         className={cn(
                           "flex h-14 w-full items-center justify-center rounded-2xl text-sm font-semibold",
@@ -278,7 +291,29 @@ export function SubscriptionPlanCards({
                       >
                         {t("current")}
                       </div>
-                    )}
+                    ) : paymentLocked ? (
+                      <div
+                        className={cn(
+                          "flex h-14 w-full items-center justify-center rounded-2xl px-3 text-center text-sm font-semibold",
+                          isPremium
+                            ? "bg-white/10 text-white/80"
+                            : "bg-[var(--dalily-navy)]/5 text-muted-foreground",
+                        )}
+                      >
+                        {t("paymentPendingHint")}
+                      </div>
+                    ) : isLowerThanCurrent ? (
+                      <div
+                        className={cn(
+                          "flex h-14 w-full items-center justify-center rounded-2xl px-3 text-center text-sm font-semibold",
+                          isPremium
+                            ? "bg-white/10 text-white/80"
+                            : "bg-[var(--dalily-navy)]/5 text-muted-foreground",
+                        )}
+                      >
+                        {t("lowerPlanHint")}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>

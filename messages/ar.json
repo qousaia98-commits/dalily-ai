@@ -1161,7 +1161,19 @@
         "upgradeFailed": "ما قدرنا نبلّش الترقية. جرّب مرة تانية.",
         "notApproved": "تُفتح الخطط بعد اعتماد نشاطك.",
         "paymentPending": "لديك بالفعل دفعة قيد المراجعة.",
-        "paymentNotConfigured": "الترقيات المدفوعة غير متاحة مؤقتاً. جرّب لاحقاً أو تواصل مع الدعم."
+        "paymentNotConfigured": "الترقيات المدفوعة غير متاحة مؤقتاً. جرّب لاحقاً أو تواصل مع الدعم.",
+        "downgradeFailed": "ما قدرنا نرجع لـ Starter. جرّب مرة تانية."
+      },
+      "lowerPlanHint": "مضمّنة في خطتك الأعلى",
+      "paymentPendingHint": "كمّل الدفع المعلّق أولاً",
+      "downgradeConfirm": {
+        "eyebrow": "تخفيض الخطة",
+        "title": "الرجوع إلى Starter؟",
+        "body": "هذا تخفيض للخطة. رح تخسر مزايا Pro/Premium فوراً وترجع للخطة المجانية Starter.",
+        "cta": "الرجوع إلى Starter",
+        "confirm": "نعم، الرجوع إلى Starter",
+        "cancel": "الإبقاء على خطتي",
+        "working": "جارٍ التبديل…"
       },
       "plans": {
         "starter": {
