@@ -62,7 +62,12 @@ export default async function BusinessDashboardPage() {
 
   return (
     <div className="w-full max-w-full space-y-8 overflow-x-hidden animate-fade-in">
-      <GrowthHero planSlug={planSlug} businessName={businessName} />
+      <GrowthHero
+        planSlug={planSlug}
+        businessName={businessName}
+        pendingRequests={pendingRequests}
+        unreadMessages={unreadMessages}
+      />
 
       {provider.status === "changes_requested" && provider.adminReviewNote ? (
         <ChangesRequiredCard note={provider.adminReviewNote} />

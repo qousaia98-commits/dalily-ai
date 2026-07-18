@@ -33,6 +33,7 @@
       "home": "Home",
       "aiAssistant": "AI Assistant",
       "messages": "Messages",
+      "search": "Search",
       "favorites": "Favorites",
       "account": "Account"
     },
@@ -60,9 +61,9 @@
     },
     "favorites": {
       "title": "Favorites",
-      "subtitle": "Saved businesses will appear here. Start exploring to build your list.",
-      "browseCta": "Browse providers",
-      "loginCta": "Log in to save"
+      "subtitle": "Saving businesses comes in a later beta. Browse search to find trusted experts for now.",
+      "browseCta": "Browse businesses",
+      "loginCta": "Log in to continue"
     },
     "account": {
       "title": "Account",
@@ -175,7 +176,7 @@
       "browseCta": "Find businesses",
       "listLabel": "Conversations",
       "emptyTitle": "No conversations yet",
-      "emptyBody": "Contact a business from search or a profile — your chats will appear here.",
+      "emptyBody": "Send a request from a business profile. Chat unlocks after they accept — then your conversations appear here.",
       "searchPlaceholder": "Search by business name…",
       "searchEmpty": "No conversations match your search.",
       "unreadCount": "{count} unread",
@@ -183,24 +184,24 @@
       "threadLabel": "Chat with {name}",
       "businessSubtitle": "Business conversation",
       "dalilySubtitle": "Official Dalily updates",
-      "composerHint": "Replies will be available when realtime messaging launches.",
-      "customerHint": "Message businesses directly from their profile to start a chat."
+      "composerHint": "Messages send instantly.",
+      "customerHint": "Open a business profile and send a request to get started."
     }
   },
   "location": {
     "onboarding": {
-      "title": "Find businesses near you",
-      "body": "Dalily uses your location only to show nearby businesses.",
-      "privacy": "We never share your exact location.",
-      "allow": "Allow Location",
-      "notNow": "Not Now",
+      "title": "Show businesses near you",
+      "body": "Turn on location so search can prioritize places close to you — not across the whole city.",
+      "privacy": "Your precise location stays on this device session only. We never share it with businesses.",
+      "allow": "Show nearby businesses",
+      "notNow": "Maybe later",
       "dismiss": "Close",
       "unsupported": "Location is not supported on this device.",
       "saveFailed": "Could not save location. Please try again."
     },
     "settings": {
       "title": "Location",
-      "description": "When enabled, Dalily prioritizes nearby businesses in search. Your exact GPS position is never stored permanently — only a short-lived session used for distance.",
+      "description": "When on, search favors nearby businesses. Your exact position is never stored permanently — only used briefly for distance.",
       "statusEnabled": "Enabled",
       "statusDisabled": "Disabled",
       "enable": "Enable location",
@@ -213,35 +214,36 @@
     }
   },
   "home": {
-    "heroTitle": "Find the service you need",
-    "heroSubtitle": "Home, health, automotive, food, business & more — find trusted local experts with AI",
+    "heroTitle": "Find trusted help near you",
+    "heroSubtitle": "Search local businesses, send a private request, and get help — step by step.",
     "searchHint": "Describe what you need in your own words",
+    "trustLine": "Private requests · Chat only after the business accepts",
     "categoriesTitle": "Browse services",
     "categorySearchLabel": "Search for {category}",
-    "trustBadge": "Verified providers",
+    "trustBadge": "Trusted local businesses",
     "aiPowered": "Smart search",
     "howItWorks": {
       "title": "How Dalily works",
-      "subtitle": "Three simple steps to find the right service",
+      "subtitle": "Three clear steps from problem to help",
       "step": "Step {number}",
       "steps": {
         "search": {
-          "title": "Search smart",
-          "description": "Describe what you need — AI understands your request and finds the best match."
+          "title": "Tell us what you need",
+          "description": "Search in your own words — we match you with the right local businesses."
         },
         "connect": {
-          "title": "Connect directly",
-          "description": "Call or message trusted providers via WhatsApp instantly."
+          "title": "Send a private request",
+          "description": "Describe the job once. The business reviews it before any chat starts."
         },
         "trust": {
           "title": "Choose with confidence",
-          "description": "Compare ratings, trust scores, and verification before you decide."
+          "description": "See ratings and verification. Chat opens only after they accept your request."
         }
       }
     },
     "featured": {
-      "title": "Featured providers",
-      "subtitle": "Top-rated service providers across Syria"
+      "title": "Featured businesses",
+      "subtitle": "Trusted local services across Syria"
     }
   },
   "search": {
@@ -372,25 +374,26 @@
     "featured": "Featured"
   },
   "serviceRequest": {
-    "sendRequest": "Send Request",
-    "eyebrow": "Service request",
-    "formTitle": "Request from {business}",
+    "sendRequest": "Send a request",
+    "loginToSend": "Log in to send a request",
+    "eyebrow": "Private request",
+    "formTitle": "Request help from {business}",
     "close": "Close",
-    "submit": "Send Request",
+    "submit": "Send request",
     "submitting": "Sending…",
-    "pendingNotice": "You already have a pending request with this business.",
-    "privacyNote": "Your request is sent privately. Chat opens only after the business accepts.",
+    "pendingNotice": "You already have an open request with this business. Wait for their reply or open it below.",
+    "privacyNote": "Your request is private. Chat opens only after they accept — so businesses are not flooded with messages.",
     "fields": {
-      "title": "Title",
-      "titlePlaceholder": "e.g. Kitchen renovation, Bathroom repair",
-      "description": "Description",
-      "descriptionPlaceholder": "Describe exactly what you need. The more details you provide, the easier it is for the business to help you.",
+      "title": "What do you need?",
+      "titlePlaceholder": "e.g. Fix a leaking kitchen sink",
+      "description": "More details",
+      "descriptionPlaceholder": "Share what happened, when you need help, and anything the business should know.",
       "preferredDate": "Preferred date (optional)",
       "preferredTime": "Preferred time (optional)",
       "budget": "Budget (optional)",
-      "budgetPlaceholder": "Estimated budget",
-      "location": "Location (optional)",
-      "locationPlaceholder": "Address or area",
+      "budgetPlaceholder": "Rough budget if you have one",
+      "location": "Where? (optional)",
+      "locationPlaceholder": "Area or address",
       "photos": "Photos (optional)",
       "photosAdd": "Add photos",
       "photosSelected": "{count} photo(s) selected",
@@ -406,8 +409,9 @@
       "not_accepting": "This business is not accepting new requests right now.",
       "provider_at_capacity": "This business has too many pending requests. Try again later."
     },
-    "successSent": "Your request was sent successfully.",
-    "viewRequest": "View request",
+    "successSent": "Request sent",
+    "successBody": "The business will review your request. You’ll be able to chat once they accept.",
+    "viewRequest": "Track this request",
     "viewRequests": "My requests"
   },
   "messaging": {
@@ -468,13 +472,52 @@
       "chatAndWait": "Chat with the business until the work is done.",
       "confirmOrReport": "Confirm completion or report a problem.",
       "waitCustomerConfirm": "Waiting for the customer to confirm completion.",
-      "leaveReview": "Leave a review to close the workflow.",
-      "waitReview": "Waiting for the customer review.",
-      "resolveDispute": "Resolve the dispute in chat.",
-      "closed": "This workflow is complete.",
-      "rejected": "This request was rejected.",
+      "leaveReview": "Leave a short review when you’re ready.",
+      "waitReview": "Waiting for the customer’s review.",
+      "resolveDispute": "Keep chatting to resolve the issue. When you’re satisfied, the business can mark the job complete.",
+      "resolveDisputeBusiness": "Resolve the issue in chat, then mark the service complete when you’re both ready.",
+      "closed": "This request is complete.",
+      "rejected": "This request was declined.",
       "cancelled": "This request was cancelled.",
-      "generic": "Continue the service workflow."
+      "generic": "Continue with the next step above."
+    },
+    "success": {
+      "quoteSent": {
+        "title": "Quote sent",
+        "body": "The customer can accept, decline, or ask for changes."
+      },
+      "quoteAccepted": {
+        "title": "Quote accepted",
+        "body": "You can keep chatting and mark the service complete when you’re done."
+      },
+      "quoteDeclined": {
+        "title": "Quote declined",
+        "body": "You can send an updated quote or continue the conversation."
+      },
+      "completedByBusiness": {
+        "title": "Marked as complete",
+        "body": "We’re waiting for the customer to confirm."
+      },
+      "customerConfirmed": {
+        "title": "Completion confirmed",
+        "body": "Thanks — a short review helps other customers choose with confidence."
+      },
+      "reviewSubmitted": {
+        "title": "Thank you for your review",
+        "body": "Your feedback helps the community trust the right businesses."
+      },
+      "problemReported": {
+        "title": "Problem reported",
+        "body": "We flagged this request. Keep chatting with the business — they can mark it complete once you’re both aligned."
+      },
+      "accepted": {
+        "title": "Request accepted",
+        "body": "You can chat now and optionally send a quote."
+      },
+      "rejected": {
+        "title": "Request declined",
+        "body": "The customer has been notified."
+      }
     },
     "quote": {
       "title": "Quote",
@@ -503,7 +546,8 @@
       "confirm": "Confirm Completion",
       "report": "Report a Problem",
       "disputeNote": "Describe the problem",
-      "submitDispute": "Submit problem report"
+      "submitDispute": "Submit problem report",
+      "submittingDispute": "Submitting…"
     },
     "review": {
       "title": "Review",
@@ -522,8 +566,8 @@
       "title": "My Requests",
       "subtitle": "Track every service request from start to review.",
       "emptyTitle": "No requests yet",
-      "emptyBody": "Find a business and send a request to get started.",
-      "browse": "Browse businesses",
+      "emptyBody": "Search for a business, open their profile, and send a private request. You’ll track every step here.",
+      "browse": "Find a business",
       "status": {
         "pending": "Pending",
         "accepted": "Accepted",
@@ -709,7 +753,7 @@
       "listLabel": "Requests",
       "searchPlaceholder": "Search by customer, title…",
       "emptyTitle": "No requests in this tab",
-      "emptyBody": "Requests matching this filter will appear here.",
+      "emptyBody": "Nothing here yet. New customer requests appear under Pending when they reach out.",
       "noProvider": "Create your business profile to receive requests.",
       "fromCustomer": "From {name}",
       "accept": "Accept",
@@ -854,13 +898,13 @@
         "unlockPro": "Unlock with PRO"
       },
       "todayOverview": {
-        "title": "Today's Overview",
-        "subtitle": "What matters right now.",
-        "requests": "Pending Requests",
-        "profileViews": "Profile Views",
+        "title": "Needs attention",
+        "subtitle": "Start here — then everything else.",
+        "requests": "New requests",
+        "profileViews": "Profile views",
         "messages": "Messages",
-        "contacts": "New Contacts",
-        "growth": "Search Appearances"
+        "contacts": "New contacts",
+        "growth": "Seen in search"
       },
       "growth": {
         "title": "Growth",
@@ -916,17 +960,21 @@
     "growth": {
       "hero": {
         "eyebrow": "Growth Dashboard",
+        "attention": {
+          "requests": "{count, plural, one {You have # new request waiting.} other {You have # new requests waiting.}}",
+          "messages": "{count, plural, one {You have # unread message.} other {You have # unread messages.}}"
+        },
         "starter": {
-          "title": "Welcome, {name}!",
-          "subtitle": "Grow your business with Dalily."
+          "title": "Welcome, {name}",
+          "subtitle": "Check new requests and messages — that’s what matters today."
         },
         "pro": {
-          "title": "Great work, {name}!",
-          "subtitle": "Your business is growing. Keep reaching more customers."
+          "title": "Welcome back, {name}",
+          "subtitle": "Stay on top of requests and replies to keep customers moving."
         },
         "premium": {
-          "title": "You're one of Dalily's Premium Businesses, {name}.",
-          "subtitle": "Thank you for trusting Dalily."
+          "title": "Welcome back, {name}",
+          "subtitle": "Your Premium visibility is on — respond quickly to stay ahead."
         }
       },
       "health": {
@@ -1369,7 +1417,8 @@
       "errors": {
         "upgradeFailed": "Could not start the upgrade. Please try again.",
         "notApproved": "Plans unlock after your business is approved.",
-        "paymentPending": "You already have a payment under review."
+        "paymentPending": "You already have a payment under review.",
+        "paymentNotConfigured": "Paid upgrades are temporarily unavailable. Please try again later or contact support."
       },
       "locked": {
         "pendingTitle": "Waiting for approval",
@@ -1485,7 +1534,10 @@
         "reviewBody": "We received your receipt. An admin will review it soon. Your plan is not active yet.",
         "waitingTitle": "Waiting for payment confirmation",
         "waitingBody": "An admin will review your payment and activate your subscription.",
+        "notConfiguredTitle": "Payment details not ready yet",
+        "notConfiguredBody": "Bank transfer details are being prepared. Paid upgrades will unlock once Dalily finishes setup — your current plan stays active.",
         "backToPlans": "Back to plans",
+        "back": "Back",
         "copy": "Copy",
         "copyAmount": "Copy amount",
         "copyReference": "Copy reference",
@@ -1570,11 +1622,11 @@
       "eyebrow": "Inbox",
       "title": "Messages",
       "subtitle": "Dalily updates and customer chats in one place.",
-      "listLabel": "Notifications",
+      "listLabel": "Conversations",
       "previewTitle": "Latest messages",
       "viewAll": "Open Messages",
-      "emptyTitle": "You are all caught up",
-      "emptyBody": "New updates from Dalily and customers will appear here.",
+      "emptyTitle": "No messages yet",
+      "emptyBody": "When you accept a customer request, chat starts here. Until then, check Pending requests.",
       "unread": "Unread",
       "sources": {
         "dalily": "Dalily",
@@ -1641,7 +1693,7 @@
       "customerHint": "Customer chats will appear here when people message you.",
       "back": "Back to conversations",
       "threadLabel": "Messages with {name}",
-      "composerHint": "Replies will be available when realtime messaging launches.",
+      "composerHint": "Messages send instantly.",
       "searchPlaceholder": "Search by name, phone, or business…",
       "searchEmpty": "No conversations match your search.",
       "unreadCount": "{count} unread",
@@ -2258,6 +2310,7 @@
         "account_disabled": "This account has been disabled. Contact support if you believe this is a mistake.",
         "email_not_confirmed": "Please confirm your email first",
         "validation_error": "Please check the form fields",
+        "auth_callback_failed": "We could not confirm your email link. Please try again or request a new one.",
         "unknown": "Something went wrong. Please try again"
       }
     },

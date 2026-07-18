@@ -32,6 +32,7 @@ import {
   nextStepHint,
 } from "@/lib/service-requests/status-machine";
 import { useMarketplaceRealtime } from "@/hooks/use-marketplace-realtime";
+import { SuccessMoment } from "@/components/shared/success-moment";
 
 const initial: ServiceRequestActionState = { success: false };
 
@@ -47,6 +48,7 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [successKey, setSuccessKey] = useState<string | null>(null);
   const [showCompleteConfirm, setShowCompleteConfirm] = useState(false);
   const [showDispute, setShowDispute] = useState(false);
 
@@ -57,14 +59,19 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
     conversationId: request.conversationId,
   });
 
-  const run = (fn: () => Promise<ServiceRequestActionState>, opts?: { openChat?: boolean }) => {
+  const run = (
+    fn: () => Promise<ServiceRequestActionState>,
+    opts?: { openChat?: boolean; successKey?: string },
+  ) => {
     setError(null);
+    setSuccessKey(null);
     startTransition(async () => {
       const result = await fn();
       if (!result.success) {
         setError(result.error ?? "failed");
         return;
       }
+      if (opts?.successKey) setSuccessKey(opts.successKey);
       if (opts?.openChat && result.conversationId) {
         router.push(
           viewer === "business"
@@ -95,6 +102,13 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
           {t(nextKey)}
         </p>
       </header>
+
+      {successKey ? (
+        <SuccessMoment
+          title={t(`success.${successKey}.title` as "success.quoteSent.title")}
+          body={t(`success.${successKey}.body` as "success.quoteSent.body")}
+        />
+      ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)]">
         <div className="space-y-5">
@@ -163,7 +177,9 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
                   <Button
                     className="min-h-11 rounded-2xl"
                     disabled={pending}
-                    onClick={() => run(() => acceptQuoteAction(request.id))}
+                    onClick={() =>
+                      run(() => acceptQuoteAction(request.id), { successKey: "quoteAccepted" })
+                    }
                   >
                     {t("quote.accept")}
                   </Button>
@@ -171,7 +187,9 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
                     variant="outline"
                     className="min-h-11 rounded-2xl"
                     disabled={pending}
-                    onClick={() => run(() => declineQuoteAction(request.id))}
+                    onClick={() =>
+                      run(() => declineQuoteAction(request.id), { successKey: "quoteDeclined" })
+                    }
                   >
                     {t("quote.decline")}
                   </Button>
@@ -209,7 +227,11 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
                     <Button
                       className="flex-1 rounded-2xl"
                       disabled={pending}
-                      onClick={() => run(() => completeServiceAction(request.id))}
+                      onClick={() =>
+                        run(() => completeServiceAction(request.id), {
+                          successKey: "completedByBusiness",
+                        })
+                      }
                     >
                       {t("complete.confirm")}
                     </Button>
@@ -234,7 +256,11 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
                 <Button
                   className="rounded-2xl"
                   disabled={pending}
-                  onClick={() => run(() => confirmCompletionAction(request.id))}
+                  onClick={() =>
+                    run(() => confirmCompletionAction(request.id), {
+                      successKey: "customerConfirmed",
+                    })
+                  }
                 >
                   {t("confirm.confirm")}
                 </Button>
@@ -302,6 +328,7 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
 
 function QuoteForm({ requestId }: { requestId: string }) {
   const t = useTranslations("marketplace.quote");
+  const ts = useTranslations("marketplace.success.quoteSent");
   const te = useTranslations("marketplace.errors");
   const router = useRouter();
   const [state, action, pending] = useActionState(sendQuoteAction, initial);
@@ -309,6 +336,10 @@ function QuoteForm({ requestId }: { requestId: string }) {
   useEffect(() => {
     if (state.success) router.refresh();
   }, [state.success, router]);
+
+  if (state.success) {
+    return <SuccessMoment title={ts("title")} body={ts("body")} />;
+  }
 
   return (
     <form action={action} className="space-y-3 rounded-3xl border border-border bg-card p-5 shadow-sm">
@@ -353,6 +384,7 @@ function QuoteForm({ requestId }: { requestId: string }) {
 
 function DisputeForm({ requestId }: { requestId: string }) {
   const t = useTranslations("marketplace.confirm");
+  const ts = useTranslations("marketplace.success.problemReported");
   const te = useTranslations("marketplace.errors");
   const router = useRouter();
   const [state, action, pending] = useActionState(reportProblemAction, initial);
@@ -360,6 +392,10 @@ function DisputeForm({ requestId }: { requestId: string }) {
   useEffect(() => {
     if (state.success) router.refresh();
   }, [state.success, router]);
+
+  if (state.success) {
+    return <SuccessMoment title={ts("title")} body={ts("body")} />;
+  }
 
   return (
     <form action={action} className="mt-4 space-y-3 border-t border-border pt-4">
@@ -372,7 +408,7 @@ function DisputeForm({ requestId }: { requestId: string }) {
         </p>
       ) : null}
       <Button type="submit" variant="destructive" className="rounded-2xl" disabled={pending}>
-        {t("submitDispute")}
+        {pending ? t("submittingDispute") : t("submitDispute")}
       </Button>
     </form>
   );
@@ -380,6 +416,7 @@ function DisputeForm({ requestId }: { requestId: string }) {
 
 function ReviewForm({ requestId }: { requestId: string }) {
   const t = useTranslations("marketplace.review");
+  const ts = useTranslations("marketplace.success.reviewSubmitted");
   const te = useTranslations("marketplace.errors");
   const router = useRouter();
   const [state, action, pending] = useActionState(submitReviewAction, initial);
@@ -387,6 +424,10 @@ function ReviewForm({ requestId }: { requestId: string }) {
   useEffect(() => {
     if (state.success) router.refresh();
   }, [state.success, router]);
+
+  if (state.success) {
+    return <SuccessMoment title={ts("title")} body={ts("body")} />;
+  }
 
   return (
     <form action={action} className={cn("space-y-3 rounded-3xl border border-border bg-card p-5 shadow-sm")}>

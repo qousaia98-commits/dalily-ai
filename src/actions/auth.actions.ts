@@ -14,6 +14,7 @@ import { generateProviderSlug, mapAuthErrorCode } from "@/lib/auth/utils";
 import { resolveLocalizedField } from "@/lib/business/resolve-localized-fields";
 import { resolveAuthUserAfterSignUp } from "@/lib/auth/resolve-signup-user";
 import { getPostLoginPath } from "@/lib/auth/roles";
+import { sanitizeAppRedirect, stripLocaleFromPath, buildAuthCallbackUrl } from "@/lib/auth/safe-redirect";
 import { resolveCategorySlugToId } from "@/lib/categories/queries";
 import { CITY_IDS, MODULE_SERVICES_ID } from "@/lib/constants/reference-data";
 import {
@@ -23,6 +24,7 @@ import {
   type ValidationIssue,
 } from "@/lib/validations/format-issues";
 import type { AppRole } from "@/types/database.types";
+import type { Locale } from "@/lib/i18n/config";
 import {
   isDuplicateKeyError,
   logRegisterStep,
@@ -139,14 +141,13 @@ function registerBusinessStepFailure(step: string, error: unknown): AuthActionSt
     stack,
   });
 
-  // Temporary diagnostics: never hide the original exception from the client UI
-  // while we identify the failing registration step.
+  // Never leak DB/Auth internals to the client in production UI.
   return exposeValidationIssues(
     {
       success: false,
-      error: details.message,
+      error: "unknown",
       failedStep: step,
-      fieldErrors: { [step]: [details.message] },
+      fieldErrors: { form: ["unknown"] },
     },
     [issue],
   );
@@ -236,8 +237,24 @@ export async function loginAction(
     .is("revoked_at", null);
 
   const roles = (rolesResult.data ?? []).map((r) => r.role as AppRole);
-  const redirectTo = getPostLoginPath(roles);
   const locale = await getLocale();
+  const requested = sanitizeAppRedirect(String(formData.get("redirect") ?? ""));
+  const cleanRequested = requested ? stripLocaleFromPath(requested) : null;
+
+  // Never send customers into business/admin via arbitrary redirect
+  let redirectTo = getPostLoginPath(roles);
+  if (cleanRequested) {
+    const isAdminPath = cleanRequested === "/admin" || cleanRequested.startsWith("/admin/");
+    const isBusinessPath =
+      cleanRequested === "/business" || cleanRequested.startsWith("/business/");
+    if (isAdminPath && roles.includes("admin")) {
+      redirectTo = cleanRequested;
+    } else if (isBusinessPath && roles.includes("business")) {
+      redirectTo = cleanRequested;
+    } else if (!isAdminPath && !isBusinessPath) {
+      redirectTo = cleanRequested;
+    }
+  }
 
   revalidatePath("/", "layout");
   redirect({ href: redirectTo, locale });
@@ -271,6 +288,7 @@ export async function registerAction(
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
+      emailRedirectTo: buildAuthCallbackUrl("/", locale as Locale),
       data: {
         display_name: parsed.data.name,
         role: "user",
@@ -431,6 +449,7 @@ export async function registerBusinessAction(
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
+      emailRedirectTo: buildAuthCallbackUrl("/business", (locale as Locale) || "ar"),
       data: {
         display_name: parsed.data.businessName,
         role: "business",
@@ -440,10 +459,9 @@ export async function registerBusinessAction(
 
   if (error) {
     logBusinessRegisterException("signUp", error);
-    // Temporary: expose original Auth error (do not map away during diagnosis)
     return {
       success: false,
-      error: error.message,
+      error: mapAuthErrorCode(error.message),
       failedStep: "signUp",
     };
   }
@@ -452,7 +470,7 @@ export async function registerBusinessAction(
     console.error("[registerBusinessAction] ✗ signUp — no user returned");
     return {
       success: false,
-      error: "Auth signUp returned no user",
+      error: "unknown",
       failedStep: "signUp",
     };
   }

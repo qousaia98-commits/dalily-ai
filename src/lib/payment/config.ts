@@ -19,3 +19,8 @@ export function getPaymentConfig(): PaymentProviderConfig {
     bankName: process.env.PAYMENT_BANK_NAME ?? "",
   };
 }
+
+/** Closed beta: paid upgrades must not show empty bank details. */
+export function isPaymentConfigured(config: PaymentProviderConfig = getPaymentConfig()): boolean {
+  return Boolean(config.receiver.trim() && config.account.trim());
+}

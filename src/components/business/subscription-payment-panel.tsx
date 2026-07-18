@@ -19,6 +19,7 @@ import {
 } from "@/actions/subscription.actions";
 import { uploadPaymentReceiptDirect } from "@/lib/payment/upload-payment-receipt";
 import { validateReceiptMeta } from "@/lib/payment/receipt-storage";
+import { isPaymentConfigured } from "@/lib/payment/config";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -41,10 +42,32 @@ export function SubscriptionPaymentPanel({ instructions, onBack }: SubscriptionP
   const [progress, setProgress] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const paymentReady = isPaymentConfigured({
+    provider: "manual",
+    receiver: instructions.receiver,
+    account: instructions.account,
+    swift: instructions.swift ?? "",
+    bankName: instructions.bankName ?? "",
+  });
+
   const isReview = instructions.status === "pending_review" || instructions.hasReceipt;
-  const receiver = instructions.receiver || t("receiverFallback");
-  const account = instructions.account || t("accountFallback");
+  const receiver = instructions.receiver;
+  const account = instructions.account;
   const amountText = `${instructions.amount} ${instructions.currency}`;
+
+  if (!paymentReady && !isReview) {
+    return (
+      <div className="space-y-4 rounded-3xl border border-amber-500/30 bg-amber-500/10 p-5 text-center">
+        <p className="text-sm font-semibold text-foreground">{t("notConfiguredTitle")}</p>
+        <p className="text-sm text-muted-foreground">{t("notConfiguredBody")}</p>
+        {onBack ? (
+          <Button type="button" variant="outline" className="min-h-11 rounded-2xl" onClick={onBack}>
+            {t("back")}
+          </Button>
+        ) : null}
+      </div>
+    );
+  }
 
   async function copyValue(field: CopyField, value: string) {
     try {

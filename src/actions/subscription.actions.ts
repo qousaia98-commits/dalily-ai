@@ -1,9 +1,10 @@
 "use server";
 
+import { cache } from "react";
 import { z } from "zod";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider, requireOwnedProvider } from "@/lib/providers/queries";
-import { getPaymentConfig } from "@/lib/payment/config";
+import { getPaymentConfig, isPaymentConfigured } from "@/lib/payment/config";
 import {
   buildPaymentReceiptPath,
   isOwnedReceiptPath,
@@ -68,7 +69,15 @@ function planLabelFromSlug(slug: string): string {
   return "STARTER";
 }
 
-export async function getSubscriptionPageData(userId: string) {
+/** Request-scoped cache — layout/dashboard/subscription share one load per user. */
+export const getSubscriptionPageData = cache(async function getSubscriptionPageData(
+  userId: string,
+) {
+  const authUser = await requireAuthUser();
+  if (authUser.id !== userId) {
+    throw new Error("FORBIDDEN");
+  }
+
   const provider = await getOwnedProvider(userId);
   if (!provider) throw new Error("NO_PROVIDER");
 
@@ -115,7 +124,7 @@ export async function getSubscriptionPageData(userId: string) {
     payments,
     pendingPayment,
   };
-}
+});
 
 export async function upgradeSubscriptionAction(
   planSlug: PlanSlug,
@@ -127,9 +136,13 @@ export async function upgradeSubscriptionAction(
   const parsed = planSlugSchema.safeParse(planSlug);
   if (!parsed.success) return { success: false, error: "invalid_plan" };
 
+  const config = getPaymentConfig();
+  if (!isPaymentConfigured(config)) {
+    return { success: false, error: "payment_not_configured" };
+  }
+
   try {
     const result = await subscriptionService.upgrade(provider.id, parsed.data, billingCycle);
-    const config = getPaymentConfig();
     const instructions = result.payment.instructions;
     revalidate(provider.slug);
     return {

@@ -104,7 +104,9 @@ export function BusinessSubscriptionPanel({
             ? t("errors.notApproved")
             : result.error === "payment_pending"
               ? t("errors.paymentPending")
-              : t("errors.upgradeFailed"),
+              : result.error === "payment_not_configured"
+                ? t("errors.paymentNotConfigured")
+                : t("errors.upgradeFailed"),
         );
         return;
       }

@@ -1,12 +1,12 @@
 import {
   CheckCircle2,
   CreditCard,
-  Heart,
   Home,
   Inbox,
   LayoutDashboard,
   Megaphone,
   MessageCircle,
+  Search,
   Sparkles,
   TrendingUp,
   UserRound,
@@ -24,7 +24,7 @@ export const GUEST_NAV_ITEMS: readonly MobileNavItemConfig[] = [
     badgeKey: "messages",
     matchPrefixes: ["/messages"],
   },
-  { id: "favorites", href: "/favorites", icon: Heart, labelKey: "favorites" },
+  { id: "search", href: "/search", icon: Search, labelKey: "search" },
   { id: "account", href: "/account", icon: UserRound, labelKey: "account" },
 ] as const;
 

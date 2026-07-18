@@ -111,7 +111,7 @@ export function nextStepHint(status: ServiceRequestStatus, viewer: "customer" | 
     case "completed":
       return viewer === "customer" ? "next.leaveReview" : "next.waitReview";
     case "disputed":
-      return "next.resolveDispute";
+      return viewer === "business" ? "next.resolveDisputeBusiness" : "next.resolveDispute";
     case "reviewed":
       return "next.closed";
     case "rejected":

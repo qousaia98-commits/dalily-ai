@@ -1,10 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
 import { Loader2 } from "lucide-react";
 import { loginAction, type AuthActionState } from "@/actions/auth.actions";
+import { sanitizeAppRedirect } from "@/lib/auth/safe-redirect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,10 +26,13 @@ function resolveError(t: ReturnType<typeof useTranslations>, code?: string): str
 
 export function LoginForm() {
   const t = useTranslations("auth.login");
+  const searchParams = useSearchParams();
+  const redirectTo = sanitizeAppRedirect(searchParams.get("redirect"));
   const [state, formAction, isPending] = useActionState(loginAction, initialState);
 
   const errorMessage =
     resolveError(t, state.error) ??
+    (searchParams.get("error") === "auth_callback_failed" ? t("errors.auth_callback_failed") : null) ??
     (state.fieldErrors?.email?.[0] ? t("errors.required") : null);
 
   return (
@@ -38,6 +43,7 @@ export function LoginForm() {
       </CardHeader>
       <CardContent>
         <form action={formAction} className="space-y-4">
+          {redirectTo ? <input type="hidden" name="redirect" value={redirectTo} /> : null}
           <div className="space-y-2">
             <Label htmlFor="email">{t("email")}</Label>
             <Input
@@ -67,7 +73,7 @@ export function LoginForm() {
               {errorMessage}
             </p>
           ) : null}
-          <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+          <Button type="submit" className="w-full min-h-11" size="lg" disabled={isPending}>
             {isPending ? <Loader2 className="size-4 animate-spin" /> : null}
             {t("submit")}
           </Button>

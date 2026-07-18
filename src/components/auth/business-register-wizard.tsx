@@ -29,20 +29,16 @@ const initialState: AuthActionState = { success: false };
 
 const CITY_SLUGS = Object.keys(CITY_IDS) as string[];
 
-const KNOWN_BUSINESS_ERRORS = new Set([
-  "validation_error",
-  "password_mismatch",
-  "email_taken",
-  "weak_password",
-  "unknown",
-]);
-
 function resolveError(t: ReturnType<typeof useTranslations>, code?: string): string | null {
   if (!code) return null;
-  if (!KNOWN_BUSINESS_ERRORS.has(code)) return code;
   const key = `errors.${code}` as "errors.unknown";
   try {
-    return t(key);
+    const message = t(key);
+    // next-intl returns the key path when missing — treat as unknown
+    if (!message || message === key || message.endsWith(`.${code}`)) {
+      return t("errors.unknown");
+    }
+    return message;
   } catch {
     return t("errors.unknown");
   }

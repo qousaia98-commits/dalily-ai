@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { BRAND } from "@/lib/brand/tokens";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+const CLOSED_BETA = process.env.DALILY_CLOSED_BETA !== "false";
 
 export function buildSiteMetadata(params: {
   title: string;
@@ -15,6 +16,9 @@ export function buildSiteMetadata(params: {
     description,
     applicationName: BRAND.name,
     metadataBase: new URL(APP_URL),
+    robots: CLOSED_BETA
+      ? { index: false, follow: false, googleBot: { index: false, follow: false } }
+      : { index: true, follow: true },
     manifest: "/manifest.webmanifest",
     icons: {
       icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],

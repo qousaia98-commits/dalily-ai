@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/routing";
 import type { BusinessConversation } from "@/lib/business/conversations";
 import { ConversationListClient } from "@/components/business/conversation-list-client";
+import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 
 export async function ConversationList({
@@ -21,13 +22,18 @@ export async function ConversationList({
 }) {
   const t = await getTranslations(namespace);
 
-  if (conversations.length === 0 && !compact) {
+  if (conversations.length === 0) {
+    const isBusiness = messagesPath.includes("business");
+    const primaryHref = isBusiness ? "/business/requests" : "/search";
+    const ctaLabel = isBusiness ? t("viewAll") : t("browseCta");
     return (
-      <div className="rounded-3xl border border-dashed border-border bg-muted/30 px-6 py-12 text-center">
-        <MessageCircle className="mx-auto size-8 text-muted-foreground" aria-hidden />
-        <p className="mt-3 text-sm font-medium text-foreground">{t("emptyTitle")}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{t("emptyBody")}</p>
-      </div>
+      <EmptyState
+        icon={MessageCircle}
+        title={t("emptyTitle")}
+        body={t("emptyBody")}
+        primary={{ href: primaryHref, label: ctaLabel }}
+        className={compact ? "py-8" : undefined}
+      />
     );
   }
 
@@ -57,7 +63,7 @@ export async function DashboardConversationsPreview({
         <h2 id="dash-chats-title" className="text-lg font-bold text-foreground">
           {t("previewTitle")}
         </h2>
-        <Button asChild variant="outline" className="rounded-2xl">
+        <Button asChild variant="outline" className="min-h-11 rounded-2xl">
           <Link href="/business/messages">{t("openMessages")}</Link>
         </Button>
       </div>

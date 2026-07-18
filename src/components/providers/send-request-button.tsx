@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { SuccessMoment } from "@/components/shared/success-moment";
 
 const initialState: ServiceRequestActionState = { success: false };
 
@@ -55,11 +56,12 @@ export function SendRequestButton({
   }, [state.success, close, router]);
 
   if (!isLoggedIn) {
+    const redirect = encodeURIComponent(`/providers/${providerId}`);
     return (
-      <Button asChild className="w-full gap-2 rounded-2xl" size="lg">
-        <Link href="/login">
+      <Button asChild className="min-h-12 w-full gap-2 rounded-2xl" size="lg">
+        <Link href={`/login?redirect=${redirect}`}>
           <Send className="size-4" aria-hidden />
-          {t("sendRequest")}
+          {t("loginToSend")}
         </Link>
       </Button>
     );
@@ -67,23 +69,27 @@ export function SendRequestButton({
 
   if (hasPendingRequest || sent) {
     return (
-      <div className="space-y-2">
+      <div className="space-y-3">
         {sent ? (
-          <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-center text-sm text-foreground">
-            {t("successSent")}
-          </p>
-        ) : null}
-        <div className="rounded-2xl border border-[var(--dalily-gold)]/30 bg-[color-mix(in_oklab,var(--dalily-gold)_8%,var(--card))] px-4 py-3 text-center text-sm text-muted-foreground">
-          {t("pendingNotice")}
-        </div>
-        {state.requestId ? (
-          <Button asChild variant="outline" className="w-full rounded-2xl">
-            <Link href={`/account/requests/${state.requestId}`}>{t("viewRequest")}</Link>
-          </Button>
+          <SuccessMoment
+            title={t("successSent")}
+            body={t("successBody")}
+            ctaHref={
+              state.requestId
+                ? `/account/requests/${state.requestId}`
+                : "/account/requests"
+            }
+            ctaLabel={state.requestId ? t("viewRequest") : t("viewRequests")}
+          />
         ) : (
-          <Button asChild variant="outline" className="w-full rounded-2xl">
-            <Link href="/account/requests">{t("viewRequests")}</Link>
-          </Button>
+          <>
+            <div className="rounded-2xl border border-[var(--dalily-gold)]/30 bg-[color-mix(in_oklab,var(--dalily-gold)_8%,var(--card))] px-4 py-3 text-center text-sm text-muted-foreground">
+              {t("pendingNotice")}
+            </div>
+            <Button asChild variant="outline" className="min-h-11 w-full rounded-2xl">
+              <Link href="/account/requests">{t("viewRequests")}</Link>
+            </Button>
+          </>
         )}
       </div>
     );

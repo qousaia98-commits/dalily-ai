@@ -1,8 +1,8 @@
-import { Search, MessageSquare, ShieldCheck } from "lucide-react";
+import { Search, Send, ShieldCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { cn } from "@/lib/utils";
 
-const stepIcons = [Search, MessageSquare, ShieldCheck];
+const stepIcons = [Search, Send, ShieldCheck];
 
 export async function HowItWorks({ className }: { className?: string }) {
   const t = await getTranslations("home.howItWorks");

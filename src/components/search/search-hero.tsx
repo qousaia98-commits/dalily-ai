@@ -26,6 +26,9 @@ export function SearchHero({
           <p className="mt-3 text-center text-sm text-muted-foreground sm:text-start">
             {t("searchHint")}
           </p>
+          <p className="mt-1.5 text-center text-xs text-muted-foreground/90 sm:text-start">
+            {t("trustLine")}
+          </p>
         </div>
       </div>
     </section>

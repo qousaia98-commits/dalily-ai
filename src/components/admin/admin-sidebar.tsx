@@ -31,7 +31,7 @@ const navItems = [
   { href: "/admin/providers", icon: Building2, key: "businesses", badgeKey: "businesses" as const },
   { href: "/admin/payments", icon: Banknote, key: "payments", badgeKey: "payments" as const },
   { href: "/admin/subscriptions", icon: CreditCard, key: "subscriptions" },
-  { href: "/admin/messages", icon: Megaphone, key: "messages", badgeKey: "messages" as const },
+  { href: "/admin/marketplace", icon: Megaphone, key: "marketplace" },
   { href: "/admin/verification", icon: ShieldCheck, key: "verification" },
   { href: "/admin/categories", icon: Tags, key: "categories" },
   { href: "/admin/searches", icon: Search, key: "searches" },
