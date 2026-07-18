@@ -11,7 +11,7 @@ export function BrandLoading({ className, label }: { className?: string; label?:
     >
       <DalilyMark size={48} className="animate-pulse text-[var(--dalily-navy)] dark:text-white" />
       {label ? <p className="text-sm text-muted-foreground">{label}</p> : null}
-      <span className="sr-only">{label ?? "Loading"}</span>
+      <span className="sr-only">{label ?? "…"}</span>
     </div>
   );
 }

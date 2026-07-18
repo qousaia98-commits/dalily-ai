@@ -124,11 +124,14 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
     displayQuery = match ? localizedField(match.name, locale) : group;
   }
 
+  const tCities = await getTranslations("auth.cities");
+  const cityLabel = city && city !== "all" ? tCities(city) : "";
+
   if (results.length === 0) {
     const emptyLabel =
       displayQuery ||
       (verifiedOnly ? t("filters.verifiedOnly") : "") ||
-      (city ? city : "") ||
+      cityLabel ||
       undefined;
 
     return (
@@ -146,7 +149,7 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
       <SearchInsight query={query} problemId={parsed.problemId} citySlug={parsed.citySlug} />
       <p className="mb-6 text-sm text-muted-foreground">
         {t("topResults", { count: results.length })}
-        {displayQuery ? ` — "${displayQuery}"` : ""}
+        {displayQuery ? ` — «${displayQuery}»` : ""}
       </p>
       <div className="grid gap-6 sm:grid-cols-2">
         {results.map((provider, index) => (

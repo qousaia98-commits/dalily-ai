@@ -1,3 +1,5 @@
+import { cache } from "react";
+import { cookies } from "next/headers";
 import { getOwnedProvider } from "@/lib/providers/queries";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { buildBusinessNotifications } from "@/lib/business/notification-inbox";
@@ -8,7 +10,6 @@ import {
 import { MSG_READ_COOKIE, parseMsgReadCookie } from "@/lib/business/message-read-state";
 import { loadConversationsForBusiness } from "@/lib/messaging/queries";
 import type { PlanSlug } from "@/lib/subscription/types";
-import { cookies } from "next/headers";
 
 function planLabel(slug: string): string {
   if (slug === "premium") return "PREMIUM";
@@ -16,7 +17,10 @@ function planLabel(slug: string): string {
   return "STARTER";
 }
 
-export async function loadBusinessConversations(userId: string) {
+/** Request-scoped cache — layout, dashboard, and mobile badges share one load. */
+export const loadBusinessConversations = cache(async function loadBusinessConversations(
+  userId: string,
+) {
   const jar = await cookies();
   const readMap = parseMsgReadCookie(jar.get(MSG_READ_COOKIE)?.value);
 
@@ -103,4 +107,4 @@ export async function loadBusinessConversations(userId: string) {
       provider,
     };
   }
-}
+});

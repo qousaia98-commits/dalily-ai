@@ -28,13 +28,9 @@ export default async function AdminDashboardPage() {
           <ControlCenterMarketplace insights={marketplace} />
           <ControlCenterStats overview={overview} />
         </div>
-        <div className="hidden xl:block">
+        <aside className="min-w-0">
           <ControlCenterActivityFeed items={activity} />
-        </div>
-      </div>
-
-      <div className="xl:hidden">
-        <ControlCenterActivityFeed items={activity} />
+        </aside>
       </div>
     </div>
   );

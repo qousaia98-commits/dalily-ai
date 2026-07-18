@@ -30,7 +30,6 @@ export async function getMobileNavBadges(role: MobileNavRole): Promise<MobileNav
       return {
         approvals: (approvals.count ?? 0) + (changes.count ?? 0),
         payments: payments.count ?? 0,
-        messages: 0,
       };
     } catch {
       return {};

@@ -2,7 +2,7 @@
 export function MobileBottomNavSpacer() {
   return (
     <div
-      className="h-[calc(5.25rem+env(safe-area-inset-bottom))] shrink-0 md:hidden"
+      className="h-[var(--dalily-mobile-nav-offset)] shrink-0 md:hidden"
       aria-hidden
     />
   );

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { getOwnedProvider } from "@/lib/providers/queries";
 import { SERVICE_REQUEST_MEDIA_BUCKET } from "@/lib/service-requests/constants";
@@ -210,34 +211,40 @@ async function hydrateDetails(
     });
   }
 
-  return Promise.all(
-    rows.map(async (row) => {
-      const mapped = mapRequest(row);
-      const paths = imagesByRequest.get(mapped.id) ?? [];
-      let imageUrls: string[] = [];
-      if (paths.length > 0) {
-        const { data: signed } = await supabase.storage
-          .from(SERVICE_REQUEST_MEDIA_BUCKET)
-          .createSignedUrls(paths, 3600);
-        imageUrls = (signed ?? [])
-          .map((s) => s.signedUrl)
-          .filter((url): url is string => Boolean(url));
-      }
-      return {
-        ...mapped,
-        customerName: profileMap.get(mapped.customer_id) ?? "Customer",
-        providerName: providerMap.get(mapped.provider_id) ?? "Business",
-        imagePaths: paths,
-        imageUrls,
-        quote: quotesByRequest.get(mapped.id) ?? null,
-        review: reviewMap.get(mapped.id) ?? null,
-        conversationId: convMap.get(mapped.id) ?? null,
-      };
-    }),
-  );
+  const allPaths = [...imagesByRequest.values()].flat();
+  const signedByPath = new Map<string, string>();
+  if (allPaths.length > 0) {
+    const { data: signed } = await supabase.storage
+      .from(SERVICE_REQUEST_MEDIA_BUCKET)
+      .createSignedUrls(allPaths, 3600);
+    (signed ?? []).forEach((item, index) => {
+      const path = item.path ?? allPaths[index];
+      if (path && item.signedUrl) signedByPath.set(path, item.signedUrl);
+    });
+  }
+
+  return rows.map((row) => {
+    const mapped = mapRequest(row);
+    const paths = imagesByRequest.get(mapped.id) ?? [];
+    const imageUrls = paths
+      .map((path) => signedByPath.get(path))
+      .filter((url): url is string => Boolean(url));
+    return {
+      ...mapped,
+      customerName: profileMap.get(mapped.customer_id) ?? "Customer",
+      providerName: providerMap.get(mapped.provider_id) ?? "Business",
+      imagePaths: paths,
+      imageUrls,
+      quote: quotesByRequest.get(mapped.id) ?? null,
+      review: reviewMap.get(mapped.id) ?? null,
+      conversationId: convMap.get(mapped.id) ?? null,
+    };
+  });
 }
 
-export async function countPendingRequestsForOwner(userId: string): Promise<number> {
+export const countPendingRequestsForOwner = cache(async function countPendingRequestsForOwner(
+  userId: string,
+): Promise<number> {
   const provider = await getOwnedProvider(userId);
   if (!provider) return 0;
   const supabase = await createClient();
@@ -248,7 +255,7 @@ export async function countPendingRequestsForOwner(userId: string): Promise<numb
     .eq("status", "pending");
   if (error) return 0;
   return count ?? 0;
-}
+});
 
 export async function countTabBadges(providerId: string): Promise<Record<BusinessRequestTab, number>> {
   const supabase = await createClient();

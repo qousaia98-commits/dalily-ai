@@ -3,7 +3,7 @@
 import { useCallback, useState, useTransition } from "react";
 import { MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { Link, useRouter } from "@/lib/i18n/routing";
 import {
   disableLocationAction,
   enableLocationWithCoordsAction,
@@ -75,15 +75,8 @@ export function NearbyLocationPrompt({
       >
         <MapPin className="size-4 shrink-0 text-muted-foreground" aria-hidden />
         <span>{t("cityMode")}</span>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="ms-auto h-8 rounded-xl"
-          disabled={pending}
-          onClick={onRefresh}
-        >
-          {t("enableFromSettings")}
+        <Button asChild variant="ghost" size="sm" className="ms-auto h-8 min-h-9 rounded-xl">
+          <Link href="/account">{t("enableFromSettings")}</Link>
         </Button>
       </div>
     );

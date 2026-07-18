@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { getStoragePublicUrl } from "@/lib/providers/storage";
 import type { ManagedProvider, ProviderImage, ProviderService, WorkingHour } from "@/types/provider.types";
@@ -93,7 +94,9 @@ export function mapProviderRow(
   };
 }
 
-export async function getOwnedProvider(userId: string): Promise<ManagedProvider | null> {
+export const getOwnedProvider = cache(async function getOwnedProvider(
+  userId: string,
+): Promise<ManagedProvider | null> {
   const supabase = await createClient();
 
   const { data: provider, error } = await supabase
@@ -124,7 +127,7 @@ export async function getOwnedProvider(userId: string): Promise<ManagedProvider 
     servicesResult.data ?? [],
     hoursResult.data ?? [],
   );
-}
+});
 
 export async function requireOwnedProvider(userId: string): Promise<ManagedProvider> {
   const provider = await getOwnedProvider(userId);

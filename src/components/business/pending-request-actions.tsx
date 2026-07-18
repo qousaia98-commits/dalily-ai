@@ -33,9 +33,7 @@ export function PendingRequestActions({ requestId, acceptAction, rejectAction }:
                 setError(result.error ?? "accept_failed");
                 return;
               }
-              if (result.conversationId) {
-                router.push(`/business/messages/${result.conversationId}`);
-              }
+              router.push(`/business/requests/${requestId}`);
               router.refresh();
             })
           }

@@ -1,9 +1,12 @@
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { loadConversationsForCustomer } from "@/lib/messaging/queries";
 import { MSG_READ_COOKIE, parseMsgReadCookie } from "@/lib/business/message-read-state";
 import { applyConversationReadState } from "@/lib/business/conversations";
 
-export async function loadCustomerConversations(userId: string | null) {
+export const loadCustomerConversations = cache(async function loadCustomerConversations(
+  userId: string | null,
+) {
   if (!userId) {
     return { conversations: [] };
   }
@@ -15,4 +18,4 @@ export async function loadCustomerConversations(userId: string | null) {
   return {
     conversations: applyConversationReadState(conversations, readMap),
   };
-}
+});

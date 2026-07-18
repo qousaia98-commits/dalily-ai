@@ -41,6 +41,8 @@
   --dalily-border: #e4e7ee;
   --dalily-muted: #8a93a8;
   --dalily-text-secondary: #5c6478;
+  /* Floating mobile nav: bar (4.75rem) + outer padding (0.5rem top + safe bottom) */
+  --dalily-mobile-nav-offset: calc(5.25rem + env(safe-area-inset-bottom, 0px));
 
   --radius: 0.75rem;
   --background: var(--dalily-white);

@@ -8,6 +8,7 @@ import {
   countUnreadConversations,
 } from "@/lib/business/conversations";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
+import { countPendingRequestsForOwner } from "@/lib/service-requests/queries";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { GrowthHero } from "@/components/business/growth-hero";
 import { DashboardTodayOverview } from "@/components/business/dashboard-today-overview";
@@ -41,15 +42,16 @@ export default async function BusinessDashboardPage() {
     );
   }
 
-  // Lightweight only — no growth-potential / location / snapshot queries
-  const [{ subscription }, { conversations }, weekly] = await Promise.all([
+  // Lightweight only — conversations cached with layout/nav badges
+  const [{ subscription }, { conversations }, weekly, pendingRequests] = await Promise.all([
     getSubscriptionPageData(authUser.id),
     loadBusinessConversations(authUser.id),
     getWeeklyInsights(provider.id, provider.reviewCount),
+    countPendingRequestsForOwner(authUser.id),
   ]);
 
   const planSlug = (subscription?.planSlug ?? "free") as PlanSlug;
-  const businessName = getLocalizedField(provider.name, locale) || "Business";
+  const businessName = getLocalizedField(provider.name, locale) || provider.id;
   const unreadMessages = countUnreadConversations(conversations);
 
   const showVerification =
@@ -70,7 +72,7 @@ export default async function BusinessDashboardPage() {
         data={{
           profileViews: weekly.profileViews ?? 0,
           unreadMessages,
-          newContacts: weekly.contactClicks ?? 0,
+          pendingRequests,
           growthAppearances: weekly.searchAppearances,
         }}
       />

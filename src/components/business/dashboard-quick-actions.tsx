@@ -37,13 +37,11 @@ export async function DashboardQuickActions({
   }[] = [
     { key: "profile", href: "/business/profile", icon: User },
     { key: "services", href: "/business/services", icon: Wrench },
-    {
-      key: "public",
-      href: publicHref ?? "/search",
-      icon: ExternalLink,
-    },
   ];
 
+  if (publicHref) {
+    actions.push({ key: "public", href: publicHref, icon: ExternalLink });
+  }
   if (showUpgrade) {
     actions.push({ key: "upgrade", href: "/business/subscription", icon: Star });
   }

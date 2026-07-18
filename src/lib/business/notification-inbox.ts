@@ -45,25 +45,11 @@ function hoursSince(iso: string | null | undefined): number | null {
 }
 
 /**
- * Synthetic notification inbox for businesses (no notifications table yet).
- * Temporary plan-activation notices expire after 24h — never permanent.
+ * Actionable Dalily inbox items only — no permanent filler notifications.
  */
 export function buildBusinessNotifications(input: BuildInput): BusinessNotification[] {
   const items: BusinessNotification[] = [];
   const now = new Date().toISOString();
-
-  if (input.providerStatus === "active") {
-    items.push({
-      id: "system_business_approved",
-      source: "dalily",
-      icon: "check",
-      titleKey: "businessApproved.title",
-      bodyKey: "businessApproved.body",
-      createdAt: now,
-      unread: false,
-      href: "/business",
-    });
-  }
 
   if (input.providerStatus === "changes_requested") {
     items.push({
@@ -105,7 +91,7 @@ export function buildBusinessNotifications(input: BuildInput): BusinessNotificat
       titleKey: isPremium ? "premiumActivated.title" : "proActivated.title",
       bodyKey: isPremium ? "premiumActivated.body" : "proActivated.body",
       createdAt: input.recentlyPaid.approvedAt ?? now,
-      unread: paidHours < 48,
+      unread: true,
       href: "/business/subscription",
     });
   }
@@ -126,48 +112,29 @@ export function buildBusinessNotifications(input: BuildInput): BusinessNotificat
     }
   }
 
-  if (input.verificationStatus === "verified") {
+  if (input.providerStatus === "pending_review") {
     items.push({
-      id: "verification_completed",
+      id: "system_pending_review",
       source: "dalily",
-      icon: "shield",
-      titleKey: "verificationCompleted.title",
-      bodyKey: "verificationCompleted.body",
-      createdAt: now,
-      unread: false,
-      href: "/business/verification",
-    });
-  }
-
-  if (input.planSlug === "pro" || input.planSlug === "premium") {
-    items.push({
-      id: "feature_available",
-      source: "dalily",
-      icon: "star",
-      titleKey: "newFeature.title",
-      bodyKey: "newFeature.body",
-      createdAt: now,
-      unread: false,
-      href: "/business/analytics",
-    });
-  }
-
-  // Customer placeholders — ready for future messaging/reviews
-  if ((input.reviewCount ?? 0) > 0) {
-    items.push({
-      id: "customer_review_hint",
-      source: "customer",
-      icon: "review",
-      titleKey: "newReview.title",
-      bodyKey: "newReview.body",
-      bodyParams: { count: input.reviewCount ?? 0 },
+      icon: "clock",
+      titleKey: "businessPending.title",
+      bodyKey: "businessPending.body",
       createdAt: now,
       unread: false,
       href: "/business",
     });
   }
 
-  return items.sort(
+  // Deduplicate by id (keep newest)
+  const byId = new Map<string, BusinessNotification>();
+  for (const item of items) {
+    const prev = byId.get(item.id);
+    if (!prev || new Date(item.createdAt) > new Date(prev.createdAt)) {
+      byId.set(item.id, item);
+    }
+  }
+
+  return [...byId.values()].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 }

@@ -23,9 +23,14 @@ import { cn } from "@/lib/utils";
 type SearchFiltersProps = {
   groups: CategoryGroupWithLeaves[];
   className?: string;
+  nearbyAvailable?: boolean;
 };
 
-export function SearchFilters({ groups, className }: SearchFiltersProps) {
+export function SearchFilters({
+  groups,
+  className,
+  nearbyAvailable = false,
+}: SearchFiltersProps) {
   const t = useTranslations("search.filters");
   const tCities = useTranslations("auth.cities");
   const locale = useLocale() as Locale;
@@ -58,7 +63,7 @@ export function SearchFilters({ groups, className }: SearchFiltersProps) {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>{t("category")}</Label>
+            <Label htmlFor="search-category">{t("category")}</Label>
             <Select
               value={category}
               onValueChange={(v) => {
@@ -74,7 +79,7 @@ export function SearchFilters({ groups, className }: SearchFiltersProps) {
                 }
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger id="search-category">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -97,12 +102,12 @@ export function SearchFilters({ groups, className }: SearchFiltersProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>{t("city")}</Label>
+            <Label htmlFor="search-city">{t("city")}</Label>
             <Select
               value={city}
               onValueChange={(v) => updateParam("city", v === "all" ? null : v)}
             >
-              <SelectTrigger>
+              <SelectTrigger id="search-city">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -119,8 +124,9 @@ export function SearchFilters({ groups, className }: SearchFiltersProps) {
           <div className="space-y-2">
             <Label htmlFor="nearby-radius">{t("nearby")}</Label>
             <Select
-              value={nearby}
+              value={nearbyAvailable ? nearby : "city"}
               onValueChange={(v) => updateParam("nearby", v === "city" ? null : v)}
+              disabled={!nearbyAvailable}
             >
               <SelectTrigger id="nearby-radius">
                 <SelectValue />
@@ -133,6 +139,9 @@ export function SearchFilters({ groups, className }: SearchFiltersProps) {
                 <SelectItem value="city">{t("nearbyOptions.city")}</SelectItem>
               </SelectContent>
             </Select>
+            {!nearbyAvailable ? (
+              <p className="text-xs text-muted-foreground">{t("nearbyNeedsLocation")}</p>
+            ) : null}
           </div>
 
           <div className="space-y-2">
@@ -156,12 +165,12 @@ export function SearchFilters({ groups, className }: SearchFiltersProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>{t("verified")}</Label>
+            <Label htmlFor="search-verified">{t("verified")}</Label>
             <Select
               value={verified}
               onValueChange={(v) => updateParam("verified", v === "all" ? null : v)}
             >
-              <SelectTrigger>
+              <SelectTrigger id="search-verified">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

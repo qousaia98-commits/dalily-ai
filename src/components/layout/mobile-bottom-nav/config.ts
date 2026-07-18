@@ -89,11 +89,11 @@ export const ADMIN_NAV_ITEMS: readonly MobileNavItemConfig[] = [
     badgeKey: "payments",
   },
   {
-    id: "messages",
-    href: "/admin/messages",
+    id: "marketplace",
+    href: "/admin/marketplace",
     icon: Megaphone,
-    labelKey: "messages",
-    badgeKey: "messages",
+    labelKey: "marketplace",
+    matchPrefixes: ["/admin/marketplace"],
   },
   {
     id: "admin",
@@ -106,6 +106,7 @@ export const ADMIN_NAV_ITEMS: readonly MobileNavItemConfig[] = [
       "/admin/users",
       "/admin/subscriptions",
       "/admin/searches",
+      "/admin/messages",
     ],
   },
 ] as const;

@@ -48,6 +48,7 @@
       "approvals": "Approvals",
       "payments": "Payments",
       "messages": "Messages",
+      "marketplace": "Market",
       "admin": "Admin"
     }
   },
@@ -318,6 +319,7 @@
       "allCities": "All cities",
       "allProviders": "All",
       "verifiedOnly": "Verified only",
+      "nearbyNeedsLocation": "Enable location in Account to use nearby radius.",
       "nearbyOptions": {
         "3": "3 km",
         "5": "5 km",
@@ -425,6 +427,8 @@
     "withBusiness": "With {name}",
     "openChat": "Open chat",
     "pinnedSummary": "Pinned request",
+    "viewRequest": "View full request",
+    "photoAlt": "Photo for request {title}",
     "chatLocked": "Chat unlocks after the business accepts your request.",
     "timeline": {
       "label": "Request timeline",
@@ -852,10 +856,11 @@
       "todayOverview": {
         "title": "Today's Overview",
         "subtitle": "What matters right now.",
+        "requests": "Pending Requests",
         "profileViews": "Profile Views",
         "messages": "Messages",
         "contacts": "New Contacts",
-        "growth": "Growth"
+        "growth": "Search Appearances"
       },
       "growth": {
         "title": "Growth",
@@ -1580,6 +1585,10 @@
         "title": "Business approved",
         "body": "Your business is live on Dalily."
       },
+      "businessPending": {
+        "title": "Under review",
+        "body": "Your business profile is being reviewed. We will notify you when it goes live."
+      },
       "changesRequested": {
         "title": "Changes requested",
         "body": "Please update your submission.",
@@ -2110,6 +2119,10 @@
         "messages": {
           "title": "Messages",
           "body": "Unread support and system notes."
+        },
+        "marketplace": {
+          "title": "Marketplace",
+          "body": "Request lifecycle and marketplace health."
         },
         "open": "Open"
       },

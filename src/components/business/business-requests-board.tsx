@@ -56,14 +56,22 @@ export function BusinessRequestsBoard({ requests, badges, userId, providerId }: 
         />
       </div>
 
-      <div className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1">
+      <div
+        className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1"
+        role="tablist"
+        aria-label={t("listLabel")}
+      >
         {BUSINESS_REQUEST_TABS.map((key) => (
           <button
             key={key}
             type="button"
+            role="tab"
+            aria-selected={tab === key}
+            id={`request-tab-${key}`}
             onClick={() => setTab(key)}
             className={cn(
-              "inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition",
+              "inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 text-xs font-semibold transition",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)] focus-visible:ring-offset-2",
               tab === key
                 ? "bg-[var(--dalily-navy)] text-white"
                 : "bg-muted text-muted-foreground hover:text-foreground",

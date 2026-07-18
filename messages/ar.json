@@ -48,6 +48,7 @@
       "approvals": "الموافقات",
       "payments": "المدفوعات",
       "messages": "الرسائل",
+      "marketplace": "السوق",
       "admin": "الإدارة"
     }
   },
@@ -318,6 +319,7 @@
       "allCities": "جميع المدن",
       "allProviders": "الكل",
       "verifiedOnly": "موثقون فقط",
+      "nearbyNeedsLocation": "فعّل الموقع من الحساب لاستخدام نطاق القرب.",
       "nearbyOptions": {
         "3": "3 كم",
         "5": "5 كم",
@@ -635,10 +637,11 @@
       "todayOverview": {
         "title": "نظرة اليوم",
         "subtitle": "الشي المهم هلق.",
+        "requests": "طلبات معلّقة",
         "profileViews": "مشاهدات الملف",
         "messages": "الرسائل",
         "contacts": "تواصلات جديدة",
-        "growth": "النمو"
+        "growth": "ظهور بالبحث"
       },
       "growth": {
         "title": "النمو",
@@ -1361,6 +1364,10 @@
         "title": "تم اعتماد النشاط",
         "body": "نشاطك صار ظاهر على دليلي."
       },
+      "businessPending": {
+        "title": "قيد المراجعة",
+        "body": "ملف نشاطك قيد المراجعة. سنُعلمك عند النشر."
+      },
       "changesRequested": {
         "title": "مطلوب تعديلات",
         "body": "حدّث طلبك.",
@@ -1898,6 +1905,10 @@
           "title": "الرسائل",
           "body": "ملاحظات دعم ونظام غير مقروءة."
         },
+        "marketplace": {
+          "title": "السوق",
+          "body": "صحة طلبات الخدمة ودورة العمل."
+        },
         "open": "فتح"
       },
       "stats": {
@@ -2137,6 +2148,8 @@
     "withBusiness": "مع {name}",
     "openChat": "فتح المحادثة",
     "pinnedSummary": "ملخص الطلب المثبت",
+    "viewRequest": "عرض الطلب بالكامل",
+    "photoAlt": "صورة لطلب {title}",
     "chatLocked": "تفتح المحادثة بعد قبول العمل لطلبك.",
     "timeline": {
       "label": "خط زمني للطلب",

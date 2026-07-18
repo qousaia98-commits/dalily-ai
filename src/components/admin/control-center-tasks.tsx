@@ -3,7 +3,7 @@ import {
   Building2,
   CreditCard,
   FileWarning,
-  MessageSquare,
+  Store,
   ArrowRight,
 } from "lucide-react";
 import { Link } from "@/lib/i18n/routing";
@@ -48,7 +48,7 @@ function TaskCard({ href, title, body, count, tone, icon: Icon, openLabel }: Tas
             tone === "muted" && "bg-[var(--dalily-navy)]/5 text-[var(--dalily-navy)]",
           )}
         >
-          <Icon className="size-5" />
+          <Icon className="size-5" aria-hidden />
         </span>
         {count > 0 ? (
           <span className="inline-flex min-w-7 items-center justify-center rounded-full bg-[var(--dalily-navy)] px-2 py-0.5 text-xs font-bold text-white">
@@ -105,12 +105,12 @@ export async function ControlCenterTasks({ overview }: { overview: ControlCenter
           openLabel={t("open")}
         />
         <TaskCard
-          href="/admin/messages"
-          title={t("messages.title")}
-          body={t("messages.body")}
-          count={overview.unreadMessages}
+          href="/admin/marketplace"
+          title={t("marketplace.title")}
+          body={t("marketplace.body")}
+          count={0}
           tone="muted"
-          icon={MessageSquare}
+          icon={Store}
           openLabel={t("open")}
         />
       </div>

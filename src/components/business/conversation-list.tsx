@@ -49,7 +49,7 @@ export async function DashboardConversationsPreview({
   locale?: string;
 }) {
   const t = await getTranslations("business.messages");
-  const preview = conversations.slice(0, 3);
+  const preview = conversations.slice(0, 2);
 
   return (
     <section className="space-y-4" aria-labelledby="dash-chats-title">

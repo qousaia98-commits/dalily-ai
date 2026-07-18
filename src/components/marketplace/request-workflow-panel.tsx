@@ -108,7 +108,11 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
                 {request.imageUrls.map((url) => (
                   <li key={url} className="overflow-hidden rounded-2xl border border-border bg-muted/30">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={url} alt="" className="aspect-square h-full w-full object-cover" />
+                    <img
+                      src={url}
+                      alt={t("photoAlt", { title: request.title })}
+                      className="aspect-square h-full w-full object-cover"
+                    />
                   </li>
                 ))}
               </ul>
@@ -189,7 +193,7 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
           ) : null}
 
           {viewer === "business" && canCompleteService(request.status) ? (
-            <div className="sticky bottom-20 z-10 rounded-3xl border border-border bg-card/95 p-4 shadow-lg backdrop-blur md:bottom-4">
+            <div className="sticky z-10 rounded-3xl border border-border bg-card/95 p-4 shadow-lg backdrop-blur bottom-[calc(var(--dalily-mobile-nav-offset)+0.75rem)] md:bottom-4">
               {!showCompleteConfirm ? (
                 <Button
                   className="h-12 w-full rounded-2xl"
