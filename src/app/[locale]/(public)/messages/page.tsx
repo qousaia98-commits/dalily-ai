@@ -41,6 +41,7 @@ export default async function CustomerMessagesPage() {
         locale={locale}
         messagesPath="/messages"
         namespace="customer.messages"
+        realtimeUserId={authUser.id}
       />
     </div>
   );

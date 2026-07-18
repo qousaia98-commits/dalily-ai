@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/routing";
 import type { BusinessConversation } from "@/lib/business/conversations";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
@@ -10,6 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { canChat } from "@/lib/service-requests/status-machine";
+import {
+  formatMessageTime,
+  isValidMessageTimestamp,
+  resolveLatestMessageAt,
+} from "@/lib/messaging/format-conversation-time";
 
 export async function ConversationThread({
   conversation,
@@ -28,10 +33,9 @@ export async function ConversationThread({
 }) {
   const t = await getTranslations(namespace);
   const tm = await getTranslations("marketplace");
+  const locale = await getLocale();
   const name = conversation.nameKey ? t(conversation.nameKey) : (conversation.name ?? "Chat");
-  const lastMessageAt =
-    conversation.messages[conversation.messages.length - 1]?.createdAt ??
-    conversation.updatedAt;
+  const lastMessageAt = resolveLatestMessageAt(conversation.messages);
 
   const chatOpen = request ? canChat(request.status) : conversation.kind === "customer";
 
@@ -44,11 +48,13 @@ export async function ConversationThread({
           requestId={request?.id ?? conversation.serviceRequestId}
         />
       ) : null}
-      <MarkConversationRead
-        conversationId={conversation.id}
-        lastMessageAt={lastMessageAt}
-        unreadCount={conversation.unreadCount}
-      />
+      {lastMessageAt ? (
+        <MarkConversationRead
+          conversationId={conversation.id}
+          lastMessageAt={lastMessageAt}
+          unreadCount={conversation.unreadCount}
+        />
+      ) : null}
       <header className="space-y-2 border-b border-border px-4 py-3">
         <div className="flex items-center gap-3">
           <Button asChild variant="ghost" size="icon" className="shrink-0 md:hidden">
@@ -136,15 +142,21 @@ export async function ConversationThread({
             !isSystem &&
             (viewer === "customer" ? msg.from === "customer" : msg.from === "business");
           const body = msg.bodyText ? msg.bodyText : t(msg.bodyKey, msg.bodyParams ?? {});
+          const timeLabel = formatMessageTime(msg.createdAt, locale);
 
           if (isSystem) {
             return (
               <div key={msg.id} className="flex justify-center">
                 <div className="max-w-[90%] rounded-2xl border border-[var(--dalily-gold)]/30 bg-[color-mix(in_oklab,var(--dalily-gold)_10%,var(--card))] px-3.5 py-2 text-center text-xs leading-relaxed text-foreground sm:max-w-[75%]">
                   <p className="font-medium">{body}</p>
-                  <time className="mt-1 block text-[0.6rem] text-muted-foreground" dateTime={msg.createdAt}>
-                    {new Date(msg.createdAt).toLocaleString()}
-                  </time>
+                  {timeLabel && isValidMessageTimestamp(msg.createdAt) ? (
+                    <time
+                      className="mt-1 block text-[0.6rem] text-muted-foreground"
+                      dateTime={msg.createdAt}
+                    >
+                      {timeLabel}
+                    </time>
+                  ) : null}
                 </div>
               </div>
             );
@@ -161,15 +173,17 @@ export async function ConversationThread({
                 )}
               >
                 <p>{body}</p>
-                <time
-                  className={cn(
-                    "mt-1 block text-[0.65rem]",
-                    mine ? "text-white/60" : "text-muted-foreground",
-                  )}
-                  dateTime={msg.createdAt}
-                >
-                  {new Date(msg.createdAt).toLocaleString()}
-                </time>
+                {timeLabel ? (
+                  <time
+                    className={cn(
+                      "mt-1 block text-[0.65rem]",
+                      mine ? "text-white/60" : "text-muted-foreground",
+                    )}
+                    dateTime={msg.createdAt}
+                  >
+                    {timeLabel}
+                  </time>
+                ) : null}
               </div>
             </div>
           );

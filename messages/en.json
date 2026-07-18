@@ -185,7 +185,9 @@
       "businessSubtitle": "Business conversation",
       "dalilySubtitle": "Official Dalily updates",
       "composerHint": "Messages send instantly.",
-      "customerHint": "Open a business profile and send a request to get started."
+      "customerHint": "Open a business profile and send a request to get started.",
+      "noMessagesYet": "No messages yet",
+      "yesterday": "Yesterday"
     }
   },
   "location": {
@@ -1697,6 +1699,8 @@
       "searchPlaceholder": "Search by name, phone, or business…",
       "searchEmpty": "No conversations match your search.",
       "unreadCount": "{count} unread",
+      "noMessagesYet": "No messages yet",
+      "yesterday": "Yesterday",
       "dalilyWelcome": {
         "body": "Welcome to Dalily Messages. Important updates about your business will appear in this chat."
       }

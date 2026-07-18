@@ -12,6 +12,8 @@ export async function ConversationList({
   compact = false,
   messagesPath = "/business/messages",
   namespace = "business.messages",
+  realtimeUserId,
+  realtimeProviderId,
 }: {
   conversations: BusinessConversation[];
   activeId?: string;
@@ -19,6 +21,8 @@ export async function ConversationList({
   compact?: boolean;
   messagesPath?: string;
   namespace?: string;
+  realtimeUserId?: string;
+  realtimeProviderId?: string | null;
 }) {
   const t = await getTranslations(namespace);
 
@@ -44,6 +48,8 @@ export async function ConversationList({
       compact={compact}
       messagesPath={messagesPath}
       namespace={namespace}
+      realtimeUserId={realtimeUserId}
+      realtimeProviderId={realtimeProviderId}
     />
   );
 }

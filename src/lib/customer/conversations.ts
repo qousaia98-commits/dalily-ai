@@ -1,12 +1,14 @@
 import type { MsgReadMap } from "@/lib/business/message-read-state";
 import {
   applyConversationReadState,
+  compareConversationsByLatestMessage,
   countUnreadConversations,
   filterConversations,
   findConversation,
   type BusinessConversation,
   type ConversationMessage,
 } from "@/lib/business/conversations";
+import { resolveLatestMessageAt } from "@/lib/messaging/format-conversation-time";
 
 export type CustomerConversation = BusinessConversation;
 
@@ -22,7 +24,7 @@ export function buildCustomerConversations(input: {
     id: string;
     businessName: string;
     previewText?: string;
-    updatedAt: string;
+    updatedAt?: string | null;
     messages: ConversationMessage[];
   }>;
 }): CustomerConversation[] {
@@ -38,7 +40,7 @@ export function buildCustomerConversations(input: {
       name: thread.businessName,
       avatarTone: "customer" as const,
       previewText: thread.previewText ?? last?.bodyText,
-      updatedAt: thread.updatedAt,
+      updatedAt: resolveLatestMessageAt(thread.messages),
       unreadCount,
       state: unreadCount > 0 ? "unread" : "read",
       messages: thread.messages,
@@ -46,7 +48,5 @@ export function buildCustomerConversations(input: {
   });
 
   const merged = applyConversationReadState(businessChats, readMap);
-  return merged.sort(
-    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-  );
+  return merged.sort(compareConversationsByLatestMessage);
 }

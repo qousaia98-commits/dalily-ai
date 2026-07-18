@@ -9,7 +9,7 @@ export default async function BusinessMessagesPage() {
   const t = await getTranslations("business.messages");
   const locale = await getLocale();
   const authUser = await requireAuthUser();
-  const { conversations, planSlug } = await loadBusinessConversations(authUser.id);
+  const { conversations, planSlug, provider } = await loadBusinessConversations(authUser.id);
   const unread = countUnreadConversations(conversations);
 
   return (
@@ -32,7 +32,12 @@ export default async function BusinessMessagesPage() {
         <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </header>
 
-      <ConversationList conversations={conversations} locale={locale} />
+      <ConversationList
+        conversations={conversations}
+        locale={locale}
+        realtimeUserId={authUser.id}
+        realtimeProviderId={provider?.id ?? null}
+      />
     </div>
   );
 }

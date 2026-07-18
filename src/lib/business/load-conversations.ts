@@ -6,6 +6,7 @@ import { buildBusinessNotifications } from "@/lib/business/notification-inbox";
 import {
   applyConversationReadState,
   buildBusinessConversations,
+  compareConversationsByLatestMessage,
 } from "@/lib/business/conversations";
 import { MSG_READ_COOKIE, parseMsgReadCookie } from "@/lib/business/message-read-state";
 import { loadConversationsForBusiness } from "@/lib/messaging/queries";
@@ -75,7 +76,7 @@ export const loadBusinessConversations = cache(async function loadBusinessConver
       readMap,
     );
     const conversations = [...customerConversations, ...dalilyConversations].sort(
-      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+      compareConversationsByLatestMessage,
     );
 
     return {
@@ -99,7 +100,7 @@ export const loadBusinessConversations = cache(async function loadBusinessConver
       readMap,
     );
     const conversations = [...customerConversations, ...dalilyConversations].sort(
-      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+      compareConversationsByLatestMessage,
     );
     return {
       conversations,

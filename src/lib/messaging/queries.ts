@@ -1,13 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { getOwnedProvider } from "@/lib/providers/queries";
 import type { BusinessConversation, ConversationMessage } from "@/lib/business/conversations";
+import { resolveLatestMessageAt } from "@/lib/messaging/format-conversation-time";
 
 type ConversationRow = {
   id: string;
   provider_id: string;
   customer_id: string;
   service_request_id: string | null;
-  last_message_at: string;
+  last_message_at: string | null;
   created_at: string;
 };
 
@@ -32,7 +33,7 @@ export async function loadConversationsForCustomer(
     .order("last_message_at", { ascending: false });
 
   if (error || !conversations?.length) return [];
-  return buildConversationList(conversations, userId, "customer");
+  return buildConversationList(conversations as ConversationRow[], userId, "customer");
 }
 
 export async function loadConversationsForBusiness(
@@ -49,7 +50,7 @@ export async function loadConversationsForBusiness(
     .order("last_message_at", { ascending: false });
 
   if (error || !conversations?.length) return [];
-  return buildConversationList(conversations, userId, "business");
+  return buildConversationList(conversations as ConversationRow[], userId, "business");
 }
 
 async function buildConversationList(
@@ -133,6 +134,8 @@ async function buildConversationList(
         ? (providerMap.get(conv.provider_id) ?? "Business")
         : (profileMap.get(conv.customer_id) ?? "Customer");
     const unreadCount = mappedMessages.filter((m) => !m.read).length;
+    // Prefer the newest message row; never fall back to a bogus/epoch last_message_at.
+    const updatedAt = resolveLatestMessageAt(mappedMessages);
 
     return {
       id: conv.id,
@@ -140,7 +143,7 @@ async function buildConversationList(
       name,
       avatarTone: "customer" as const,
       previewText: last?.bodyText ?? "",
-      updatedAt: conv.last_message_at,
+      updatedAt,
       unreadCount,
       state: unreadCount > 0 ? ("unread" as const) : ("read" as const),
       messages: mappedMessages,

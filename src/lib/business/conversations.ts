@@ -1,5 +1,6 @@
 import type { BusinessNotification } from "@/lib/business/notification-inbox";
 import type { MsgReadMap } from "@/lib/business/message-read-state";
+import { resolveLatestMessageAt } from "@/lib/messaging/format-conversation-time";
 
 export type ConversationKind = "dalily" | "customer";
 export type ConversationState = "unread" | "read" | "archived";
@@ -26,7 +27,8 @@ export type BusinessConversation = {
   previewKey?: string;
   previewText?: string;
   previewParams?: Record<string, string | number>;
-  updatedAt: string;
+  /** ISO timestamp of the newest real message; null when the thread has no messages yet. */
+  updatedAt: string | null;
   unreadCount: number;
   state: ConversationState;
   /** Future realtime typing indicator */
@@ -62,23 +64,28 @@ export function buildBusinessConversations(input: {
     });
 
   if (dalilyMessages.length === 0) {
+    // Placeholder copy only — never use Unix epoch as a display timestamp.
     dalilyMessages.push({
       id: "dalily_welcome",
       bodyKey: "dalilyWelcome.body",
-      createdAt: new Date(0).toISOString(),
+      createdAt: "",
       from: "dalily",
       read: true,
     });
   }
 
-  dalilyMessages.sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-  );
+  dalilyMessages.sort((a, b) => {
+    const aMs = a.createdAt ? Date.parse(a.createdAt) : 0;
+    const bMs = b.createdAt ? Date.parse(b.createdAt) : 0;
+    const aSafe = Number.isFinite(aMs) ? aMs : 0;
+    const bSafe = Number.isFinite(bMs) ? bMs : 0;
+    return aSafe - bSafe;
+  });
 
-  // If user opened the thread, treat everything up to lastRead as read
   if (dalilyReadAt > 0) {
     for (const msg of dalilyMessages) {
-      if (new Date(msg.createdAt).getTime() <= dalilyReadAt) msg.read = true;
+      const created = msg.createdAt ? Date.parse(msg.createdAt) : NaN;
+      if (Number.isFinite(created) && created <= dalilyReadAt) msg.read = true;
     }
   }
 
@@ -92,15 +99,22 @@ export function buildBusinessConversations(input: {
     avatarTone: "dalily",
     previewKey: last.bodyKey,
     previewParams: last.bodyParams,
-    updatedAt: last.createdAt,
+    updatedAt: resolveLatestMessageAt(dalilyMessages),
     unreadCount,
     state: unreadCount > 0 ? "unread" : "read",
     messages: dalilyMessages,
   };
 
-  return [dalily].sort(
-    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-  );
+  return [dalily].sort(compareConversationsByLatestMessage);
+}
+
+export function compareConversationsByLatestMessage(
+  a: BusinessConversation,
+  b: BusinessConversation,
+) {
+  const aMs = a.updatedAt ? Date.parse(a.updatedAt) : 0;
+  const bMs = b.updatedAt ? Date.parse(b.updatedAt) : 0;
+  return (Number.isFinite(bMs) ? bMs : 0) - (Number.isFinite(aMs) ? aMs : 0);
 }
 
 export function applyConversationReadState(
@@ -112,7 +126,8 @@ export function applyConversationReadState(
     const threshold = lastReadAt ? new Date(lastReadAt).getTime() : 0;
     const messages = c.messages.map((m) => {
       if (m.read) return m;
-      if (threshold > 0 && new Date(m.createdAt).getTime() <= threshold) {
+      const created = m.createdAt ? Date.parse(m.createdAt) : NaN;
+      if (threshold > 0 && Number.isFinite(created) && created <= threshold) {
         return { ...m, read: true };
       }
       return m;
@@ -123,6 +138,7 @@ export function applyConversationReadState(
       messages,
       unreadCount,
       state: unreadCount > 0 ? "unread" : "read",
+      updatedAt: resolveLatestMessageAt(messages),
     };
   });
 }

@@ -185,7 +185,9 @@
       "businessSubtitle": "محادثة مع عمل",
       "dalilySubtitle": "تحديثات دليلي الرسمية",
       "composerHint": "تُرسل الرسائل فوراً.",
-      "customerHint": "افتح ملف عمل وأرسل طلباً للبدء."
+      "customerHint": "افتح ملف عمل وأرسل طلباً للبدء.",
+      "noMessagesYet": "لا رسائل بعد",
+      "yesterday": "أمس"
     }
   },
   "location": {
@@ -1436,6 +1438,8 @@
       "searchPlaceholder": "ابحث بالاسم أو الهاتف أو النشاط…",
       "searchEmpty": "ما في محادثات مطابقة.",
       "unreadCount": "{count} غير مقروء",
+      "noMessagesYet": "لا رسائل بعد",
+      "yesterday": "أمس",
       "dalilyWelcome": {
         "body": "أهلاً في رسائل دليلي. التحديثات المهمة عن نشاطك بتظهر بهالمحادثة."
       }

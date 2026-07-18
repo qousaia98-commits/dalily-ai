@@ -6,20 +6,10 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
 import type { BusinessConversation } from "@/lib/business/conversations";
 import { filterConversations } from "@/lib/business/conversations";
+import { formatConversationListTime } from "@/lib/messaging/format-conversation-time";
+import { useMarketplaceRealtime } from "@/hooks/use-marketplace-realtime";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
-function formatRelativeTime(iso: string, locale: string): string {
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return "now";
-  if (mins < 60) return `${mins}m`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h`;
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d`;
-  return new Date(iso).toLocaleDateString(locale);
-}
 
 export function ConversationListClient({
   conversations,
@@ -27,16 +17,28 @@ export function ConversationListClient({
   compact = false,
   messagesPath = "/business/messages",
   namespace = "business.messages",
+  realtimeUserId,
+  realtimeProviderId,
 }: {
   conversations: BusinessConversation[];
   activeId?: string;
   compact?: boolean;
   messagesPath?: string;
   namespace?: string;
+  /** When set, list refreshes on new inbox activity. */
+  realtimeUserId?: string;
+  realtimeProviderId?: string | null;
 }) {
   const t = useTranslations(namespace);
   const locale = useLocale();
   const [query, setQuery] = useState("");
+
+  useMarketplaceRealtime({
+    userId: realtimeUserId ?? "",
+    providerId: realtimeProviderId,
+    inboxAsCustomer: Boolean(realtimeUserId && !realtimeProviderId),
+    inboxAsProviderId: realtimeProviderId ?? null,
+  });
 
   const resolveName = (c: BusinessConversation) =>
     c.nameKey ? t(c.nameKey) : (c.name ?? "Chat");
@@ -81,6 +83,9 @@ export function ConversationListClient({
                 ? t(c.previewKey, c.previewParams ?? {})
                 : "";
             const active = activeId === c.id;
+            const timeLabel = formatConversationListTime(c.updatedAt, locale, {
+              yesterday: t("yesterday"),
+            });
 
             return (
               <li key={c.id}>
@@ -108,12 +113,18 @@ export function ConversationListClient({
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
                       <p className="truncate text-sm font-bold text-foreground">{name}</p>
-                      <time
-                        className="shrink-0 text-[0.65rem] text-muted-foreground"
-                        dateTime={c.updatedAt}
-                      >
-                        {formatRelativeTime(c.updatedAt, locale)}
-                      </time>
+                      {timeLabel ? (
+                        <time
+                          className="shrink-0 text-[0.65rem] text-muted-foreground"
+                          dateTime={c.updatedAt ?? undefined}
+                        >
+                          {timeLabel}
+                        </time>
+                      ) : (
+                        <span className="shrink-0 text-[0.65rem] text-muted-foreground">
+                          {t("noMessagesYet")}
+                        </span>
+                      )}
                     </div>
                     <div className="mt-0.5 flex items-center gap-2">
                       <p className="truncate text-sm text-muted-foreground">{preview}</p>

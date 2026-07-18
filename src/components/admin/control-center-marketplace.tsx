@@ -36,6 +36,7 @@ export async function ControlCenterMarketplace({
           title={t("topCategories")}
           empty={t("empty")}
           items={insights.topCategories.map((c) => ({
+            id: c.slug,
             label: c.slug,
             value: String(c.count),
           }))}
@@ -44,6 +45,7 @@ export async function ControlCenterMarketplace({
           title={t("topCities")}
           empty={t("empty")}
           items={insights.topCities.map((c) => ({
+            id: c.slug,
             label: c.slug,
             value: String(c.count),
           }))}
@@ -52,6 +54,7 @@ export async function ControlCenterMarketplace({
           title={t("mostViewed")}
           empty={t("empty")}
           items={insights.mostViewedBusinesses.map((b) => ({
+            id: b.providerId,
             label: b.providerId.slice(0, 8),
             value: String(b.views),
           }))}
@@ -60,6 +63,7 @@ export async function ControlCenterMarketplace({
           title={t("mostActive")}
           empty={t("empty")}
           items={insights.mostActiveBusinesses.map((b) => ({
+            id: b.providerId,
             label: b.providerId.slice(0, 8),
             value: String(b.events),
           }))}
@@ -87,7 +91,7 @@ function ListCard({
 }: {
   title: string;
   empty: string;
-  items: { label: string; value: string }[];
+  items: { id: string; label: string; value: string }[];
 }) {
   return (
     <div className="rounded-2xl border border-border bg-card p-4">
@@ -98,7 +102,7 @@ function ListCard({
         <ul className="mt-3 space-y-2">
           {items.map((item) => (
             <li
-              key={item.label + item.value}
+              key={item.id}
               className="flex items-center justify-between gap-2 text-sm"
             >
               <span className="truncate text-muted-foreground">{item.label}</span>
