@@ -17,6 +17,10 @@ export type ProviderListItem = {
   coverImage: string;
   avatarImage: string;
   distanceKm?: number | null;
+  /** Map pin — exact or city-centroid fallback */
+  latitude?: number | null;
+  longitude?: number | null;
+  phone?: string | null;
   profileCompleteness?: number;
   responseTimeHours?: number | null;
   /** Completed marketplace jobs (Smart Match) */

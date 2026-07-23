@@ -511,6 +511,24 @@
       "photography_need": "تصوير"
     },
     "topResults": "أفضل {count} نتائج",
+    "smartMap": {
+      "showMap": "عرض الخريطة",
+      "showList": "عرض القائمة",
+      "mapTitle": "الخريطة",
+      "mapRegionLabel": "خريطة المزودين",
+      "closeMap": "إغلاق الخريطة",
+      "closePreview": "إغلاق المعاينة",
+      "syncHint": "اختيار مزود ببرزه على الخريطة والقائمة.",
+      "distance": "على بعد {km} كم",
+      "travelTime": "حوالي {minutes} د",
+      "verified": "موثّق",
+      "emergency": "طارئ",
+      "hoursUnknown": "الساعات في الملف",
+      "viewProfile": "عرض الملف",
+      "call": "اتصال",
+      "navigate": "توجيه",
+      "loading": "جارٍ تحميل الخريطة…"
+    },
     "error": {
       "pageTitle": "نتائج البحث",
       "title": "البحث غير متاح",

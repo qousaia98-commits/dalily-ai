@@ -6,6 +6,8 @@ import { SearchEmptyState } from "@/components/search/search-empty-state";
 import { SearchErrorState } from "@/components/search/search-error-state";
 import { SearchInsight } from "@/components/search/search-insight";
 import { NearbyLocationPrompt } from "@/components/search/nearby-location-prompt";
+import { SmartMapSearchLayout } from "@/components/search/smart-map/smart-map-search-layout";
+import { ProviderCardMapAnchor } from "@/components/search/smart-map/provider-card-map-anchor";
 import {
   getCategoryGroups,
   getLeafCategories,
@@ -26,6 +28,8 @@ import {
 import { parseNearbyRadius, parseSearchSort } from "@/lib/geo/distance";
 import { getAuthUser } from "@/lib/auth/session";
 import { parseUrgencyOverride } from "@/lib/diagnosis/url";
+import { toSmartMapProviders } from "@/lib/smart-map/types";
+import { getLocalizedText } from "@/types/domain.types";
 
 type SearchResultsProps = {
   searchParams: {
@@ -188,16 +192,27 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
         {t("topResults", { count: results.length })}
         {displayQuery ? ` — «${displayQuery}»` : ""}
       </p>
-      <div className="grid gap-6 sm:grid-cols-2">
+      <SmartMapSearchLayout
+        providers={toSmartMapProviders(results, (item) =>
+          getLocalizedText(item.name, locale),
+        )}
+        userLocation={
+          locationEnabled && nearbyLoc
+            ? { lat: nearbyLoc.lat, lng: nearbyLoc.lng }
+            : null
+        }
+        emergencySearch={parsed.priority === "emergency"}
+      >
         {results.map((provider, index) => (
-          <ProviderCard
-            key={provider.id}
-            provider={provider}
-            position={index + 1}
-            className={cn("animate-fade-in-up", `stagger-${Math.min(index + 1, 4)}`)}
-          />
+          <ProviderCardMapAnchor key={provider.id} providerId={provider.id}>
+            <ProviderCard
+              provider={provider}
+              position={index + 1}
+              className={cn("animate-fade-in-up", `stagger-${Math.min(index + 1, 4)}`)}
+            />
+          </ProviderCardMapAnchor>
         ))}
-      </div>
+      </SmartMapSearchLayout>
     </div>
   );
 }

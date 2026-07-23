@@ -3,38 +3,37 @@
 import { ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import {
+  buildNavigationUrl,
+  openExternalNavigation,
+} from "@/lib/smart-map/navigation";
 
 /**
- * Opens Google Maps / Apple Maps directions — no embedded map.
+ * Opens Google Maps / Apple Maps / OSM directions — no embedded map.
  */
 export function OpenRouteButton({
   lat,
   lng,
   label,
+  onNavigate,
 }: {
   lat: number;
   lng: number;
   label?: string;
+  onNavigate?: () => void;
 }) {
   const t = useTranslations("provider");
-  const dest = `${lat},${lng}`;
+  const href = buildNavigationUrl(lat, lng);
 
   function openRoute(e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
-    const isApple = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
-    const href = isApple
-      ? `https://maps.apple.com/?daddr=${encodeURIComponent(dest)}`
-      : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}`;
-    window.open(href, "_blank", "noopener,noreferrer");
+    onNavigate?.();
+    openExternalNavigation(lat, lng);
   }
 
   return (
     <Button asChild variant="outline" className="w-full gap-2 rounded-2xl" size="lg">
-      <a
-        href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}`}
-        onClick={openRoute}
-        aria-label={t("openRouteAria")}
-      >
+      <a href={href} onClick={openRoute} aria-label={t("openRouteAria")}>
         <ExternalLink className="size-4" aria-hidden />
         {label ?? t("openRoute")}
       </a>

@@ -61,8 +61,6 @@ export function DiagnosisWizard({ problemId, onExit, onSkip, onComplete }: Props
     return () => {
       if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     };
-    // Intro typing beat before the first question — runs once on mount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const answeredEntries = Object.entries(answers);

@@ -1,5 +1,6 @@
 import { citySlugFromId } from "@/lib/providers/reference";
 import { getStoragePublicUrl } from "@/lib/providers/storage";
+import { resolveProviderCoords } from "@/lib/geo/provider-coords";
 import type { LocalizedText } from "@/types/domain.types";
 import type { ProviderListItem } from "@/types/search.types";
 import type { Database, LocalizedJson } from "@/types/database.types";
@@ -73,6 +74,8 @@ export function mapProviderRowsToListItems(
       planSlug,
     });
 
+    const coords = resolveProviderCoords(row);
+
     items.push({
       id: row.id,
       slug: row.slug,
@@ -88,6 +91,9 @@ export function mapProviderRowsToListItems(
       coverImage: coverPath ? getStoragePublicUrl(coverPath) : DEFAULT_COVER,
       avatarImage: avatarPath ? getStoragePublicUrl(avatarPath) : DEFAULT_AVATAR,
       distanceKm,
+      latitude: coords?.lat ?? null,
+      longitude: coords?.lng ?? null,
+      phone: row.phone?.trim() || null,
       profileCompleteness: row.profile_completeness,
       responseTimeHours: row.response_time_hours,
       completedJobs,

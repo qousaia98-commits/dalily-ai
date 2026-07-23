@@ -511,6 +511,24 @@
       "photography_need": "Photography"
     },
     "topResults": "Top {count} matches",
+    "smartMap": {
+      "showMap": "Show Map",
+      "showList": "Show list",
+      "mapTitle": "Map",
+      "mapRegionLabel": "Providers map",
+      "closeMap": "Close map",
+      "closePreview": "Close preview",
+      "syncHint": "Selecting a provider highlights it on the map and in the list.",
+      "distance": "{km} km away",
+      "travelTime": "~{minutes} min",
+      "verified": "Verified",
+      "emergency": "Emergency",
+      "hoursUnknown": "Hours on profile",
+      "viewProfile": "View Profile",
+      "call": "Call",
+      "navigate": "Navigate",
+      "loading": "Loading map…"
+    },
     "error": {
       "pageTitle": "Search results",
       "title": "Search unavailable",

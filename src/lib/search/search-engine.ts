@@ -20,8 +20,7 @@ import {
 import { getAuthUser } from "@/lib/auth/session";
 import { getActivePlanSlugsByProviderIds } from "@/lib/subscription/repository";
 import { haversineKm } from "@/lib/geo/distance";
-import { CITY_CENTROIDS } from "@/lib/geo/city-centroids";
-import { citySlugFromId } from "@/lib/providers/reference";
+import { resolveProviderCoords } from "@/lib/geo/provider-coords";
 import {
   analyzeServiceRequest,
   fetchCompletedJobsByProviderIds,
@@ -36,20 +35,6 @@ import type { Database } from "@/types/database.types";
 import type { MatchConfidence } from "@/lib/search/learning/types";
 
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
-
-function resolveProviderCoords(row: ProviderRow): { lat: number; lng: number } | null {
-  if (
-    typeof row.latitude === "number" &&
-    typeof row.longitude === "number" &&
-    Number.isFinite(row.latitude) &&
-    Number.isFinite(row.longitude)
-  ) {
-    return { lat: row.latitude, lng: row.longitude };
-  }
-  const cityKey = citySlugFromId(row.city_id);
-  if (cityKey && CITY_CENTROIDS[cityKey]) return CITY_CENTROIDS[cityKey];
-  return null;
-}
 
 function buildDistanceMap(
   rows: ProviderRow[],
