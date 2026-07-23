@@ -23,13 +23,14 @@ export function formatDistanceKm(km: number): string {
   return String(Math.round(km));
 }
 
-export type NearbyRadiusKm = 3 | 5 | 10 | 20 | "city";
+/** Numeric km or entire city. Dynamic radius may use any positive km. */
+export type NearbyRadiusKm = number | "city";
 
 export function parseNearbyRadius(value: string | undefined | null): NearbyRadiusKm | null {
   if (!value) return null;
   if (value === "city") return "city";
   const n = Number(value);
-  if (n === 3 || n === 5 || n === 10 || n === 20) return n;
+  if (Number.isFinite(n) && n > 0 && n <= 100) return n;
   return null;
 }
 

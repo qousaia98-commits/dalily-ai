@@ -33,6 +33,7 @@ import {
   reviewSchema,
   sendMessageSchema,
 } from "@/lib/validations/service-request";
+import { logLearningEvent, scheduleLearningUpdate } from "@/lib/search/learning";
 
 export type ServiceRequestActionState = {
   success: boolean;
@@ -224,6 +225,35 @@ export async function createServiceRequestAction(
   }
 
   revalidateMessaging();
+  void logLearningEvent({
+    eventType: "request_sent",
+    providerId: provider.id,
+    customerId: authUser.id,
+    serviceRequestId: request.id,
+  });
+  // Repeat booking signal when customer had a prior completed job with this provider
+  void (async () => {
+    try {
+      const { count } = await supabase
+        .from("service_requests")
+        .select("id", { count: "exact", head: true })
+        .eq("customer_id", authUser.id)
+        .eq("provider_id", provider.id)
+        .in("status", ["completed", "reviewed"])
+        .neq("id", request.id);
+      if ((count ?? 0) > 0) {
+        await logLearningEvent({
+          eventType: "repeat_booking",
+          providerId: provider.id,
+          customerId: authUser.id,
+          serviceRequestId: request.id,
+        });
+      }
+    } catch {
+      // non-blocking
+    }
+  })();
+  scheduleLearningUpdate({ providerId: provider.id, customerId: authUser.id });
   return { success: true, message: "request_sent", requestId: request.id };
 }
 
@@ -248,6 +278,13 @@ export async function acceptServiceRequestAction(
   }
 
   revalidateMessaging();
+  void logLearningEvent({
+    eventType: "request_accepted",
+    providerId: provider.id,
+    serviceRequestId: requestId,
+    customerId: authUser.id,
+  });
+  scheduleLearningUpdate({ providerId: provider.id });
   return { success: true, message: "accepted", conversationId: data as string };
 }
 
@@ -271,6 +308,13 @@ export async function rejectServiceRequestAction(
   }
 
   revalidateMessaging();
+  void logLearningEvent({
+    eventType: "request_declined",
+    providerId: provider.id,
+    serviceRequestId: requestId,
+    customerId: authUser.id,
+  });
+  scheduleLearningUpdate({ providerId: provider.id });
   return { success: true, message: "rejected" };
 }
 
@@ -610,6 +654,17 @@ export async function confirmCompletionAction(
   }
 
   revalidateMessaging();
+  void logLearningEvent({
+    eventType: "request_completed",
+    providerId: request.provider_id,
+    customerId: authUser.id,
+    serviceRequestId: requestId,
+    metadata: { completion_time_seconds: completionSeconds },
+  });
+  scheduleLearningUpdate({
+    providerId: request.provider_id,
+    customerId: authUser.id,
+  });
   return { success: true, message: "completed", conversationId: conversationId ?? undefined };
 }
 
@@ -775,6 +830,17 @@ export async function submitReviewAction(
   }
 
   revalidateMessaging();
+  void logLearningEvent({
+    eventType: "review_submitted",
+    providerId: request.provider_id,
+    customerId: authUser.id,
+    serviceRequestId: request.id,
+    metadata: { rating: parsed.data.rating },
+  });
+  scheduleLearningUpdate({
+    providerId: request.provider_id,
+    customerId: authUser.id,
+  });
   return { success: true, message: "reviewed" };
 }
 

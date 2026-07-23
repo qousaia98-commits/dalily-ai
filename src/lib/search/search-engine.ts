@@ -22,7 +22,18 @@ import { getActivePlanSlugsByProviderIds } from "@/lib/subscription/repository";
 import { haversineKm } from "@/lib/geo/distance";
 import { CITY_CENTROIDS } from "@/lib/geo/city-centroids";
 import { citySlugFromId } from "@/lib/providers/reference";
+import {
+  analyzeServiceRequest,
+  fetchCompletedJobsByProviderIds,
+  resolveDynamicRadiusKm,
+} from "@/lib/search/smart-match";
+import {
+  fetchCustomerPreferenceProfile,
+  fetchPerformanceScoresByProviderIds,
+  logLearningEvent,
+} from "@/lib/search/learning";
 import type { Database } from "@/types/database.types";
+import type { MatchConfidence } from "@/lib/search/learning/types";
 
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
 
@@ -68,7 +79,7 @@ function buildDistanceMap(
 }
 
 /**
- * Dalily Search Engine — single ranking algorithm via ranking-engine.
+ * Dalily Search Engine — Smart Local Matching via ranking-engine.
  */
 export class DalilySearchEngine {
   constructor(
@@ -88,12 +99,31 @@ export class DalilySearchEngine {
     const groupSlug = input.groupSlug;
     const textTerms = parsed?.textTerms ?? "";
     const sort = input.sort ?? "relevant";
-    const nearbyRadius = input.nearbyRadius ?? null;
     const hasUserLocation =
       input.userLat != null &&
       input.userLng != null &&
       Number.isFinite(input.userLat) &&
       Number.isFinite(input.userLng);
+
+    const dynamicRadius = resolveDynamicRadiusKm({
+      problemId,
+      categorySlug: categorySlug ?? groupSlug ?? null,
+      priority,
+    });
+
+    const useDynamic = input.useDynamicRadius !== false;
+    let nearbyRadius = input.nearbyRadius ?? null;
+    let radiusIsDynamic = false;
+
+    // Auto-apply adaptive radius when location is known and caller didn't set a radius
+    if (hasUserLocation && useDynamic && nearbyRadius == null) {
+      nearbyRadius = dynamicRadius;
+      radiusIsDynamic = true;
+    }
+
+    if (nearbyRadius == null) {
+      nearbyRadius = hasUserLocation ? 10 : "city";
+    }
 
     const { providers: rows } = await this.searchProvider.search({
       categorySlug: groupSlug ? undefined : categorySlug,
@@ -114,32 +144,82 @@ export class DalilySearchEngine {
         const d = distanceByProviderId.get(row.id);
         return d != null && d <= nearbyRadius;
       });
+      // Soft fallback: widen once if empty
+      if (filtered.length === 0 && typeof nearbyRadius === "number") {
+        const widened = Math.min(50, Math.round(nearbyRadius * 1.5));
+        filtered = rows.filter((row) => {
+          const d = distanceByProviderId.get(row.id);
+          return d != null && d <= widened;
+        });
+      }
       if (filtered.length === 0) filtered = rows;
     }
 
-    const planSlugsByProviderId = await getActivePlanSlugsByProviderIds(
-      filtered.map((row) => row.id),
-    );
+    const providerIds = filtered.map((row) => row.id);
+    const [
+      planSlugsByProviderId,
+      completedJobsByProviderId,
+      categorySlugById,
+      performanceByProviderId,
+      customerPreferences,
+    ] = await Promise.all([
+      getActivePlanSlugsByProviderIds(providerIds),
+      fetchCompletedJobsByProviderIds(providerIds),
+      getCategorySlugMap(),
+      fetchPerformanceScoresByProviderIds(providerIds),
+      fetchCustomerPreferenceProfile(input.userId),
+    ]);
 
-    const { providers: rankedAll, snapshot } = rankProvidersDetailed(filtered, {
+    const categorySlugByProviderId = new Map<string, string>();
+    for (const row of filtered) {
+      const slug = categorySlugById.get(row.category_id);
+      if (slug) categorySlugByProviderId.set(row.id, slug);
+    }
+
+    const numericRadius =
+      nearbyRadius && nearbyRadius !== "city" ? nearbyRadius : null;
+
+    const {
+      providers: rankedAll,
+      snapshot,
+      candidates,
+      confidenceByProviderId,
+    } = rankProvidersDetailed(filtered, {
       priority,
       planSlugsByProviderId,
       distanceByProviderId,
+      completedJobsByProviderId,
+      targetCategorySlug: categorySlug ?? null,
+      categorySlugByProviderId,
+      radiusKm: numericRadius,
       sort,
+      performanceByProviderId,
+      customerPreferences,
+      applyLearning: true,
     });
 
     const ranked = rankedAll.slice(0, TOP_N);
+    const rankedCandidates = candidates.slice(0, TOP_N);
     const displayIds = ranked.map((r) => r.id);
 
     const imageIds = ranked
       .flatMap((row) => [row.avatar_image_id, row.cover_image_id])
       .filter((id): id is string => Boolean(id));
 
-    const [imagePathById, categorySlugById, categoryNameBySlug] = await Promise.all([
+    const [imagePathById, categoryNameBySlug] = await Promise.all([
       fetchImagePaths(imageIds),
-      getCategorySlugMap(),
       getCategoryNameMap(),
     ]);
+
+    const completedJobsMap = new Map(
+      rankedCandidates.map((c) => [c.provider.id, c.completedJobs] as const),
+    );
+
+    const confidenceMap = new Map<string, MatchConfidence | null>();
+    for (const id of displayIds) {
+      confidenceMap.set(id, confidenceByProviderId?.get(id) ?? null);
+    }
+
     const providers = mapProviderRowsToListItems(
       ranked,
       imagePathById,
@@ -147,7 +227,16 @@ export class DalilySearchEngine {
       categoryNameBySlug,
       planSlugsByProviderId,
       distanceByProviderId,
+      completedJobsMap,
+      input.locale === "ar" ? "ar" : "en",
+      confidenceMap,
     );
+
+    const advisor = analyzeServiceRequest({
+      problemId,
+      priority,
+      categorySlug: categorySlug ?? null,
+    });
 
     const result: SearchEngineResult = {
       providers,
@@ -163,10 +252,22 @@ export class DalilySearchEngine {
         active: Boolean(hasUserLocation && nearbyRadius && nearbyRadius !== "city"),
         radiusKm: nearbyRadius,
         hasUserLocation,
+        dynamic: radiusIsDynamic,
       },
+      advisor: problemId ? advisor : null,
     };
 
     void this.logSearch(input, parsed?.normalized ?? null, result, snapshot, displayIds);
+
+    // Learning: recommendation_shown (append-only, non-blocking)
+    for (const [index, id] of displayIds.entries()) {
+      void logLearningEvent({
+        eventType: "recommendation_shown",
+        providerId: id,
+        customerId: input.userId ?? null,
+        metadata: { position: index + 1, problemId, categorySlug: categorySlug ?? null },
+      });
+    }
 
     return result;
   }
@@ -178,7 +279,6 @@ export class DalilySearchEngine {
     snapshot: import("@/lib/search/ranking/ranking-engine").RankingSnapshotEntry[],
     displayIds: string[],
   ): Promise<void> {
-    // Log whenever we have a meaningful search signal (query or filters)
     const hasSignal =
       Boolean(input.query?.trim()) ||
       Boolean(result.parsed.categorySlug) ||
@@ -189,11 +289,11 @@ export class DalilySearchEngine {
     try {
       const userId = input.userId ?? (await getAuthUser())?.id ?? null;
       const nearby =
-        input.nearbyRadius == null
+        input.nearbyRadius == null && result.nearby?.radiusKm == null
           ? null
-          : input.nearbyRadius === "city"
+          : (result.nearby?.radiusKm ?? input.nearbyRadius) === "city"
             ? "city"
-            : String(input.nearbyRadius);
+            : String(result.nearby?.radiusKm ?? input.nearbyRadius);
 
       const logId = await insertSearchLog({
         queryText: input.query?.trim() || "[filter]",

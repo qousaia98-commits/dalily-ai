@@ -24,6 +24,7 @@ import {
   parseLocationPreference,
 } from "@/lib/geo/location-preference";
 import { parseNearbyRadius, parseSearchSort } from "@/lib/geo/distance";
+import { getAuthUser } from "@/lib/auth/session";
 
 type SearchResultsProps = {
   searchParams: {
@@ -56,9 +57,7 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
       : undefined;
   const city = searchParams.city && searchParams.city !== "all" ? searchParams.city : undefined;
   const verifiedOnly = searchParams.verified === "true";
-  const nearbyRadius =
-    parseNearbyRadius(searchParams.nearby) ??
-    (locationEnabled && nearbyLoc ? 10 : "city");
+  const explicitNearby = parseNearbyRadius(searchParams.nearby);
   const sort = parseSearchSort(searchParams.sort);
 
   const hasSearch = Boolean(query || category || group || city || verifiedOnly);
@@ -84,8 +83,11 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
 
   let results;
   let parsed;
+  let advisor;
+  let nearbyMeta;
 
   try {
+    const authUser = await getAuthUser();
     const searchResult = await runDalilySearch({
       query: query || undefined,
       categorySlug: category,
@@ -93,13 +95,20 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
       citySlug: city,
       verifiedOnly: searchParams.verified === "true",
       locale,
+      userId: authUser?.id ?? null,
       userLat: locationEnabled ? (nearbyLoc?.lat ?? null) : null,
       userLng: locationEnabled ? (nearbyLoc?.lng ?? null) : null,
-      nearbyRadius,
+      // null → Smart Match dynamic radius; explicit filter wins
+      nearbyRadius:
+        explicitNearby ??
+        (locationEnabled && nearbyLoc ? null : "city"),
+      useDynamicRadius: explicitNearby == null,
       sort,
     });
     results = searchResult.providers;
     parsed = searchResult.parsed;
+    advisor = searchResult.advisor;
+    nearbyMeta = searchResult.nearby;
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
       console.error("[search]", error);
@@ -127,6 +136,11 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
   const tCities = await getTranslations("auth.cities");
   const cityLabel = city && city !== "all" ? tCities(city) : "";
 
+  const dynamicRadiusKm =
+    nearbyMeta?.dynamic && typeof nearbyMeta.radiusKm === "number"
+      ? nearbyMeta.radiusKm
+      : null;
+
   if (results.length === 0) {
     const emptyLabel =
       displayQuery ||
@@ -137,7 +151,15 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
     return (
       <>
         {locationPrompt}
-        <SearchInsight query={query} problemId={parsed.problemId} citySlug={parsed.citySlug} />
+        <SearchInsight
+          query={query}
+          problemId={parsed.problemId}
+          citySlug={parsed.citySlug}
+          priority={parsed.priority}
+          categorySlug={parsed.categorySlug}
+          advisor={advisor}
+          dynamicRadiusKm={dynamicRadiusKm}
+        />
         <SearchEmptyState query={emptyLabel} />
       </>
     );
@@ -146,7 +168,15 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
   return (
     <div>
       {locationPrompt}
-      <SearchInsight query={query} problemId={parsed.problemId} citySlug={parsed.citySlug} />
+      <SearchInsight
+        query={query}
+        problemId={parsed.problemId}
+        citySlug={parsed.citySlug}
+        priority={parsed.priority}
+        categorySlug={parsed.categorySlug}
+        advisor={advisor}
+        dynamicRadiusKm={dynamicRadiusKm}
+      />
       <p className="mb-6 text-sm text-muted-foreground">
         {t("topResults", { count: results.length })}
         {displayQuery ? ` — «${displayQuery}»` : ""}

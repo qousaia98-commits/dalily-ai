@@ -215,7 +215,7 @@ CREATE POLICY "service_request_media_participant_select" ON storage.objects
         JOIN public.service_requests sr ON sr.id = sri.request_id
         JOIN public.providers p ON p.id = sr.provider_id
         WHERE sri.bucket = 'service-request-media'
-          AND sri.path = name
+          AND sri.path = storage.objects.name
           AND p.owner_id = auth.uid()
           AND p.deleted_at IS NULL
       )

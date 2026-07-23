@@ -163,8 +163,8 @@ export async function submitVerificationAction(): Promise<VerificationActionStat
   const provider = await requireOwnedProvider(authUser.id);
   const readiness = await getApprovalReadiness(provider);
 
-  if (!readiness.hasLogo || !readiness.hasCover || !readiness.hasGallery) {
-    return { success: false, error: "profile_media_incomplete" };
+  if (!readiness.hasIdDocument) {
+    return { success: false, error: "documents_incomplete" };
   }
 
   const verification = await getProviderVerificationForOwner(provider.id);

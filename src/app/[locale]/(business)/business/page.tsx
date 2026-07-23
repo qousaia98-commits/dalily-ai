@@ -1,20 +1,28 @@
 import { getLocale, getTranslations } from "next-intl/server";
+import { redirect } from "@/lib/i18n/routing";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/queries";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { getLocalizedField } from "@/types/provider.types";
 import { getWeeklyInsights } from "@/lib/business/insights";
-import {
-  countUnreadConversations,
-} from "@/lib/business/conversations";
+import { countUnreadConversations } from "@/lib/business/conversations";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
 import { countPendingRequestsForOwner } from "@/lib/service-requests/queries";
+import {
+  getProviderVerificationForOwner,
+  toBusinessVerificationView,
+} from "@/lib/verification/queries";
+import {
+  getProfileStrength,
+  shouldForceOnboarding,
+} from "@/lib/business/onboarding";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { GrowthHero } from "@/components/business/growth-hero";
 import { DashboardTodayOverview } from "@/components/business/dashboard-today-overview";
 import { DashboardQuickActions } from "@/components/business/dashboard-quick-actions";
 import { DashboardConversationsPreview } from "@/components/business/conversation-list";
 import { ChangesRequiredCard } from "@/components/business/changes-required-card";
+import { ProfileStrengthCard } from "@/components/business/profile-strength-card";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -42,7 +50,13 @@ export default async function BusinessDashboardPage() {
     );
   }
 
-  // Lightweight only — conversations cached with layout/nav badges
+  const verificationRow = await getProviderVerificationForOwner(provider.id);
+  const verification = toBusinessVerificationView(verificationRow);
+
+  if (shouldForceOnboarding(provider, verification, locale)) {
+    redirect({ href: "/business/welcome", locale });
+  }
+
   const [{ subscription }, { conversations }, weekly, pendingRequests] = await Promise.all([
     getSubscriptionPageData(authUser.id),
     loadBusinessConversations(authUser.id),
@@ -53,6 +67,7 @@ export default async function BusinessDashboardPage() {
   const planSlug = (subscription?.planSlug ?? "free") as PlanSlug;
   const businessName = getLocalizedField(provider.name, locale) || provider.id;
   const unreadMessages = countUnreadConversations(conversations);
+  const strength = getProfileStrength(provider, verification, locale);
 
   const showVerification =
     provider.verificationStatus !== "verified" ||
@@ -72,6 +87,8 @@ export default async function BusinessDashboardPage() {
       {provider.status === "changes_requested" && provider.adminReviewNote ? (
         <ChangesRequiredCard note={provider.adminReviewNote} />
       ) : null}
+
+      <ProfileStrengthCard strength={strength} />
 
       <DashboardTodayOverview
         data={{

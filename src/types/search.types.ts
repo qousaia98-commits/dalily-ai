@@ -19,6 +19,15 @@ export type ProviderListItem = {
   distanceKm?: number | null;
   profileCompleteness?: number;
   responseTimeHours?: number | null;
+  /** Completed marketplace jobs (Smart Match) */
+  completedJobs?: number;
+  /** Why Dalily recommends this business */
+  matchReasons?: import("@/lib/search/smart-match/reasons").MatchReason[];
+  /**
+   * Match confidence from Learning data quality.
+   * null/undefined = hide indicator (insufficient data). Never invent.
+   */
+  matchConfidence?: import("@/lib/search/learning/types").MatchConfidence | null;
 };
 
 export type SearchProvidersInput = {

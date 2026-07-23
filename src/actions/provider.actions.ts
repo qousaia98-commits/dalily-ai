@@ -23,6 +23,7 @@ import { buildProviderMediaPath } from "@/lib/providers/storage";
 import {
   createProviderSchema,
   imageUploadSchema,
+  onboardingProfileSchema,
   serviceInputSchema,
   updateContactSchema,
   updateProviderProfileSchema,
@@ -245,6 +246,66 @@ export async function updateContactAction(
       whatsapp: parsed.data.whatsapp || parsed.data.phone,
       email: parsed.data.email,
       website: parsed.data.website || null,
+      address_line: addressLine,
+      updated_by: authUser.id,
+    })
+    .eq("id", provider.id)
+    .eq("owner_id", authUser.id);
+
+  if (error) return { success: false, error: "update_failed" };
+
+  await syncProfileCompleteness(authUser.id);
+  await revalidateBusiness();
+  return { success: true, message: "saved" };
+}
+
+/** Autosave for guided onboarding — profile essentials without media. */
+export async function saveOnboardingProfileAction(
+  _prev: ProviderActionState,
+  formData: FormData,
+): Promise<ProviderActionState> {
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
+  const provider = await requireOwnedProvider(authUser.id);
+
+  const parsed = onboardingProfileSchema.safeParse({
+    locale: formData.get("locale"),
+    businessName: formData.get("businessName"),
+    about: formData.get("about"),
+    category: formData.get("category"),
+    city: formData.get("city"),
+    phone: formData.get("phone"),
+    address: formData.get("address"),
+  });
+
+  if (!parsed.success) return validationError(parsed.error);
+
+  const categoryId = await resolveCategorySlugToId(parsed.data.category);
+  const cityId = CITY_IDS[parsed.data.city];
+  if (!categoryId || !cityId) return { success: false, error: "validation_error" };
+
+  const name = await translateOptional(parsed.data.locale, parsed.data.businessName, provider.name);
+  const about = await translateOptional(
+    parsed.data.locale,
+    parsed.data.about,
+    provider.about ?? { ar: "", en: "" },
+  );
+  const addressLine = buildLocalizedField(
+    parsed.data.locale === "ar" ? parsed.data.address : (provider.addressLine?.ar ?? parsed.data.address),
+    parsed.data.locale === "en" ? parsed.data.address : (provider.addressLine?.en ?? parsed.data.address),
+  );
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("providers")
+    .update({
+      name,
+      about,
+      category_id: categoryId,
+      city_id: cityId,
+      phone: parsed.data.phone,
+      whatsapp: provider.whatsapp || parsed.data.phone,
       address_line: addressLine,
       updated_by: authUser.id,
     })
@@ -577,9 +638,6 @@ export async function submitProviderForReviewAction(): Promise<ProviderActionSta
 
   if (!readiness.ready) {
     if (!readiness.hasIdDocument) return { success: false, error: "id_document_required" };
-    if (!readiness.hasLogo || !readiness.hasCover || !readiness.hasGallery) {
-      return { success: false, error: "media_incomplete" };
-    }
     return { success: false, error: "incomplete_profile" };
   }
 

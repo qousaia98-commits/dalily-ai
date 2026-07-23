@@ -5,18 +5,23 @@ import {
 } from "@/lib/verification/queries";
 
 export type ApprovalReadiness = {
+  /** Ready to submit for admin review — identity docs only. */
   ready: boolean;
   hasLogo: boolean;
   hasCover: boolean;
   hasGallery: boolean;
   hasIdDocument: boolean;
-  missing: Array<"logo" | "cover" | "gallery" | "idDocument">;
+  /** Soft media gaps (not required for submit). */
+  missingMedia: Array<"logo" | "cover" | "gallery">;
+  missing: Array<"idDocument">;
 };
 
-export function evaluateMediaReadiness(provider: ManagedProvider): Omit<
-  ApprovalReadiness,
-  "hasIdDocument" | "ready" | "missing"
-> & { missingMedia: Array<"logo" | "cover" | "gallery"> } {
+export function evaluateMediaReadiness(provider: ManagedProvider): {
+  hasLogo: boolean;
+  hasCover: boolean;
+  hasGallery: boolean;
+  missingMedia: Array<"logo" | "cover" | "gallery">;
+} {
   const hasLogo = Boolean(provider.avatarImageId);
   const hasCover = Boolean(provider.coverImageId);
   const hasGallery = provider.gallery.length > 0;
@@ -27,7 +32,10 @@ export function evaluateMediaReadiness(provider: ManagedProvider): Omit<
   return { hasLogo, hasCover, hasGallery, missingMedia };
 }
 
-/** Business can submit for admin approval only when logo, cover, gallery, and ID docs are present. */
+/**
+ * Business can submit for admin approval when identity documents are complete.
+ * Logo, cover, and gallery are optional profile-strength items — not submit blockers.
+ */
 export async function getApprovalReadiness(
   provider: ManagedProvider,
 ): Promise<ApprovalReadiness> {
@@ -35,7 +43,7 @@ export async function getApprovalReadiness(
   const verification = await getProviderVerificationForOwner(provider.id);
   const hasIdDocument = isVerificationComplete(verification);
 
-  const missing: ApprovalReadiness["missing"] = [...media.missingMedia];
+  const missing: ApprovalReadiness["missing"] = [];
   if (!hasIdDocument) missing.push("idDocument");
 
   return {
@@ -44,6 +52,7 @@ export async function getApprovalReadiness(
     hasCover: media.hasCover,
     hasGallery: media.hasGallery,
     hasIdDocument,
+    missingMedia: media.missingMedia,
     missing,
   };
 }

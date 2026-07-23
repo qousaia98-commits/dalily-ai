@@ -193,17 +193,17 @@
   "location": {
     "onboarding": {
       "title": "Show businesses near you",
-      "body": "Turn on location so search can prioritize places close to you — not across the whole city.",
-      "privacy": "Your precise location stays on this device session only. We never share it with businesses.",
+      "body": "We only use your location to find the best businesses near you. Your exact location is never publicly shared.",
+      "privacy": "Businesses only see an approximate distance or your city — never your exact GPS. You can pick a city manually if you prefer.",
       "allow": "Show nearby businesses",
-      "notNow": "Maybe later",
+      "notNow": "Choose city instead",
       "dismiss": "Close",
       "unsupported": "Location is not supported on this device.",
       "saveFailed": "Could not save location. Please try again."
     },
     "settings": {
       "title": "Location",
-      "description": "When on, search favors nearby businesses. Your exact position is never stored permanently — only used briefly for distance.",
+      "description": "We only use your location to find the best businesses near you. Your exact location is never publicly shared — only approximate distance or city.",
       "statusEnabled": "Enabled",
       "statusDisabled": "Disabled",
       "enable": "Enable location",
@@ -211,14 +211,14 @@
       "update": "Update current location",
       "activeNote": "Nearby search is active for this session.",
       "unsupported": "Location is not supported on this device.",
-      "permissionDenied": "Location permission was denied by your browser.",
+      "permissionDenied": "Location permission was denied by your browser. You can still search by city.",
       "saveFailed": "Could not update location. Please try again."
     }
   },
   "home": {
     "heroTitle": "Find trusted help near you",
-    "heroSubtitle": "Search local businesses, send a private request, and get help — step by step.",
-    "searchHint": "Describe what you need in your own words",
+    "heroSubtitle": "Describe your problem — Dalily understands it and finds the best nearby businesses automatically.",
+    "searchHint": "Describe your problem in your own words — no manual browsing needed",
     "trustLine": "Private requests · Chat only after the business accepts",
     "categoriesTitle": "Browse services",
     "categorySearchLabel": "Search for {category}",
@@ -270,7 +270,60 @@
       "queryLabel": "Your search"
     },
     "insight": {
-      "detected": "We understood your request as"
+      "detected": "Dalily understood your request as"
+    },
+    "advisor": {
+      "category": "Category: {category}",
+      "possibleIssue": "Possible issue",
+      "searchRadius": "Searching within ~{km} km",
+      "clarifyTitle": "A few details help us match better",
+      "clarifyHint": "Optional — add these in your request when you are ready.",
+      "urgency": {
+        "emergency": "Urgency: Emergency",
+        "high": "Urgency: High",
+        "normal": "Urgency: Medium",
+        "low": "Urgency: Low"
+      },
+      "issues": {
+        "coolingOrRefrigerant": "Cooling system or refrigerant",
+        "pipeOrFixture": "Pipe, fixture, or seal",
+        "circuitOrSupply": "Circuit breaker or power supply",
+        "sealOrHose": "Seal, hose, or appliance connection",
+        "lockMechanism": "Lock mechanism or key",
+        "mechanicalOrElectrical": "Mechanical or electrical fault",
+        "deepOrRoutine": "Deep clean or routine service",
+        "eventOrPortrait": "Event, wedding, or portrait session"
+      },
+      "questions": {
+        "acCompletelyOff": "Is the unit completely off?",
+        "acWaterLeaking": "Is water leaking?",
+        "acIndoorOrOutdoor": "Indoor or outdoor unit?",
+        "leakStillRunning": "Is water still running?",
+        "leakLocation": "Kitchen, bathroom, or elsewhere?",
+        "powerNeighborsAffected": "Are neighbors also without power?",
+        "powerBreakerTripped": "Has the breaker tripped?",
+        "applianceBrand": "What brand is the appliance?",
+        "applianceNoise": "Is it making unusual noises?"
+      }
+    },
+    "match": {
+      "whyRecommended": "Why Dalily recommends this business",
+      "respondsMinutes": "Responds in about {minutes} minutes",
+      "completedJobs": "{count} completed jobs",
+      "confidence": {
+        "high": "High confidence match",
+        "medium": "Medium confidence match",
+        "low": "Low confidence match"
+      }
+    },
+    "matchReasons": {
+      "verified": "Verified business",
+      "nearby": "{km} km away",
+      "fastResponse": "Responds in about {minutes} minutes",
+      "completedJobs": "{count} completed jobs",
+      "specialist": "Specialist for {category}",
+      "highRating": "Highly rated ({rating}★)",
+      "premium": "Premium partner on Dalily"
     },
     "problems": {
       "water_leak": "Water leak",
@@ -298,17 +351,17 @@
     },
     "nearby": {
       "title": "Allow Dalily to use your location?",
-      "body": "We only use your location to find nearby businesses.",
+      "body": "We only use your location to find the best businesses near you. Your exact location is never publicly shared.",
       "allow": "Allow",
-      "deny": "Not now",
-      "active": "Showing nearby businesses based on your location",
+      "deny": "Choose city instead",
+      "active": "Showing nearby matches — businesses only see approximate distance, never your exact GPS",
       "clear": "Use city only",
       "unsupported": "Location is not supported on this device.",
       "saveFailed": "Could not save location. Please try again.",
-      "permissionDenied": "Location permission was denied.",
-      "cityMode": "Searching by city. Enable location in Account settings for nearby results.",
+      "permissionDenied": "Location permission was denied. You can still pick a city in filters.",
+      "cityMode": "Searching by city. Enable location in Account settings for nearby smart matching.",
       "enableFromSettings": "Enable location",
-      "refreshHint": "Location is enabled — refresh to find businesses near you.",
+      "refreshHint": "Location is enabled — update it so Dalily can match businesses near you.",
       "refresh": "Update location"
     },
     "filters": {
@@ -414,7 +467,17 @@
     "successSent": "Request sent",
     "successBody": "The business will review your request. You’ll be able to chat once they accept.",
     "viewRequest": "Track this request",
-    "viewRequests": "My requests"
+    "viewRequests": "My requests",
+    "optimizer": {
+      "title": "Tips to get a better response",
+      "optional": "Optional — never required to send.",
+      "dismiss": "Dismiss",
+      "photo": "Upload a photo of the issue",
+      "brand": "Add the brand if you know it",
+      "model": "Add the model number if available",
+      "preferredTime": "Add a preferred appointment time",
+      "location": "Add your area or neighborhood"
+    }
   },
   "messaging": {
     "composer": {
@@ -833,6 +896,23 @@
       "draftNote": "Your profile is in draft. Complete it and submit for review.",
       "pendingNote": "Your profile is under review. We'll notify you when it's approved.",
       "activeNote": "Your profile is live and visible to customers.",
+      "profileStrength": {
+        "eyebrow": "Grow faster",
+        "title": "Complete your profile",
+        "subtitle": "Businesses with a complete profile receive more customer requests.",
+        "label": "Profile strength",
+        "progressAria": "Profile strength {percent} percent",
+        "cta": "Continue",
+        "completeTitle": "Your business profile is complete.",
+        "completeBody": "You’re ready to attract more customers on Dalily.",
+        "items": {
+          "identity": "Identity verified",
+          "profile": "Business profile completed",
+          "logo": "Upload your logo",
+          "gallery": "Add at least 3 photos",
+          "hours": "Add opening hours"
+        }
+      },
       "upgradeCard": {
         "starterEyebrow": "Ready for more customers?",
         "starterTitle": "Upgrade to PRO",
@@ -956,6 +1036,62 @@
         "plans": {
           "title": "Subscriptions",
           "body": "Upgrade only when you want more visibility — Starter stays free forever."
+        }
+      }
+    },
+    "onboarding": {
+      "eyebrow": "Business setup",
+      "title": "Let’s get your business ready",
+      "subtitle": "Two short steps. We’ll guide you — no hunting for pages.",
+      "progressLabel": "Onboarding progress",
+      "stepOf": "Step {current} of {total}",
+      "submitting": "Submitting for review…",
+      "steps": {
+        "identity": "Identity",
+        "profile": "Profile",
+        "success": "Done"
+      },
+      "identity": {
+        "title": "Verify your identity",
+        "subtitle": "Upload clear photos of your ID. This helps customers trust your business.",
+        "why": "Dalily verifies every business so customers can book with confidence. Your documents are reviewed privately by our team.",
+        "idFront": "ID front",
+        "idBack": "ID back",
+        "selfie": "Selfie holding your ID",
+        "upload": "Upload",
+        "uploaded": "Saved",
+        "autosaveHint": "Each upload saves automatically.",
+        "continue": "Continue"
+      },
+      "profile": {
+        "title": "Your business profile",
+        "subtitle": "Confirm the essentials customers need to find and contact you.",
+        "businessName": "Business name",
+        "category": "Category",
+        "categoryPlaceholder": "Choose a category",
+        "phone": "Phone number",
+        "description": "Description",
+        "city": "City",
+        "address": "Address / area",
+        "addressPlaceholder": "Neighbourhood or street",
+        "autosaveHint": "Changes save automatically.",
+        "saving": "Saving…",
+        "saved": "Saved",
+        "back": "Back",
+        "finish": "Finish setup",
+        "errors": {
+          "validation": "Please check all fields and try again."
+        }
+      },
+      "success": {
+        "title": "Your business profile has been created successfully.",
+        "review": "We are reviewing your verification.",
+        "dashboardHint": "You can already access your dashboard.",
+        "cta": "Go to Dashboard",
+        "bullets": {
+          "created": "Your business profile is ready.",
+          "reviewing": "Our team is reviewing your identity documents.",
+          "access": "You can explore your dashboard while you wait."
         }
       }
     },
@@ -1225,7 +1361,7 @@
         "invalid_file_type": "Invalid file type",
         "invalid_hours": "Please set valid opening hours",
         "incomplete_profile": "Complete your business profile before submitting",
-        "media_incomplete": "Upload logo, cover, and at least one gallery photo first",
+        "media_incomplete": "Complete identity verification before submitting.",
         "id_document_required": "Upload your ID documents before submitting",
         "invalid_status": "Profile cannot be submitted in its current state",
         "submit_failed": "Could not submit for review",
@@ -1365,7 +1501,7 @@
       "uploadSuccess": "Document uploaded successfully.",
       "submitForReview": "Submit for review",
       "submitSuccess": "Your documents were submitted. We will notify you after review.",
-      "draftHint": "Complete your profile, then submit your documents for admin review.",
+      "draftHint": "Upload your ID documents, then submit for admin review. Logo and photos can be added later from your dashboard.",
       "approvedBanner": "Your business is verified and visible in search results.",
       "pendingBanner": "Your documents are under review. You will be notified once an admin decides.",
       "rejectionTitle": "Verification rejected",
@@ -1396,7 +1532,7 @@
         "already_approved": "Your business is already verified.",
         "already_submitted": "Your documents are already under review.",
         "documents_incomplete": "Upload all three documents before submitting.",
-        "profile_media_incomplete": "Upload logo, cover, and gallery photos before submitting for approval.",
+        "profile_media_incomplete": "Complete identity verification before submitting.",
         "submit_failed": "Could not submit your documents. Please try again."
       }
     },
@@ -1763,7 +1899,27 @@
       "payments": "Payments",
       "subscriptions": "Subscription approvals",
       "messages": "Messages",
-      "marketplace": "Marketplace"
+      "marketplace": "Marketplace",
+      "learning": "Learning AI"
+    },
+    "learning": {
+      "eyebrow": "Internal · Learning AI",
+      "title": "Learning Engine",
+      "subtitle": "Marketplace outcomes that improve Smart Match over time. Hidden from customers.",
+      "totalEvents": "Learning events",
+      "eventsWeek": "Events (7 days)",
+      "providersScored": "Providers scored",
+      "avgScore": "Avg performance",
+      "avgQuality": "Avg data quality",
+      "preferenceProfiles": "Customer preference profiles",
+      "recommendationAccuracy": "Recommendation CTR (7d)",
+      "recompute": "Recompute scores",
+      "topPerformers": "Top performing providers",
+      "fastestResponders": "Fastest responders",
+      "highestCompletion": "Highest completion rate",
+      "highestRepeat": "Highest repeat customers",
+      "eventBreakdown": "Learning Engine event stats (7 days)",
+      "empty": "No learning data yet — scores appear after marketplace activity."
     },
     "marketplace": {
       "eyebrow": "Marketplace",

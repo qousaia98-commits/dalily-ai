@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { StarRating } from "@/components/providers/star-rating";
 import { SerpClickLink } from "@/components/providers/serp-click-link";
+import { MatchReasonsList } from "@/components/search/match-reasons-list";
 import { getLocalizedText } from "@/types/domain.types";
 import type { ProviderListItem } from "@/types/search.types";
 import type { Locale } from "@/lib/i18n/config";
@@ -17,6 +18,8 @@ type ProviderCardProps = {
   className?: string;
   style?: React.CSSProperties;
   position?: number;
+  /** Show Smart Match recommendation reasons */
+  showMatchReasons?: boolean;
 };
 
 export async function ProviderCard({
@@ -24,13 +27,16 @@ export async function ProviderCard({
   className,
   style,
   position,
+  showMatchReasons = true,
 }: ProviderCardProps) {
   const locale = (await getLocale()) as Locale;
   const tProvider = await getTranslations("provider");
+  const tMatch = await getTranslations("search.match");
   const providerName = getLocalizedText(provider.name, locale);
   const planSlug = provider.planSlug ?? "free";
   const benefits = getBenefits(planSlug);
   const health = provider.profileCompleteness ?? provider.trustScore;
+  const reasons = provider.matchReasons ?? [];
 
   return (
     <SerpClickLink
@@ -107,10 +113,39 @@ export async function ProviderCard({
             {provider.responseTimeHours != null ? (
               <span className="flex items-center gap-1">
                 <Clock className="size-3.5" aria-hidden />
-                {tProvider("respondsIn", { hours: provider.responseTimeHours })}
+                {provider.responseTimeHours <= 1
+                  ? tMatch("respondsMinutes", {
+                      minutes: Math.max(5, Math.round(provider.responseTimeHours * 60)),
+                    })
+                  : tProvider("respondsIn", { hours: provider.responseTimeHours })}
+              </span>
+            ) : null}
+            {provider.completedJobs != null && provider.completedJobs > 0 ? (
+              <span className="text-xs font-medium text-foreground">
+                {tMatch("completedJobs", { count: provider.completedJobs })}
               </span>
             ) : null}
           </div>
+
+          {showMatchReasons && reasons.length > 0 ? (
+            <div className="border-t border-border/60 pt-3">
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <p className="text-xs font-medium text-foreground">{tMatch("whyRecommended")}</p>
+                {provider.matchConfidence ? (
+                  <Badge variant="outline" className="text-[10px]">
+                    {tMatch(`confidence.${provider.matchConfidence}`)}
+                  </Badge>
+                ) : null}
+              </div>
+              <MatchReasonsList reasons={reasons} />
+            </div>
+          ) : provider.matchConfidence ? (
+            <div className="border-t border-border/60 pt-3">
+              <Badge variant="outline" className="text-[10px]">
+                {tMatch(`confidence.${provider.matchConfidence}`)}
+              </Badge>
+            </div>
+          ) : null}
         </CardContent>
       </Card>
     </SerpClickLink>

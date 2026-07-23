@@ -51,8 +51,10 @@ export type SearchEngineInput = {
   /** Ephemeral user location — never permanently stored */
   userLat?: number | null;
   userLng?: number | null;
-  /** Radius in km, or "city" for entire city */
-  nearbyRadius?: 3 | 5 | 10 | 20 | "city" | null;
+  /** Radius in km, or "city" for entire city. Omit to use dynamic radius. */
+  nearbyRadius?: number | "city" | null;
+  /** When true (default), apply adaptive radius from problem/category */
+  useDynamicRadius?: boolean;
   sort?: import("@/lib/geo/distance").SearchSort;
 };
 
@@ -70,7 +72,10 @@ export type SearchEngineResult = {
     active: boolean;
     radiusKm: number | "city" | null;
     hasUserLocation: boolean;
+    /** True when radius came from Smart Match policy */
+    dynamic?: boolean;
   };
+  advisor?: import("@/lib/search/smart-match/advisor").ServiceAdvisorInsight | null;
 };
 
 export const SEARCH_TOP_N = 12;

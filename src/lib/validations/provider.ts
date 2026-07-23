@@ -41,6 +41,17 @@ export const updateContactSchema = z.object({
   addressEn: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
+/** Single-step onboarding profile save (name, category, phone, about, address, city). */
+export const onboardingProfileSchema = z.object({
+  locale: localeField,
+  businessName: z.string().trim().min(2).max(120),
+  about: z.string().trim().min(10).max(2000),
+  category: z.string().trim().min(1).max(80),
+  city: z.enum(Object.keys(CITY_IDS) as [string, ...string[]]),
+  phone: z.string().trim().min(7).max(20),
+  address: z.string().trim().min(3).max(500),
+});
+
 export const serviceInputSchema = z.object({
   locale: localeField,
   name: z.string().trim().min(2).max(120),

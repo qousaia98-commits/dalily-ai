@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { SuccessMoment } from "@/components/shared/success-moment";
+import { RequestOptimizerHints } from "@/components/service-requests/request-optimizer-hints";
 
 const initialState: ServiceRequestActionState = { success: false };
 
@@ -41,10 +42,18 @@ export function SendRequestButton({
   );
   const fileRef = useRef<HTMLInputElement>(null);
   const [photoCount, setPhotoCount] = useState(0);
+  const [description, setDescription] = useState("");
+  const [preferredDate, setPreferredDate] = useState("");
+  const [preferredTime, setPreferredTime] = useState("");
+  const [locationText, setLocationText] = useState("");
 
   const close = useCallback(() => {
     setOpen(false);
     setPhotoCount(0);
+    setDescription("");
+    setPreferredDate("");
+    setPreferredTime("");
+    setLocationText("");
   }, []);
 
   useEffect(() => {
@@ -171,11 +180,21 @@ export function SendRequestButton({
                     maxLength={4000}
                     placeholder={t("fields.descriptionPlaceholder")}
                     className="min-h-[120px] rounded-xl resize-y"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                   />
                   {state.fieldErrors?.description ? (
                     <p className="text-xs text-destructive">{t("errors.description")}</p>
                   ) : null}
                 </div>
+
+                <RequestOptimizerHints
+                  description={description}
+                  hasPhotos={photoCount > 0}
+                  hasPreferredDate={Boolean(preferredDate)}
+                  hasPreferredTime={Boolean(preferredTime)}
+                  hasLocation={Boolean(locationText.trim())}
+                />
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="space-y-2">
@@ -188,6 +207,8 @@ export function SendRequestButton({
                       name="preferredDate"
                       type="date"
                       className="rounded-xl"
+                      value={preferredDate}
+                      onChange={(e) => setPreferredDate(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
@@ -197,6 +218,8 @@ export function SendRequestButton({
                       name="preferredTime"
                       type="time"
                       className="rounded-xl"
+                      value={preferredTime}
+                      onChange={(e) => setPreferredTime(e.target.value)}
                     />
                   </div>
                 </div>
@@ -225,6 +248,8 @@ export function SendRequestButton({
                     maxLength={300}
                     placeholder={t("fields.locationPlaceholder")}
                     className="rounded-xl"
+                    value={locationText}
+                    onChange={(e) => setLocationText(e.target.value)}
                   />
                 </div>
 
@@ -240,7 +265,9 @@ export function SendRequestButton({
                     accept="image/jpeg,image/png,image/webp,image/gif"
                     multiple
                     className="hidden"
-                    onChange={(e) => setPhotoCount(Math.min(e.target.files?.length ?? 0, MAX_REQUEST_PHOTOS))}
+                    onChange={(e) =>
+                      setPhotoCount(Math.min(e.target.files?.length ?? 0, MAX_REQUEST_PHOTOS))
+                    }
                   />
                   <Button
                     type="button"

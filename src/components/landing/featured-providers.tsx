@@ -23,6 +23,7 @@ export async function FeaturedProviders({ className }: { className?: string }) {
             <ProviderCard
               key={provider.id}
               provider={provider}
+              showMatchReasons={false}
               className={cn("animate-fade-in-up", `stagger-${index + 1}`)}
             />
           ))}

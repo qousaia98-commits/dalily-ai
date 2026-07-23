@@ -857,6 +857,126 @@ export type Database = {
         };
         Relationships: [];
       };
+      learning_events: {
+        Row: {
+          id: string;
+          event_type: string;
+          provider_id: string | null;
+          customer_id: string | null;
+          service_request_id: string | null;
+          search_log_id: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          event_type: string;
+          provider_id?: string | null;
+          customer_id?: string | null;
+          service_request_id?: string | null;
+          search_log_id?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          event_type?: string;
+          provider_id?: string | null;
+          customer_id?: string | null;
+          service_request_id?: string | null;
+          search_log_id?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      provider_performance_scores: {
+        Row: {
+          provider_id: string;
+          performance_score: number;
+          acceptance_rate: number | null;
+          completion_rate: number | null;
+          avg_rating: number | null;
+          avg_response_hours: number | null;
+          cancellation_rate: number | null;
+          repeat_customer_rate: number | null;
+          successful_jobs: number;
+          sample_size: number;
+          data_quality: number;
+          factors: Json;
+          computed_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          provider_id: string;
+          performance_score?: number;
+          acceptance_rate?: number | null;
+          completion_rate?: number | null;
+          avg_rating?: number | null;
+          avg_response_hours?: number | null;
+          cancellation_rate?: number | null;
+          repeat_customer_rate?: number | null;
+          successful_jobs?: number;
+          sample_size?: number;
+          data_quality?: number;
+          factors?: Json;
+          computed_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          provider_id?: string;
+          performance_score?: number;
+          acceptance_rate?: number | null;
+          completion_rate?: number | null;
+          avg_rating?: number | null;
+          avg_response_hours?: number | null;
+          cancellation_rate?: number | null;
+          repeat_customer_rate?: number | null;
+          successful_jobs?: number;
+          sample_size?: number;
+          data_quality?: number;
+          factors?: Json;
+          computed_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      customer_preference_profiles: {
+        Row: {
+          customer_id: string;
+          prefer_nearby: number;
+          prefer_premium: number;
+          prefer_high_rating: number;
+          prefer_fast_response: number;
+          sample_size: number;
+          factors: Json;
+          computed_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          customer_id: string;
+          prefer_nearby?: number;
+          prefer_premium?: number;
+          prefer_high_rating?: number;
+          prefer_fast_response?: number;
+          sample_size?: number;
+          factors?: Json;
+          computed_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          customer_id?: string;
+          prefer_nearby?: number;
+          prefer_premium?: number;
+          prefer_high_rating?: number;
+          prefer_fast_response?: number;
+          sample_size?: number;
+          factors?: Json;
+          computed_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       service_requests: {
         Row: {
           id: string;

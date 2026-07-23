@@ -4,6 +4,7 @@ import type { LocalizedText } from "@/types/domain.types";
 import type { ProviderListItem } from "@/types/search.types";
 import type { Database, LocalizedJson } from "@/types/database.types";
 import type { PlanSlug } from "@/lib/subscription/types";
+import { buildMatchReasons } from "@/lib/search/smart-match/reasons";
 
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
 
@@ -30,6 +31,9 @@ export function mapProviderRowsToListItems(
   categoryNameBySlug: Map<string, LocalizedJson>,
   planSlugsByProviderId?: Map<string, PlanSlug>,
   distanceByProviderId?: Map<string, number | null>,
+  completedJobsByProviderId?: Map<string, number>,
+  locale: "en" | "ar" = "en",
+  confidenceByProviderId?: Map<string, import("@/lib/search/learning/types").MatchConfidence | null>,
 ): ProviderListItem[] {
   const items: ProviderListItem[] = [];
 
@@ -54,23 +58,41 @@ export function mapProviderRowsToListItems(
         ? Math.round(rawDistance * 10) / 10
         : null;
 
+    const planSlug = planSlugsByProviderId?.get(row.id) ?? "free";
+    const completedJobs = completedJobsByProviderId?.get(row.id) ?? 0;
+    const categoryLabel = toLocalizedText(categoryName);
+    const categoryLabelText = locale === "ar" ? categoryLabel.ar : categoryLabel.en;
+
+    const matchReasons = buildMatchReasons({
+      verified: row.verification_status === "verified",
+      distanceKm,
+      responseTimeHours: row.response_time_hours,
+      completedJobs,
+      categoryLabel: categoryLabelText || null,
+      rating: Number(row.rating_avg),
+      planSlug,
+    });
+
     items.push({
       id: row.id,
       slug: row.slug,
       name: toLocalizedText(row.name),
       category: catSlug,
-      categoryLabel: toLocalizedText(categoryName),
+      categoryLabel,
       city: cityLabel,
       rating: Number(row.rating_avg),
       reviewCount: row.review_count,
       trustScore: row.trust_score,
       verified: row.verification_status === "verified",
-      planSlug: planSlugsByProviderId?.get(row.id) ?? "free",
+      planSlug,
       coverImage: coverPath ? getStoragePublicUrl(coverPath) : DEFAULT_COVER,
       avatarImage: avatarPath ? getStoragePublicUrl(avatarPath) : DEFAULT_AVATAR,
       distanceKm,
       profileCompleteness: row.profile_completeness,
       responseTimeHours: row.response_time_hours,
+      completedJobs,
+      matchReasons,
+      matchConfidence: confidenceByProviderId?.get(row.id) ?? null,
     });
   }
 
