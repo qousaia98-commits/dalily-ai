@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
-import { getOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider } from "@/lib/providers/database";
 import { isProviderSubscriptionUnlocked } from "@/lib/providers/approval-readiness";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { BusinessSubscriptionPanel } from "@/components/business/business-subscription-panel";

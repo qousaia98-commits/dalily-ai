@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { getOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider } from "@/lib/providers/database";
 import type { BusinessConversation, ConversationMessage } from "@/lib/business/conversations";
 import { resolveLatestMessageAt } from "@/lib/messaging/format-conversation-time";
 

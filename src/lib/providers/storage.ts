@@ -1,4 +1,5 @@
 import { PROVIDER_MEDIA_BUCKET } from "@/lib/providers/constants";
+import { buildOwnedStoragePath, isOwnedStoragePath } from "@/lib/storage/owned-path";
 
 export function getStoragePublicUrl(path: string): string {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -19,8 +20,7 @@ export function buildProviderMediaPath(
   kind: string,
   fileName: string,
 ): string {
-  const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
-  return `${ownerId}/${providerId}/${kind}/${Date.now()}-${safeName}`;
+  return buildOwnedStoragePath(ownerId, providerId, kind, fileName);
 }
 
 /** True when path belongs to this owner/provider/kind (anti-tamper). */
@@ -30,6 +30,5 @@ export function isOwnedProviderMediaPath(
   providerId: string,
   kind: string,
 ): boolean {
-  const prefix = `${ownerId}/${providerId}/${kind}/`;
-  return path.startsWith(prefix) && !path.includes("..");
+  return isOwnedStoragePath(path, ownerId, providerId, kind);
 }

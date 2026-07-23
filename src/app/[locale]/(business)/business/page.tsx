@@ -1,10 +1,10 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "@/lib/i18n/routing";
 import { requireAuthUser } from "@/lib/auth/session";
-import { getOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider } from "@/lib/providers/database";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { getLocalizedField } from "@/types/provider.types";
-import { getWeeklyInsights } from "@/lib/business/insights";
+import { getWeeklyInsights } from "@/lib/business/analytics-database";
 import { countUnreadConversations } from "@/lib/business/conversations";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
 import {

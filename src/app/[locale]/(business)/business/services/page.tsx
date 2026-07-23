@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
-import { getOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider } from "@/lib/providers/database";
 import { ProviderServicesManager } from "@/components/business/provider-services-manager";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 

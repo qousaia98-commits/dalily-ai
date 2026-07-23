@@ -7,7 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAuthUser } from "@/lib/auth/session";
 import { isPlatformAdmin } from "@/lib/auth/roles";
 import { logAdminAudit } from "@/lib/admin/audit";
-import { requireOwnedProvider } from "@/lib/providers/queries";
+import { requireOwnedProvider } from "@/lib/providers/database";
 import {
   ALLOWED_VERIFICATION_TYPES,
   MAX_VERIFICATION_BYTES,

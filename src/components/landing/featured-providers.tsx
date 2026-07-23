@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { getFeaturedProviders } from "@/lib/providers/public-queries";
+import { getFeaturedProviders } from "@/lib/providers/database";
 import { ProviderCard } from "@/components/providers/provider-card";
 import { cn } from "@/lib/utils";
 

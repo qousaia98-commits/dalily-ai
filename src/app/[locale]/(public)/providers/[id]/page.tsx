@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { getPublicProviderById } from "@/lib/providers/public-queries";
+import { getPublicProviderById } from "@/lib/providers/database";
 import { getAuthUser } from "@/lib/auth/session";
 import { hasPendingRequest, getProviderRequestSettings } from "@/lib/service-requests/queries";
 import { getLocalizedText } from "@/types/domain.types";

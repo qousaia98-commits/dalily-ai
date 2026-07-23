@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { cookies } from "next/headers";
-import { getOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider } from "@/lib/providers/database";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { buildBusinessNotifications } from "@/lib/business/notification-inbox";
 import {

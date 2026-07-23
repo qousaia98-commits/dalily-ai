@@ -2,10 +2,10 @@ import { Lock, Sparkles, Star, TrendingUp, MapPin, Search, BarChart3 } from "luc
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/routing";
 import { requireAuthUser } from "@/lib/auth/session";
-import { getOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider } from "@/lib/providers/database";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { getBenefits } from "@/lib/subscription/benefit-engine";
-import { getProviderAnalyticsBundle } from "@/lib/business/insights";
+import { getProviderAnalyticsBundle } from "@/lib/business/analytics-database";
 import { categorySlugFromId } from "@/lib/providers/reference";
 import { BusinessStatsCards } from "@/components/business/business-stats-cards";
 import { DashboardGrowthPotential } from "@/components/business/dashboard-growth-potential";

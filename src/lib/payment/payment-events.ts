@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import type { PaymentEventType } from "@/types/database.types";
 
-export type PaymentEventType = "requested" | "receipt_uploaded" | "approved" | "rejected";
+export type { PaymentEventType };
 
 export async function logPaymentEvent(params: {
   paymentId: string;

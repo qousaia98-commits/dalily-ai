@@ -1,14 +1,15 @@
 import { z } from "zod";
 import { CITY_IDS } from "@/lib/constants/reference-data";
+import { emailField, phoneField } from "@/lib/validations/common";
 
 export const loginSchema = z.object({
-  email: z.string().trim().email(),
+  email: emailField,
   password: z.string().min(1),
 });
 
 export const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
-  email: z.string().trim().email(),
+  email: emailField,
   password: z.string().min(6).max(128),
   locale: z.enum(["ar", "en"]).default("ar"),
 });
@@ -18,8 +19,8 @@ export const registerBusinessSchema = z
     businessName: z.string().trim().min(2).max(120),
     category: z.string().trim().min(1).max(80),
     city: z.enum(Object.keys(CITY_IDS) as [string, ...string[]]),
-    phone: z.string().trim().min(7).max(20),
-    email: z.string().trim().email(),
+    phone: phoneField,
+    email: emailField,
     password: z.string().min(6).max(128),
     confirmPassword: z.string().min(6).max(128),
     about: z.string().trim().min(10).max(2000),

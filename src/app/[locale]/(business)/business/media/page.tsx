@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
-import { getOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider } from "@/lib/providers/database";
 import { getProviderPlanLimits } from "@/lib/subscription/get-provider-limits";
 import { MAX_GALLERY_IMAGES } from "@/lib/providers/constants";
 import { BusinessMediaManager } from "@/components/business/business-media-manager";

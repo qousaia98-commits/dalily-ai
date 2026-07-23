@@ -1,4 +1,5 @@
 import type { CategorySlug } from "@/lib/categories/types";
+import type { Database } from "@/types/database.types";
 
 /**
  * Canonical problem identifier — language-agnostic.
@@ -21,7 +22,7 @@ export type ProblemId =
   | "it_support_need"
   | "photography_need";
 
-export type ProblemPriority = "emergency" | "high" | "normal" | "low";
+export type ProblemPriority = Database["public"]["Enums"]["problem_priority"];
 
 export type DetectedProblem = {
   problemId: ProblemId;

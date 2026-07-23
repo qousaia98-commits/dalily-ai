@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
-import { getOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider } from "@/lib/providers/database";
 import { SERVICE_REQUEST_MEDIA_BUCKET } from "@/lib/service-requests/constants";
 import {
   statusesForTab,

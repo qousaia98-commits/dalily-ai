@@ -1,16 +1,6 @@
-export type ServiceRequestStatus =
-  | "pending"
-  | "accepted"
-  | "quoted"
-  | "quote_accepted"
-  | "quote_declined"
-  | "in_progress"
-  | "completed_by_business"
-  | "completed"
-  | "disputed"
-  | "reviewed"
-  | "rejected"
-  | "cancelled";
+import type { Database } from "@/types/database.types";
+
+export type ServiceRequestStatus = Database["public"]["Enums"]["service_request_status"];
 
 export type TimelineStepId =
   | "request_sent"

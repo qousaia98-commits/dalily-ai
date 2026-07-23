@@ -1,7 +1,7 @@
 import { Crown, Sparkles, TrendingUp } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/routing";
-import type { GrowthPotentialResult } from "@/lib/business/growth-potential";
+import type { GrowthPotentialResult } from "@/lib/business/analytics-database";
 import type { PlanSlug } from "@/lib/subscription/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

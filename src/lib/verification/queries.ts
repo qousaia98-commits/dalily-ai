@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Database, LocalizedJson } from "@/types/database.types";
 import { PROVIDER_VERIFICATION_BUCKET } from "@/lib/verification/constants";
+import { getLocalizedField } from "@/types/provider.types";
 
 export type ProviderVerificationStatus = Database["public"]["Enums"]["provider_verification_status"];
 
@@ -197,11 +198,6 @@ export async function listVerificationsForAdmin(params: {
 export async function listPendingVerificationsForAdmin(): Promise<AdminVerificationItem[]> {
   const result = await listVerificationsForAdmin({ status: "pending", pageSize: 100 });
   return result.items;
-}
-
-function getLocalizedField(value: LocalizedJson, locale: string): string {
-  if (locale === "ar") return value.ar || value.en;
-  return value.en || value.ar;
 }
 
 export async function createSignedVerificationUrl(path: string, expiresIn = 3600): Promise<string | null> {

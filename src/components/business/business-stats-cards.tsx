@@ -1,7 +1,7 @@
 import { Eye, Search, MousePointer, Heart } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { WeeklyInsights } from "@/lib/business/insights";
+import type { WeeklyInsights } from "@/lib/business/analytics-database";
 
 const statConfig = [
   { key: "profileViews" as const, icon: Eye, field: "profileViews" as const },

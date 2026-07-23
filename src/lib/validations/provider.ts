@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { CITY_IDS } from "@/lib/constants/reference-data";
 import { locales } from "@/lib/i18n/config";
+import { emailField, phoneField } from "@/lib/validations/common";
 
 const localeField = z.enum(locales);
 
@@ -19,8 +20,8 @@ export const createProviderSchema = z.object({
   businessName: z.string().trim().min(2).max(120),
   category: z.string().trim().min(1).max(80),
   city: z.enum(Object.keys(CITY_IDS) as [string, ...string[]]),
-  phone: z.string().trim().min(7).max(20),
-  email: z.string().trim().email(),
+  phone: phoneField,
+  email: emailField,
   about: z.string().trim().min(10).max(2000),
 });
 
@@ -33,9 +34,9 @@ export const updateProviderProfileSchema = z.object({
 });
 
 export const updateContactSchema = z.object({
-  phone: z.string().trim().min(7).max(20),
+  phone: phoneField,
   whatsapp: z.string().trim().max(20).optional().or(z.literal("")),
-  email: z.string().trim().email(),
+  email: emailField,
   website: z.union([z.literal(""), z.string().trim().url()]).optional(),
   addressAr: z.string().trim().max(500).optional().or(z.literal("")),
   addressEn: z.string().trim().max(500).optional().or(z.literal("")),
@@ -48,7 +49,7 @@ export const onboardingProfileSchema = z.object({
   about: z.string().trim().min(10).max(2000),
   category: z.string().trim().min(1).max(80),
   city: z.enum(Object.keys(CITY_IDS) as [string, ...string[]]),
-  phone: z.string().trim().min(7).max(20),
+  phone: phoneField,
   address: z.string().trim().min(3).max(500),
 });
 

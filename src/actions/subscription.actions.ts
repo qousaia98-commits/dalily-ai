@@ -3,7 +3,7 @@
 import { cache } from "react";
 import { z } from "zod";
 import { requireAuthUser } from "@/lib/auth/session";
-import { getOwnedProvider, requireOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider, requireOwnedProvider } from "@/lib/providers/database";
 import { getPaymentConfig, isPaymentConfigured } from "@/lib/payment/config";
 import {
   buildPaymentReceiptPath,

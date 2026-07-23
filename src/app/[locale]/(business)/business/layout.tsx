@@ -3,7 +3,7 @@ import { redirect } from "@/lib/i18n/routing";
 import { getAuthUser } from "@/lib/auth/session";
 import { isBusinessUser } from "@/lib/auth/roles";
 import { getBusinessHeaderLabel } from "@/lib/business/header-label";
-import { getOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider } from "@/lib/providers/database";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
 import { countUnreadConversations } from "@/lib/business/conversations";
 import { countPendingRequestsForOwner } from "@/lib/service-requests/queries";

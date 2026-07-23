@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getAuthUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
-import { getOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider } from "@/lib/providers/database";
 import {
   ALLOWED_IMAGE_TYPES,
   MAX_IMAGE_BYTES,

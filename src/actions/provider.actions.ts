@@ -12,7 +12,7 @@ import {
   calculateProfileCompleteness,
   completenessFromProvider,
 } from "@/lib/providers/completion";
-import { getOwnedProvider, requireOwnedProvider } from "@/lib/providers/queries";
+import { getOwnedProvider, requireOwnedProvider } from "@/lib/providers/database";
 import { ensureFreeSubscription } from "@/lib/subscription/repository";
 import {
   ALLOWED_IMAGE_TYPES,

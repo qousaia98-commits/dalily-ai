@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
-import { getOwnedProviderForVerification } from "@/lib/providers/public-queries";
+import { getOwnedProviderForVerification } from "@/lib/providers/database";
 import {
   getProviderVerificationForOwner,
   toBusinessVerificationView,

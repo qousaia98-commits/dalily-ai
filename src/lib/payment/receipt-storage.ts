@@ -1,3 +1,5 @@
+import { buildOwnedStoragePath, isOwnedStoragePath } from "@/lib/storage/owned-path";
+
 export const PAYMENT_RECEIPTS_BUCKET = "payment-receipts";
 
 export const MAX_RECEIPT_BYTES = 10 * 1024 * 1024;
@@ -48,8 +50,7 @@ export function buildPaymentReceiptPath(
   paymentId: string,
   fileName: string,
 ): string {
-  const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
-  return `${ownerId}/${providerId}/${paymentId}/${Date.now()}-${safeName}`;
+  return buildOwnedStoragePath(ownerId, providerId, paymentId, fileName);
 }
 
 /** True when path belongs to this owner/provider/payment (anti-tamper). */
@@ -59,6 +60,5 @@ export function isOwnedReceiptPath(
   providerId: string,
   paymentId: string,
 ): boolean {
-  const prefix = `${ownerId}/${providerId}/${paymentId}/`;
-  return path.startsWith(prefix) && !path.includes("..");
+  return isOwnedStoragePath(path, ownerId, providerId, paymentId);
 }

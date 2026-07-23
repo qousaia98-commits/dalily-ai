@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getLocalizedText } from "@/types/domain.types";
 import type { Locale } from "@/lib/i18n/config";
-import type { PublicProviderProfile } from "@/lib/providers/public-queries";
+import type { PublicProviderProfile } from "@/lib/providers/database";
 import { TrustScore } from "@/components/providers/trust-score";
 import { StarRating } from "@/components/providers/star-rating";
 import { Badge } from "@/components/ui/badge";
