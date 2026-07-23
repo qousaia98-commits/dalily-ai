@@ -2061,6 +2061,191 @@
         "forbidden": "لا يمكنك تغيير هذه الإعدادات.",
         "failed": "حدث خطأ ما."
       }
+    },
+    "success": {
+      "kpis": {
+        "title": "نظرة عامة على العمل",
+        "todayAppointments": "مواعيد اليوم",
+        "upcomingBookings": "الحجوزات القادمة",
+        "pendingBookingRequests": "طلبات حجز بانتظار الرد",
+        "unreadMessages": "رسائل غير مقروءة",
+        "averageRating": "متوسط التقييم",
+        "completedJobs": "أعمال مكتملة",
+        "responseTimeHours": "وقت الاستجابة",
+        "acceptanceRate": "معدل القبول",
+        "cancellationRate": "معدل الإلغاء",
+        "profileCompletion": "اكتمال الملف",
+        "verificationStatus": "التحقق",
+        "dalilyScore": "درجة دليلي",
+        "hoursValue": "{hours} س",
+        "verification": {
+          "unverified": "غير موثّق",
+          "pending": "قيد المراجعة",
+          "partially_verified": "جزئي",
+          "verified": "موثّق",
+          "rejected": "مرفوض"
+        }
+      },
+      "schedule": {
+        "title": "جدول اليوم",
+        "subtitle": "مواعيد اليوم مرتبة زمنياً.",
+        "empty": "لا مواعيد مجدولة لليوم.",
+        "openChat": "فتح المحادثة",
+        "openBooking": "فتح الحجز",
+        "navigate": "التنقل",
+        "status": {
+          "pending": "قيد الانتظار",
+          "confirmed": "مؤكد",
+          "declined": "مرفوض",
+          "cancelled": "ملغى",
+          "completed": "مكتمل",
+          "rescheduled": "أُعيد جدولته",
+          "expired": "منتهي",
+          "awaiting_customer_confirmation": "بانتظار التأكيد",
+          "customer_confirmed": "أكد العميل",
+          "issue_reported": "مشكلة مبلغ عنها"
+        }
+      },
+      "performance": {
+        "title": "أداء العمل",
+        "subtitle": "مجمّع من الحجوزات والتقييمات والظهور.",
+        "jobsThisWeek": "أعمال هذا الأسبوع",
+        "jobsThisMonth": "أعمال هذا الشهر",
+        "averageRating": "متوسط التقييم",
+        "reviewCount": "عدد التقييمات",
+        "completionRate": "معدل الإتمام",
+        "avgConfirmationTimeHours": "متوسط وقت التأكيد",
+        "avgResponseTimeHours": "متوسط وقت الاستجابة",
+        "repeatCustomers": "عملاء متكررون",
+        "profileViews": "مشاهدات الملف",
+        "searchAppearances": "ظهور في البحث",
+        "bookingConversionRate": "تحويل الحجوزات"
+      },
+      "insights": {
+        "title": "رؤى للمزود",
+        "subtitle": "توصيات قواعدية مرتبة حسب الأثر. جاهزة للذكاء الاصطناعي لاحقاً.",
+        "empty": "أداؤك ممتاز — لا توصيات عاجلة.",
+        "impact": "الأثر {value}",
+        "items": {
+          "complete_profile": "أكمل ملفك للظهور أعلى في البحث.",
+          "upload_photos": "أضف المزيد من صور الأعمال لبناء الثقة.",
+          "slow_response": "وقت استجابتك أبطأ من المثالي — ردّ أسرع.",
+          "unread_bookings": "لديك طلبات حجز بانتظار الرد.",
+          "unread_messages": "لديك رسائل عملاء غير مقروءة.",
+          "more_hours": "فعّل ساعات عمل أكثر لفتح فترات حجز.",
+          "add_service": "أضف خدمة أخرى لجذب المزيد من العملاء.",
+          "improve_description": "حسّن وصف ملفك.",
+          "verify_business": "وثّق عملك لفتح شارات الثقة.",
+          "enable_availability": "فعّل قبول الحجوزات لاستقبال المواعيد."
+        }
+      },
+      "profile": {
+        "title": "اكتمال الملف",
+        "subtitle": "الملفات الأقوى تحصل على حجوزات أكثر.",
+        "progressAria": "اكتمال الملف {percent} بالمئة",
+        "complete": "ملفك مكتمل. حافظ على تحديث الصور والساعات.",
+        "missingTitle": "عناصر ناقصة",
+        "missing": {
+          "logo": "الشعار",
+          "cover": "صورة الغلاف",
+          "description": "الوصف",
+          "hours": "ساعات العمل",
+          "phone": "رقم الهاتف",
+          "address": "العنوان",
+          "services": "الخدمات",
+          "gallery": "معرض الأعمال",
+          "verification": "التحقق",
+          "category": "التصنيف"
+        }
+      },
+      "quickActions": {
+        "title": "إجراءات سريعة",
+        "calendar": "فتح التقويم",
+        "availability": "إدارة التوفر",
+        "inbox": "فتح الوارد",
+        "bookings": "عرض الحجوزات",
+        "profile": "تعديل الملف",
+        "portfolio": "رفع المعرض",
+        "services": "إدارة الخدمات",
+        "verify": "توثيق العمل"
+      },
+      "activity": {
+        "title": "النشاط الأخير",
+        "empty": "لا نشاط حديث بعد.",
+        "kinds": {
+          "booking_created": "حجز جديد",
+          "booking_accepted": "تم قبول حجز",
+          "review_received": "تقييم جديد",
+          "message_received": "رسالة واردة",
+          "verification_approved": "تمت الموافقة على التوثيق",
+          "profile_updated": "تم تحديث الملف",
+          "system": "تحديث النظام"
+        }
+      },
+      "charts": {
+        "title": "الاتجاهات",
+        "bookingsWeek": "حجوزات أسبوعياً",
+        "bookingsMonth": "حجوزات شهرياً",
+        "ratingTrend": "اتجاه متوسط التقييم",
+        "completedTrend": "اتجاه الأعمال المكتملة",
+        "empty": "لا توجد بيانات كافية بعد."
+      },
+      "notifications": {
+        "title": "الإشعارات",
+        "empty": "لا إشعارات جديدة.",
+        "categories": {
+          "message": "رسائل",
+          "booking": "حجوزات",
+          "review": "تقييمات",
+          "verification": "توثيق",
+          "system": "النظام"
+        },
+        "fallback": {
+          "message": "رسائل تحتاج انتباهك.",
+          "booking": "تحديث حجز أو طلب.",
+          "review": "نشاط تقييم جديد.",
+          "verification": "تحديث التوثيق.",
+          "system": "إشعار النظام."
+        }
+      },
+      "leaderboard": {
+        "title": "ترتيب دليلي",
+        "dalilyScore": "درجة دليلي",
+        "rating": "التقييم",
+        "jobs": "أعمال مكتملة",
+        "level": "مستوى المزود",
+        "progressToNext": "التقدم للمستوى التالي",
+        "progressAria": "التقدم نحو مستوى المزود التالي",
+        "level1": "مبتدئ",
+        "level2": "صاعد",
+        "level3": "راسخ",
+        "level4": "موثوق",
+        "level5": "محترف",
+        "level6": "نخبة",
+        "level7": "أسطورة",
+        "badges": {
+          "verified": "موثّق",
+          "top_rated": "أعلى تقييماً",
+          "profile_complete": "ملف مكتمل",
+          "reliable": "موثوق"
+        }
+      },
+      "achievements": {
+        "title": "الإنجازات",
+        "subtitle": "محطات تفتح التقدير. جاهزة للألعاب لاحقاً.",
+        "unlocked": "مفتوح",
+        "progress": "{value}% مكتمل",
+        "items": {
+          "first_booking": "أول حجز",
+          "jobs_10": "10 أعمال مكتملة",
+          "jobs_50": "50 عملاً مكتملاً",
+          "reviews_100": "100 تقييم",
+          "verified": "مزود موثّق",
+          "fast_responder": "استجابة سريعة",
+          "top_rated": "أعلى تقييماً",
+          "profile_complete": "ملف مكتمل"
+        }
+      }
     }
   },
   "admin": {

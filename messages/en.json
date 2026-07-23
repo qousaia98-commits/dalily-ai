@@ -2338,6 +2338,191 @@
       "emptyHint": "Growth numbers appear as customers search your category.",
       "legacyHint": "Showing real appearances. Upgrade simulations unlock as new searches are logged.",
       "realCalc": "Based on {count} real ranking snapshots this week."
+    },
+    "success": {
+      "kpis": {
+        "title": "Business overview",
+        "todayAppointments": "Today's appointments",
+        "upcomingBookings": "Upcoming bookings",
+        "pendingBookingRequests": "Pending booking requests",
+        "unreadMessages": "Unread messages",
+        "averageRating": "Average rating",
+        "completedJobs": "Completed jobs",
+        "responseTimeHours": "Response time",
+        "acceptanceRate": "Acceptance rate",
+        "cancellationRate": "Cancellation rate",
+        "profileCompletion": "Profile completion",
+        "verificationStatus": "Verification",
+        "dalilyScore": "Dalily Score",
+        "hoursValue": "{hours}h",
+        "verification": {
+          "unverified": "Not verified",
+          "pending": "Pending",
+          "partially_verified": "Partial",
+          "verified": "Verified",
+          "rejected": "Rejected"
+        }
+      },
+      "schedule": {
+        "title": "Today's schedule",
+        "subtitle": "Appointments for today in chronological order.",
+        "empty": "No appointments scheduled for today.",
+        "openChat": "Open chat",
+        "openBooking": "Open booking",
+        "navigate": "Navigate",
+        "status": {
+          "pending": "Pending",
+          "confirmed": "Confirmed",
+          "declined": "Declined",
+          "cancelled": "Cancelled",
+          "completed": "Completed",
+          "rescheduled": "Rescheduled",
+          "expired": "Expired",
+          "awaiting_customer_confirmation": "Awaiting confirmation",
+          "customer_confirmed": "Customer confirmed",
+          "issue_reported": "Issue reported"
+        }
+      },
+      "performance": {
+        "title": "Business performance",
+        "subtitle": "Aggregated from your bookings, reviews and reach.",
+        "jobsThisWeek": "Jobs this week",
+        "jobsThisMonth": "Jobs this month",
+        "averageRating": "Average rating",
+        "reviewCount": "Review count",
+        "completionRate": "Completion rate",
+        "avgConfirmationTimeHours": "Avg. confirmation time",
+        "avgResponseTimeHours": "Avg. response time",
+        "repeatCustomers": "Repeat customers",
+        "profileViews": "Profile views",
+        "searchAppearances": "Search appearances",
+        "bookingConversionRate": "Booking conversion"
+      },
+      "insights": {
+        "title": "Provider insights",
+        "subtitle": "Rule-based recommendations ordered by impact. AI-ready architecture.",
+        "empty": "You're in great shape — no urgent recommendations.",
+        "impact": "Impact {value}",
+        "items": {
+          "complete_profile": "Complete your profile to appear higher in search.",
+          "upload_photos": "Upload more service photos to build trust.",
+          "slow_response": "Your response time is slower than ideal — reply faster.",
+          "unread_bookings": "You have unread booking requests waiting.",
+          "unread_messages": "You have unread customer messages.",
+          "more_hours": "Enable more working hours to unlock more slots.",
+          "add_service": "Add another service to attract more customers.",
+          "improve_description": "Improve your profile description.",
+          "verify_business": "Verify your business to unlock trust badges.",
+          "enable_availability": "Turn on booking availability to receive appointments."
+        }
+      },
+      "profile": {
+        "title": "Profile completion",
+        "subtitle": "Stronger profiles get more bookings.",
+        "progressAria": "Profile completion {percent} percent",
+        "complete": "Your profile looks complete. Keep media and hours up to date.",
+        "missingTitle": "Missing items",
+        "missing": {
+          "logo": "Logo",
+          "cover": "Cover image",
+          "description": "Description",
+          "hours": "Working hours",
+          "phone": "Phone number",
+          "address": "Address",
+          "services": "Services",
+          "gallery": "Portfolio images",
+          "verification": "Verification",
+          "category": "Category"
+        }
+      },
+      "quickActions": {
+        "title": "Quick actions",
+        "calendar": "Open calendar",
+        "availability": "Manage availability",
+        "inbox": "Open inbox",
+        "bookings": "View bookings",
+        "profile": "Edit profile",
+        "portfolio": "Upload portfolio",
+        "services": "Manage services",
+        "verify": "Verify business"
+      },
+      "activity": {
+        "title": "Recent activity",
+        "empty": "No recent activity yet.",
+        "kinds": {
+          "booking_created": "New booking",
+          "booking_accepted": "Booking accepted",
+          "review_received": "Review received",
+          "message_received": "Message received",
+          "verification_approved": "Verification approved",
+          "profile_updated": "Profile updated",
+          "system": "System update"
+        }
+      },
+      "charts": {
+        "title": "Trends",
+        "bookingsWeek": "Bookings per week",
+        "bookingsMonth": "Bookings per month",
+        "ratingTrend": "Average rating trend",
+        "completedTrend": "Completed jobs trend",
+        "empty": "Not enough data yet."
+      },
+      "notifications": {
+        "title": "Notifications",
+        "empty": "You're all caught up.",
+        "categories": {
+          "message": "Messages",
+          "booking": "Bookings",
+          "review": "Reviews",
+          "verification": "Verification",
+          "system": "System"
+        },
+        "fallback": {
+          "message": "Unread messages need attention.",
+          "booking": "Booking or request update.",
+          "review": "New review activity.",
+          "verification": "Verification update.",
+          "system": "System notification."
+        }
+      },
+      "leaderboard": {
+        "title": "Dalily ranking",
+        "dalilyScore": "Dalily Score",
+        "rating": "Rating",
+        "jobs": "Completed jobs",
+        "level": "Provider level",
+        "progressToNext": "Progress to next level",
+        "progressAria": "Progress toward next provider level",
+        "level1": "Starter",
+        "level2": "Rising",
+        "level3": "Established",
+        "level4": "Trusted",
+        "level5": "Pro",
+        "level6": "Elite",
+        "level7": "Legend",
+        "badges": {
+          "verified": "Verified",
+          "top_rated": "Top rated",
+          "profile_complete": "Profile complete",
+          "reliable": "Reliable"
+        }
+      },
+      "achievements": {
+        "title": "Achievements",
+        "subtitle": "Milestones that unlock recognition. Ready for future gamification.",
+        "unlocked": "Unlocked",
+        "progress": "{value}% complete",
+        "items": {
+          "first_booking": "First booking",
+          "jobs_10": "10 completed jobs",
+          "jobs_50": "50 completed jobs",
+          "reviews_100": "100 reviews",
+          "verified": "Verified provider",
+          "fast_responder": "Fast responder",
+          "top_rated": "Top rated",
+          "profile_complete": "Profile complete"
+        }
+      }
     }
   },
   "admin": {

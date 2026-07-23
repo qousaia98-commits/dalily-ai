@@ -4,35 +4,27 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
 import { getLocalizedField } from "@/types/provider.types";
-import { getWeeklyInsights } from "@/lib/business/analytics-database";
 import { countUnreadConversations } from "@/lib/business/conversations";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
-import {
-  countPendingRequestsForOwner,
-  countTotalRequestsForProvider,
-} from "@/lib/service-requests/queries";
+import { countPendingRequestsForOwner, countTotalRequestsForProvider } from "@/lib/service-requests/queries";
 import {
   getProviderVerificationForOwner,
   toBusinessVerificationView,
 } from "@/lib/verification/queries";
-import {
-  getProfileStrength,
-  shouldForceOnboarding,
-} from "@/lib/business/onboarding";
+import { shouldForceOnboarding } from "@/lib/business/onboarding";
+import { getProviderSuccessDashboard } from "@/lib/provider-success/dashboard-service";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { GrowthHero } from "@/components/business/growth-hero";
-import { DashboardTodayOverview } from "@/components/business/dashboard-today-overview";
-import { DashboardQuickActions } from "@/components/business/dashboard-quick-actions";
-import { DashboardConversationsPreview } from "@/components/business/conversation-list";
 import { ChangesRequiredCard } from "@/components/business/changes-required-card";
-import { ProfileStrengthCard } from "@/components/business/profile-strength-card";
 import { FirstRequestMediaBanner } from "@/components/business/first-request-media-banner";
+import { DashboardConversationsPreview } from "@/components/business/conversation-list";
+import { ProviderSuccessDashboardView } from "@/components/provider-success/provider-success-dashboard";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
 
 /**
- * Business homepage — calm, 5-second overview.
- * Heavy growth / analytics live on /business/analytics.
+ * Provider Success Dashboard — central business workspace (Sprint 39).
+ * Reuses Booking, Chat, Reviews, Analytics, Notifications, Provider modules.
  */
 export default async function BusinessDashboardPage() {
   const t = await getTranslations("business.dashboard");
@@ -61,19 +53,22 @@ export default async function BusinessDashboardPage() {
     redirect({ href: "/business/welcome", locale });
   }
 
-  const [{ subscription }, { conversations }, weekly, pendingRequests, totalRequests] =
+  const [{ subscription }, { conversations }, pendingRequests, totalRequests, success] =
     await Promise.all([
       getSubscriptionPageData(authUser.id),
       loadBusinessConversations(authUser.id),
-      getWeeklyInsights(provider.id, provider.reviewCount),
       countPendingRequestsForOwner(authUser.id),
       countTotalRequestsForProvider(provider.id),
+      getProviderSuccessDashboard({
+        provider,
+        ownerId: authUser.id,
+        verification,
+      }),
     ]);
 
   const planSlug = (subscription?.planSlug ?? "free") as PlanSlug;
   const businessName = getLocalizedField(provider.name, locale) || provider.id;
   const unreadMessages = countUnreadConversations(conversations);
-  const strength = getProfileStrength(provider, verification, locale);
 
   const showVerification =
     provider.verificationStatus !== "verified" ||
@@ -100,24 +95,9 @@ export default async function BusinessDashboardPage() {
         galleryCount={provider.gallery.length}
       />
 
-      <ProfileStrengthCard strength={strength} />
-
-      <DashboardTodayOverview
-        data={{
-          profileViews: weekly.profileViews ?? 0,
-          unreadMessages,
-          pendingRequests,
-          growthAppearances: weekly.searchAppearances,
-        }}
-      />
+      <ProviderSuccessDashboardView data={success} showVerify={showVerification} />
 
       <DashboardConversationsPreview conversations={conversations} />
-
-      <DashboardQuickActions
-        planSlug={planSlug}
-        publicHref={provider.status === "active" ? `/providers/${provider.id}` : null}
-        showVerification={showVerification}
-      />
     </div>
   );
 }
