@@ -69,6 +69,11 @@ export async function ProviderCard({
                 {tProvider("featured")}
               </Badge>
             ) : null}
+            {provider.rating >= 4.7 && provider.reviewCount >= 8 ? (
+              <Badge className="bg-amber-500/15 text-amber-800 dark:text-amber-300">
+                {tProvider("topRated")}
+              </Badge>
+            ) : null}
           </div>
         </div>
         <CardContent className="space-y-3 p-4">

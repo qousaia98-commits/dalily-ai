@@ -598,6 +598,7 @@
     "gallery": "Gallery",
     "reviewsSection": "Reviews",
     "noReviews": "No reviews yet.",
+    "topRated": "Top Rated",
     "contact": "Contact",
     "requestService": "Send Request",
     "requestServiceBody": "Describe what you need — the business will review your request before you can chat.",
@@ -613,6 +614,52 @@
     "healthScore": "Health {score}%",
     "healthShort": "Health",
     "featured": "Featured"
+  },
+  "reviews": {
+    "sectionTitle": "Customer reviews",
+    "sectionSubtitle": "{count, plural, =0 {No reviews yet} one {# review} other {# reviews}}",
+    "empty": "No reviews yet. Completed jobs can leave the first review.",
+    "averageLabel": "Average rating",
+    "basedOn": "Based on {count} reviews",
+    "breakdownLabel": "Rating breakdown",
+    "anonymous": "Anonymous customer",
+    "customer": "Customer",
+    "verifiedBadge": "Verified review",
+    "verifiedBooking": "Verified booking",
+    "providerReply": "Provider reply",
+    "helpful": "Helpful",
+    "openPhoto": "Open photo",
+    "photoPreview": "Review photo",
+    "prevPage": "Previous",
+    "nextPage": "Next",
+    "replyPlaceholder": "Write an official reply…",
+    "submitReply": "Post reply",
+    "replying": "Posting…",
+    "errors": {
+      "login_required": "Please log in",
+      "forbidden": "Not allowed",
+      "not_found": "Review not found",
+      "validation_error": "Please check your reply",
+      "reply_exists": "A reply already exists",
+      "failed": "Something went wrong"
+    },
+    "sort": {
+      "label": "Sort reviews",
+      "newest": "Newest",
+      "highest": "Highest rating",
+      "lowest": "Lowest rating",
+      "helpful": "Most helpful",
+      "verified": "Verified first",
+      "photos": "With photos"
+    },
+    "badges": {
+      "top_rated": "Top Rated",
+      "highly_recommended": "Highly Recommended",
+      "fast_response": "Fast Response",
+      "verified": "Verified",
+      "emergency_available": "Emergency Available",
+      "experienced": "Experienced"
+    }
   },
   "serviceRequest": {
     "sendRequest": "Send a request",
@@ -803,8 +850,11 @@
     "review": {
       "title": "Review",
       "formTitle": "Leave a review",
-      "rating": "Overall rating (1–5)",
+      "rating": "Overall rating",
       "comment": "Comment",
+      "photos": "Photos (optional)",
+      "photosHint": "Up to 5 images of the completed work.",
+      "anonymous": "Show my name as anonymous",
       "recommend": "Recommend this business?",
       "recommendSkip": "Prefer not to say",
       "recommendYes": "Yes",

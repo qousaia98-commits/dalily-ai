@@ -598,6 +598,7 @@
     "gallery": "معرض الصور",
     "reviewsSection": "التقييمات",
     "noReviews": "لا توجد تقييمات بعد.",
+    "topRated": "الأعلى تقييماً",
     "contact": "تواصل",
     "requestService": "إرسال طلب",
     "requestServiceBody": "صف ما تحتاجه — سيراجع العمل طلبك قبل فتح المحادثة.",
@@ -613,6 +614,52 @@
     "healthScore": "الصحة {score}%",
     "healthShort": "الصحة",
     "featured": "مميز"
+  },
+  "reviews": {
+    "sectionTitle": "تقييمات الزبائن",
+    "sectionSubtitle": "{count, plural, =0 {لا توجد تقييمات بعد} one {تقييم واحد} other {# تقييمات}}",
+    "empty": "لا توجد تقييمات بعد. الأعمال المكتملة يمكنها ترك أول تقييم.",
+    "averageLabel": "متوسط التقييم",
+    "basedOn": "بناءً على {count} تقييمات",
+    "breakdownLabel": "توزيع التقييمات",
+    "anonymous": "زبون مجهول",
+    "customer": "زبون",
+    "verifiedBadge": "تقييم موثّق",
+    "verifiedBooking": "حجز موثّق",
+    "providerReply": "رد المزود",
+    "helpful": "مفيد",
+    "openPhoto": "فتح الصورة",
+    "photoPreview": "صورة التقييم",
+    "prevPage": "السابق",
+    "nextPage": "التالي",
+    "replyPlaceholder": "اكتب رداً رسمياً…",
+    "submitReply": "نشر الرد",
+    "replying": "جارٍ النشر…",
+    "errors": {
+      "login_required": "يرجى تسجيل الدخول",
+      "forbidden": "غير مسموح",
+      "not_found": "التقييم غير موجود",
+      "validation_error": "تحقق من الرد",
+      "reply_exists": "يوجد رد مسبقاً",
+      "failed": "حدث خطأ"
+    },
+    "sort": {
+      "label": "ترتيب التقييمات",
+      "newest": "الأحدث",
+      "highest": "الأعلى تقييماً",
+      "lowest": "الأقل تقييماً",
+      "helpful": "الأكثر فائدة",
+      "verified": "الموثّق أولاً",
+      "photos": "مع صور"
+    },
+    "badges": {
+      "top_rated": "الأعلى تقييماً",
+      "highly_recommended": "موصى به بشدة",
+      "fast_response": "رد سريع",
+      "verified": "موثّق",
+      "emergency_available": "متاح للطوارئ",
+      "experienced": "ذو خبرة"
+    }
   },
   "serviceRequest": {
     "sendRequest": "إرسال طلب",
@@ -2719,8 +2766,11 @@
     "review": {
       "title": "التقييم",
       "formTitle": "اترك تقييماً",
-      "rating": "التقييم العام (1–5)",
+      "rating": "التقييم العام",
       "comment": "تعليق",
+      "photos": "صور (اختياري)",
+      "photosHint": "حتى 5 صور للعمل المنجز.",
+      "anonymous": "اعرض اسمي كمجهول",
       "recommend": "هل توصي بهذا العمل؟",
       "recommendSkip": "أفضل عدم الإجابة",
       "recommendYes": "نعم",

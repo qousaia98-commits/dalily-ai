@@ -749,6 +749,7 @@ export async function submitReviewAction(
     rating: formData.get("rating"),
     comment: formData.get("comment") ?? "",
     recommend: formData.get("recommend") ?? "",
+    anonymous: formData.get("anonymous") ?? "",
   });
   if (!parsed.success) return validationError(parsed.error);
 
@@ -767,6 +768,7 @@ export async function submitReviewAction(
 
   const recommend =
     parsed.data.recommend === "yes" ? true : parsed.data.recommend === "no" ? false : null;
+  const isAnonymous = parsed.data.anonymous === "true";
 
   const { data: review, error } = await supabase
     .from("service_reviews")
@@ -777,11 +779,25 @@ export async function submitReviewAction(
       rating: parsed.data.rating,
       comment: parsed.data.comment?.trim() || null,
       recommend,
+      is_anonymous: isAnonymous,
+      is_verified: true,
+      verified_booking: true,
+      verified_customer: true,
+      verified_interaction: true,
+      status: "approved",
     })
     .select("id")
     .single();
 
   if (error || !review) return { success: false, error: "review_failed" };
+
+  const photoFiles = formData
+    .getAll("photos")
+    .filter((f): f is File => f instanceof File && f.size > 0);
+  if (photoFiles.length > 0) {
+    const { uploadReviewImages } = await import("@/actions/review.actions");
+    await uploadReviewImages(review.id, request.provider_id, authUser.id, photoFiles);
+  }
 
   const { data: reviewed, error: reviewStatusError } = await supabase
     .from("service_requests")
@@ -795,22 +811,16 @@ export async function submitReviewAction(
     return { success: false, error: "invalid_status" };
   }
 
+  // Recompute aggregates + trust (subscription-agnostic DB function)
+  await supabase.rpc("recompute_provider_trust_score", {
+    p_provider_id: request.provider_id,
+  });
+
   const { data: provider } = await supabase
     .from("providers")
     .select("owner_id, review_count, rating_avg")
     .eq("id", request.provider_id)
     .maybeSingle();
-
-  if (provider) {
-    const prevCount = provider.review_count ?? 0;
-    const prevAvg = Number(provider.rating_avg ?? 0);
-    const nextCount = prevCount + 1;
-    const nextAvg = ((prevAvg * prevCount) + parsed.data.rating) / nextCount;
-    await supabase
-      .from("providers")
-      .update({ review_count: nextCount, rating_avg: nextAvg })
-      .eq("id", request.provider_id);
-  }
 
   const conversationId = await getConversationIdForRequest(request.id);
   if (provider?.owner_id) {

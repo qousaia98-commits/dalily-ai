@@ -16,6 +16,8 @@ import { OpenRouteButton } from "@/components/providers/open-route-button";
 import { SendRequestButton } from "@/components/providers/send-request-button";
 import { TrackProfileView } from "@/components/providers/track-profile-view";
 import { TrackContactClick } from "@/components/providers/track-contact-click";
+import { ProviderReviewsSection } from "@/components/reviews/provider-reviews-section";
+import { TrustBadgeList } from "@/components/reviews/trust-badge-list";
 import {
   NEARBY_LOC_COOKIE,
   parseNearbyLocCookie,
@@ -26,6 +28,8 @@ import {
 } from "@/lib/geo/location-preference";
 import { haversineKm, formatDistanceKm } from "@/lib/geo/distance";
 import { CITY_CENTROIDS } from "@/lib/geo/city-centroids";
+import type { PublicReview, ProviderReviewStats, ReviewSort } from "@/lib/reviews/types";
+import type { TrustBadgeId } from "@/lib/reviews/trust-score";
 
 type ProviderProfileViewProps = {
   provider: PublicProviderProfile;
@@ -33,6 +37,15 @@ type ProviderProfileViewProps = {
   hasPendingRequest?: boolean;
   acceptingRequests?: boolean;
   estimatedResponseHours?: number;
+  reviewStats: ProviderReviewStats;
+  reviews: PublicReview[];
+  reviewTotal: number;
+  reviewHasMore: boolean;
+  reviewPage: number;
+  reviewSort: ReviewSort;
+  trustBadges: TrustBadgeId[];
+  canVoteReviews: boolean;
+  canReplyReviews?: boolean;
 };
 
 export async function ProviderProfileView({
@@ -41,6 +54,15 @@ export async function ProviderProfileView({
   hasPendingRequest = false,
   acceptingRequests = true,
   estimatedResponseHours,
+  reviewStats,
+  reviews,
+  reviewTotal,
+  reviewHasMore,
+  reviewPage,
+  reviewSort,
+  trustBadges,
+  canVoteReviews,
+  canReplyReviews = false,
 }: ProviderProfileViewProps) {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("provider");
@@ -126,6 +148,7 @@ export async function ProviderProfileView({
               <span>
                 {provider.reviewCount} {t("reviews")}
               </span>
+              <TrustBadgeList badges={trustBadges.slice(0, 3)} />
               <span className="flex items-center gap-1">
                 <MapPin className="size-4" />
                 {locationLabel}
@@ -191,10 +214,18 @@ export async function ProviderProfileView({
               </section>
             ) : null}
 
-            <section>
-              <h2 className="mb-4 text-lg font-semibold">{t("reviewsSection")}</h2>
-              <p className="text-sm text-muted-foreground">{t("noReviews")}</p>
-            </section>
+            <ProviderReviewsSection
+              providerId={provider.id}
+              stats={reviewStats}
+              reviews={reviews}
+              total={reviewTotal}
+              hasMore={reviewHasMore}
+              page={reviewPage}
+              sort={reviewSort}
+              badges={trustBadges}
+              canVote={canVoteReviews}
+              canReply={canReplyReviews}
+            />
           </div>
 
           <div className="space-y-4">
@@ -230,7 +261,7 @@ export async function ProviderProfileView({
               </CardHeader>
               <CardContent>
                 <TrustScore
-                  score={provider.trustScore}
+                  score={reviewStats.trustScore || provider.trustScore}
                   verified={provider.verified}
                   size="lg"
                   showBar

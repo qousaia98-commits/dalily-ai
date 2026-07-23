@@ -15,6 +15,7 @@ import {
   type ServiceRequestActionState,
 } from "@/actions/service-request.actions";
 import { RequestTimeline } from "@/components/marketplace/request-timeline";
+import { InteractiveStarRating } from "@/components/reviews/interactive-star-rating";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -420,6 +421,7 @@ function ReviewForm({ requestId }: { requestId: string }) {
   const te = useTranslations("marketplace.errors");
   const router = useRouter();
   const [state, action, pending] = useActionState(submitReviewAction, initial);
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
     if (state.success) router.refresh();
@@ -433,14 +435,32 @@ function ReviewForm({ requestId }: { requestId: string }) {
     <form action={action} className={cn("space-y-3 rounded-3xl border border-border bg-card p-5 shadow-sm")}>
       <input type="hidden" name="requestId" value={requestId} />
       <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">{t("formTitle")}</h2>
-      <div className="space-y-1.5">
-        <Label htmlFor="rating">{t("rating")}</Label>
-        <Input id="rating" name="rating" type="number" min={1} max={5} required className="rounded-xl" />
-      </div>
+      <InteractiveStarRating
+        label={t("rating")}
+        value={rating}
+        onChange={setRating}
+        disabled={pending}
+      />
       <div className="space-y-1.5">
         <Label htmlFor="comment">{t("comment")}</Label>
         <Textarea id="comment" name="comment" rows={4} className="rounded-xl" />
       </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="photos">{t("photos")}</Label>
+        <Input
+          id="photos"
+          name="photos"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          multiple
+          className="rounded-xl"
+        />
+        <p className="text-xs text-muted-foreground">{t("photosHint")}</p>
+      </div>
+      <label className="flex min-h-11 items-center gap-2 text-sm">
+        <input type="checkbox" name="anonymous" value="true" className="size-4 rounded border" />
+        {t("anonymous")}
+      </label>
       <div className="space-y-1.5">
         <Label htmlFor="recommend">{t("recommend")}</Label>
         <select
@@ -459,7 +479,7 @@ function ReviewForm({ requestId }: { requestId: string }) {
           {te(state.error as "failed")}
         </p>
       ) : null}
-      <Button type="submit" className="w-full rounded-2xl" disabled={pending}>
+      <Button type="submit" className="w-full rounded-2xl" disabled={pending || rating < 1}>
         {pending ? t("submitting") : t("submit")}
       </Button>
     </form>

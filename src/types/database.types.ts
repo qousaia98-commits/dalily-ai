@@ -1248,6 +1248,18 @@ export type Database = {
           comment: string | null;
           recommend: boolean | null;
           created_at: string;
+          updated_at: string;
+          deleted_at: string | null;
+          status: "pending" | "approved" | "rejected" | "hidden";
+          is_anonymous: boolean;
+          is_verified: boolean;
+          verified_booking: boolean;
+          verified_customer: boolean;
+          verified_interaction: boolean;
+          helpful_count: number;
+          provider_reply: string | null;
+          provider_replied_at: string | null;
+          provider_reply_by: string | null;
         };
         Insert: {
           id?: string;
@@ -1258,6 +1270,18 @@ export type Database = {
           comment?: string | null;
           recommend?: boolean | null;
           created_at?: string;
+          updated_at?: string;
+          deleted_at?: string | null;
+          status?: "pending" | "approved" | "rejected" | "hidden";
+          is_anonymous?: boolean;
+          is_verified?: boolean;
+          verified_booking?: boolean;
+          verified_customer?: boolean;
+          verified_interaction?: boolean;
+          helpful_count?: number;
+          provider_reply?: string | null;
+          provider_replied_at?: string | null;
+          provider_reply_by?: string | null;
         };
         Update: {
           id?: string;
@@ -1267,6 +1291,36 @@ export type Database = {
           rating?: number;
           comment?: string | null;
           recommend?: boolean | null;
+          created_at?: string;
+          updated_at?: string;
+          deleted_at?: string | null;
+          status?: "pending" | "approved" | "rejected" | "hidden";
+          is_anonymous?: boolean;
+          is_verified?: boolean;
+          verified_booking?: boolean;
+          verified_customer?: boolean;
+          verified_interaction?: boolean;
+          helpful_count?: number;
+          provider_reply?: string | null;
+          provider_replied_at?: string | null;
+          provider_reply_by?: string | null;
+        };
+        Relationships: [];
+      };
+      service_review_helpful_votes: {
+        Row: {
+          review_id: string;
+          user_id: string;
+          created_at: string;
+        };
+        Insert: {
+          review_id: string;
+          user_id: string;
+          created_at?: string;
+        };
+        Update: {
+          review_id?: string;
+          user_id?: string;
           created_at?: string;
         };
         Relationships: [];
@@ -1452,6 +1506,10 @@ export type Database = {
           p_conversation_id?: string | null;
         };
         Returns: string;
+      };
+      recompute_provider_trust_score: {
+        Args: { p_provider_id: string };
+        Returns: number;
       };
     };
     Enums: {

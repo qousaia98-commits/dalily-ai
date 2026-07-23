@@ -42,6 +42,7 @@ export const reviewSchema = z.object({
   rating: z.coerce.number().int().min(1).max(5),
   comment: z.string().trim().max(2000).optional().or(z.literal("")),
   recommend: z.enum(["yes", "no", ""]).optional(),
+  anonymous: z.enum(["true", "false", ""]).optional(),
 });
 
 export const disputeSchema = z.object({
