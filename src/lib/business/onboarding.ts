@@ -100,8 +100,6 @@ export function resolveOnboardingPhase(
 
 export function shouldForceOnboarding(
   provider: ManagedProvider,
-  _verification: BusinessVerificationView,
-  _locale: string = "ar",
 ): boolean {
   // Keep drafts / changes-requested in the guided flow until they submit.
   return provider.status === "draft" || provider.status === "changes_requested";

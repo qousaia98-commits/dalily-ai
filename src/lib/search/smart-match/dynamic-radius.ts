@@ -58,7 +58,7 @@ export function resolveDynamicRadiusKm(input: {
   categorySlug?: CategorySlug | string | null;
   priority?: ProblemPriority | null;
 }): NearbyRadiusKm {
-  let base =
+  const base =
     (input.problemId ? PROBLEM_RADIUS_KM[input.problemId] : undefined) ??
     (input.categorySlug ? CATEGORY_RADIUS_KM[input.categorySlug] : undefined) ??
     10;

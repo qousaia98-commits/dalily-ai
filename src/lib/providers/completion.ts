@@ -49,12 +49,12 @@ export function calculateProfileCompleteness(input: {
   if (input.categoryId && input.cityId) core += 15;
   if (input.servicesCount > 0) core += 10;
 
-  // Optional richness — small positive bonus only (not required to rank well)
+  // Optional richness — small positive bonus only (never a penalty for missing media)
+  // Logo +2 · Cover +2 · ≥3 work photos +4 · hours extra
   let bonus = 0;
-  if (input.avatarImageId) bonus += 4;
+  if (input.avatarImageId) bonus += 2;
   if (input.coverImageId) bonus += 2;
   if (input.galleryCount >= 3) bonus += 4;
-  else if (input.galleryCount > 0) bonus += 2;
 
   const configuredHours = input.workingHours.filter(
     (h) => h.isClosed || (h.opensAt && h.closesAt),

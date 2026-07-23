@@ -9,4 +9,5 @@ export const ALLOWED_IMAGE_TYPES = [
   "image/gif",
 ] as const;
 
-export const MAX_GALLERY_IMAGES = 12;
+/** Absolute gallery cap across all plans (plan limits may be lower). */
+export const MAX_GALLERY_IMAGES = 20;

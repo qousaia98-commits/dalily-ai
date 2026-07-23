@@ -108,7 +108,12 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
   const cover = images.find((image) => image.id === provider.cover_image_id);
   const gallery = images
     .filter((image) => image.kind === "gallery")
-    .sort((a, b) => a.sort_order - b.sort_order)
+    .sort((a, b) => {
+      if (Boolean(a.is_featured) !== Boolean(b.is_featured)) {
+        return a.is_featured ? -1 : 1;
+      }
+      return a.sort_order - b.sort_order;
+    })
     .map((image) => getStoragePublicUrl(image.path));
 
   const activeServices = (servicesResult.data ?? [])

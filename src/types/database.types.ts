@@ -306,6 +306,7 @@ export type Database = {
           kind: ImageKind;
           alt_text: LocalizedJson | null;
           sort_order: number;
+          is_featured: boolean;
           mime_type: string | null;
           size_bytes: number | null;
           created_at: string;
@@ -320,6 +321,7 @@ export type Database = {
           kind: ImageKind;
           alt_text?: LocalizedJson | null;
           sort_order?: number;
+          is_featured?: boolean;
           mime_type?: string | null;
           size_bytes?: number | null;
           created_at?: string;
@@ -334,6 +336,7 @@ export type Database = {
           kind?: ImageKind;
           alt_text?: LocalizedJson | null;
           sort_order?: number;
+          is_featured?: boolean;
           mime_type?: string | null;
           size_bytes?: number | null;
           created_at?: string;

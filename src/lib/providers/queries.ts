@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
-import { getStoragePublicUrl } from "@/lib/providers/storage";
+import { getStoragePublicUrl, getStorageThumbnailUrl } from "@/lib/providers/storage";
 import type { ManagedProvider, ProviderImage, ProviderService, WorkingHour } from "@/types/provider.types";
 import type { Database, LocalizedJson } from "@/types/database.types";
 
@@ -14,8 +14,10 @@ function mapImage(row: ImageRow): ProviderImage {
     id: row.id,
     path: row.path,
     url: getStoragePublicUrl(row.path),
+    thumbnailUrl: getStorageThumbnailUrl(row.path),
     kind: row.kind,
     sortOrder: row.sort_order,
+    isFeatured: Boolean(row.is_featured),
   };
 }
 
@@ -60,7 +62,10 @@ export function mapProviderRow(
   const cover = activeImages.find((i) => i.kind === "cover" && i.id === provider.cover_image_id);
   const gallery = activeImages
     .filter((i) => i.kind === "gallery")
-    .sort((a, b) => a.sort_order - b.sort_order)
+    .sort((a, b) => {
+      if (a.is_featured !== b.is_featured) return a.is_featured ? -1 : 1;
+      return a.sort_order - b.sort_order;
+    })
     .map(mapImage);
 
   return {

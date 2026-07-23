@@ -27,7 +27,7 @@ const navItems = [
   { href: "/business/messages", icon: MessageCircle, key: "messages", badgeKey: "messages" as const },
   { href: "/business/profile", icon: User, key: "profile" },
   { href: "/business/services", icon: Wrench, key: "services" },
-  { href: "/business/gallery", icon: Images, key: "gallery" },
+  { href: "/business/media", icon: Images, key: "media" },
   { href: "/business/analytics", icon: BarChart3, key: "analytics" },
   { href: "/business/verification", icon: ShieldCheck, key: "verification" },
   { href: "/business/settings", icon: Settings, key: "settings" },

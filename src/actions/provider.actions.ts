@@ -15,6 +15,7 @@ import { getOwnedProvider, requireOwnedProvider } from "@/lib/providers/queries"
 import { ensureFreeSubscription } from "@/lib/subscription/repository";
 import {
   ALLOWED_IMAGE_TYPES,
+  MAX_GALLERY_IMAGES,
   MAX_IMAGE_BYTES,
   PROVIDER_MEDIA_BUCKET,
 } from "@/lib/providers/constants";
@@ -42,8 +43,12 @@ export type ProviderActionState = {
   message?: string;
 };
 
-async function revalidateBusiness() {
+async function revalidateBusiness(providerId?: string) {
   revalidatePath("/business", "layout");
+  if (providerId) {
+    revalidatePath(`/providers/${providerId}`);
+    revalidatePath("/", "layout");
+  }
 }
 
 async function requireBusinessOwner() {
@@ -506,7 +511,8 @@ export async function uploadProviderImageAction(
   }
 
   const limits = await getProviderPlanLimits(provider.id);
-  if (parsed.data.kind === "gallery" && limits.maxImages != null && provider.gallery.length >= limits.maxImages) {
+  const galleryCap = Math.min(limits.maxImages ?? MAX_GALLERY_IMAGES, MAX_GALLERY_IMAGES);
+  if (parsed.data.kind === "gallery" && provider.gallery.length >= galleryCap) {
     return { success: false, error: "gallery_limit" };
   }
 
@@ -524,10 +530,18 @@ export async function uploadProviderImageAction(
   if (kind === "avatar" || kind === "cover") {
     const existingId = kind === "avatar" ? provider.avatarImageId : provider.coverImageId;
     if (existingId) {
+      const { data: oldImage } = await supabase
+        .from("images")
+        .select("path")
+        .eq("id", existingId)
+        .maybeSingle();
       await supabase
         .from("images")
         .update({ deleted_at: new Date().toISOString() })
         .eq("id", existingId);
+      if (oldImage?.path) {
+        await supabase.storage.from(PROVIDER_MEDIA_BUCKET).remove([oldImage.path]);
+      }
     }
   }
 
@@ -565,8 +579,59 @@ export async function uploadProviderImageAction(
   }
 
   await syncProfileCompleteness(authUser.id);
-  await revalidateBusiness();
-  return { success: true, message: "uploaded" };
+  await revalidateBusiness(provider.id);
+  return {
+    success: true,
+    message: kind === "avatar" ? "logo_updated" : kind === "cover" ? "cover_updated" : "uploaded",
+  };
+}
+
+export async function deleteProviderMediaAction(
+  kind: "avatar" | "cover",
+): Promise<ProviderActionState> {
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
+  const provider = await requireOwnedProvider(authUser.id);
+  const imageId = kind === "avatar" ? provider.avatarImageId : provider.coverImageId;
+  if (!imageId) return { success: false, error: "not_found" };
+
+  const supabase = await createClient();
+  const { data: image } = await supabase
+    .from("images")
+    .select("path, kind")
+    .eq("id", imageId)
+    .eq("provider_id", provider.id)
+    .is("deleted_at", null)
+    .maybeSingle();
+
+  if (!image || image.kind !== kind) return { success: false, error: "not_found" };
+
+  await supabase
+    .from("images")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", imageId)
+    .eq("provider_id", provider.id);
+
+  await supabase
+    .from("providers")
+    .update({
+      ...(kind === "avatar" ? { avatar_image_id: null } : { cover_image_id: null }),
+      updated_by: authUser.id,
+    })
+    .eq("id", provider.id)
+    .eq("owner_id", authUser.id);
+
+  if (image.path) {
+    await supabase.storage.from(PROVIDER_MEDIA_BUCKET).remove([image.path]);
+  }
+
+  await syncProfileCompleteness(authUser.id);
+  await revalidateBusiness(provider.id);
+  return {
+    success: true,
+    message: kind === "avatar" ? "logo_deleted" : "cover_deleted",
+  };
 }
 
 export async function deleteGalleryImageAction(imageId: string): Promise<ProviderActionState> {
@@ -588,7 +653,7 @@ export async function deleteGalleryImageAction(imageId: string): Promise<Provide
 
   const { error } = await supabase
     .from("images")
-    .update({ deleted_at: new Date().toISOString() })
+    .update({ deleted_at: new Date().toISOString(), is_featured: false })
     .eq("id", imageId)
     .eq("provider_id", provider.id);
 
@@ -596,8 +661,90 @@ export async function deleteGalleryImageAction(imageId: string): Promise<Provide
 
   await supabase.storage.from(PROVIDER_MEDIA_BUCKET).remove([image.path]);
   await syncProfileCompleteness(authUser.id);
-  await revalidateBusiness();
+  await revalidateBusiness(provider.id);
   return { success: true, message: "deleted" };
+}
+
+export async function reorderGalleryImagesAction(
+  orderedIds: string[],
+): Promise<ProviderActionState> {
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
+  const provider = await requireOwnedProvider(authUser.id);
+
+  if (!Array.isArray(orderedIds) || orderedIds.length === 0) {
+    return { success: false, error: "validation_error" };
+  }
+
+  const galleryIds = new Set(provider.gallery.map((image) => image.id));
+  if (orderedIds.length !== galleryIds.size || orderedIds.some((id) => !galleryIds.has(id))) {
+    return { success: false, error: "validation_error" };
+  }
+
+  const supabase = await createClient();
+  const updates = orderedIds.map((id, index) =>
+    supabase
+      .from("images")
+      .update({ sort_order: index })
+      .eq("id", id)
+      .eq("provider_id", provider.id)
+      .eq("kind", "gallery")
+      .is("deleted_at", null),
+  );
+
+  const results = await Promise.all(updates);
+  if (results.some((result) => result.error)) {
+    return { success: false, error: "update_failed" };
+  }
+
+  await revalidateBusiness(provider.id);
+  return { success: true, message: "gallery_reordered" };
+}
+
+export async function setFeaturedGalleryImageAction(
+  imageId: string,
+): Promise<ProviderActionState> {
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
+  const provider = await requireOwnedProvider(authUser.id);
+
+  const target = provider.gallery.find((image) => image.id === imageId);
+  if (!target) return { success: false, error: "not_found" };
+
+  const supabase = await createClient();
+  await supabase
+    .from("images")
+    .update({ is_featured: false })
+    .eq("provider_id", provider.id)
+    .eq("kind", "gallery")
+    .is("deleted_at", null);
+
+  const { error } = await supabase
+    .from("images")
+    .update({ is_featured: true, sort_order: 0 })
+    .eq("id", imageId)
+    .eq("provider_id", provider.id)
+    .eq("kind", "gallery")
+    .is("deleted_at", null);
+
+  if (error) return { success: false, error: "update_failed" };
+
+  // Keep remaining images ordered after the featured one.
+  const others = provider.gallery.filter((image) => image.id !== imageId);
+  await Promise.all(
+    others.map((image, index) =>
+      supabase
+        .from("images")
+        .update({ sort_order: index + 1 })
+        .eq("id", image.id)
+        .eq("provider_id", provider.id),
+    ),
+  );
+
+  await revalidateBusiness(provider.id);
+  return { success: true, message: "featured_updated" };
 }
 
 export async function deleteProviderAction(): Promise<ProviderActionState> {

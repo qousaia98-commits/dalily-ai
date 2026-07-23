@@ -257,6 +257,18 @@ export const countPendingRequestsForOwner = cache(async function countPendingReq
   return count ?? 0;
 });
 
+export const countTotalRequestsForProvider = cache(async function countTotalRequestsForProvider(
+  providerId: string,
+): Promise<number> {
+  const supabase = await createClient();
+  const { count, error } = await supabase
+    .from("service_requests")
+    .select("id", { count: "exact", head: true })
+    .eq("provider_id", providerId);
+  if (error) return 0;
+  return count ?? 0;
+});
+
 export async function countTabBadges(providerId: string): Promise<Record<BusinessRequestTab, number>> {
   const supabase = await createClient();
   const tabs: BusinessRequestTab[] = [

@@ -7,7 +7,10 @@ import { getLocalizedField } from "@/types/provider.types";
 import { getWeeklyInsights } from "@/lib/business/insights";
 import { countUnreadConversations } from "@/lib/business/conversations";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
-import { countPendingRequestsForOwner } from "@/lib/service-requests/queries";
+import {
+  countPendingRequestsForOwner,
+  countTotalRequestsForProvider,
+} from "@/lib/service-requests/queries";
 import {
   getProviderVerificationForOwner,
   toBusinessVerificationView,
@@ -23,6 +26,7 @@ import { DashboardQuickActions } from "@/components/business/dashboard-quick-act
 import { DashboardConversationsPreview } from "@/components/business/conversation-list";
 import { ChangesRequiredCard } from "@/components/business/changes-required-card";
 import { ProfileStrengthCard } from "@/components/business/profile-strength-card";
+import { FirstRequestMediaBanner } from "@/components/business/first-request-media-banner";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -53,16 +57,18 @@ export default async function BusinessDashboardPage() {
   const verificationRow = await getProviderVerificationForOwner(provider.id);
   const verification = toBusinessVerificationView(verificationRow);
 
-  if (shouldForceOnboarding(provider, verification, locale)) {
+  if (shouldForceOnboarding(provider)) {
     redirect({ href: "/business/welcome", locale });
   }
 
-  const [{ subscription }, { conversations }, weekly, pendingRequests] = await Promise.all([
-    getSubscriptionPageData(authUser.id),
-    loadBusinessConversations(authUser.id),
-    getWeeklyInsights(provider.id, provider.reviewCount),
-    countPendingRequestsForOwner(authUser.id),
-  ]);
+  const [{ subscription }, { conversations }, weekly, pendingRequests, totalRequests] =
+    await Promise.all([
+      getSubscriptionPageData(authUser.id),
+      loadBusinessConversations(authUser.id),
+      getWeeklyInsights(provider.id, provider.reviewCount),
+      countPendingRequestsForOwner(authUser.id),
+      countTotalRequestsForProvider(provider.id),
+    ]);
 
   const planSlug = (subscription?.planSlug ?? "free") as PlanSlug;
   const businessName = getLocalizedField(provider.name, locale) || provider.id;
@@ -87,6 +93,12 @@ export default async function BusinessDashboardPage() {
       {provider.status === "changes_requested" && provider.adminReviewNote ? (
         <ChangesRequiredCard note={provider.adminReviewNote} />
       ) : null}
+
+      <FirstRequestMediaBanner
+        providerId={provider.id}
+        totalRequests={totalRequests}
+        galleryCount={provider.gallery.length}
+      />
 
       <ProfileStrengthCard strength={strength} />
 

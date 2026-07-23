@@ -804,6 +804,7 @@
       "profile": "Profile",
       "services": "Services",
       "gallery": "Gallery",
+      "media": "Media",
       "analytics": "Analytics",
       "verification": "Verification",
       "upgrade": "⭐ Upgrade",
@@ -915,6 +916,13 @@
           "hours": "Add opening hours",
           "services": "Add more services"
         }
+      },
+      "firstRequest": {
+        "title": "🎉 Congratulations!",
+        "body": "You received your first customer request.",
+        "hint": "Add photos of your previous work to increase customer trust and improve your profile.",
+        "cta": "Add Photos",
+        "dismiss": "Dismiss"
       },
       "upgradeCard": {
         "starterEyebrow": "Ready for more customers?",
@@ -1087,14 +1095,17 @@
         }
       },
       "success": {
-        "title": "Your business is registered.",
+        "title": "🎉 Your business is now online!",
+        "onlineBody": "You can already receive customer requests.",
         "review": "We are reviewing your identity verification.",
         "dashboardHint": "Open your dashboard — add logo and photos anytime to get more requests.",
         "cta": "Go to Dashboard",
+        "completeProfile": "Complete Profile",
+        "maybeLater": "Maybe Later",
         "bullets": {
           "created": "Your business profile essentials are ready.",
           "reviewing": "Our team is reviewing your identity documents.",
-          "access": "Complete optional extras on the dashboard to attract more customers."
+          "access": "Complete optional extras on the Media page to attract more customers."
         }
       }
     },
@@ -1344,6 +1355,8 @@
       "cover": "Cover image",
       "uploadAvatar": "Upload photo",
       "uploadCover": "Upload cover",
+      "mediaManageHint": "Logo, cover and work gallery are managed in the Media section — optional anytime.",
+      "openMediaManager": "Open Media Manager",
       "closed": "Closed",
       "save": "Save changes",
       "cancel": "Cancel",
@@ -1422,6 +1435,69 @@
         "gallery_limit": "Gallery image limit reached for your plan",
         "delete_failed": "Could not remove image",
         "not_found": "Image not found",
+        "unknown": "Something went wrong"
+      }
+    },
+    "media": {
+      "title": "Media",
+      "subtitle": "Upload your logo, cover image and work photos. Media is optional and can be updated anytime.",
+      "noProvider": "Create a provider profile first",
+      "uploading": "Uploading…",
+      "status": {
+        "set": "Added",
+        "optional": "Optional"
+      },
+      "actions": {
+        "upload": "Upload",
+        "replace": "Replace",
+        "delete": "Delete",
+        "confirmUpload": "Confirm upload",
+        "cancel": "Cancel"
+      },
+      "logo": {
+        "title": "Logo",
+        "empty": "Upload your logo to make your business look more professional."
+      },
+      "cover": {
+        "title": "Cover Image",
+        "empty": "Add a cover image to attract more customers."
+      },
+      "gallery": {
+        "title": "Work Gallery",
+        "subtitle": "Show your previous work. Drag to reorder. Set one photo as featured.",
+        "empty": "Show your previous work. Businesses with work photos receive more customer trust.",
+        "addPhotos": "Add Photos",
+        "dropHint": "Drag & drop photos here",
+        "dropHintSecondary": "Or tap Add Photos. Images are compressed before upload.",
+        "count": "{count} of {max} photos",
+        "featured": "Featured",
+        "setFeatured": "Featured",
+        "dragHandle": "Drag to reorder",
+        "compressing": "Optimizing…"
+      },
+      "toasts": {
+        "uploadCompleted": "Upload completed",
+        "uploadFailed": "Upload failed",
+        "imageDeleted": "Image deleted",
+        "logoUpdated": "Logo updated",
+        "logoDeleted": "Logo deleted",
+        "coverUpdated": "Cover updated",
+        "coverDeleted": "Cover deleted",
+        "reordered": "Gallery reordered",
+        "featuredUpdated": "Featured image updated",
+        "duplicate": "This image is already uploading or was just uploaded"
+      },
+      "errors": {
+        "upload_failed": "Upload failed",
+        "file_required": "Please select a file",
+        "file_too_large": "File is too large (max 5 MB)",
+        "invalid_file_type": "Invalid file type",
+        "gallery_limit": "Gallery image limit reached",
+        "delete_failed": "Could not remove image",
+        "update_failed": "Could not save changes",
+        "not_found": "Image not found",
+        "forbidden": "Action not allowed",
+        "validation_error": "Please check your selection",
         "unknown": "Something went wrong"
       }
     },

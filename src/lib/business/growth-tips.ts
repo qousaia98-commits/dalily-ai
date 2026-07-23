@@ -17,7 +17,7 @@ export function buildGrowthTips(provider: ManagedProvider, limit = 4): GrowthTip
       item.id === "verification"
         ? "/business/verification"
         : item.id === "gallery" || item.id === "logo" || item.id === "cover"
-          ? "/business/gallery"
+          ? "/business/media"
           : item.id === "categories"
             ? "/business/services"
             : "/business/profile";

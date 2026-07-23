@@ -6,6 +6,13 @@ export function getStoragePublicUrl(path: string): string {
   return `${base}/storage/v1/object/public/${PROVIDER_MEDIA_BUCKET}/${path}`;
 }
 
+/** Thumbnail via Supabase image transform when available; falls back to public URL. */
+export function getStorageThumbnailUrl(path: string, width = 480): string {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!base) return "";
+  return `${base}/storage/v1/render/image/public/${PROVIDER_MEDIA_BUCKET}/${path}?width=${width}&resize=contain&quality=75`;
+}
+
 export function buildProviderMediaPath(
   ownerId: string,
   providerId: string,

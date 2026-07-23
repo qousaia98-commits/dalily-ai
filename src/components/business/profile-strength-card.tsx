@@ -17,8 +17,8 @@ import { Button } from "@/components/ui/button";
 const ITEM_META = {
   identity: { href: "/business/verification", icon: IdCard, optional: false },
   profile: { href: "/business/profile", icon: Sparkles, optional: false },
-  logo: { href: "/business/profile", icon: ImageIcon, optional: true },
-  gallery: { href: "/business/gallery", icon: Images, optional: true },
+  logo: { href: "/business/media", icon: ImageIcon, optional: true },
+  gallery: { href: "/business/media", icon: Images, optional: true },
   hours: { href: "/business/profile", icon: Clock3, optional: true },
   services: { href: "/business/profile", icon: ListChecks, optional: true },
 } as const;

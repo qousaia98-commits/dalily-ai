@@ -9,8 +9,10 @@ export type ProviderImage = {
   id: string;
   path: string;
   url: string;
+  thumbnailUrl: string;
   kind: ImageKind;
   sortOrder: number;
+  isFeatured: boolean;
 };
 
 export type ProviderService = {

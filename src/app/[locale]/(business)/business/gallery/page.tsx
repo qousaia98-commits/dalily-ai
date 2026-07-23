@@ -1,33 +1,8 @@
-import { getTranslations } from "next-intl/server";
-import { requireAuthUser } from "@/lib/auth/session";
-import { getOwnedProvider } from "@/lib/providers/queries";
-import { ProviderGalleryManager } from "@/components/business/provider-gallery-manager";
-import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
+import { redirect } from "@/lib/i18n/routing";
+import { getLocale } from "next-intl/server";
 
-export default async function BusinessGalleryPage() {
-  const t = await getTranslations("business.gallery");
-  const authUser = await requireAuthUser();
-  const provider = await getOwnedProvider(authUser.id);
-
-  if (!provider) {
-    return (
-      <div className="space-y-6 animate-fade-in">
-        <div>
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
-          <p className="mt-1 text-muted-foreground">{t("noProvider")}</p>
-        </div>
-        <ProviderCreateFormLoader />
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="mt-1 text-muted-foreground">{t("subtitle")}</p>
-      </div>
-      <ProviderGalleryManager provider={provider} />
-    </div>
-  );
+/** Legacy gallery route — media management lives at /business/media. */
+export default async function BusinessGalleryRedirectPage() {
+  const locale = await getLocale();
+  redirect({ href: "/business/media", locale });
 }

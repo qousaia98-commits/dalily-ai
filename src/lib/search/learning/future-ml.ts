@@ -41,8 +41,9 @@ export function buildFeatureVector(
 
 /** Placeholder — returns null until a model is registered. */
 export function predictWithFutureModel(
-  _slot: FutureMlModelSlot,
+  slot: FutureMlModelSlot,
   _features: FutureMlFeatureVector,
 ): FutureMlPrediction {
-  return { model: _slot, score: null, version: null };
+  void _features;
+  return { model: slot, score: null, version: null };
 }

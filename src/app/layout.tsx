@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Noto_Sans_Arabic } from "next/font/google";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "@/components/shared/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 import { localeDirection } from "@/lib/i18n/config";
 import { buildSiteMetadata } from "@/lib/brand/metadata";
 import "./globals.css";
@@ -41,7 +42,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${plusJakarta.variable} ${notoArabic.variable}`}
     >
       <body className="min-h-screen antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -19,7 +19,7 @@ export default async function MyBusinessPage() {
       icon: User,
     },
     {
-      href: "/business/gallery",
+      href: "/business/media",
       title: t("links.gallery"),
       description: t("links.galleryDesc"),
       icon: Images,

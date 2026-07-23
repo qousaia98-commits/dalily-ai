@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
-import { CheckCircle2, LayoutDashboard } from "lucide-react";
+import { CheckCircle2, Images, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function OnboardingSuccessStep() {
@@ -18,8 +18,8 @@ export function OnboardingSuccessStep() {
         <h2 className="text-2xl font-bold tracking-tight text-[var(--dalily-navy)] sm:text-3xl">
           {t("title")}
         </h2>
-        <p className="text-base leading-relaxed text-muted-foreground">{t("review")}</p>
-        <p className="text-sm leading-relaxed text-muted-foreground">{t("dashboardHint")}</p>
+        <p className="text-base leading-relaxed text-muted-foreground">{t("onlineBody")}</p>
+        <p className="text-sm leading-relaxed text-muted-foreground">{t("review")}</p>
       </div>
 
       <ul className="mx-auto max-w-md space-y-2 text-start text-sm text-[var(--dalily-navy)]">
@@ -37,15 +37,27 @@ export function OnboardingSuccessStep() {
         </li>
       </ul>
 
-      <Button
-        asChild
-        className="h-12 w-full rounded-2xl bg-[var(--dalily-gold)] font-bold text-[var(--dalily-navy)] hover:bg-[var(--dalily-gold-light)] sm:w-auto sm:min-w-56"
-      >
-        <Link href="/business" className="gap-2">
-          <LayoutDashboard className="size-4" aria-hidden />
-          {t("cta")}
-        </Link>
-      </Button>
+      <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+        <Button
+          asChild
+          className="h-12 rounded-2xl bg-[var(--dalily-gold)] font-bold text-[var(--dalily-navy)] hover:bg-[var(--dalily-gold-light)] sm:min-w-52"
+        >
+          <Link href="/business/media" className="gap-2">
+            <Images className="size-4" aria-hidden />
+            {t("completeProfile")}
+          </Link>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          className="h-12 rounded-2xl font-semibold sm:min-w-44"
+        >
+          <Link href="/business" className="gap-2">
+            <LayoutDashboard className="size-4" aria-hidden />
+            {t("maybeLater")}
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }

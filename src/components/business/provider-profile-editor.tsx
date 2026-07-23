@@ -1,14 +1,13 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import Image from "next/image";
-import { Loader2, Trash2, Upload } from "lucide-react";
+import { Images, Loader2, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/lib/i18n/routing";
 import {
   updateProviderProfileAction,
   updateContactAction,
   updateWorkingHoursAction,
-  uploadProviderImageAction,
   deleteProviderAction,
   submitProviderForReviewAction,
   type ProviderActionState,
@@ -77,14 +76,6 @@ export function ProviderProfileEditor({
   );
   const [hoursState, hoursAction, hoursPending] = useActionState(
     updateWorkingHoursAction,
-    initialState,
-  );
-  const [avatarState, avatarAction, avatarPending] = useActionState(
-    uploadProviderImageAction,
-    initialState,
-  );
-  const [coverState, coverAction, coverPending] = useActionState(
-    uploadProviderImageAction,
     initialState,
   );
 
@@ -271,62 +262,20 @@ export function ProviderProfileEditor({
         </TabsContent>
 
         <TabsContent value="media" className="mt-4">
-          <div className="grid gap-4 lg:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>{t("avatar")}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="relative mx-auto size-32 overflow-hidden rounded-full bg-muted">
-                  {provider.avatarUrl ? (
-                    <Image src={provider.avatarUrl} alt="" fill className="object-cover" sizes="128px" />
-                  ) : null}
-                </div>
-                <form action={avatarAction}>
-                  <input type="hidden" name="providerId" value={provider.id} />
-                  <input type="hidden" name="kind" value="avatar" />
-                  <Input type="file" name="file" accept="image/*" required className="mb-3" />
-                  {avatarState.error ? (
-                    <p className="mb-2 text-sm text-destructive">{resolveError(t, avatarState.error)}</p>
-                  ) : null}
-                  {avatarState.success ? (
-                    <p className="mb-2 text-sm text-emerald-600 dark:text-emerald-400">{t("saved")}</p>
-                  ) : null}
-                  <Button type="submit" disabled={avatarPending} className="gap-2">
-                    {avatarPending ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
-                    {t("uploadAvatar")}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>{t("cover")}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-muted">
-                  {provider.coverUrl ? (
-                    <Image src={provider.coverUrl} alt="" fill className="object-cover" sizes="400px" />
-                  ) : null}
-                </div>
-                <form action={coverAction}>
-                  <input type="hidden" name="providerId" value={provider.id} />
-                  <input type="hidden" name="kind" value="cover" />
-                  <Input type="file" name="file" accept="image/*" required className="mb-3" />
-                  {coverState.error ? (
-                    <p className="mb-2 text-sm text-destructive">{resolveError(t, coverState.error)}</p>
-                  ) : null}
-                  {coverState.success ? (
-                    <p className="mb-2 text-sm text-emerald-600 dark:text-emerald-400">{t("saved")}</p>
-                  ) : null}
-                  <Button type="submit" disabled={coverPending} className="gap-2">
-                    {coverPending ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
-                    {t("uploadCover")}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("media")}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">{t("mediaManageHint")}</p>
+              <Button asChild className="gap-2">
+                <Link href="/business/media">
+                  <Images className="size-4" aria-hidden />
+                  {t("openMediaManager")}
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="hours" className="mt-4">
