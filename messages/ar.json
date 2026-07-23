@@ -2999,6 +2999,18 @@
     "bookingReminder": {
       "title": "تذكير بالموعد",
       "body": "لديك موعد قادم."
+    },
+    "bookingCompletionPrompt": {
+      "title": "هل اكتملت الخدمة؟",
+      "body": "انتهى موعدك. أكّد الإتمام أو أبلغ عن مشكلة."
+    },
+    "bookingCustomerConfirmed": {
+      "title": "أكد العميل الإتمام",
+      "body": "أكد العميل أن الخدمة اكتملت."
+    },
+    "bookingIssueReported": {
+      "title": "أبلغ العميل عن مشكلة",
+      "body": "أبلغ عميل عن مشكلة في موعد. المحادثة تبقى مفتوحة."
     }
   },
   "booking": {
@@ -3038,14 +3050,19 @@
       "cancelled": "ملغى",
       "completed": "مكتمل",
       "rescheduled": "أُعيد جدولته",
-      "expired": "منتهي"
+      "expired": "منتهي",
+      "awaiting_customer_confirmation": "بانتظار تأكيدك",
+      "customer_confirmed": "أكد العميل",
+      "issue_reported": "تم الإبلاغ عن مشكلة"
     },
     "actions": {
       "accept": "قبول",
       "decline": "رفض",
       "cancel": "إلغاء",
       "complete": "تعليم كمكتمل",
-      "leaveReview": "اترك تقييماً"
+      "leaveReview": "اترك تقييماً",
+      "requestConfirmation": "اطلب تأكيد العميل",
+      "openChat": "فتح المحادثة"
     },
     "errors": {
       "create_failed": "تعذر إنشاء الحجز.",
@@ -3093,6 +3110,34 @@
       "blockReason": "السبب",
       "blockSubmit": "حظر الفترة",
       "noProvider": "أنشئ ملف عملك أولاً."
+    },
+    "completion": {
+      "title": "هل اكتملت الخدمة؟",
+      "subtitle": "أنت فقط من يؤكد الإتمام. هذا يفتح التقييمات.",
+      "yes": "نعم، اكتملت",
+      "no": "لا، هناك مشكلة",
+      "whatHappened": "ماذا حدث؟",
+      "submit": "إرسال",
+      "issueReportedTitle": "تم الإبلاغ عن مشكلة",
+      "issueReportedBody": "يبقى الحجز نشطاً والمحادثة مفتوحة. يمكنك إعادة الجدولة أو التأكيد لاحقاً إذا اكتمل العمل.",
+      "continueChat": "متابعة المحادثة",
+      "confirmAnyway": "تعليم كمكتمل الآن",
+      "reasons": {
+        "provider_never_arrived": "لم يصل مزود الخدمة",
+        "provider_cancelled": "ألغى مزود الخدمة",
+        "work_incomplete": "العمل لم يكتمل",
+        "poor_quality": "جودة ضعيفة",
+        "need_another_visit": "أحتاج موعداً آخر",
+        "other": "أخرى"
+      },
+      "errors": {
+        "update_failed": "تعذر حفظ إجابتك.",
+        "forbidden": "لا يمكنك تأكيد هذا الحجز.",
+        "not_found": "الحجز غير موجود.",
+        "invalid_status": "لا يمكن تأكيد هذا الحجز الآن.",
+        "validation_error": "يرجى اختيار سبب.",
+        "login_required": "يرجى تسجيل الدخول."
+      }
     }
   }
 }

@@ -174,10 +174,8 @@ CREATE POLICY booking_issue_reports_select ON public.booking_issue_reports
     AND (
       customer_id = auth.uid()
       OR provider_id IN (SELECT id FROM public.providers WHERE owner_id = auth.uid() AND deleted_at IS NULL)
-      OR EXISTS (
-        SELECT 1 FROM public.users u
-        WHERE u.id = auth.uid() AND u.role IN ('admin', 'super_admin')
-      )
+      OR public.has_role('admin')
+      OR public.has_role('moderator')
     )
   );
 
@@ -191,9 +189,7 @@ CREATE POLICY booking_issue_reports_soft_delete ON public.booking_issue_reports
   FOR UPDATE TO authenticated
   USING (
     customer_id = auth.uid()
-    OR EXISTS (
-      SELECT 1 FROM public.users u
-      WHERE u.id = auth.uid() AND u.role IN ('admin', 'super_admin')
-    )
+    OR public.has_role('admin')
+    OR public.has_role('moderator')
   )
   WITH CHECK (true);

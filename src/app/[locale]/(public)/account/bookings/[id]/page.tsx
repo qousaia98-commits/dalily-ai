@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getBookingById } from "@/lib/booking/booking-service";
+import { processCompletionPrompts } from "@/lib/booking/completion-service";
 import { BookingCard } from "@/components/booking/booking-card";
 import { OpenRouteButton } from "@/components/providers/open-route-button";
 
@@ -11,6 +12,13 @@ export default async function AccountBookingDetailPage({ params }: Props) {
   const { id } = await params;
   const t = await getTranslations("booking");
   const authUser = await requireAuthUser();
+
+  try {
+    await processCompletionPrompts();
+  } catch {
+    /* soft */
+  }
+
   const booking = await getBookingById(id);
 
   if (!booking || booking.customerId !== authUser.id) notFound();

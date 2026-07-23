@@ -1080,6 +1080,18 @@
     "bookingReminder": {
       "title": "Appointment reminder",
       "body": "You have an upcoming appointment."
+    },
+    "bookingCompletionPrompt": {
+      "title": "Was the service completed?",
+      "body": "Your appointment time has passed. Confirm completion or report an issue."
+    },
+    "bookingCustomerConfirmed": {
+      "title": "Customer confirmed completion",
+      "body": "The customer confirmed that the service was completed."
+    },
+    "bookingIssueReported": {
+      "title": "Customer reported an issue",
+      "body": "A customer reported a problem with an appointment. Chat stays open."
     }
   },
   "footer": {
@@ -3040,14 +3052,19 @@
       "cancelled": "Cancelled",
       "completed": "Completed",
       "rescheduled": "Rescheduled",
-      "expired": "Expired"
+      "expired": "Expired",
+      "awaiting_customer_confirmation": "Awaiting your confirmation",
+      "customer_confirmed": "Customer confirmed",
+      "issue_reported": "Issue reported"
     },
     "actions": {
       "accept": "Accept",
       "decline": "Decline",
       "cancel": "Cancel",
       "complete": "Mark completed",
-      "leaveReview": "Leave a review"
+      "leaveReview": "Leave a review",
+      "requestConfirmation": "Ask customer to confirm",
+      "openChat": "Open chat"
     },
     "errors": {
       "create_failed": "Could not create the booking.",
@@ -3095,6 +3112,34 @@
       "blockReason": "Reason",
       "blockSubmit": "Block period",
       "noProvider": "Create your business profile first."
+    },
+    "completion": {
+      "title": "Has your service been completed?",
+      "subtitle": "Only you can confirm completion. This unlocks reviews.",
+      "yes": "Yes, it was completed",
+      "no": "No, there was a problem",
+      "whatHappened": "What happened?",
+      "submit": "Submit",
+      "issueReportedTitle": "Issue reported",
+      "issueReportedBody": "Your booking stays active and chat stays open. You can reschedule or confirm later if the work was finished.",
+      "continueChat": "Continue chat",
+      "confirmAnyway": "Mark as completed now",
+      "reasons": {
+        "provider_never_arrived": "Provider never arrived",
+        "provider_cancelled": "Provider cancelled",
+        "work_incomplete": "Work not finished",
+        "poor_quality": "Poor quality",
+        "need_another_visit": "Need another appointment",
+        "other": "Other"
+      },
+      "errors": {
+        "update_failed": "Could not save your answer.",
+        "forbidden": "You cannot confirm this booking.",
+        "not_found": "Booking not found.",
+        "invalid_status": "This booking cannot be confirmed right now.",
+        "validation_error": "Please choose a reason.",
+        "login_required": "Please log in."
+      }
     }
   }
 }
