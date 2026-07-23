@@ -57,7 +57,7 @@ export async function resolveAuthUserAfterSignUp(params: {
   const identityCount = signUpUser.identities?.length ?? 0;
   const signUpUserId = signUpUser.id;
 
-  console.log("[registerBusinessAction] auth.signUp result", {
+  logRegisterStep("auth.signUp result", true, {
     signUpUserId,
     identityCount,
     hasSession: Boolean(signUpSession),
@@ -66,7 +66,7 @@ export async function resolveAuthUserAfterSignUp(params: {
 
   if (identityCount > 0) {
     const exists = await authUserExistsInAuthSchema(admin, signUpUserId);
-    console.log("[registerBusinessAction] auth.users contains signUp id", {
+    logRegisterStep("auth.users contains signUp id", true, {
       userId: signUpUserId,
       exists,
     });
@@ -89,7 +89,7 @@ export async function resolveAuthUserAfterSignUp(params: {
 
   // Empty identities — anti-enumeration placeholder; resolve the real auth.users row.
   const existing = await findAuthUserByEmail(admin, email);
-  console.log("[registerBusinessAction] empty identities — lookup by email", {
+  logRegisterStep("empty identities — lookup by email", true, {
     signUpUserId,
     existingAuthUserId: existing?.id ?? null,
     authUsersContainsSignUpId: await authUserExistsInAuthSchema(admin, signUpUserId),
@@ -106,7 +106,7 @@ export async function resolveAuthUserAfterSignUp(params: {
 
   if (!signInError && signInData.user) {
     const exists = await authUserExistsInAuthSchema(admin, signInData.user.id);
-    console.log("[registerBusinessAction] resumed via signIn", {
+    logRegisterStep("resumed via signIn", true, {
       userId: signInData.user.id,
       authUsersContainsId: exists,
     });
@@ -126,7 +126,7 @@ export async function resolveAuthUserAfterSignUp(params: {
   const notConfirmed = signInError?.message.toLowerCase().includes("not confirmed") ?? false;
   if (notConfirmed && signInError) {
     const exists = await authUserExistsInAuthSchema(admin, existing.id);
-    console.log("[registerBusinessAction] resumed via email lookup (unconfirmed)", {
+    logRegisterStep("resumed via email lookup (unconfirmed)", true, {
       userId: existing.id,
       authUsersContainsId: exists,
       signInError: signInError.message,

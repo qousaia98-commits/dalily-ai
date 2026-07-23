@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { getAuthUser } from "@/lib/auth/session";
 import { isBusinessUser } from "@/lib/auth/roles";
 import { generateProviderSlug } from "@/lib/auth/utils";
@@ -20,10 +21,9 @@ import {
   PROVIDER_MEDIA_BUCKET,
 } from "@/lib/providers/constants";
 import { getProviderPlanLimits } from "@/lib/subscription/get-provider-limits";
-import { buildProviderMediaPath } from "@/lib/providers/storage";
+import { buildProviderMediaPath, isOwnedProviderMediaPath } from "@/lib/providers/storage";
 import {
   createProviderSchema,
-  imageUploadSchema,
   onboardingProfileSchema,
   serviceInputSchema,
   updateContactSchema,
@@ -41,7 +41,29 @@ export type ProviderActionState = {
   error?: string;
   fieldErrors?: Record<string, string[]>;
   message?: string;
+  /** Direct-upload prepare payload (never includes file bytes). */
+  upload?: {
+    path: string;
+    token: string;
+    signedUrl: string;
+  };
 };
+
+const imagePrepareMetaSchema = z.object({
+  providerId: z.string().uuid(),
+  kind: z.enum(["avatar", "cover", "gallery"]),
+  fileName: z.string().trim().min(1).max(255),
+  mimeType: z.string().trim().min(3).max(100),
+  size: z.number().int().positive(),
+});
+
+const imageConfirmMetaSchema = z.object({
+  providerId: z.string().uuid(),
+  kind: z.enum(["avatar", "cover", "gallery"]),
+  path: z.string().trim().min(8).max(500),
+  mimeType: z.string().trim().min(3).max(100),
+  size: z.number().int().positive(),
+});
 
 async function revalidateBusiness(providerId?: string) {
   revalidatePath("/business", "layout");
@@ -483,30 +505,28 @@ export async function deleteServiceAction(serviceId: string): Promise<ProviderAc
   return { success: true, message: "service_deleted" };
 }
 
-export async function uploadProviderImageAction(
-  _prev: ProviderActionState,
-  formData: FormData,
-): Promise<ProviderActionState> {
+/**
+ * Step 1: validate metadata + ownership + plan limits, return a signed
+ * upload target. File bytes never enter this action.
+ */
+export async function prepareProviderImageUploadAction(meta: {
+  providerId: string;
+  kind: string;
+  fileName: string;
+  mimeType: string;
+  size: number;
+}): Promise<ProviderActionState> {
   const businessAuth = await requireBusinessOwner();
   if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
   const authUser = businessAuth.authUser;
   const provider = await requireOwnedProvider(authUser.id);
 
-  const parsed = imageUploadSchema.safeParse({
-    providerId: formData.get("providerId"),
-    kind: formData.get("kind"),
-  });
-
+  const parsed = imagePrepareMetaSchema.safeParse(meta);
   if (!parsed.success) return validationError(parsed.error);
   if (parsed.data.providerId !== provider.id) return { success: false, error: "forbidden" };
 
-  const file = formData.get("file");
-  if (!(file instanceof File) || file.size === 0) {
-    return { success: false, error: "file_required" };
-  }
-
-  if (file.size > MAX_IMAGE_BYTES) return { success: false, error: "file_too_large" };
-  if (!ALLOWED_IMAGE_TYPES.includes(file.type as (typeof ALLOWED_IMAGE_TYPES)[number])) {
+  if (parsed.data.size > MAX_IMAGE_BYTES) return { success: false, error: "file_too_large" };
+  if (!ALLOWED_IMAGE_TYPES.includes(parsed.data.mimeType as (typeof ALLOWED_IMAGE_TYPES)[number])) {
     return { success: false, error: "invalid_file_type" };
   }
 
@@ -516,16 +536,72 @@ export async function uploadProviderImageAction(
     return { success: false, error: "gallery_limit" };
   }
 
+  const path = buildProviderMediaPath(authUser.id, provider.id, parsed.data.kind, parsed.data.fileName);
+
   const supabase = await createClient();
-  const kind = parsed.data.kind as ImageKind;
-  const path = buildProviderMediaPath(authUser.id, provider.id, kind, file.name);
-  const buffer = Buffer.from(await file.arrayBuffer());
-
-  const { error: uploadError } = await supabase.storage
+  const { data, error } = await supabase.storage
     .from(PROVIDER_MEDIA_BUCKET)
-    .upload(path, buffer, { contentType: file.type, upsert: false });
+    .createSignedUploadUrl(path);
 
-  if (uploadError) return { success: false, error: "upload_failed" };
+  if (error || !data?.signedUrl || !data.token) {
+    return { success: false, error: "upload_failed" };
+  }
+
+  return {
+    success: true,
+    upload: { path: data.path || path, token: data.token, signedUrl: data.signedUrl },
+  };
+}
+
+/**
+ * Step 2: after the direct Storage upload, persist path/mime/size and
+ * apply the same side effects the old FormData action used to perform.
+ */
+export async function confirmProviderImageUploadAction(meta: {
+  providerId: string;
+  kind: string;
+  path: string;
+  mimeType: string;
+  size: number;
+}): Promise<ProviderActionState> {
+  const businessAuth = await requireBusinessOwner();
+  if (!businessAuth.authUser) return { success: false, error: businessAuth.error };
+  const authUser = businessAuth.authUser;
+  const provider = await requireOwnedProvider(authUser.id);
+
+  const parsed = imageConfirmMetaSchema.safeParse(meta);
+  if (!parsed.success) return validationError(parsed.error);
+  if (parsed.data.providerId !== provider.id) return { success: false, error: "forbidden" };
+
+  if (parsed.data.size > MAX_IMAGE_BYTES) return { success: false, error: "file_too_large" };
+  if (!ALLOWED_IMAGE_TYPES.includes(parsed.data.mimeType as (typeof ALLOWED_IMAGE_TYPES)[number])) {
+    return { success: false, error: "invalid_file_type" };
+  }
+
+  const kind = parsed.data.kind as ImageKind;
+  const path = parsed.data.path;
+
+  if (!isOwnedProviderMediaPath(path, authUser.id, provider.id, kind)) {
+    return { success: false, error: "forbidden" };
+  }
+
+  const supabase = await createClient();
+
+  const limits = await getProviderPlanLimits(provider.id);
+  const galleryCap = Math.min(limits.maxImages ?? MAX_GALLERY_IMAGES, MAX_GALLERY_IMAGES);
+  if (kind === "gallery" && provider.gallery.length >= galleryCap) {
+    await supabase.storage.from(PROVIDER_MEDIA_BUCKET).remove([path]);
+    return { success: false, error: "gallery_limit" };
+  }
+
+  const folder = path.slice(0, path.lastIndexOf("/"));
+  const objectName = path.slice(path.lastIndexOf("/") + 1);
+  const { data: listing } = await supabase.storage
+    .from(PROVIDER_MEDIA_BUCKET)
+    .list(folder, { search: objectName });
+  if (!listing?.some((entry) => entry.name === objectName)) {
+    return { success: false, error: "upload_failed" };
+  }
 
   if (kind === "avatar" || kind === "cover") {
     const existingId = kind === "avatar" ? provider.avatarImageId : provider.coverImageId;
@@ -552,8 +628,8 @@ export async function uploadProviderImageAction(
       provider_id: provider.id,
       path,
       kind,
-      mime_type: file.type,
-      size_bytes: file.size,
+      mime_type: parsed.data.mimeType,
+      size_bytes: parsed.data.size,
       sort_order: kind === "gallery" ? provider.gallery.length : 0,
     })
     .select("id")

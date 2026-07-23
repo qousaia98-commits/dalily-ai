@@ -15,13 +15,15 @@ import {
   Upload,
 } from "lucide-react";
 import {
+  confirmProviderImageUploadAction,
   deleteGalleryImageAction,
   deleteProviderMediaAction,
+  prepareProviderImageUploadAction,
   reorderGalleryImagesAction,
   setFeaturedGalleryImageAction,
-  uploadProviderImageAction,
 } from "@/actions/provider.actions";
 import { compressImageFile, fileFingerprint } from "@/lib/media/compress-image";
+import { uploadProviderImageDirect } from "@/lib/providers/upload-provider-image";
 import { MAX_GALLERY_IMAGES } from "@/lib/providers/constants";
 import type { ManagedProvider, ProviderImage } from "@/types/provider.types";
 import { cn } from "@/lib/utils";
@@ -112,17 +114,17 @@ function SingleMediaCard({
     const fp = fileFingerprint(pendingFile);
     startTransition(async () => {
       try {
-        setProgress(15);
         const compressed = await compressImageFile(pendingFile, {
           maxEdge: kind === "avatar" ? 800 : 1920,
         });
-        setProgress(45);
-        const fd = new FormData();
-        fd.set("providerId", providerId);
-        fd.set("kind", kind);
-        fd.set("file", compressed.file);
-        setProgress(70);
-        const result = await uploadProviderImageAction({ success: false }, fd);
+        const result = await uploadProviderImageDirect({
+          providerId,
+          kind,
+          file: compressed.file,
+          prepare: (meta) => prepareProviderImageUploadAction(meta),
+          confirm: (meta) => confirmProviderImageUploadAction(meta),
+          onProgress: (p) => setProgress(p.percent),
+        });
         if (!result.success) {
           toast.error(resolveError(t, result.error));
           setProgress(0);
@@ -363,11 +365,22 @@ export function BusinessMediaManager({ provider, maxImages }: Props) {
           ),
         );
 
-        const fd = new FormData();
-        fd.set("providerId", provider.id);
-        fd.set("kind", "gallery");
-        fd.set("file", compressed.file);
-        const result = await uploadProviderImageAction({ success: false }, fd);
+        const result = await uploadProviderImageDirect({
+          providerId: provider.id,
+          kind: "gallery",
+          file: compressed.file,
+          prepare: (meta) => prepareProviderImageUploadAction(meta),
+          confirm: (meta) => confirmProviderImageUploadAction(meta),
+          onProgress: (p) => {
+            setUploads((prev) =>
+              prev.map((item) =>
+                item.id === uploadId
+                  ? { ...item, status: "uploading", progress: Math.max(item.progress, p.percent) }
+                  : item,
+              ),
+            );
+          },
+        });
 
         if (!result.success) {
           setUploads((prev) =>

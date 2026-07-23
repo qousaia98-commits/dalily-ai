@@ -22,3 +22,14 @@ export function buildProviderMediaPath(
   const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
   return `${ownerId}/${providerId}/${kind}/${Date.now()}-${safeName}`;
 }
+
+/** True when path belongs to this owner/provider/kind (anti-tamper). */
+export function isOwnedProviderMediaPath(
+  path: string,
+  ownerId: string,
+  providerId: string,
+  kind: string,
+): boolean {
+  const prefix = `${ownerId}/${providerId}/${kind}/`;
+  return path.startsWith(prefix) && !path.includes("..");
+}

@@ -75,9 +75,4 @@ export const workingHoursSchema = z.object({
     .length(7),
 });
 
-export const imageUploadSchema = z.object({
-  providerId: z.string().uuid(),
-  kind: z.enum(["avatar", "cover", "gallery"]),
-});
-
 export { localizedField, localizedOptional };

@@ -1,6 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
+import { putFileToStorage } from "@/lib/supabase/direct-upload";
 import {
   PAYMENT_RECEIPTS_BUCKET,
   validateReceiptMeta,
@@ -71,6 +72,7 @@ export async function uploadPaymentReceiptDirect(input: {
   onProgress?.({ phase: "uploading", percent: 20 });
 
   const uploaded = await putFileToStorage({
+    bucket: PAYMENT_RECEIPTS_BUCKET,
     path: prepared.path,
     token: prepared.token,
     signedUrl: prepared.signedUrl,
@@ -115,72 +117,4 @@ function guessMimeFromName(name: string): string {
   if (lower.endsWith(".png")) return "image/png";
   if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
   return "";
-}
-
-async function putFileToStorage(input: {
-  path: string;
-  token?: string;
-  signedUrl?: string;
-  file: File;
-  mimeType: string;
-  onPercent: (ratio: number) => void;
-}): Promise<{ ok: boolean }> {
-  // Prefer signed URL PUT (progress via XHR).
-  if (input.signedUrl) {
-    try {
-      await xhrPut(input.signedUrl, input.file, input.mimeType, input.onPercent);
-      return { ok: true };
-    } catch {
-      // fall through
-    }
-  }
-
-  // Fallback: session-authenticated upload (RLS owner INSERT).
-  const supabase = createClient();
-  if (input.token) {
-    const { error } = await supabase.storage
-      .from(PAYMENT_RECEIPTS_BUCKET)
-      .uploadToSignedUrl(input.path, input.token, input.file, {
-        contentType: input.mimeType,
-      });
-    if (!error) {
-      input.onPercent(1);
-      return { ok: true };
-    }
-  }
-
-  const { error } = await supabase.storage
-    .from(PAYMENT_RECEIPTS_BUCKET)
-    .upload(input.path, input.file, {
-      contentType: input.mimeType,
-      upsert: false,
-    });
-
-  if (error) return { ok: false };
-  input.onPercent(1);
-  return { ok: true };
-}
-
-function xhrPut(
-  url: string,
-  file: File,
-  mimeType: string,
-  onPercent: (ratio: number) => void,
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("PUT", url);
-    xhr.setRequestHeader("Content-Type", mimeType);
-    xhr.setRequestHeader("x-upsert", "false");
-    xhr.upload.onprogress = (event) => {
-      if (!event.lengthComputable || event.total <= 0) return;
-      onPercent(event.loaded / event.total);
-    };
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) resolve();
-      else reject(new Error(`upload_http_${xhr.status}`));
-    };
-    xhr.onerror = () => reject(new Error("upload_network"));
-    xhr.send(file);
-  });
 }

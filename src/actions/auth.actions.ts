@@ -359,7 +359,7 @@ export async function registerBusinessAction(
 ): Promise<AuthActionState> {
   const locale = (formData.get("locale") as string) || "ar";
 
-  console.log("[registerBusinessAction] ▶ START", {
+  logRegisterStep("START", true, {
     locale,
     email: formData.get("email"),
     category: formData.get("category"),
@@ -611,7 +611,7 @@ export async function registerBusinessAction(
   revalidatePath("/business", "layout");
 
   if (!hasSession) {
-    console.log("[registerBusinessAction] ✓ verify_email required — no redirect");
+    logRegisterStep("verify_email required — no redirect", true);
     return {
       success: true,
       message: "verify_email_business",
@@ -619,9 +619,7 @@ export async function registerBusinessAction(
   }
 
   // ── redirect ────────────────────────────────────────────────────────────
-  console.log("[registerBusinessAction] ✓ redirect → /business/welcome", {
-    locale: parsed.data.locale,
-  });
+  logRegisterStep("redirect → /business/welcome", true, { locale: parsed.data.locale });
   redirect({ href: "/business/welcome", locale: parsed.data.locale as "ar" | "en" });
   return { success: true };
 }
