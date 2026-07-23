@@ -17,7 +17,9 @@ export type LearningEventType =
   | "review_submitted"
   | "repeat_booking"
   | "recommendation_shown"
-  | "recommendation_chosen";
+  | "recommendation_chosen"
+  | "diagnosis_completed"
+  | "diagnosis_abandoned";
 
 export type MatchConfidence = "high" | "medium" | "low";
 

@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Search, Sparkles } from "lucide-react";
+import { useEffect, useState, useTransition } from "react";
+import { Loader2, Search, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/lib/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { VoiceSearchButton } from "@/components/search/voice-search-button";
+import { DiagnosisWizard } from "@/components/search/diagnosis-wizard";
+import { detectDiagnosisAction } from "@/actions/diagnosis.actions";
+import { URGENCY_PARAM } from "@/lib/diagnosis/url";
+import type { DiagnosisResult } from "@/lib/diagnosis/types";
+import type { ProblemId } from "@/lib/search/engine/types";
 import { cn } from "@/lib/utils";
 
 const MIN_QUERY_LENGTH = 2;
@@ -32,12 +37,34 @@ export function SearchForm({
   const [query, setQuery] = useState(defaultQuery);
   const [error, setError] = useState<string | null>(null);
   const [voiceLanguage, setVoiceLanguage] = useState<string | null>(null);
+  const [mode, setMode] = useState<"input" | "wizard">("input");
+  const [activeProblemId, setActiveProblemId] = useState<ProblemId | null>(null);
+  const [checking, startChecking] = useTransition();
 
   useEffect(() => {
     setQuery(defaultQuery);
   }, [defaultQuery]);
 
   const isCompact = size === "compact";
+
+  function navigate(trimmed: string, urgencyOverride?: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("q", trimmed);
+    if (voiceLanguage) {
+      params.set("voice", "1");
+      params.set("lang", voiceLanguage);
+      setVoiceLanguage(null);
+    } else {
+      params.delete("voice");
+      params.delete("lang");
+    }
+    if (urgencyOverride) {
+      params.set(URGENCY_PARAM, urgencyOverride);
+    } else {
+      params.delete(URGENCY_PARAM);
+    }
+    router.push(`/search?${params.toString()}`);
+  }
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -55,18 +82,28 @@ export function SearchForm({
     }
 
     setError(null);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("q", trimmed);
-    if (voiceLanguage) {
-      params.set("voice", "1");
-      params.set("lang", voiceLanguage);
-      setVoiceLanguage(null);
-    } else {
-      params.delete("voice");
-      params.delete("lang");
-    }
-    router.push(`/search?${params.toString()}`);
+    startChecking(async () => {
+      const detection = await detectDiagnosisAction(trimmed);
+      if (detection) {
+        setActiveProblemId(detection.problemId);
+        setMode("wizard");
+      } else {
+        navigate(trimmed);
+      }
+    });
   };
+
+  if (mode === "wizard" && activeProblemId) {
+    return (
+      <div className={cn("w-full", className)}>
+        <DiagnosisWizard
+          problemId={activeProblemId}
+          onExit={() => setMode("input")}
+          onComplete={(result: DiagnosisResult) => navigate(query.trim(), result.urgency)}
+        />
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className={cn("w-full", className)} noValidate>
@@ -108,12 +145,17 @@ export function SearchForm({
         <Button
           type="submit"
           size="lg"
+          disabled={checking}
           className={cn(
             "w-full rounded-2xl px-8 font-semibold shadow-lg shadow-primary/20 sm:w-auto",
             isCompact ? "h-12 text-base" : "h-14 text-base sm:h-16",
           )}
         >
-          <Sparkles className="size-5" />
+          {checking ? (
+            <Loader2 className="size-5 animate-spin" aria-hidden />
+          ) : (
+            <Sparkles className="size-5" />
+          )}
           {t("submit")}
         </Button>
       </div>

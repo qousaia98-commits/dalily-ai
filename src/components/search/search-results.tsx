@@ -25,6 +25,7 @@ import {
 } from "@/lib/geo/location-preference";
 import { parseNearbyRadius, parseSearchSort } from "@/lib/geo/distance";
 import { getAuthUser } from "@/lib/auth/session";
+import { parseUrgencyOverride } from "@/lib/diagnosis/url";
 
 type SearchResultsProps = {
   searchParams: {
@@ -37,6 +38,7 @@ type SearchResultsProps = {
     nearby?: string;
     voice?: string;
     lang?: string;
+    urgency?: string;
   };
 };
 
@@ -108,6 +110,7 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
       sort,
       inputMode: searchParams.voice === "1" ? "voice" : "text",
       voiceLanguage: searchParams.voice === "1" ? (searchParams.lang ?? null) : null,
+      priorityOverride: parseUrgencyOverride(searchParams.urgency),
     });
     results = searchResult.providers;
     parsed = searchResult.parsed;

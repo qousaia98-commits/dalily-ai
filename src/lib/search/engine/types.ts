@@ -61,6 +61,8 @@ export type SearchEngineInput = {
   inputMode?: "text" | "voice";
   /** Analytics only — language Whisper detected for a voice query. */
   voiceLanguage?: string | null;
+  /** Set by the AI Guided Diagnosis wizard — overrides detected priority. */
+  priorityOverride?: ProblemPriority | null;
 };
 
 export type SearchEngineResult = {

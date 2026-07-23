@@ -281,6 +281,153 @@
         "transcription_failed": "لم نتمكن من فهم ذلك. حاول مرة أخرى أو اكتب بحثك."
       }
     },
+    "diagnosis": {
+      "skip": "تخطّي — البحث مباشرة",
+      "back": "رجوع",
+      "findProviders": "ابحث عن مزودين",
+      "startOver": "البدء من جديد",
+      "stepOf": "السؤال {current} من {total}",
+      "summary": {
+        "title": "هذا ما فهمناه",
+        "categoryLabel": "الفئة",
+        "urgencyLabel": "الأولوية",
+        "possibleCauseLabel": "السبب المحتمل",
+        "confidenceCaption": "تقدير بناءً على إجاباتك — نسبة الثقة {percent}%",
+        "categories": {
+          "electrical": "كهربائي",
+          "plumbing": "سباك",
+          "locksmith": "أقفال",
+          "auto-repair": "ميكانيكي",
+          "appliance-repair": "صيانة أجهزة"
+        }
+      },
+      "problems": {
+        "power_outage": {
+          "questions": {
+            "state": {
+              "label": "ما الذي يحدث بالضبط؟",
+              "options": {
+                "off": "اللمبة لا تعمل",
+                "flickers": "تومض",
+                "breakerTripped": "القاطع الكهربائي يفصل",
+                "switchBroken": "المفتاح لا يعمل",
+                "unknown": "لا أعرف"
+              }
+            },
+            "smoke": {
+              "label": "هل لاحظت دخاناً أو شرراً؟",
+              "options": { "yes": "نعم", "no": "لا" }
+            },
+            "scope": {
+              "label": "كم عدد اللمبات المتأثرة؟",
+              "options": { "one": "واحدة", "several": "عدة لمبات", "entireHouse": "المنزل بالكامل" }
+            },
+            "sudden": {
+              "label": "هل حدث ذلك فجأة؟",
+              "options": { "yes": "نعم", "no": "لا" }
+            }
+          },
+          "causes": {
+            "wiringHazard": "خطر محتمل في التوصيلات الكهربائية",
+            "breaker": "قاطع كهربائي مفصول",
+            "switch": "مفتاح تالف",
+            "looseConnection": "توصيلة غير محكمة",
+            "bulb": "لمبة تالفة"
+          }
+        },
+        "water_leak": {
+          "questions": {
+            "location": {
+              "label": "أين يوجد التسرب؟",
+              "options": { "kitchen": "المطبخ", "bathroom": "الحمام", "garden": "الحديقة", "other": "مكان آخر" }
+            },
+            "amount": {
+              "label": "كمية الماء؟",
+              "options": { "drops": "قطرات قليلة", "constant": "تسرب مستمر", "heavy": "تسرب غزير" }
+            },
+            "since": {
+              "label": "منذ متى؟",
+              "options": { "today": "اليوم", "fewDays": "منذ أيام قليلة", "longTime": "منذ فترة طويلة" }
+            }
+          },
+          "causes": {
+            "pipeBurst": "انفجار في الأنبوب",
+            "wornWasher": "حلقة أو وردة مطاطية بالية",
+            "looseFitting": "وصلة غير محكمة"
+          }
+        },
+        "locked_out": {
+          "questions": {
+            "where": {
+              "label": "أين انغلق عليك الباب؟",
+              "options": { "home": "المنزل", "car": "السيارة", "office": "المكتب" }
+            },
+            "reason": {
+              "label": "ماذا حدث؟",
+              "options": {
+                "lostKey": "فقدت المفتاح",
+                "brokenKey": "انكسر المفتاح",
+                "brokenLock": "القفل معطّل",
+                "lockedInside": "هناك شخص محتجز بالداخل"
+              }
+            }
+          },
+          "causes": {
+            "needsNewKey": "يحتاج مفتاحاً بديلاً",
+            "keyExtraction": "يحتاج استخراج مفتاح مكسور",
+            "lockReplacement": "قد يحتاج القفل للاستبدال",
+            "emergencyEntry": "يحتاج دخولاً طارئاً"
+          }
+        },
+        "vehicle_repair": {
+          "questions": {
+            "engineStarts": {
+              "label": "هل يعمل المحرك؟",
+              "options": { "yes": "نعم", "no": "لا" }
+            },
+            "batteryWarning": {
+              "label": "هل يوجد تحذير من البطارية؟",
+              "options": { "yes": "نعم", "no": "لا" }
+            },
+            "unusualSounds": {
+              "label": "هل هناك أصوات غير معتادة؟",
+              "options": { "yes": "نعم", "no": "لا" }
+            }
+          },
+          "causes": {
+            "deadBattery": "على الأرجح البطارية فارغة",
+            "starterOrFuel": "مشكلة محتملة في بادئ الحركة أو الوقود",
+            "mechanicalFault": "عطل ميكانيكي محتمل"
+          }
+        },
+        "appliance_leak": {
+          "questions": {
+            "appliance": {
+              "label": "ما هو الجهاز؟",
+              "options": {
+                "washingMachine": "الغسالة",
+                "dishwasher": "غسالة الصحون",
+                "fridge": "الثلاجة",
+                "other": "جهاز آخر"
+              }
+            },
+            "amount": {
+              "label": "كمية الماء؟",
+              "options": { "drops": "قطرات قليلة", "constant": "تسرب مستمر", "heavy": "تسرب غزير" }
+            },
+            "recentRepair": {
+              "label": "هل تم إصلاحه أو تركيبه مؤخراً؟",
+              "options": { "yes": "نعم", "no": "لا" }
+            }
+          },
+          "causes": {
+            "installationIssue": "مشكلة محتملة في التركيب",
+            "hoseOrValveFailure": "عطل في الخرطوم أو الصمام",
+            "wornSeal": "حلقة إحكام بالية"
+          }
+        }
+      }
+    },
     "empty": {
       "title": "لا توجد نتائج",
       "description": "لم نعثر على مزودين مطابقين. جرّب تعديل الفلاتر أو صياغة مختلفة.",

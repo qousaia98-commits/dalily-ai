@@ -281,6 +281,153 @@
         "transcription_failed": "We couldn't understand that. Please try again or type your search."
       }
     },
+    "diagnosis": {
+      "skip": "Skip — search directly instead",
+      "back": "Back",
+      "findProviders": "Find providers",
+      "startOver": "Start over",
+      "stepOf": "Question {current} of {total}",
+      "summary": {
+        "title": "Here's what we understood",
+        "categoryLabel": "Category",
+        "urgencyLabel": "Urgency",
+        "possibleCauseLabel": "Possible cause",
+        "confidenceCaption": "Estimate based on your answers — {percent}% confidence",
+        "categories": {
+          "electrical": "Electrician",
+          "plumbing": "Plumber",
+          "locksmith": "Locksmith",
+          "auto-repair": "Mechanic",
+          "appliance-repair": "Appliance repair"
+        }
+      },
+      "problems": {
+        "power_outage": {
+          "questions": {
+            "state": {
+              "label": "What exactly happens?",
+              "options": {
+                "off": "The lamp does not turn on",
+                "flickers": "It flickers",
+                "breakerTripped": "The breaker trips",
+                "switchBroken": "The switch does not work",
+                "unknown": "I don't know"
+              }
+            },
+            "smoke": {
+              "label": "Did you notice smoke or sparks?",
+              "options": { "yes": "Yes", "no": "No" }
+            },
+            "scope": {
+              "label": "How many lamps are affected?",
+              "options": { "one": "One", "several": "Several", "entireHouse": "Entire house" }
+            },
+            "sudden": {
+              "label": "Did this happen suddenly?",
+              "options": { "yes": "Yes", "no": "No" }
+            }
+          },
+          "causes": {
+            "wiringHazard": "Possible wiring hazard",
+            "breaker": "Tripped breaker",
+            "switch": "Faulty switch",
+            "looseConnection": "Loose connection",
+            "bulb": "Broken bulb"
+          }
+        },
+        "water_leak": {
+          "questions": {
+            "location": {
+              "label": "Where is the leak?",
+              "options": { "kitchen": "Kitchen", "bathroom": "Bathroom", "garden": "Garden", "other": "Other" }
+            },
+            "amount": {
+              "label": "How much water?",
+              "options": { "drops": "Small drops", "constant": "Constant leak", "heavy": "Heavy leak" }
+            },
+            "since": {
+              "label": "Since when?",
+              "options": { "today": "Today", "fewDays": "A few days", "longTime": "A long time" }
+            }
+          },
+          "causes": {
+            "pipeBurst": "Burst pipe",
+            "wornWasher": "Worn washer or seal",
+            "looseFitting": "Loose fitting"
+          }
+        },
+        "locked_out": {
+          "questions": {
+            "where": {
+              "label": "Where are you locked out of?",
+              "options": { "home": "Home", "car": "Car", "office": "Office" }
+            },
+            "reason": {
+              "label": "What happened?",
+              "options": {
+                "lostKey": "I lost my key",
+                "brokenKey": "The key broke",
+                "brokenLock": "The lock is broken",
+                "lockedInside": "Someone is locked inside"
+              }
+            }
+          },
+          "causes": {
+            "needsNewKey": "Needs a replacement key",
+            "keyExtraction": "Broken key needs extraction",
+            "lockReplacement": "Lock likely needs replacement",
+            "emergencyEntry": "Emergency entry needed"
+          }
+        },
+        "vehicle_repair": {
+          "questions": {
+            "engineStarts": {
+              "label": "Does the engine start?",
+              "options": { "yes": "Yes", "no": "No" }
+            },
+            "batteryWarning": {
+              "label": "Is there a battery warning light?",
+              "options": { "yes": "Yes", "no": "No" }
+            },
+            "unusualSounds": {
+              "label": "Any unusual sounds?",
+              "options": { "yes": "Yes", "no": "No" }
+            }
+          },
+          "causes": {
+            "deadBattery": "Likely a dead battery",
+            "starterOrFuel": "Possible starter or fuel issue",
+            "mechanicalFault": "Possible mechanical fault"
+          }
+        },
+        "appliance_leak": {
+          "questions": {
+            "appliance": {
+              "label": "Which appliance?",
+              "options": {
+                "washingMachine": "Washing machine",
+                "dishwasher": "Dishwasher",
+                "fridge": "Fridge",
+                "other": "Other"
+              }
+            },
+            "amount": {
+              "label": "How much water?",
+              "options": { "drops": "Small drops", "constant": "Constant leak", "heavy": "Heavy leak" }
+            },
+            "recentRepair": {
+              "label": "Was it recently repaired or installed?",
+              "options": { "yes": "Yes", "no": "No" }
+            }
+          },
+          "causes": {
+            "installationIssue": "Possible installation issue",
+            "hoseOrValveFailure": "Hose or valve failure",
+            "wornSeal": "Worn seal"
+          }
+        }
+      }
+    },
     "empty": {
       "title": "No results found",
       "description": "We could not find matching providers. Try adjusting filters or a different query.",

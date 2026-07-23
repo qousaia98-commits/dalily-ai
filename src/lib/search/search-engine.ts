@@ -91,7 +91,7 @@ export class DalilySearchEngine {
     const parsed = input.query ? await this.problemDetector.detect(input.query) : null;
 
     const problemId = parsed?.problem?.problemId ?? null;
-    const priority = parsed?.problem?.priority ?? null;
+    const priority = input.priorityOverride ?? parsed?.problem?.priority ?? null;
     const citySlug = input.citySlug ?? parsed?.citySlug ?? null;
     const categorySlug =
       input.categorySlug ??
