@@ -57,7 +57,7 @@ function stripProblemTokens(normalized: string, problemId: ProblemId | null): st
 }
 
 export class RuleBasedProblemDetector implements ProblemDetector {
-  detect(raw: string): ParsedUserQuery {
+  async detect(raw: string): Promise<ParsedUserQuery> {
     const normalized = normalizeSearchText(raw);
     const citySlug = detectCitySlug(normalized);
     const withoutCity = stripCityTokens(normalized, citySlug);
@@ -76,6 +76,6 @@ export class RuleBasedProblemDetector implements ProblemDetector {
 
 export const ruleBasedProblemDetector = new RuleBasedProblemDetector();
 
-export function parseUserQuery(raw: string): ParsedUserQuery {
+export async function parseUserQuery(raw: string): Promise<ParsedUserQuery> {
   return ruleBasedProblemDetector.detect(raw);
 }

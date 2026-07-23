@@ -791,6 +791,8 @@ export type Database = {
           nearby_radius: string | null;
           ranking_snapshot: Json;
           locale: string | null;
+          input_mode: string | null;
+          voice_language: string | null;
           created_at: string;
         };
         Insert: {
@@ -807,6 +809,8 @@ export type Database = {
           nearby_radius?: string | null;
           ranking_snapshot?: Json;
           locale?: string | null;
+          input_mode?: string | null;
+          voice_language?: string | null;
           created_at?: string;
         };
         Update: {
@@ -823,6 +827,8 @@ export type Database = {
           nearby_radius?: string | null;
           ranking_snapshot?: Json;
           locale?: string | null;
+          input_mode?: string | null;
+          voice_language?: string | null;
           created_at?: string;
         };
         Relationships: [];

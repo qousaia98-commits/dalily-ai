@@ -13,6 +13,7 @@
     "seed:search": "node scripts/seed-search-providers.mjs",
     "verify:search": "node scripts/verify-search.mjs",
     "verify:search:db": "node scripts/verify-search-integration.mjs",
+    "verify:search:llm": "node scripts/verify-search-llm.mjs",
     "generate:brand": "node scripts/write-brand-svgs.mjs && node scripts/generate-brand-assets.mjs"
   },
   "dependencies": {

@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/lib/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { VoiceSearchButton } from "@/components/search/voice-search-button";
 import { cn } from "@/lib/utils";
 
 const MIN_QUERY_LENGTH = 2;
@@ -30,6 +31,7 @@ export function SearchForm({
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(defaultQuery);
   const [error, setError] = useState<string | null>(null);
+  const [voiceLanguage, setVoiceLanguage] = useState<string | null>(null);
 
   useEffect(() => {
     setQuery(defaultQuery);
@@ -55,6 +57,14 @@ export function SearchForm({
     setError(null);
     const params = new URLSearchParams(searchParams.toString());
     params.set("q", trimmed);
+    if (voiceLanguage) {
+      params.set("voice", "1");
+      params.set("lang", voiceLanguage);
+      setVoiceLanguage(null);
+    } else {
+      params.delete("voice");
+      params.delete("lang");
+    }
     router.push(`/search?${params.toString()}`);
   };
 
@@ -77,9 +87,17 @@ export function SearchForm({
             maxLength={MAX_QUERY_LENGTH}
             autoFocus={autoFocus}
             className={cn(
-              "rounded-2xl border-border/80 bg-card ps-12 pe-4 shadow-lg shadow-primary/5 transition-shadow focus-visible:shadow-xl focus-visible:shadow-primary/10",
+              "rounded-2xl border-border/80 bg-card ps-12 pe-14 shadow-lg shadow-primary/5 transition-shadow focus-visible:shadow-xl focus-visible:shadow-primary/10",
               isCompact ? "h-12 text-base" : "h-14 text-base sm:h-16 sm:text-lg",
             )}
+          />
+          <VoiceSearchButton
+            className="absolute end-2 top-1/2 -translate-y-1/2"
+            onTranscript={(text, language) => {
+              setQuery(text);
+              setVoiceLanguage(language);
+              if (error) setError(null);
+            }}
           />
           {error ? (
             <p id="search-error" role="alert" className="mt-2 text-sm text-destructive">

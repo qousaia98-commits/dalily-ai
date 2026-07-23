@@ -264,6 +264,20 @@
       "tooShort": "Please enter at least 2 characters",
       "tooLong": "Search is too long — maximum 200 characters"
     },
+    "voice": {
+      "start": "Search by voice",
+      "recording": "Listening… {time}",
+      "cancel": "Cancel",
+      "done": "Done",
+      "transcribing": "Transcribing…",
+      "editHint": "Edit your search or press Search",
+      "recordAgain": "Record again",
+      "errors": {
+        "permission_denied": "Microphone access was denied. Enable it in your browser settings to use voice search.",
+        "not_supported": "Voice search isn't supported in this browser.",
+        "transcription_failed": "We couldn't understand that. Please try again or type your search."
+      }
+    },
     "empty": {
       "title": "No results found",
       "description": "We could not find matching providers. Try adjusting filters or a different query.",

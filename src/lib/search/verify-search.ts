@@ -49,7 +49,7 @@ function makeProvider(overrides: Partial<ProviderRow>): ProviderRow {
   };
 }
 
-export function verifySearchMvp(): { ok: boolean; failures: string[] } {
+export async function verifySearchMvp(): Promise<{ ok: boolean; failures: string[] }> {
   const failures: string[] = [];
 
   const cases: Array<{ query: string; expected: string }> = [
@@ -63,7 +63,7 @@ export function verifySearchMvp(): { ok: boolean; failures: string[] } {
   ];
 
   for (const testCase of cases) {
-    const detected = ruleBasedProblemDetector.detect(testCase.query);
+    const detected = await ruleBasedProblemDetector.detect(testCase.query);
     if (detected.problem?.problemId !== testCase.expected) {
       failures.push(
         `Problem detection failed for "${testCase.query}" — expected ${testCase.expected}, got ${detected.problem?.problemId ?? "null"}`,

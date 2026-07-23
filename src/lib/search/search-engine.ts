@@ -5,7 +5,7 @@ import { getCategoryNameMap, getCategorySlugMap } from "@/lib/categories/queries
 import { mapProviderRowsToListItems } from "@/lib/search/mapper/provider-list-mapper";
 import {
   type ProblemDetector,
-  ruleBasedProblemDetector,
+  hybridProblemDetector,
 } from "@/lib/search/problem-detection";
 import { rankProvidersDetailed } from "@/lib/search/ranking/rank-providers";
 import { fetchImagePaths } from "@/lib/search/repository/provider-search.repository";
@@ -83,12 +83,12 @@ function buildDistanceMap(
  */
 export class DalilySearchEngine {
   constructor(
-    private readonly problemDetector: ProblemDetector = ruleBasedProblemDetector,
+    private readonly problemDetector: ProblemDetector = hybridProblemDetector,
     private readonly searchProvider: SearchProvider = relationalSearchProvider,
   ) {}
 
   async search(input: SearchEngineInput): Promise<SearchEngineResult> {
-    const parsed = input.query ? this.problemDetector.detect(input.query) : null;
+    const parsed = input.query ? await this.problemDetector.detect(input.query) : null;
 
     const problemId = parsed?.problem?.problemId ?? null;
     const priority = parsed?.problem?.priority ?? null;
@@ -308,6 +308,8 @@ export class DalilySearchEngine {
         rankingSnapshot: snapshot,
         userId,
         locale: input.locale ?? null,
+        inputMode: input.inputMode ?? "text",
+        voiceLanguage: input.inputMode === "voice" ? (input.voiceLanguage ?? null) : null,
       });
 
       await insertImpressionBatch(displayIds, logId);

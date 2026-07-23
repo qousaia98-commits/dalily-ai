@@ -35,6 +35,8 @@ type SearchResultsProps = {
     verified?: string;
     sort?: string;
     nearby?: string;
+    voice?: string;
+    lang?: string;
   };
 };
 
@@ -104,6 +106,8 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
         (locationEnabled && nearbyLoc ? null : "city"),
       useDynamicRadius: explicitNearby == null,
       sort,
+      inputMode: searchParams.voice === "1" ? "voice" : "text",
+      voiceLanguage: searchParams.voice === "1" ? (searchParams.lang ?? null) : null,
     });
     results = searchResult.providers;
     parsed = searchResult.parsed;

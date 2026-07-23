@@ -56,6 +56,10 @@ export type SearchEngineInput = {
   /** When true (default), apply adaptive radius from problem/category */
   useDynamicRadius?: boolean;
   sort?: import("@/lib/geo/distance").SearchSort;
+  /** Analytics only — how the query text was produced. */
+  inputMode?: "text" | "voice";
+  /** Analytics only — language Whisper detected for a voice query. */
+  voiceLanguage?: string | null;
 };
 
 export type SearchEngineResult = {

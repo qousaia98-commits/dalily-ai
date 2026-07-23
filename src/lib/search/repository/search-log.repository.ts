@@ -20,6 +20,8 @@ export type SearchLogInsert = {
   rankingSnapshot?: RankingSnapshotEntry[];
   userId?: string | null;
   locale?: string | null;
+  inputMode?: "text" | "voice" | null;
+  voiceLanguage?: string | null;
 };
 
 type SearchLogRow = Database["public"]["Tables"]["search_logs"]["Insert"];
@@ -40,6 +42,8 @@ export async function insertSearchLog(entry: SearchLogInsert): Promise<string | 
       provider_ids: entry.providerIds,
       user_id: entry.userId ?? null,
       locale: entry.locale ?? null,
+      input_mode: entry.inputMode ?? null,
+      voice_language: entry.voiceLanguage ?? null,
     };
 
     const row: SearchLogRow = useSnapshots
