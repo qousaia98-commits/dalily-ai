@@ -52,7 +52,7 @@ export function useMarketplaceRealtime(scope: RealtimeScope) {
           .on(
             "postgres_changes",
             {
-              event: "INSERT",
+              event: "*",
               schema: "public",
               table: "messages",
               filter: `conversation_id=eq.${scope.conversationId}`,

@@ -31,7 +31,6 @@ import {
   disputeSchema,
   providerRequestSettingsSchema,
   reviewSchema,
-  sendMessageSchema,
 } from "@/lib/validations/service-request";
 import { logLearningEvent, scheduleLearningUpdate } from "@/lib/search/learning";
 
@@ -858,79 +857,8 @@ export async function sendMessageAction(
   conversationId: string,
   bodyText: string,
 ): Promise<{ success: boolean; error?: string }> {
-  const authUser = await getAuthUser();
-  if (!authUser) return { success: false, error: "login_required" };
-
-  const parsed = sendMessageSchema.safeParse({ conversationId, bodyText });
-  if (!parsed.success) return { success: false, error: "validation_error" };
-
-  const supabase = await createClient();
-  const { data: conv } = await supabase
-    .from("conversations")
-    .select("id, provider_id, customer_id, service_request_id")
-    .eq("id", parsed.data.conversationId)
-    .maybeSingle();
-  if (!conv) return { success: false, error: "not_found" };
-
-  const { data: providerRow } = await supabase
-    .from("providers")
-    .select("owner_id")
-    .eq("id", conv.provider_id)
-    .maybeSingle();
-
-  const isParticipant =
-    authUser.id === conv.customer_id || authUser.id === providerRow?.owner_id;
-  if (!isParticipant) return { success: false, error: "forbidden" };
-
-  if (conv.service_request_id) {
-    const { data: request } = await supabase
-      .from("service_requests")
-      .select("status")
-      .eq("id", conv.service_request_id)
-      .maybeSingle();
-    if (
-      !request ||
-      request.status === "pending" ||
-      request.status === "rejected" ||
-      request.status === "cancelled" ||
-      request.status === "reviewed"
-    ) {
-      return { success: false, error: "chat_locked" };
-    }
-  }
-
-  const { error } = await supabase.from("messages").insert({
-    conversation_id: parsed.data.conversationId,
-    sender_id: authUser.id,
-    body_text: parsed.data.bodyText,
-    is_system: false,
-  });
-  if (error) return { success: false, error: "send_failed" };
-
-  const notifyUserId =
-    authUser.id === conv.customer_id ? providerRow?.owner_id : conv.customer_id;
-
-  if (notifyUserId) {
-    await supabase.rpc("notify_marketplace_user", {
-      p_user_id: notifyUserId,
-      p_type: "new_message",
-      p_title_key: "notifications.newMessage.title",
-      p_body_key: "notifications.newMessage.body",
-      p_body_params: {},
-      p_href:
-        authUser.id === conv.customer_id
-          ? `/business/messages/${conversationId}`
-          : `/messages/${conversationId}`,
-      p_request_id: conv.service_request_id,
-      p_conversation_id: conversationId,
-    });
-  }
-
-  revalidatePath(`/messages/${conversationId}`);
-  revalidatePath(`/business/messages/${conversationId}`);
-  revalidatePath("/messages");
-  revalidatePath("/business/messages");
-  return { success: true };
+  const { sendLegacyTextMessageAction } = await import("@/actions/chat.actions");
+  return sendLegacyTextMessageAction(conversationId, bodyText);
 }
 
 export async function saveProviderRequestSettingsAction(

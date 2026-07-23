@@ -745,7 +745,33 @@
     "composer": {
       "placeholder": "Type a message…",
       "send": "Send message",
-      "error": "Could not send message. Please try again."
+      "error": "Could not send message. Please try again.",
+      "attach": "Attach file",
+      "attachHint": "Images and documents — compressed automatically",
+      "removeFile": "Remove",
+      "shareLocation": "Share location",
+      "locationShared": "Shared location"
+    },
+    "typing": {
+      "one": "{name} is typing…",
+      "many": "{count} people are typing…"
+    },
+    "receipts": {
+      "sent": "Sent",
+      "delivered": "Delivered",
+      "read": "Read"
+    },
+    "presence": {
+      "online": "Online",
+      "offline": "Offline",
+      "lastSeen": "Last seen {time}"
+    },
+    "actions": {
+      "pin": "Pin",
+      "unpin": "Unpin",
+      "archive": "Archive",
+      "unarchive": "Unarchive",
+      "searchMessages": "Search messages"
     }
   },
   "marketplace": {
@@ -983,7 +1009,8 @@
     },
     "newMessage": {
       "title": "New message",
-      "body": "You have a new message."
+      "body": "You have a new message.",
+      "attachmentBody": "You received a new attachment."
     }
   },
   "footer": {

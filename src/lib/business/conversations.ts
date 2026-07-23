@@ -15,6 +15,18 @@ export type ConversationMessage = {
   read: boolean;
   isSystem?: boolean;
   eventType?: string | null;
+  deliveryStatus?: "sent" | "delivered" | "read";
+  messageType?: "text" | "image" | "document" | "location" | "voice" | "system" | "video";
+  locationLat?: number | null;
+  locationLng?: number | null;
+  locationLabel?: string | null;
+  attachments?: Array<{
+    id: string;
+    fileName: string;
+    mimeType: string;
+    kind: string;
+    signedUrl?: string | null;
+  }>;
 };
 
 export type BusinessConversation = {
@@ -33,6 +45,10 @@ export type BusinessConversation = {
   state: ConversationState;
   /** Future realtime typing indicator */
   isTyping?: boolean;
+  pinned?: boolean;
+  archived?: boolean;
+  peerUserId?: string | null;
+  peerOnline?: boolean | null;
   messages: ConversationMessage[];
   serviceRequestId?: string | null;
 };
@@ -165,6 +181,13 @@ export function filterConversations(
     const name = resolveName(c).toLowerCase();
     const phone = (c.phone ?? "").toLowerCase();
     const preview = (c.previewText ?? "").toLowerCase();
-    return name.includes(q) || phone.includes(q) || preview.includes(q) || c.id.includes(q);
+    const messageHit = c.messages.some((m) => (m.bodyText ?? "").toLowerCase().includes(q));
+    return (
+      name.includes(q) ||
+      phone.includes(q) ||
+      preview.includes(q) ||
+      messageHit ||
+      c.id.includes(q)
+    );
   });
 }

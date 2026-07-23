@@ -1118,6 +1118,14 @@ export type Database = {
           last_message_at: string;
           created_at: string;
           updated_at: string;
+          status: string;
+          pinned_by_customer: boolean;
+          pinned_by_provider: boolean;
+          archived_by_customer: boolean;
+          archived_by_provider: boolean;
+          deleted_at: string | null;
+          closed_at: string | null;
+          metadata: Json;
         };
         Insert: {
           id?: string;
@@ -1127,6 +1135,14 @@ export type Database = {
           last_message_at?: string;
           created_at?: string;
           updated_at?: string;
+          status?: string;
+          pinned_by_customer?: boolean;
+          pinned_by_provider?: boolean;
+          archived_by_customer?: boolean;
+          archived_by_provider?: boolean;
+          deleted_at?: string | null;
+          closed_at?: string | null;
+          metadata?: Json;
         };
         Update: {
           id?: string;
@@ -1136,6 +1152,14 @@ export type Database = {
           last_message_at?: string;
           created_at?: string;
           updated_at?: string;
+          status?: string;
+          pinned_by_customer?: boolean;
+          pinned_by_provider?: boolean;
+          archived_by_customer?: boolean;
+          archived_by_provider?: boolean;
+          deleted_at?: string | null;
+          closed_at?: string | null;
+          metadata?: Json;
         };
         Relationships: [];
       };
@@ -1148,6 +1172,15 @@ export type Database = {
           is_system: boolean;
           event_type: string | null;
           created_at: string;
+          message_type: string;
+          delivery_status: string;
+          edited_at: string | null;
+          deleted_at: string | null;
+          client_id: string | null;
+          metadata: Json;
+          location_lat: number | null;
+          location_lng: number | null;
+          location_label: string | null;
         };
         Insert: {
           id?: string;
@@ -1157,6 +1190,15 @@ export type Database = {
           is_system?: boolean;
           event_type?: string | null;
           created_at?: string;
+          message_type?: string;
+          delivery_status?: string;
+          edited_at?: string | null;
+          deleted_at?: string | null;
+          client_id?: string | null;
+          metadata?: Json;
+          location_lat?: number | null;
+          location_lng?: number | null;
+          location_label?: string | null;
         };
         Update: {
           id?: string;
@@ -1166,6 +1208,15 @@ export type Database = {
           is_system?: boolean;
           event_type?: string | null;
           created_at?: string;
+          message_type?: string;
+          delivery_status?: string;
+          edited_at?: string | null;
+          deleted_at?: string | null;
+          client_id?: string | null;
+          metadata?: Json;
+          location_lat?: number | null;
+          location_lng?: number | null;
+          location_label?: string | null;
         };
         Relationships: [];
       };

@@ -4,7 +4,9 @@ import { Link } from "@/lib/i18n/routing";
 import type { BusinessConversation } from "@/lib/business/conversations";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
 import { MarkConversationRead } from "@/components/business/mark-conversation-read";
-import { MessageComposer } from "@/components/messaging/message-composer";
+import { ChatThreadClientShell } from "@/components/messaging/chat-thread-client-shell";
+import { ConversationQuickActions } from "@/components/messaging/conversation-quick-actions";
+import { ReadReceiptIcon } from "@/components/messaging/read-receipt-icon";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -92,6 +94,14 @@ export async function ConversationThread({
               </p>
             )}
           </div>
+          {conversation.kind === "customer" ? (
+            <ConversationQuickActions
+              conversationId={conversation.id}
+              viewer={viewer === "customer" ? "customer" : "business"}
+              pinned={conversation.pinned}
+              archived={conversation.archived || conversation.state === "archived"}
+            />
+          ) : null}
         </div>
         {request ? (
           <div className="rounded-2xl border border-border/70 bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
@@ -173,15 +183,31 @@ export async function ConversationThread({
                 )}
               >
                 <p>{body}</p>
+                {msg.messageType === "location" && msg.locationLat != null && msg.locationLng != null ? (
+                  <a
+                    href={`https://www.openstreetmap.org/?mlat=${msg.locationLat}&mlon=${msg.locationLng}#map=16/${msg.locationLat}/${msg.locationLng}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "mt-1 block text-xs underline underline-offset-2",
+                      mine ? "text-white/80" : "text-primary",
+                    )}
+                  >
+                    {msg.locationLabel ?? `${msg.locationLat.toFixed(4)}, ${msg.locationLng.toFixed(4)}`}
+                  </a>
+                ) : null}
                 {timeLabel ? (
                   <time
                     className={cn(
-                      "mt-1 block text-[0.65rem]",
-                      mine ? "text-white/60" : "text-muted-foreground",
+                      "mt-1 flex items-center gap-1 text-[0.65rem]",
+                      mine ? "justify-end text-white/60" : "text-muted-foreground",
                     )}
                     dateTime={msg.createdAt}
                   >
                     {timeLabel}
+                    {mine ? (
+                      <ReadReceiptIcon status={msg.deliveryStatus ?? (msg.read ? "read" : "sent")} />
+                    ) : null}
                   </time>
                 ) : null}
               </div>
@@ -190,8 +216,14 @@ export async function ConversationThread({
         })}
       </div>
 
-      {conversation.kind === "customer" && chatOpen ? (
-        <MessageComposer conversationId={conversation.id} />
+      {conversation.kind === "customer" && userId ? (
+        <ChatThreadClientShell
+          conversationId={conversation.id}
+          userId={userId}
+          peerUserId={conversation.peerUserId}
+          chatOpen={Boolean(chatOpen)}
+          lockedLabel={tm("chatLocked")}
+        />
       ) : conversation.kind === "customer" ? (
         <div className="border-t border-border px-4 py-3">
           <p className="text-center text-xs text-muted-foreground">{tm("chatLocked")}</p>

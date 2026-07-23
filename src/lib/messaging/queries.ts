@@ -20,6 +20,11 @@ type MessageRow = {
   created_at: string;
   is_system?: boolean;
   event_type?: string | null;
+  delivery_status?: string | null;
+  message_type?: string | null;
+  location_lat?: number | null;
+  location_lng?: number | null;
+  location_label?: string | null;
 };
 
 export async function loadConversationsForCustomer(
@@ -61,14 +66,30 @@ async function buildConversationList(
   const supabase = await createClient();
   const ids = conversations.map((c) => c.id);
 
-  const { data: messages } = await supabase
-    .from("messages")
-    .select("id, conversation_id, sender_id, body_text, created_at, is_system, event_type")
-    .in("conversation_id", ids)
-    .order("created_at", { ascending: true });
+  let messages: MessageRow[] | null = null;
+  {
+    const primary = await supabase
+      .from("messages")
+      .select(
+        "id, conversation_id, sender_id, body_text, created_at, is_system, event_type, delivery_status, message_type, location_lat, location_lng, location_label",
+      )
+      .in("conversation_id", ids)
+      .order("created_at", { ascending: true });
+
+    if (primary.error) {
+      const fallback = await supabase
+        .from("messages")
+        .select("id, conversation_id, sender_id, body_text, created_at, is_system, event_type")
+        .in("conversation_id", ids)
+        .order("created_at", { ascending: true });
+      messages = (fallback.data ?? null) as unknown as MessageRow[] | null;
+    } else {
+      messages = (primary.data ?? null) as unknown as MessageRow[] | null;
+    }
+  }
 
   const messagesByConv = new Map<string, MessageRow[]>();
-  for (const msg of (messages ?? []) as MessageRow[]) {
+  for (const msg of messages ?? []) {
     const list = messagesByConv.get(msg.conversation_id) ?? [];
     list.push(msg);
     messagesByConv.set(msg.conversation_id, list);
@@ -87,15 +108,19 @@ async function buildConversationList(
   const providerIds = [...new Set(conversations.map((c) => c.provider_id))];
   const { data: providers } = await supabase
     .from("providers")
-    .select("id, name")
+    .select("id, name, owner_id")
     .in("id", providerIds);
 
   const providerMap = new Map(
     (providers ?? []).map((p) => [
       p.id,
-      typeof p.name === "object" && p.name !== null
-        ? ((p.name as { en?: string }).en ?? (p.name as { ar?: string }).ar ?? "Business")
-        : "Business",
+      {
+        name:
+          typeof p.name === "object" && p.name !== null
+            ? ((p.name as { en?: string }).en ?? (p.name as { ar?: string }).ar ?? "Business")
+            : "Business",
+        ownerId: p.owner_id as string,
+      },
     ]),
   );
 
@@ -125,13 +150,19 @@ async function buildConversationList(
         read: ownMessage,
         isSystem: Boolean(m.is_system),
         eventType: m.event_type ?? null,
+        deliveryStatus: (m.delivery_status as ConversationMessage["deliveryStatus"]) ?? "sent",
+        messageType: (m.message_type as ConversationMessage["messageType"]) ?? "text",
+        locationLat: m.location_lat ?? null,
+        locationLng: m.location_lng ?? null,
+        locationLabel: m.location_label ?? null,
       };
     });
 
     const last = mappedMessages[mappedMessages.length - 1];
+    const providerInfo = providerMap.get(conv.provider_id);
     const name =
       viewer === "customer"
-        ? (providerMap.get(conv.provider_id) ?? "Business")
+        ? (providerInfo?.name ?? "Business")
         : (profileMap.get(conv.customer_id) ?? "Customer");
     const unreadCount = mappedMessages.filter((m) => !m.read).length;
     // Prefer the newest message row; never fall back to a bogus/epoch last_message_at.
@@ -148,6 +179,7 @@ async function buildConversationList(
       state: unreadCount > 0 ? ("unread" as const) : ("read" as const),
       messages: mappedMessages,
       serviceRequestId: conv.service_request_id,
+      peerUserId: viewer === "customer" ? (providerInfo?.ownerId ?? null) : conv.customer_id,
     };
   });
 }

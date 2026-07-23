@@ -31,6 +31,14 @@ export async function markConversationReadAction(
     maxAge: 60 * 60 * 24 * 365,
   });
 
+  // Server-side receipts when Sprint 36 migration is applied
+  try {
+    const { markChatReadAction } = await import("@/actions/chat.actions");
+    await markChatReadAction(conversationId);
+  } catch {
+    /* soft — cookie unread still works */
+  }
+
   revalidatePath("/business", "layout");
   revalidatePath("/business/messages");
   revalidatePath(`/business/messages/${conversationId}`);

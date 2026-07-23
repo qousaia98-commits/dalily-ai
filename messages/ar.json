@@ -745,7 +745,33 @@
     "composer": {
       "placeholder": "اكتب رسالة…",
       "send": "إرسال رسالة",
-      "error": "تعذر إرسال الرسالة. حاول مرة أخرى."
+      "error": "تعذر إرسال الرسالة. حاول مرة أخرى.",
+      "attach": "إرفاق ملف",
+      "attachHint": "صور ومستندات — تُضغط تلقائياً",
+      "removeFile": "إزالة",
+      "shareLocation": "مشاركة الموقع",
+      "locationShared": "تمت مشاركة الموقع"
+    },
+    "typing": {
+      "one": "{name} يكتب…",
+      "many": "{count} أشخاص يكتبون…"
+    },
+    "receipts": {
+      "sent": "أُرسلت",
+      "delivered": "وُصلت",
+      "read": "قُرئت"
+    },
+    "presence": {
+      "online": "متصل",
+      "offline": "غير متصل",
+      "lastSeen": "آخر ظهور {time}"
+    },
+    "actions": {
+      "pin": "تثبيت",
+      "unpin": "إلغاء التثبيت",
+      "archive": "أرشفة",
+      "unarchive": "إلغاء الأرشفة",
+      "searchMessages": "بحث في الرسائل"
     }
   },
   "footer": {
@@ -2899,7 +2925,8 @@
     },
     "newMessage": {
       "title": "رسالة جديدة",
-      "body": "لديك رسالة جديدة."
+      "body": "لديك رسالة جديدة.",
+      "attachmentBody": "وصلك مرفق جديد."
     }
   }
 }
