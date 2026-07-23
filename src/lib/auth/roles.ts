@@ -31,13 +31,18 @@ export function isAdminUser(roles: AppRole[]): boolean {
   return hasAnyRole(roles, [ROLES.ADMIN, ROLES.MODERATOR]);
 }
 
-/** Platform admin panel — admin role only (Sprint 6) */
+/** Full platform admin — payments, broadcasts, subscriptions (not moderators). */
 export function isPlatformAdmin(roles: AppRole[]): boolean {
   return hasRole(roles, ROLES.ADMIN);
 }
 
+/** Admin Control Center access — admin or moderator (Sprint 41). */
+export function canAccessAdminPanel(roles: AppRole[]): boolean {
+  return isAdminUser(roles);
+}
+
 export function getPostLoginPath(roles: AppRole[]): string {
-  if (isPlatformAdmin(roles)) return "/admin";
+  if (canAccessAdminPanel(roles)) return "/admin";
   if (isBusinessUser(roles)) return "/business";
   return "/";
 }

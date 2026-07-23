@@ -38,6 +38,11 @@ export type AdminProviderItem = {
   phone: string | null;
   planSlug: string;
   createdAt: string;
+  ratingAvg: number;
+  trustScore: number;
+  profileCompleteness: number;
+  responseTimeHours: number | null;
+  updatedAt: string;
 };
 
 export type AdminProviderListResult = {
@@ -189,7 +194,7 @@ export async function listProvidersForAdmin(params: {
   let query = admin
     .from("providers")
     .select(
-      "id, slug, name, status, verification_status, city_id, category_id, owner_id, phone, email, created_at",
+      "id, slug, name, status, verification_status, city_id, category_id, owner_id, phone, email, created_at, rating_avg, trust_score, profile_completeness, response_time_hours, updated_at",
       { count: "exact" },
     )
     .is("deleted_at", null)
@@ -317,6 +322,11 @@ export async function listProvidersForAdmin(params: {
     phone: provider.phone,
     planSlug: planByProvider.get(provider.id) ?? "free",
     createdAt: provider.created_at,
+    ratingAvg: Number(provider.rating_avg) || 0,
+    trustScore: Number(provider.trust_score) || 0,
+    profileCompleteness: Number(provider.profile_completeness) || 0,
+    responseTimeHours: provider.response_time_hours,
+    updatedAt: provider.updated_at,
   }));
 
   return { items, total: count ?? items.length, page, pageSize };

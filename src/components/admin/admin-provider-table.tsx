@@ -73,6 +73,11 @@ export function AdminProviderTable({ items }: AdminProviderTableProps) {
                 {item.ownerDisplayName ?? item.ownerEmail}
                 {item.phone ? ` · ${item.phone}` : ""}
               </p>
+              <p className="text-xs text-muted-foreground">
+                ★ {item.ratingAvg.toFixed(1)} · {t("metrics.trust")}: {item.trustScore} ·{" "}
+                {t("metrics.completion")}: {item.profileCompleteness}% ·{" "}
+                {t("metrics.lastActive")}: {new Date(item.updatedAt).toLocaleDateString(locale)}
+              </p>
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <Button variant="outline" size="sm" asChild className="gap-2">

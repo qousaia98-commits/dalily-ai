@@ -16,6 +16,10 @@ export type RankingInspectionRow = {
   breakdown: DalilyScoreBreakdown;
   explanation: RankingExplanation;
   weights: typeof DEFAULT_DALILY_WEIGHTS;
+  rankingPosition: number;
+  searchVisibility: "high" | "medium" | "low";
+  recommendationReasons: string[];
+  rankingHistoryReady: boolean;
 };
 
 export async function getAdminRankingInspection(
@@ -63,8 +67,15 @@ export async function getAdminRankingInspection(
       breakdown,
       explanation,
       weights: DEFAULT_DALILY_WEIGHTS,
+      rankingPosition: 0,
+      searchVisibility:
+        breakdown.overall >= 75 ? "high" : breakdown.overall >= 50 ? "medium" : "low",
+      recommendationReasons: explanation.topStrengths,
+      rankingHistoryReady: false,
     });
   }
 
-  return result.sort((a, b) => b.breakdown.overall - a.breakdown.overall);
+  return result
+    .sort((a, b) => b.breakdown.overall - a.breakdown.overall)
+    .map((row, index) => ({ ...row, rankingPosition: index + 1 }));
 }

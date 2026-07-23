@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/routing";
 import { getAuthUser } from "@/lib/auth/session";
-import { isBusinessUser, isPlatformAdmin } from "@/lib/auth/roles";
+import { isBusinessUser, canAccessAdminPanel } from "@/lib/auth/roles";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { LogoutButton } from "@/components/auth/logout-button";
@@ -24,7 +24,7 @@ export async function AppHeader({
   const tNav = await getTranslations("nav");
   const authUser = await getAuthUser();
   const businessUser = authUser ? isBusinessUser(authUser.roles) : false;
-  const platformAdmin = authUser ? isPlatformAdmin(authUser.roles) : false;
+  const platformAdmin = authUser ? canAccessAdminPanel(authUser.roles) : false;
 
   const accountLabel =
     businessLabel !== undefined

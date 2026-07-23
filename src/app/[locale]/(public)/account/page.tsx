@@ -10,7 +10,7 @@ import {
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getAuthUser } from "@/lib/auth/session";
-import { isBusinessUser, isPlatformAdmin } from "@/lib/auth/roles";
+import { isBusinessUser, canAccessAdminPanel } from "@/lib/auth/roles";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -29,7 +29,7 @@ export default async function AccountPage() {
   const t = await getTranslations("mobilePages.account");
   const authUser = await getAuthUser();
   const businessUser = authUser ? isBusinessUser(authUser.roles) : false;
-  const platformAdmin = authUser ? isPlatformAdmin(authUser.roles) : false;
+  const platformAdmin = authUser ? canAccessAdminPanel(authUser.roles) : false;
   const jar = await cookies();
   const locationPreference = parseLocationPreference(jar.get(LOC_PREF_COOKIE)?.value);
   const hasActiveLocation = Boolean(

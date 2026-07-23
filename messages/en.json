@@ -2585,7 +2585,15 @@
       "messages": "Messages",
       "marketplace": "Marketplace",
       "learning": "Learning AI",
-      "ranking": "Ranking"
+      "ranking": "Ranking",
+      "customers": "Customers",
+      "issues": "Issues",
+      "reviewModeration": "Review moderation",
+      "analytics": "Analytics",
+      "content": "Content",
+      "broadcasts": "Broadcasts",
+      "health": "System health",
+      "audit": "Audit log"
     },
     "learning": {
       "eyebrow": "Internal · Learning AI",
@@ -2737,6 +2745,11 @@
       "empty": "No providers match your filters.",
       "viewProfile": "View profile",
       "pagination": "{total} providers total",
+      "metrics": {
+        "trust": "Trust",
+        "completion": "Profile",
+        "lastActive": "Last active"
+      },
       "filters": {
         "search": "Search name, owner, email, phone, city, ID…",
         "allStatuses": "All statuses",
@@ -2862,7 +2875,8 @@
       "byCity": "Searches by city",
       "perDay": "Searches per day",
       "count": "Count",
-      "empty": "No search data yet."
+      "empty": "No search data yet.",
+      "recommendationCtr": "Recommendation click rate (7d): {rate}%"
     },
     "users": {
       "title": "User management",
@@ -3153,6 +3167,12 @@
       "empty": "No active providers to score.",
       "score": "Dalily Score",
       "strengths": "Top strengths",
+      "historyReady": "Ranking history storage is architecture-ready (read-only inspector).",
+      "visibility": {
+        "high": "High visibility",
+        "medium": "Medium visibility",
+        "low": "Low visibility"
+      },
       "components": {
         "quality": "Quality",
         "trust": "Trust",
@@ -3164,6 +3184,179 @@
         "profileQuality": "Profile quality",
         "popularity": "Popularity",
         "response": "Response"
+      }
+    },
+    "controlCenterV2": {
+      "title": "Platform health",
+      "subtitle": "Live marketplace KPIs for operators and moderators.",
+      "empty": "No data yet.",
+      "topCategories": "Top categories",
+      "topCities": "Top cities",
+      "links": {
+        "analytics": "Analytics center",
+        "health": "System health"
+      },
+      "kpis": {
+        "totalUsers": "Total users",
+        "totalProviders": "Total providers",
+        "verifiedProviders": "Verified providers",
+        "pendingVerifications": "Pending verifications",
+        "bookingsToday": "Bookings today",
+        "bookingsThisMonth": "Bookings this month",
+        "completedJobs": "Completed jobs",
+        "activeConversations": "Active conversations",
+        "averageRating": "Average rating",
+        "averageDalilyScore": "Average Dalily score",
+        "issueReports": "Issue reports",
+        "openModeration": "Open moderation",
+        "searchesToday": "Searches today",
+        "searchSuccessRate": "Search success rate"
+      }
+    },
+    "issues": {
+      "eyebrow": "Issue Center",
+      "title": "Reported problems",
+      "subtitle": "Booking issues, provider and customer reports — assign and resolve.",
+      "empty": "No issues in this filter.",
+      "viewProvider": "View provider",
+      "status": {
+        "all": "All",
+        "open": "Open",
+        "in_progress": "In progress",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      },
+      "actions": {
+        "inProgress": "Start",
+        "resolve": "Resolve",
+        "close": "Close"
+      }
+    },
+    "reviewModeration": {
+      "eyebrow": "Moderation",
+      "title": "Review moderation",
+      "subtitle": "Newest, low ratings, and reported reviews. Spam detection ready.",
+      "empty": "No reviews in this filter.",
+      "spamReady": "Spam detection extension point is ready (AI not enabled).",
+      "spamNotReady": "Spam detection unavailable.",
+      "verified": "Verified",
+      "noComment": "No comment",
+      "provider": "Provider",
+      "warnDefault": "Please follow Dalily community guidelines.",
+      "filters": {
+        "newest": "Newest",
+        "low": "Low ratings",
+        "hidden": "Hidden",
+        "pending": "Pending"
+      },
+      "actions": {
+        "hide": "Hide",
+        "restore": "Restore",
+        "delete": "Delete",
+        "deleteConfirm": "Soft-delete this review?",
+        "warnCustomer": "Warn customer"
+      }
+    },
+    "broadcasts": {
+      "eyebrow": "Notifications",
+      "title": "Broadcast center",
+      "subtitle": "Send platform messages to all users, providers, customers, or a single user.",
+      "send": "Send now",
+      "sent": "Broadcast sent.",
+      "scheduleReady": "Scheduling architecture is ready — send immediately for now.",
+      "history": "Delivery history",
+      "emptyHistory": "No broadcasts yet.",
+      "fields": {
+        "title": "Title",
+        "body": "Message",
+        "target": "Audience",
+        "userId": "User ID"
+      },
+      "targets": {
+        "all": "All users",
+        "providers": "Providers",
+        "customers": "Customers",
+        "single": "Single user"
+      },
+      "errors": {
+        "forbidden": "Only admins can broadcast.",
+        "validation_error": "Check title and message.",
+        "failed": "Could not send broadcast."
+      }
+    },
+    "health": {
+      "eyebrow": "Operations",
+      "title": "System health",
+      "subtitle": "Database, API, cron, and deployment signals.",
+      "cronTitle": "Cron jobs",
+      "aiReadyTitle": "AI extension points",
+      "aiReadyBody": "Architecture stubs only — fraud, moderation, verification, trends, forecasting, abuse.",
+      "fields": {
+        "database": "Database",
+        "realtime": "Realtime",
+        "storage": "Storage",
+        "queue": "Queue",
+        "api": "API",
+        "version": "Deployment version",
+        "environment": "Environment"
+      }
+    },
+    "audit": {
+      "eyebrow": "Security",
+      "title": "Audit log",
+      "subtitle": "Admin actions, verification, moderation, and system changes.",
+      "moderationLog": "Control Center actions",
+      "auditLog": "Legacy audit trail",
+      "empty": "No entries yet."
+    },
+    "analyticsCenter": {
+      "eyebrow": "Analytics",
+      "title": "Analytics center",
+      "subtitle": "Bookings, chats, reviews, growth, searches, conversion, and retention.",
+      "exportReady": "CSV export architecture ready.",
+      "links": {
+        "searches": "Search analytics",
+        "marketplace": "Marketplace",
+        "learning": "Learning AI",
+        "ranking": "Ranking inspector"
+      },
+      "kpis": {
+        "bookingsTotal": "Bookings total",
+        "bookingsMonth": "Bookings this month",
+        "chatsActive": "Active chats",
+        "reviewsTotal": "Reviews",
+        "searchesMonth": "Searches this month",
+        "completionRate": "Completion rate",
+        "cancellationRate": "Cancellation rate",
+        "customerGrowth": "Customer growth (7d)",
+        "providerGrowth": "Provider growth (7d)",
+        "acceptanceRate": "Acceptance rate",
+        "avgRating": "Average rating",
+        "recClickRate": "Recommendation CTR"
+      }
+    },
+    "content": {
+      "eyebrow": "Content",
+      "title": "Content management",
+      "subtitle": "Categories, cities, featured providers, and homepage promotions.",
+      "bannerSlotsReady": "Banner slots and emergency categories are architecture-ready via existing category and marketplace modules.",
+      "cards": {
+        "categories": {
+          "title": "Service categories",
+          "body": "Manage groups, subcategories, and active flags."
+        },
+        "promotions": {
+          "title": "Homepage promotions",
+          "body": "Marketplace insights and featured placement signals."
+        },
+        "featured": {
+          "title": "Featured providers",
+          "body": "Review active providers for featured eligibility."
+        },
+        "cities": {
+          "title": "Cities & demand",
+          "body": "Search analytics by city and trending problems."
+        }
       }
     }
   },

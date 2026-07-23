@@ -13,6 +13,13 @@ import {
   Megaphone,
   Brain,
   Gauge,
+  AlertTriangle,
+  MessageSquareWarning,
+  Radio,
+  Activity,
+  ScrollText,
+  BarChart3,
+  FolderOpen,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
@@ -25,30 +32,44 @@ type AdminSidebarProps = {
     businesses?: number;
     payments?: number;
     messages?: number;
+    issues?: number;
   };
+  showAdminOnly?: boolean;
 };
 
-const navItems = [
+const sharedNav = [
   { href: "/admin", icon: LayoutDashboard, key: "dashboard", exact: true },
   { href: "/admin/providers", icon: Building2, key: "businesses", badgeKey: "businesses" as const },
+  { href: "/admin/users", icon: Users, key: "customers" },
+  { href: "/admin/verification", icon: ShieldCheck, key: "verification" },
+  { href: "/admin/issues", icon: AlertTriangle, key: "issues", badgeKey: "issues" as const },
+  { href: "/admin/reviews", icon: MessageSquareWarning, key: "reviewModeration" },
+  { href: "/admin/ranking", icon: Gauge, key: "ranking" },
+  { href: "/admin/analytics", icon: BarChart3, key: "analytics" },
+  { href: "/admin/searches", icon: Search, key: "searches" },
+  { href: "/admin/content", icon: FolderOpen, key: "content" },
+  { href: "/admin/health", icon: Activity, key: "health" },
+  { href: "/admin/audit", icon: ScrollText, key: "audit" },
+] as const;
+
+const adminOnlyNav = [
   { href: "/admin/payments", icon: Banknote, key: "payments", badgeKey: "payments" as const },
   { href: "/admin/subscriptions", icon: CreditCard, key: "subscriptions" },
   { href: "/admin/marketplace", icon: Megaphone, key: "marketplace" },
   { href: "/admin/learning", icon: Brain, key: "learning" },
-  { href: "/admin/ranking", icon: Gauge, key: "ranking" },
-  { href: "/admin/verification", icon: ShieldCheck, key: "verification" },
+  { href: "/admin/broadcasts", icon: Radio, key: "broadcasts" },
   { href: "/admin/categories", icon: Tags, key: "categories" },
-  { href: "/admin/searches", icon: Search, key: "searches" },
-  { href: "/admin/users", icon: Users, key: "users" },
 ] as const;
 
-export function AdminSidebar({ badges = {} }: AdminSidebarProps) {
+export function AdminSidebar({ badges = {}, showAdminOnly = true }: AdminSidebarProps) {
   const t = useTranslations("admin.nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const navItems = showAdminOnly ? [...sharedNav, ...adminOnlyNav] : [...sharedNav];
+
   const NavContent = () => (
-    <nav className="flex flex-col gap-1">
+    <nav className="flex flex-col gap-1" aria-label={t("menu")}>
       {navItems.map((item) => {
         const { href, icon: Icon, key } = item;
         const exact = "exact" in item && item.exact;
@@ -69,16 +90,12 @@ export function AdminSidebar({ badges = {} }: AdminSidebarProps) {
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
           >
-            <Icon className="size-4 shrink-0" />
+            <Icon className="size-4 shrink-0" aria-hidden />
             <span className="flex-1">{t(key)}</span>
             {badgeCount > 0 ? (
               <span
-                className={cn(
-                  "inline-flex min-w-5 items-center justify-center rounded-full px-1.5 py-0.5 text-[0.625rem] font-bold",
-                  active
-                    ? "bg-[var(--dalily-gold)] text-[var(--dalily-navy)]"
-                    : "bg-[var(--dalily-gold)] text-[var(--dalily-navy)]",
-                )}
+                className="inline-flex min-w-5 items-center justify-center rounded-full bg-[var(--dalily-gold)] px-1.5 py-0.5 text-[0.625rem] font-bold text-[var(--dalily-navy)]"
+                aria-label={`${badgeCount}`}
               >
                 {badgeCount > 99 ? "99+" : badgeCount}
               </span>
@@ -104,7 +121,7 @@ export function AdminSidebar({ badges = {} }: AdminSidebarProps) {
       </div>
 
       <aside className="hidden w-56 shrink-0 lg:block">
-        <div className="sticky top-20 rounded-xl border bg-card p-4">
+        <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto rounded-xl border bg-card p-4">
           <p className="mb-4 px-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
             {t("title")}
           </p>

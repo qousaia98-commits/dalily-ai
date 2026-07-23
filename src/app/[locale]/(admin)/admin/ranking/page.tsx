@@ -41,14 +41,16 @@ export default async function AdminRankingPage() {
         <p className="text-sm text-muted-foreground">{t("empty")}</p>
       ) : (
         <ul className="space-y-3">
-          {rows.map((row, index) => (
+          {rows.map((row) => (
             <li
               key={row.providerId}
               className="rounded-2xl border border-border bg-card p-4 shadow-sm"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs text-muted-foreground">#{index + 1}</p>
+                  <p className="text-xs text-muted-foreground">
+                    #{row.rankingPosition} · {t(`visibility.${row.searchVisibility}`)}
+                  </p>
                   <Link
                     href={`/admin/providers/${row.providerId}`}
                     className="text-base font-bold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)]"
@@ -61,6 +63,7 @@ export default async function AdminRankingPage() {
                       .map((s) => t(`components.${s}`))
                       .join(", ")}
                   </p>
+                  <p className="mt-1 text-xs text-muted-foreground">{t("historyReady")}</p>
                 </div>
                 <div className="text-end">
                   <p className="text-2xl font-bold">{row.breakdown.overall}</p>

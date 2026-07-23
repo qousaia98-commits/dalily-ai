@@ -2308,7 +2308,15 @@
       "messages": "الرسائل",
       "marketplace": "السوق",
       "learning": "ذكاء التعلم",
-      "ranking": "الترتيب"
+      "ranking": "الترتيب",
+      "customers": "العملاء",
+      "issues": "المشكلات",
+      "reviewModeration": "إشراف التقييمات",
+      "analytics": "التحليلات",
+      "content": "المحتوى",
+      "broadcasts": "البث",
+      "health": "صحة النظام",
+      "audit": "سجل التدقيق"
     },
     "learning": {
       "eyebrow": "داخلي · Learning AI",
@@ -2442,6 +2450,11 @@
       "empty": "لا يوجد مزودون يطابقون الفلاتر.",
       "viewProfile": "عرض الملف",
       "pagination": "{total} مزود إجمالاً",
+      "metrics": {
+        "trust": "الثقة",
+        "completion": "الملف",
+        "lastActive": "آخر نشاط"
+      },
       "filters": {
         "search": "ابحث بالاسم، المالك، البريد، الهاتف، المدينة، المعرّف…",
         "allStatuses": "كل الحالات",
@@ -2567,7 +2580,8 @@
       "byCity": "البحث حسب المدينة",
       "perDay": "البحث يومياً",
       "count": "العدد",
-      "empty": "لا توجد بيانات بحث بعد."
+      "empty": "لا توجد بيانات بحث بعد.",
+      "recommendationCtr": "نسبة نقر التوصيات (7 أيام): {rate}%"
     },
     "users": {
       "title": "إدارة المستخدمين",
@@ -2876,6 +2890,12 @@
       "empty": "لا مزودين نشطين للتقييم.",
       "score": "درجة دليلي",
       "strengths": "أقوى النقاط",
+      "historyReady": "سجل الترتيب جاهز معمارياً (مفتش للقراءة فقط).",
+      "visibility": {
+        "high": "ظهور مرتفع",
+        "medium": "ظهور متوسط",
+        "low": "ظهور منخفض"
+      },
       "components": {
         "quality": "الجودة",
         "trust": "الثقة",
@@ -2887,6 +2907,179 @@
         "profileQuality": "جودة الملف",
         "popularity": "الشعبية",
         "response": "الاستجابة"
+      }
+    },
+    "controlCenterV2": {
+      "title": "صحة المنصة",
+      "subtitle": "مؤشرات السوق الحية للمشغّلين والمشرفين.",
+      "empty": "لا بيانات بعد.",
+      "topCategories": "أبرز الفئات",
+      "topCities": "أبرز المدن",
+      "links": {
+        "analytics": "مركز التحليلات",
+        "health": "صحة النظام"
+      },
+      "kpis": {
+        "totalUsers": "إجمالي المستخدمين",
+        "totalProviders": "إجمالي المزودين",
+        "verifiedProviders": "مزودون موثّقون",
+        "pendingVerifications": "تحققات معلّقة",
+        "bookingsToday": "حجوزات اليوم",
+        "bookingsThisMonth": "حجوزات هذا الشهر",
+        "completedJobs": "أعمال مكتملة",
+        "activeConversations": "محادثات نشطة",
+        "averageRating": "متوسط التقييم",
+        "averageDalilyScore": "متوسط درجة دليلي",
+        "issueReports": "بلاغات المشكلات",
+        "openModeration": "إشراف مفتوح",
+        "searchesToday": "عمليات بحث اليوم",
+        "searchSuccessRate": "معدل نجاح البحث"
+      }
+    },
+    "issues": {
+      "eyebrow": "مركز المشكلات",
+      "title": "المشكلات المبلّغ عنها",
+      "subtitle": "مشاكل الحجوزات وتقارير المزودين والعملاء — عيّن وحلّ.",
+      "empty": "لا مشكلات في هذا الفلتر.",
+      "viewProvider": "عرض المزود",
+      "status": {
+        "all": "الكل",
+        "open": "مفتوح",
+        "in_progress": "قيد المعالجة",
+        "resolved": "محلول",
+        "closed": "مغلق"
+      },
+      "actions": {
+        "inProgress": "بدء",
+        "resolve": "حل",
+        "close": "إغلاق"
+      }
+    },
+    "reviewModeration": {
+      "eyebrow": "الإشراف",
+      "title": "إشراف التقييمات",
+      "subtitle": "الأحدث والتقييمات المنخفضة والمبلّغ عنها. كشف السبام جاهز.",
+      "empty": "لا تقييمات في هذا الفلتر.",
+      "spamReady": "نقطة توسعة كشف السبام جاهزة (الذكاء الاصطناعي غير مفعّل).",
+      "spamNotReady": "كشف السبام غير متاح.",
+      "verified": "موثّق",
+      "noComment": "بدون تعليق",
+      "provider": "المزود",
+      "warnDefault": "يرجى الالتزام بإرشادات مجتمع دليلي.",
+      "filters": {
+        "newest": "الأحدث",
+        "low": "تقييمات منخفضة",
+        "hidden": "مخفي",
+        "pending": "معلّق"
+      },
+      "actions": {
+        "hide": "إخفاء",
+        "restore": "استعادة",
+        "delete": "حذف",
+        "deleteConfirm": "حذف ناعم لهذا التقييم؟",
+        "warnCustomer": "تحذير العميل"
+      }
+    },
+    "broadcasts": {
+      "eyebrow": "الإشعارات",
+      "title": "مركز البث",
+      "subtitle": "أرسل رسائل المنصة للجميع أو المزودين أو العملاء أو مستخدم واحد.",
+      "send": "إرسال الآن",
+      "sent": "تم إرسال البث.",
+      "scheduleReady": "جدولة البث جاهزة معمارياً — الإرسال فوري حالياً.",
+      "history": "سجل التسليم",
+      "emptyHistory": "لا بث بعد.",
+      "fields": {
+        "title": "العنوان",
+        "body": "الرسالة",
+        "target": "الجمهور",
+        "userId": "معرّف المستخدم"
+      },
+      "targets": {
+        "all": "كل المستخدمين",
+        "providers": "المزودون",
+        "customers": "العملاء",
+        "single": "مستخدم واحد"
+      },
+      "errors": {
+        "forbidden": "البث للمسؤولين فقط.",
+        "validation_error": "تحقق من العنوان والرسالة.",
+        "failed": "تعذّر إرسال البث."
+      }
+    },
+    "health": {
+      "eyebrow": "العمليات",
+      "title": "صحة النظام",
+      "subtitle": "قاعدة البيانات وواجهة البرمجة والمهام المجدولة والنشر.",
+      "cronTitle": "المهام المجدولة",
+      "aiReadyTitle": "نقاط توسعة الذكاء الاصطناعي",
+      "aiReadyBody": "هياكل فقط — احتيال، إشراف، تحقق، اتجاهات، توقعات، إساءة.",
+      "fields": {
+        "database": "قاعدة البيانات",
+        "realtime": "الوقت الحقيقي",
+        "storage": "التخزين",
+        "queue": "الطابور",
+        "api": "واجهة البرمجة",
+        "version": "إصدار النشر",
+        "environment": "البيئة"
+      }
+    },
+    "audit": {
+      "eyebrow": "الأمان",
+      "title": "سجل التدقيق",
+      "subtitle": "إجراءات المسؤول والتحقق والإشراف وتغييرات النظام.",
+      "moderationLog": "إجراءات مركز التحكم",
+      "auditLog": "سجل التدقيق السابق",
+      "empty": "لا إدخالات بعد."
+    },
+    "analyticsCenter": {
+      "eyebrow": "التحليلات",
+      "title": "مركز التحليلات",
+      "subtitle": "الحجوزات والمحادثات والتقييمات والنمو والبحث والتحويل والاحتفاظ.",
+      "exportReady": "تصدير CSV جاهز معمارياً.",
+      "links": {
+        "searches": "تحليلات البحث",
+        "marketplace": "السوق",
+        "learning": "ذكاء التعلم",
+        "ranking": "مفتش الترتيب"
+      },
+      "kpis": {
+        "bookingsTotal": "إجمالي الحجوزات",
+        "bookingsMonth": "حجوزات هذا الشهر",
+        "chatsActive": "محادثات نشطة",
+        "reviewsTotal": "التقييمات",
+        "searchesMonth": "عمليات البحث هذا الشهر",
+        "completionRate": "معدل الإنجاز",
+        "cancellationRate": "معدل الإلغاء",
+        "customerGrowth": "نمو العملاء (7 أيام)",
+        "providerGrowth": "نمو المزودين (7 أيام)",
+        "acceptanceRate": "معدل القبول",
+        "avgRating": "متوسط التقييم",
+        "recClickRate": "نسبة نقر التوصيات"
+      }
+    },
+    "content": {
+      "eyebrow": "المحتوى",
+      "title": "إدارة المحتوى",
+      "subtitle": "الفئات والمدن والمزودون المميزون وترويج الصفحة الرئيسية.",
+      "bannerSlotsReady": "خانات البانر وفئات الطوارئ جاهزة عبر وحدات الفئات والسوق الحالية.",
+      "cards": {
+        "categories": {
+          "title": "فئات الخدمات",
+          "body": "إدارة المجموعات والفئات الفرعية والحالة."
+        },
+        "promotions": {
+          "title": "ترويج الصفحة الرئيسية",
+          "body": "إشارات السوق والظهور المميز."
+        },
+        "featured": {
+          "title": "مزودون مميزون",
+          "body": "مراجعة المزودين النشطين للأهلية."
+        },
+        "cities": {
+          "title": "المدن والطلب",
+          "body": "تحليلات البحث حسب المدينة والمشكلات الرائجة."
+        }
       }
     }
   },

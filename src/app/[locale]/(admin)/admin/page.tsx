@@ -3,24 +3,28 @@ import {
   getControlCenterOverview,
   listAdminActivityFeed,
 } from "@/lib/admin/control-center";
+import { getControlCenterV2Kpis } from "@/lib/admin/control-center-v2";
 import { getMarketplaceInsights } from "@/lib/admin/marketplace-insights";
 import { ControlCenterHero } from "@/components/admin/control-center-hero";
 import { ControlCenterTasks } from "@/components/admin/control-center-tasks";
 import { ControlCenterStats } from "@/components/admin/control-center-stats";
 import { ControlCenterActivityFeed } from "@/components/admin/control-center-activity";
 import { ControlCenterMarketplace } from "@/components/admin/control-center-marketplace";
+import { ControlCenterV2Widgets } from "@/components/admin/control-center-v2-widgets";
 
 export default async function AdminDashboardPage() {
   await requireAdminUser();
-  const [overview, activity, marketplace] = await Promise.all([
+  const [overview, activity, marketplace, v2] = await Promise.all([
     getControlCenterOverview(),
     listAdminActivityFeed(12),
     getMarketplaceInsights(),
+    getControlCenterV2Kpis(),
   ]);
 
   return (
     <div className="space-y-8 animate-fade-in lg:space-y-10">
       <ControlCenterHero overview={overview} />
+      <ControlCenterV2Widgets kpis={v2} />
 
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="space-y-8">

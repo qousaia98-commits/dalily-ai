@@ -55,12 +55,12 @@ export async function requireAuthUser(): Promise<AuthUser> {
 }
 
 /**
- * For Server Components / pages: redirects home if not admin.
+ * For Server Components / pages: redirects home if not admin or moderator.
  */
 export async function requireAdminUser(): Promise<AuthUser> {
   const user = await requireAuthUser();
-  const { isPlatformAdmin } = await import("@/lib/auth/roles");
-  if (!isPlatformAdmin(user.roles)) {
+  const { canAccessAdminPanel } = await import("@/lib/auth/roles");
+  if (!canAccessAdminPanel(user.roles)) {
     const locale = (await getLocale()) as Locale;
     redirect({ href: "/", locale });
     throw new Error("FORBIDDEN");
