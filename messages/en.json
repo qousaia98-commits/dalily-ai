@@ -91,7 +91,9 @@
         "myRequests": "My Requests",
         "myRequestsDesc": "Track your service requests and quotes",
         "requestSettings": "Request settings",
-        "requestSettingsDesc": "Manage how customers contact you"
+        "requestSettingsDesc": "Manage how customers contact you",
+        "myBookings": "My bookings",
+        "myBookingsDesc": "Appointments you requested with providers"
       }
     },
     "myBusiness": {
@@ -349,15 +351,25 @@
             },
             "smoke": {
               "label": "Did you notice smoke or sparks?",
-              "options": { "yes": "Yes", "no": "No" }
+              "options": {
+                "yes": "Yes",
+                "no": "No"
+              }
             },
             "scope": {
               "label": "How many lamps are affected?",
-              "options": { "one": "One", "several": "Several", "entireHouse": "Entire house" }
+              "options": {
+                "one": "One",
+                "several": "Several",
+                "entireHouse": "Entire house"
+              }
             },
             "sudden": {
               "label": "Did this happen suddenly?",
-              "options": { "yes": "Yes", "no": "No" }
+              "options": {
+                "yes": "Yes",
+                "no": "No"
+              }
             }
           },
           "causes": {
@@ -372,15 +384,28 @@
           "questions": {
             "location": {
               "label": "Where is the leak?",
-              "options": { "kitchen": "Kitchen", "bathroom": "Bathroom", "garden": "Garden", "other": "Other" }
+              "options": {
+                "kitchen": "Kitchen",
+                "bathroom": "Bathroom",
+                "garden": "Garden",
+                "other": "Other"
+              }
             },
             "amount": {
               "label": "How much water?",
-              "options": { "drops": "Small drops", "constant": "Constant leak", "heavy": "Heavy leak" }
+              "options": {
+                "drops": "Small drops",
+                "constant": "Constant leak",
+                "heavy": "Heavy leak"
+              }
             },
             "since": {
               "label": "Since when?",
-              "options": { "today": "Today", "fewDays": "A few days", "longTime": "A long time" }
+              "options": {
+                "today": "Today",
+                "fewDays": "A few days",
+                "longTime": "A long time"
+              }
             }
           },
           "causes": {
@@ -393,7 +418,11 @@
           "questions": {
             "where": {
               "label": "Where are you locked out of?",
-              "options": { "home": "Home", "car": "Car", "office": "Office" }
+              "options": {
+                "home": "Home",
+                "car": "Car",
+                "office": "Office"
+              }
             },
             "reason": {
               "label": "What happened?",
@@ -416,15 +445,24 @@
           "questions": {
             "engineStarts": {
               "label": "Does the engine start?",
-              "options": { "yes": "Yes", "no": "No" }
+              "options": {
+                "yes": "Yes",
+                "no": "No"
+              }
             },
             "batteryWarning": {
               "label": "Is there a battery warning light?",
-              "options": { "yes": "Yes", "no": "No" }
+              "options": {
+                "yes": "Yes",
+                "no": "No"
+              }
             },
             "unusualSounds": {
               "label": "Any unusual sounds?",
-              "options": { "yes": "Yes", "no": "No" }
+              "options": {
+                "yes": "Yes",
+                "no": "No"
+              }
             }
           },
           "causes": {
@@ -446,11 +484,18 @@
             },
             "amount": {
               "label": "How much water?",
-              "options": { "drops": "Small drops", "constant": "Constant leak", "heavy": "Heavy leak" }
+              "options": {
+                "drops": "Small drops",
+                "constant": "Constant leak",
+                "heavy": "Heavy leak"
+              }
             },
             "recentRepair": {
               "label": "Was it recently repaired or installed?",
-              "options": { "yes": "Yes", "no": "No" }
+              "options": {
+                "yes": "Yes",
+                "no": "No"
+              }
             }
           },
           "causes": {
@@ -1011,6 +1056,30 @@
       "title": "New message",
       "body": "You have a new message.",
       "attachmentBody": "You received a new attachment."
+    },
+    "bookingCreated": {
+      "title": "New booking request",
+      "body": "A customer requested an appointment."
+    },
+    "bookingAccepted": {
+      "title": "Booking confirmed",
+      "body": "Your appointment was confirmed."
+    },
+    "bookingDeclined": {
+      "title": "Booking declined",
+      "body": "Your appointment request was declined."
+    },
+    "bookingCancelled": {
+      "title": "Booking cancelled",
+      "body": "An appointment was cancelled."
+    },
+    "bookingCompleted": {
+      "title": "Service completed",
+      "body": "Your appointment was marked completed. You can leave a review."
+    },
+    "bookingReminder": {
+      "title": "Appointment reminder",
+      "body": "You have an upcoming appointment."
     }
   },
   "footer": {
@@ -1102,7 +1171,10 @@
       "upgrade": "⭐ Upgrade",
       "messages": "Messages",
       "requests": "Requests",
-      "settings": "Settings"
+      "settings": "Settings",
+      "bookings": "Bookings",
+      "calendar": "Calendar",
+      "availability": "Availability"
     },
     "requests": {
       "eyebrow": "Inbox",
@@ -2930,5 +3002,99 @@
     "description": "We ran into a problem while loading this page. Please try again.",
     "retry": "Try again",
     "backHome": "Back to home"
+  },
+  "booking": {
+    "eyebrow": "Appointments",
+    "formTitle": "Book an appointment",
+    "formSubtitle": "Choose a service and an available time slot.",
+    "loginRequired": "Log in to book an appointment.",
+    "loginCta": "Log in",
+    "service": "Service",
+    "selectService": "Select a service",
+    "duration": "Duration",
+    "minutes": "{count} min",
+    "pickSlot": "Available times",
+    "loadingSlots": "Loading slots…",
+    "noSlots": "No available slots in the next two weeks.",
+    "location": "Location / address",
+    "locationPlaceholder": "Where should the provider come?",
+    "notes": "Notes for the provider",
+    "notesPlaceholder": "Describe the job or access details…",
+    "contact": "Preferred contact",
+    "contactChat": "In-app chat",
+    "contactPhone": "Phone",
+    "contactWhatsapp": "WhatsApp",
+    "submit": "Request appointment",
+    "confirmHint": "The provider must confirm before the appointment is final.",
+    "myBookingsTitle": "My bookings",
+    "myBookingsSubtitle": "Track upcoming and past appointments.",
+    "providerBookingsTitle": "Bookings",
+    "providerBookingsSubtitle": "Incoming requests and your schedule.",
+    "detailTitle": "Appointment details",
+    "navigateTitle": "Navigate",
+    "noProvider": "Create your business profile to manage bookings.",
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "declined": "Declined",
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "rescheduled": "Rescheduled",
+      "expired": "Expired"
+    },
+    "actions": {
+      "accept": "Accept",
+      "decline": "Decline",
+      "cancel": "Cancel",
+      "complete": "Mark completed",
+      "leaveReview": "Leave a review"
+    },
+    "errors": {
+      "create_failed": "Could not create the booking.",
+      "overlap": "That time slot is no longer available.",
+      "login_required": "Please log in.",
+      "validation_error": "Check the form and try again.",
+      "forbidden": "You cannot change this booking.",
+      "not_found": "Booking not found.",
+      "invalid_status": "This action is not available for the current status.",
+      "update_failed": "Could not update the booking."
+    },
+    "calendar": {
+      "eyebrow": "Schedule",
+      "title": "Calendar",
+      "subtitle": "Day, week, month, and agenda views of your appointments.",
+      "prev": "Previous",
+      "next": "Next",
+      "today": "Today",
+      "empty": "No appointments in this range.",
+      "todayTitle": "Today's schedule",
+      "pendingTitle": "Pending approvals",
+      "views": {
+        "day": "Day",
+        "week": "Week",
+        "month": "Month",
+        "agenda": "Agenda"
+      }
+    },
+    "availability": {
+      "eyebrow": "Availability",
+      "pageTitle": "Availability settings",
+      "pageSubtitle": "Working hours come from your profile. Tune booking rules and block vacation here.",
+      "title": "Booking rules",
+      "timezone": "Timezone",
+      "durations": "Slot durations (minutes, comma-separated)",
+      "buffer": "Buffer between appointments (min)",
+      "notice": "Minimum notice (hours)",
+      "ahead": "Bookable days ahead",
+      "accepting": "Accepting new bookings",
+      "emergency": "Emergency availability",
+      "save": "Save settings",
+      "blockTitle": "Block time / vacation",
+      "blockStart": "Starts",
+      "blockEnd": "Ends",
+      "blockReason": "Reason",
+      "blockSubmit": "Block period",
+      "noProvider": "Create your business profile first."
+    }
   }
 }

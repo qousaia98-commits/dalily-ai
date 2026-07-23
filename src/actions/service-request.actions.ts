@@ -846,6 +846,23 @@ export async function submitReviewAction(
     serviceRequestId: request.id,
     metadata: { rating: parsed.data.rating },
   });
+  try {
+    const { trackBookingReviewSubmitted } = await import("@/lib/booking/completion-service");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: linkedBooking } = await (supabase as any)
+      .from("bookings")
+      .select("id")
+      .eq("service_request_id", request.id)
+      .is("deleted_at", null)
+      .maybeSingle();
+    await trackBookingReviewSubmitted({
+      bookingId: linkedBooking?.id ?? null,
+      providerId: request.provider_id,
+      actorId: authUser.id,
+    });
+  } catch {
+    /* soft analytics */
+  }
   scheduleLearningUpdate({
     providerId: request.provider_id,
     customerId: authUser.id,

@@ -1,5 +1,6 @@
 import {
   Building2,
+  CalendarClock,
   ClipboardList,
   Languages,
   LogIn,
@@ -42,6 +43,12 @@ export default async function AccountPage() {
           title: t("links.myRequests"),
           description: t("links.myRequestsDesc"),
           icon: ClipboardList,
+        },
+        {
+          href: "/account/bookings",
+          title: t("links.myBookings"),
+          description: t("links.myBookingsDesc"),
+          icon: CalendarClock,
         },
         ...(platformAdmin
           ? [

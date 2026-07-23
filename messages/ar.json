@@ -91,7 +91,9 @@
         "myRequests": "طلباتي",
         "myRequestsDesc": "تتبع طلبات الخدمة والعروض",
         "requestSettings": "إعدادات الطلبات",
-        "requestSettingsDesc": "تحكم بكيفية تواصل الزبائن معك"
+        "requestSettingsDesc": "تحكم بكيفية تواصل الزبائن معك",
+        "myBookings": "حجوزاتي",
+        "myBookingsDesc": "المواعيد التي طلبتها مع مزودي الخدمة"
       }
     },
     "myBusiness": {
@@ -349,15 +351,25 @@
             },
             "smoke": {
               "label": "هل لاحظت دخاناً أو شرراً؟",
-              "options": { "yes": "نعم", "no": "لا" }
+              "options": {
+                "yes": "نعم",
+                "no": "لا"
+              }
             },
             "scope": {
               "label": "كم عدد اللمبات المتأثرة؟",
-              "options": { "one": "واحدة", "several": "عدة لمبات", "entireHouse": "المنزل بالكامل" }
+              "options": {
+                "one": "واحدة",
+                "several": "عدة لمبات",
+                "entireHouse": "المنزل بالكامل"
+              }
             },
             "sudden": {
               "label": "هل حدث ذلك فجأة؟",
-              "options": { "yes": "نعم", "no": "لا" }
+              "options": {
+                "yes": "نعم",
+                "no": "لا"
+              }
             }
           },
           "causes": {
@@ -372,15 +384,28 @@
           "questions": {
             "location": {
               "label": "أين يوجد التسرب؟",
-              "options": { "kitchen": "المطبخ", "bathroom": "الحمام", "garden": "الحديقة", "other": "مكان آخر" }
+              "options": {
+                "kitchen": "المطبخ",
+                "bathroom": "الحمام",
+                "garden": "الحديقة",
+                "other": "مكان آخر"
+              }
             },
             "amount": {
               "label": "كمية الماء؟",
-              "options": { "drops": "قطرات قليلة", "constant": "تسرب مستمر", "heavy": "تسرب غزير" }
+              "options": {
+                "drops": "قطرات قليلة",
+                "constant": "تسرب مستمر",
+                "heavy": "تسرب غزير"
+              }
             },
             "since": {
               "label": "منذ متى؟",
-              "options": { "today": "اليوم", "fewDays": "منذ أيام قليلة", "longTime": "منذ فترة طويلة" }
+              "options": {
+                "today": "اليوم",
+                "fewDays": "منذ أيام قليلة",
+                "longTime": "منذ فترة طويلة"
+              }
             }
           },
           "causes": {
@@ -393,7 +418,11 @@
           "questions": {
             "where": {
               "label": "أين انغلق عليك الباب؟",
-              "options": { "home": "المنزل", "car": "السيارة", "office": "المكتب" }
+              "options": {
+                "home": "المنزل",
+                "car": "السيارة",
+                "office": "المكتب"
+              }
             },
             "reason": {
               "label": "ماذا حدث؟",
@@ -416,15 +445,24 @@
           "questions": {
             "engineStarts": {
               "label": "هل يعمل المحرك؟",
-              "options": { "yes": "نعم", "no": "لا" }
+              "options": {
+                "yes": "نعم",
+                "no": "لا"
+              }
             },
             "batteryWarning": {
               "label": "هل يوجد تحذير من البطارية؟",
-              "options": { "yes": "نعم", "no": "لا" }
+              "options": {
+                "yes": "نعم",
+                "no": "لا"
+              }
             },
             "unusualSounds": {
               "label": "هل هناك أصوات غير معتادة؟",
-              "options": { "yes": "نعم", "no": "لا" }
+              "options": {
+                "yes": "نعم",
+                "no": "لا"
+              }
             }
           },
           "causes": {
@@ -446,11 +484,18 @@
             },
             "amount": {
               "label": "كمية الماء؟",
-              "options": { "drops": "قطرات قليلة", "constant": "تسرب مستمر", "heavy": "تسرب غزير" }
+              "options": {
+                "drops": "قطرات قليلة",
+                "constant": "تسرب مستمر",
+                "heavy": "تسرب غزير"
+              }
             },
             "recentRepair": {
               "label": "هل تم إصلاحه أو تركيبه مؤخراً؟",
-              "options": { "yes": "نعم", "no": "لا" }
+              "options": {
+                "yes": "نعم",
+                "no": "لا"
+              }
             }
           },
           "causes": {
@@ -863,7 +908,10 @@
       "upgrade": "⭐ تطوير",
       "messages": "الرسائل",
       "requests": "الطلبات",
-      "settings": "الإعدادات"
+      "settings": "الإعدادات",
+      "bookings": "الحجوزات",
+      "calendar": "التقويم",
+      "availability": "التوفر"
     },
     "requests": {
       "eyebrow": "الوارد",
@@ -2927,6 +2975,124 @@
       "title": "رسالة جديدة",
       "body": "لديك رسالة جديدة.",
       "attachmentBody": "وصلك مرفق جديد."
+    },
+    "bookingCreated": {
+      "title": "طلب حجز جديد",
+      "body": "طلب عميل موعداً."
+    },
+    "bookingAccepted": {
+      "title": "تم تأكيد الحجز",
+      "body": "تم تأكيد موعدك."
+    },
+    "bookingDeclined": {
+      "title": "تم رفض الحجز",
+      "body": "تم رفض طلب موعدك."
+    },
+    "bookingCancelled": {
+      "title": "تم إلغاء الحجز",
+      "body": "تم إلغاء موعد."
+    },
+    "bookingCompleted": {
+      "title": "اكتملت الخدمة",
+      "body": "تم تعليم موعدك كمكتمل. يمكنك ترك تقييم."
+    },
+    "bookingReminder": {
+      "title": "تذكير بالموعد",
+      "body": "لديك موعد قادم."
+    }
+  },
+  "booking": {
+    "eyebrow": "المواعيد",
+    "formTitle": "احجز موعداً",
+    "formSubtitle": "اختر الخدمة والوقت المتاح.",
+    "loginRequired": "سجّل الدخول لحجز موعد.",
+    "loginCta": "تسجيل الدخول",
+    "service": "الخدمة",
+    "selectService": "اختر خدمة",
+    "duration": "المدة",
+    "minutes": "{count} دقيقة",
+    "pickSlot": "الأوقات المتاحة",
+    "loadingSlots": "جاري تحميل الأوقات…",
+    "noSlots": "لا توجد أوقات متاحة خلال الأسبوعين القادمين.",
+    "location": "الموقع / العنوان",
+    "locationPlaceholder": "أين يجب أن يأتي مزود الخدمة؟",
+    "notes": "ملاحظات لمزود الخدمة",
+    "notesPlaceholder": "صف المهمة أو تفاصيل الوصول…",
+    "contact": "طريقة التواصل المفضلة",
+    "contactChat": "محادثة داخل التطبيق",
+    "contactPhone": "هاتف",
+    "contactWhatsapp": "واتساب",
+    "submit": "طلب موعد",
+    "confirmHint": "يجب أن يؤكد مزود الخدمة قبل أن يصبح الموعد نهائياً.",
+    "myBookingsTitle": "حجوزاتي",
+    "myBookingsSubtitle": "تابع المواعيد القادمة والسابقة.",
+    "providerBookingsTitle": "الحجوزات",
+    "providerBookingsSubtitle": "الطلبات الواردة وجدولك.",
+    "detailTitle": "تفاصيل الموعد",
+    "navigateTitle": "التنقل",
+    "noProvider": "أنشئ ملف عملك لإدارة الحجوزات.",
+    "status": {
+      "pending": "قيد الانتظار",
+      "confirmed": "مؤكد",
+      "declined": "مرفوض",
+      "cancelled": "ملغى",
+      "completed": "مكتمل",
+      "rescheduled": "أُعيد جدولته",
+      "expired": "منتهي"
+    },
+    "actions": {
+      "accept": "قبول",
+      "decline": "رفض",
+      "cancel": "إلغاء",
+      "complete": "تعليم كمكتمل",
+      "leaveReview": "اترك تقييماً"
+    },
+    "errors": {
+      "create_failed": "تعذر إنشاء الحجز.",
+      "overlap": "هذا الوقت لم يعد متاحاً.",
+      "login_required": "يرجى تسجيل الدخول.",
+      "validation_error": "تحقق من النموذج وحاول مرة أخرى.",
+      "forbidden": "لا يمكنك تعديل هذا الحجز.",
+      "not_found": "الحجز غير موجود.",
+      "invalid_status": "هذا الإجراء غير متاح للحالة الحالية.",
+      "update_failed": "تعذر تحديث الحجز."
+    },
+    "calendar": {
+      "eyebrow": "الجدول",
+      "title": "التقويم",
+      "subtitle": "عرض يومي وأسبوعي وشهري وأجندة لمواعيدك.",
+      "prev": "السابق",
+      "next": "التالي",
+      "today": "اليوم",
+      "empty": "لا مواعيد في هذا النطاق.",
+      "todayTitle": "جدول اليوم",
+      "pendingTitle": "بانتظار الموافقة",
+      "views": {
+        "day": "يوم",
+        "week": "أسبوع",
+        "month": "شهر",
+        "agenda": "أجندة"
+      }
+    },
+    "availability": {
+      "eyebrow": "التوفر",
+      "pageTitle": "إعدادات التوفر",
+      "pageSubtitle": "ساعات العمل من ملفك. اضبط قواعد الحجز واحظر الإجازات هنا.",
+      "title": "قواعد الحجز",
+      "timezone": "المنطقة الزمنية",
+      "durations": "مدد الفترات (دقائق، مفصولة بفواصل)",
+      "buffer": "فاصل بين المواعيد (دقيقة)",
+      "notice": "حد أدنى للإشعار المسبق (ساعات)",
+      "ahead": "أيام الحجز المسبقة",
+      "accepting": "قبول حجوزات جديدة",
+      "emergency": "توفر طارئ",
+      "save": "حفظ الإعدادات",
+      "blockTitle": "حظر وقت / إجازة",
+      "blockStart": "يبدأ",
+      "blockEnd": "ينتهي",
+      "blockReason": "السبب",
+      "blockSubmit": "حظر الفترة",
+      "noProvider": "أنشئ ملف عملك أولاً."
     }
   }
 }

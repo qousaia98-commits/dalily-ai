@@ -14,6 +14,7 @@ import {
 } from "@/lib/reviews/queries";
 import { resolveTrustBadges } from "@/lib/reviews/trust-score";
 import { fetchCompletedJobsByProviderIds } from "@/lib/search/smart-match";
+import { createClient } from "@/lib/supabase/server";
 
 type ProviderPageProps = {
   params: Promise<{ id: string; locale: string }>;
@@ -40,22 +41,32 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
   if (!provider) notFound();
 
   const authUser = await getAuthUser();
+  const locale = (await getLocale()) as Locale;
   const reviewSort = parseReviewSort(sp.reviewSort);
   const reviewPage = Math.max(1, Number(sp.reviewPage) || 1);
 
-  const [pending, settings, reviewStats, reviewPageData, jobsMap, owned] = await Promise.all([
-    authUser != null ? hasPendingRequest(authUser.id, provider.id) : Promise.resolve(false),
-    getProviderRequestSettings(provider.id),
-    getProviderReviewStats(provider.id),
-    listProviderReviews({
-      providerId: provider.id,
-      sort: reviewSort,
-      page: reviewPage,
-      viewerId: authUser?.id ?? null,
-    }),
-    fetchCompletedJobsByProviderIds([provider.id]),
-    authUser ? getOwnedProvider(authUser.id) : Promise.resolve(null),
-  ]);
+  const supabase = await createClient();
+  const [pending, settings, reviewStats, reviewPageData, jobsMap, owned, servicesResult] =
+    await Promise.all([
+      authUser != null ? hasPendingRequest(authUser.id, provider.id) : Promise.resolve(false),
+      getProviderRequestSettings(provider.id),
+      getProviderReviewStats(provider.id),
+      listProviderReviews({
+        providerId: provider.id,
+        sort: reviewSort,
+        page: reviewPage,
+        viewerId: authUser?.id ?? null,
+      }),
+      fetchCompletedJobsByProviderIds([provider.id]),
+      authUser ? getOwnedProvider(authUser.id) : Promise.resolve(null),
+      supabase
+        .from("provider_services")
+        .select("id, name")
+        .eq("provider_id", provider.id)
+        .eq("is_active", true)
+        .is("deleted_at", null)
+        .order("sort_order"),
+    ]);
 
   const trustBadges = resolveTrustBadges({
     ratingAvg: reviewStats.ratingAvg || provider.rating,
@@ -65,6 +76,14 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
     responseTimeHours: provider.responseTimeHours,
     completedJobs: jobsMap.get(provider.id) ?? 0,
   });
+
+  const bookingServices = (servicesResult.data ?? []).map((row) => ({
+    id: row.id,
+    name: getLocalizedText(
+      (row.name ?? { ar: "", en: "" }) as { ar: string; en: string },
+      locale,
+    ),
+  }));
 
   return (
     <main className="flex flex-1 flex-col pb-16 pt-0">
@@ -83,6 +102,7 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
         trustBadges={trustBadges}
         canVoteReviews={Boolean(authUser)}
         canReplyReviews={Boolean(owned && owned.id === provider.id)}
+        bookingServices={bookingServices}
       />
     </main>
   );

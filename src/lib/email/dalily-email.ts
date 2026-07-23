@@ -172,6 +172,28 @@ export async function sendPaymentApprovedEmail(input: {
   });
 }
 
+export async function sendBookingCompletionPromptEmail(input: {
+  to: string;
+  locale?: string;
+  href: string;
+}) {
+  const isAr = input.locale === "ar";
+  return sendEmail({
+    tag: "booking_completion_prompt",
+    to: input.to,
+    subject: isAr ? "هل اكتملت الخدمة؟ — دليلي" : "Has your service been completed? — Dalily",
+    html: isAr
+      ? `<p>مرحباً،</p>
+         <p>انتهى موعدك. هل اكتملت الخدمة؟</p>
+         <p><a href="${input.href}">أكد الإتمام أو أبلغ عن مشكلة</a></p>
+         <p>دليلي</p>`
+      : `<p>Hi,</p>
+         <p>Your appointment time has passed. Has the service been completed?</p>
+         <p><a href="${input.href}">Confirm completion or report an issue</a></p>
+         <p>— Dalily</p>`,
+  });
+}
+
 export async function sendPaymentRejectedEmail(
   input: LocaleInput & {
     planLabel: string;

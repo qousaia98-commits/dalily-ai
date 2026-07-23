@@ -12,6 +12,9 @@ import {
   MessageCircle,
   Inbox,
   Settings,
+  CalendarDays,
+  CalendarClock,
+  Clock3,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
@@ -24,6 +27,9 @@ import type { PlanSlug } from "@/lib/subscription/types";
 const navItems = [
   { href: "/business", icon: LayoutDashboard, key: "dashboard", exact: true },
   { href: "/business/requests", icon: Inbox, key: "requests", badgeKey: "requests" as const },
+  { href: "/business/bookings", icon: CalendarClock, key: "bookings" },
+  { href: "/business/calendar", icon: CalendarDays, key: "calendar" },
+  { href: "/business/availability", icon: Clock3, key: "availability" },
   { href: "/business/messages", icon: MessageCircle, key: "messages", badgeKey: "messages" as const },
   { href: "/business/profile", icon: User, key: "profile" },
   { href: "/business/services", icon: Wrench, key: "services" },

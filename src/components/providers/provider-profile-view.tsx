@@ -30,6 +30,7 @@ import { haversineKm, formatDistanceKm } from "@/lib/geo/distance";
 import { CITY_CENTROIDS } from "@/lib/geo/city-centroids";
 import type { PublicReview, ProviderReviewStats, ReviewSort } from "@/lib/reviews/types";
 import type { TrustBadgeId } from "@/lib/reviews/trust-score";
+import { BookingForm } from "@/components/booking/booking-form";
 
 type ProviderProfileViewProps = {
   provider: PublicProviderProfile;
@@ -46,6 +47,7 @@ type ProviderProfileViewProps = {
   trustBadges: TrustBadgeId[];
   canVoteReviews: boolean;
   canReplyReviews?: boolean;
+  bookingServices?: { id: string; name: string }[];
 };
 
 export async function ProviderProfileView({
@@ -63,6 +65,7 @@ export async function ProviderProfileView({
   trustBadges,
   canVoteReviews,
   canReplyReviews = false,
+  bookingServices = [],
 }: ProviderProfileViewProps) {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("provider");
@@ -254,6 +257,12 @@ export async function ProviderProfileView({
                 )}
               </CardContent>
             </Card>
+
+            <BookingForm
+              providerId={provider.id}
+              services={bookingServices}
+              isLoggedIn={isLoggedIn}
+            />
 
             <Card>
               <CardHeader>
