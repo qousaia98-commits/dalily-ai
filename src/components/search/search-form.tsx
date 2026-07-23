@@ -8,6 +8,7 @@ import { useRouter } from "@/lib/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { VoiceSearchButton } from "@/components/search/voice-search-button";
+import { VisionUploadControl } from "@/components/search/vision-upload-control";
 import { DiagnosisWizard } from "@/components/search/diagnosis-wizard";
 import { detectDiagnosisAction } from "@/actions/diagnosis.actions";
 import { URGENCY_PARAM } from "@/lib/diagnosis/url";
@@ -37,6 +38,7 @@ export function SearchForm({
   const [query, setQuery] = useState(defaultQuery);
   const [error, setError] = useState<string | null>(null);
   const [voiceLanguage, setVoiceLanguage] = useState<string | null>(null);
+  const [fromVision, setFromVision] = useState(false);
   const [mode, setMode] = useState<"input" | "wizard">("input");
   const [activeProblemId, setActiveProblemId] = useState<ProblemId | null>(null);
   const [checking, startChecking] = useTransition();
@@ -58,12 +60,36 @@ export function SearchForm({
       params.delete("voice");
       params.delete("lang");
     }
+    if (fromVision) {
+      params.set("vision", "1");
+      setFromVision(false);
+    } else {
+      params.delete("vision");
+    }
     if (urgencyOverride) {
       params.set(URGENCY_PARAM, urgencyOverride);
     } else {
       params.delete(URGENCY_PARAM);
     }
     router.push(`/search?${params.toString()}`);
+  }
+
+  function enterPipeline(trimmed: string, options?: { skipDiagnosis?: boolean; urgency?: string }) {
+    setError(null);
+    startChecking(async () => {
+      if (options?.skipDiagnosis && options.urgency) {
+        navigate(trimmed, options.urgency);
+        return;
+      }
+
+      const detection = await detectDiagnosisAction(trimmed);
+      if (detection) {
+        setActiveProblemId(detection.problemId);
+        setMode("wizard");
+      } else {
+        navigate(trimmed, options?.urgency);
+      }
+    });
   }
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -81,16 +107,8 @@ export function SearchForm({
       return;
     }
 
-    setError(null);
-    startChecking(async () => {
-      const detection = await detectDiagnosisAction(trimmed);
-      if (detection) {
-        setActiveProblemId(detection.problemId);
-        setMode("wizard");
-      } else {
-        navigate(trimmed);
-      }
-    });
+    setFromVision(false);
+    enterPipeline(trimmed);
   };
 
   if (mode === "wizard" && activeProblemId) {
@@ -110,7 +128,7 @@ export function SearchForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className={cn("w-full", className)} noValidate>
+    <form onSubmit={handleSubmit} className={cn("w-full space-y-3", className)} noValidate>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute start-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
@@ -119,6 +137,7 @@ export function SearchForm({
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);
+              setFromVision(false);
               if (error) setError(null);
             }}
             placeholder={t("placeholder")}
@@ -137,6 +156,7 @@ export function SearchForm({
             onTranscript={(text, language) => {
               setQuery(text);
               setVoiceLanguage(language);
+              setFromVision(false);
               if (error) setError(null);
             }}
           />
@@ -163,6 +183,35 @@ export function SearchForm({
           {t("submit")}
         </Button>
       </div>
+
+      <VisionUploadControl
+        compact={isCompact}
+        onError={(message) => setError(message)}
+        onAnalyzed={({ decision, diagnosisProblemId }) => {
+          setFromVision(true);
+          setVoiceLanguage(null);
+          setQuery(decision.queryText);
+          setError(null);
+
+          if (decision.skipDiagnosis && decision.urgencyOverride) {
+            enterPipeline(decision.queryText, {
+              skipDiagnosis: true,
+              urgency: decision.urgencyOverride,
+            });
+            return;
+          }
+
+          if (diagnosisProblemId) {
+            setActiveProblemId(diagnosisProblemId);
+            setMode("wizard");
+            return;
+          }
+
+          enterPipeline(decision.queryText, {
+            urgency: decision.urgencyOverride ?? undefined,
+          });
+        }}
+      />
     </form>
   );
 }
