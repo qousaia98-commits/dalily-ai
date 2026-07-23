@@ -5,6 +5,8 @@ import { Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { createProviderAction, type ProviderActionState } from "@/actions/provider.actions";
 import { LocalizedFieldInput } from "@/components/business/localized-field-input";
+import { FieldError } from "@/components/forms/field-error";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,6 +36,8 @@ export function ProviderCreateForm({ categoryGroups }: ProviderCreateFormProps) 
   const [category, setCategory] = useState("");
   const [city, setCity] = useState("");
   const [state, formAction, isPending] = useActionState(createProviderAction, initialState);
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId: "provider-create" });
 
   return (
     <Card>
@@ -42,7 +46,7 @@ export function ProviderCreateForm({ categoryGroups }: ProviderCreateFormProps) 
         <CardDescription>{t("subtitle")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="space-y-4">
+        <form action={formAction} className="space-y-4" noValidate onSubmit={guardSubmit}>
           <input type="hidden" name="locale" value={locale} />
           <input type="hidden" name="category" value={category} />
           <input type="hidden" name="city" value={city} />
@@ -52,6 +56,9 @@ export function ProviderCreateForm({ categoryGroups }: ProviderCreateFormProps) 
             label={t("name")}
             required
             disabled={isPending}
+            formId="provider-create"
+            errorMessage={fieldErrors.businessName}
+            onValueChange={() => clearFieldError("businessName")}
           />
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
@@ -83,11 +90,29 @@ export function ProviderCreateForm({ categoryGroups }: ProviderCreateFormProps) 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="phone">{t("phone")}</Label>
-              <Input id="phone" name="phone" type="tel" required disabled={isPending} />
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                disabled={isPending}
+                {...requiredAttr}
+                {...getFieldA11y("phone")}
+                onChange={() => clearFieldError("phone")}
+              />
+              <FieldError name="phone" formId="provider-create" message={fieldErrors.phone} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">{t("email")}</Label>
-              <Input id="email" name="email" type="email" required disabled={isPending} />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                disabled={isPending}
+                {...requiredAttr}
+                {...getFieldA11y("email")}
+                onChange={() => clearFieldError("email")}
+              />
+              <FieldError name="email" formId="provider-create" message={fieldErrors.email} />
             </div>
           </div>
           <LocalizedFieldInput
@@ -98,6 +123,9 @@ export function ProviderCreateForm({ categoryGroups }: ProviderCreateFormProps) 
             rows={4}
             required
             disabled={isPending}
+            formId="provider-create"
+            errorMessage={fieldErrors.about}
+            onValueChange={() => clearFieldError("about")}
           />
           {state.error ? (
             <p className="text-sm text-destructive">{t(`errors.${state.error}` as "errors.unknown")}</p>

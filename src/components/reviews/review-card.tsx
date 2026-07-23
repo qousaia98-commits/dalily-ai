@@ -16,6 +16,8 @@ import {
 } from "@/actions/review.actions";
 import type { PublicReview } from "@/lib/reviews/types";
 import { cn } from "@/lib/utils";
+import { FieldError } from "@/components/forms/field-error";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 
 type Props = {
   review: PublicReview;
@@ -34,6 +36,9 @@ export function ReviewCard({ review, canVote, canReply = false }: Props) {
   const [replyState, replyAction, replyPending] = useActionState(replyToReviewAction, {
     success: false,
   });
+  const formId = `reply-${review.id}`;
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId });
 
   useEffect(() => {
     if (replyState.success) router.refresh();
@@ -119,7 +124,12 @@ export function ReviewCard({ review, canVote, canReply = false }: Props) {
           <p className="mt-1 text-sm text-foreground">{review.providerReply}</p>
         </div>
       ) : canReply ? (
-        <form action={replyAction} className="space-y-2 rounded-xl border border-dashed border-border p-3">
+        <form
+          action={replyAction}
+          className="space-y-2 rounded-xl border border-dashed border-border p-3"
+          noValidate
+          onSubmit={guardSubmit}
+        >
           <input type="hidden" name="reviewId" value={review.id} />
           <label className="text-xs font-semibold text-muted-foreground" htmlFor={`reply-${review.id}`}>
             {t("providerReply")}
@@ -128,12 +138,15 @@ export function ReviewCard({ review, canVote, canReply = false }: Props) {
             id={`reply-${review.id}`}
             name="reply"
             rows={3}
-            required
             minLength={2}
             maxLength={2000}
             className="rounded-xl"
             placeholder={t("replyPlaceholder")}
+            {...requiredAttr}
+            {...getFieldA11y("reply")}
+            onChange={() => clearFieldError("reply")}
           />
+          <FieldError name="reply" formId={formId} message={fieldErrors.reply} />
           {replyState.error ? (
             <p className="text-sm text-destructive" role="alert">
               {t(`errors.${replyState.error}` as "errors.failed")}

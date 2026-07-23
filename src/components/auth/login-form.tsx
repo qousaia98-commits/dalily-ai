@@ -7,6 +7,8 @@ import { Link } from "@/lib/i18n/routing";
 import { Loader2 } from "lucide-react";
 import { loginAction, type AuthActionState } from "@/actions/auth.actions";
 import { sanitizeAppRedirect } from "@/lib/auth/safe-redirect";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
+import { FieldError } from "@/components/forms/field-error";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,6 +31,8 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = sanitizeAppRedirect(searchParams.get("redirect"));
   const [state, formAction, isPending] = useActionState(loginAction, initialState);
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId: "login" });
 
   const errorMessage =
     resolveError(t, state.error) ??
@@ -42,7 +46,12 @@ export function LoginForm() {
         <CardDescription>{t("subtitle")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="space-y-4">
+        <form
+          action={formAction}
+          className="space-y-4"
+          noValidate
+          onSubmit={guardSubmit}
+        >
           {redirectTo ? <input type="hidden" name="redirect" value={redirectTo} /> : null}
           <div className="space-y-2">
             <Label htmlFor="email">{t("email")}</Label>
@@ -51,10 +60,13 @@ export function LoginForm() {
               name="email"
               type="email"
               autoComplete="email"
-              required
               disabled={isPending}
-              aria-invalid={Boolean(state.fieldErrors?.email)}
+              {...requiredAttr}
+              {...getFieldA11y("email")}
+              aria-invalid={Boolean(fieldErrors.email || state.fieldErrors?.email)}
+              onChange={() => clearFieldError("email")}
             />
+            <FieldError name="email" formId="login" message={fieldErrors.email} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">{t("password")}</Label>
@@ -63,10 +75,13 @@ export function LoginForm() {
               name="password"
               type="password"
               autoComplete="current-password"
-              required
               disabled={isPending}
-              aria-invalid={Boolean(state.fieldErrors?.password)}
+              {...requiredAttr}
+              {...getFieldA11y("password")}
+              aria-invalid={Boolean(fieldErrors.password || state.fieldErrors?.password)}
+              onChange={() => clearFieldError("password")}
             />
+            <FieldError name="password" formId="login" message={fieldErrors.password} />
           </div>
           {errorMessage ? (
             <p className="text-sm text-destructive" role="alert">

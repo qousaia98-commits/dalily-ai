@@ -9,6 +9,8 @@ import {
   type VerificationActionState,
 } from "@/actions/verification.actions";
 import type { BusinessVerificationView } from "@/lib/verification/queries";
+import { FieldError } from "@/components/forms/field-error";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,13 +34,21 @@ function DocUpload({
   const te = useTranslations("business.verification");
   const router = useRouter();
   const [state, action, pending] = useActionState(uploadVerificationDocumentAction, initial);
+  const formId = `onboard-${docType}`;
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId });
 
   useEffect(() => {
     if (state.success) router.refresh();
   }, [state.success, router]);
 
   return (
-    <form action={action} className="space-y-2.5 rounded-2xl border border-border/80 bg-card p-4">
+    <form
+      action={action}
+      className="space-y-2.5 rounded-2xl border border-border/80 bg-card p-4"
+      noValidate
+      onSubmit={guardSubmit}
+    >
       <input type="hidden" name="docType" value={docType} />
       <input type="hidden" name="providerId" value={providerId} />
       <div className="flex items-center justify-between gap-2">
@@ -57,10 +67,13 @@ function DocUpload({
         name="file"
         type="file"
         accept="image/jpeg,image/png,image/webp"
-        required={!uploaded}
         disabled={disabled || pending}
         className="rounded-xl"
+        {...(!uploaded ? requiredAttr : {})}
+        {...getFieldA11y("file")}
+        onChange={() => clearFieldError("file")}
       />
+      <FieldError name="file" formId={formId} message={fieldErrors.file} />
       <Button
         type="submit"
         variant="outline"

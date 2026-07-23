@@ -34,6 +34,8 @@ import {
 } from "@/lib/service-requests/status-machine";
 import { useMarketplaceRealtime } from "@/hooks/use-marketplace-realtime";
 import { SuccessMoment } from "@/components/shared/success-moment";
+import { FieldError } from "@/components/forms/field-error";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 
 const initial: ServiceRequestActionState = { success: false };
 
@@ -333,6 +335,8 @@ function QuoteForm({ requestId }: { requestId: string }) {
   const te = useTranslations("marketplace.errors");
   const router = useRouter();
   const [state, action, pending] = useActionState(sendQuoteAction, initial);
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId: "quote" });
 
   useEffect(() => {
     if (state.success) router.refresh();
@@ -343,7 +347,12 @@ function QuoteForm({ requestId }: { requestId: string }) {
   }
 
   return (
-    <form action={action} className="space-y-3 rounded-3xl border border-border bg-card p-5 shadow-sm">
+    <form
+      action={action}
+      className="space-y-3 rounded-3xl border border-border bg-card p-5 shadow-sm"
+      noValidate
+      onSubmit={guardSubmit}
+    >
       <input type="hidden" name="requestId" value={requestId} />
       <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
         {t("sendTitle")}
@@ -351,7 +360,18 @@ function QuoteForm({ requestId }: { requestId: string }) {
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="price">{t("price")}</Label>
-          <Input id="price" name="price" type="number" min={0} step="0.01" required className="rounded-xl" />
+          <Input
+            id="price"
+            name="price"
+            type="number"
+            min={0}
+            step="0.01"
+            className="rounded-xl"
+            {...requiredAttr}
+            {...getFieldA11y("price")}
+            onChange={() => clearFieldError("price")}
+          />
+          <FieldError name="price" formId="quote" message={fieldErrors.price} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="currency">{t("currency")}</Label>
@@ -389,6 +409,8 @@ function DisputeForm({ requestId }: { requestId: string }) {
   const te = useTranslations("marketplace.errors");
   const router = useRouter();
   const [state, action, pending] = useActionState(reportProblemAction, initial);
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId: "dispute" });
 
   useEffect(() => {
     if (state.success) router.refresh();
@@ -399,10 +421,24 @@ function DisputeForm({ requestId }: { requestId: string }) {
   }
 
   return (
-    <form action={action} className="mt-4 space-y-3 border-t border-border pt-4">
+    <form
+      action={action}
+      className="mt-4 space-y-3 border-t border-border pt-4"
+      noValidate
+      onSubmit={guardSubmit}
+    >
       <input type="hidden" name="requestId" value={requestId} />
       <Label htmlFor="note">{t("disputeNote")}</Label>
-      <Textarea id="note" name="note" required rows={3} className="rounded-xl" />
+      <Textarea
+        id="note"
+        name="note"
+        rows={3}
+        className="rounded-xl"
+        {...requiredAttr}
+        {...getFieldA11y("note")}
+        onChange={() => clearFieldError("note")}
+      />
+      <FieldError name="note" formId="dispute" message={fieldErrors.note} />
       {state.error ? (
         <p className="text-sm text-destructive" role="alert">
           {te(state.error as "failed")}
@@ -422,6 +458,9 @@ function ReviewForm({ requestId }: { requestId: string }) {
   const router = useRouter();
   const [state, action, pending] = useActionState(submitReviewAction, initial);
   const [rating, setRating] = useState(0);
+  const { fieldErrors, guardSubmit, clearFieldError } = useClientFormValidation({
+    formId: "review",
+  });
 
   useEffect(() => {
     if (state.success) router.refresh();
@@ -432,14 +471,24 @@ function ReviewForm({ requestId }: { requestId: string }) {
   }
 
   return (
-    <form action={action} className={cn("space-y-3 rounded-3xl border border-border bg-card p-5 shadow-sm")}>
+    <form
+      action={action}
+      className={cn("space-y-3 rounded-3xl border border-border bg-card p-5 shadow-sm")}
+      noValidate
+      onSubmit={guardSubmit}
+    >
       <input type="hidden" name="requestId" value={requestId} />
       <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">{t("formTitle")}</h2>
       <InteractiveStarRating
         label={t("rating")}
         value={rating}
-        onChange={setRating}
+        onChange={(value) => {
+          setRating(value);
+          clearFieldError("rating");
+        }}
         disabled={pending}
+        errorMessage={fieldErrors.rating}
+        formId="review"
       />
       <div className="space-y-1.5">
         <Label htmlFor="comment">{t("comment")}</Label>

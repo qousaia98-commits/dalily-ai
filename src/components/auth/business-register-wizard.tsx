@@ -132,7 +132,7 @@ export function BusinessRegisterWizard({
         </p>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="space-y-4">
+        <form action={formAction} className="space-y-4" noValidate>
           <input type="hidden" name="locale" value={locale} />
           <input type="hidden" name="businessName" value={form.businessName} />
           <input type="hidden" name="category" value={form.category} />

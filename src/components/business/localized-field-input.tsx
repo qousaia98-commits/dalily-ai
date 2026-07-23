@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { previewLocalizedFieldAction } from "@/actions/translation.actions";
+import { FieldError } from "@/components/forms/field-error";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +20,9 @@ type LocalizedFieldInputProps = {
   rows?: number;
   required?: boolean;
   disabled?: boolean;
+  errorMessage?: string | null;
+  formId?: string;
+  onValueChange?: () => void;
 };
 
 export function LocalizedFieldInput({
@@ -32,6 +36,9 @@ export function LocalizedFieldInput({
   rows = 4,
   required = false,
   disabled = false,
+  errorMessage,
+  formId,
+  onValueChange,
 }: LocalizedFieldInputProps) {
   const locale = useLocale() as Locale;
   const t = useTranslations("business.translation");
@@ -54,20 +61,28 @@ export function LocalizedFieldInput({
     });
   };
 
+  const errorId = formId ? `${formId}-${name}-error` : `${name}-error`;
+
   const fieldProps = {
     id,
     name,
     defaultValue,
-    required,
+    ...(required
+      ? ({ "data-required": true, "aria-required": true } as const)
+      : {}),
     disabled: disabled || isPending,
     onBlur: handleBlur,
+    onChange: onValueChange,
     dir: locale === "ar" ? ("rtl" as const) : ("ltr" as const),
+    "aria-invalid": Boolean(errorMessage) || undefined,
+    "aria-describedby": errorMessage ? errorId : undefined,
   };
 
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
       {multiline ? <Textarea {...fieldProps} rows={rows} /> : <Input {...fieldProps} />}
+      <FieldError name={name} formId={formId} message={errorMessage} />
       {isPending ? <p className="text-xs text-muted-foreground">{t("translating")}</p> : null}
       {preview ? (
         <p className="text-xs text-muted-foreground">{t("preview", { text: preview })}</p>

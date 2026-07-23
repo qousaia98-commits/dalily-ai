@@ -16,6 +16,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { SuccessMoment } from "@/components/shared/success-moment";
 import { RequestOptimizerHints } from "@/components/service-requests/request-optimizer-hints";
+import { FieldError } from "@/components/forms/field-error";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 
 const initialState: ServiceRequestActionState = { success: false };
 
@@ -46,6 +48,8 @@ export function SendRequestButton({
   const [preferredDate, setPreferredDate] = useState("");
   const [preferredTime, setPreferredTime] = useState("");
   const [locationText, setLocationText] = useState("");
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId: "send-request" });
 
   const close = useCallback(() => {
     setOpen(false);
@@ -152,7 +156,12 @@ export function SendRequestButton({
               </button>
             </div>
 
-            <form action={formAction} className="flex flex-1 flex-col overflow-hidden">
+            <form
+              action={formAction}
+              className="flex flex-1 flex-col overflow-hidden"
+              noValidate
+              onSubmit={guardSubmit}
+            >
               <input type="hidden" name="providerId" value={providerId} />
               <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">
                 <div className="space-y-2">
@@ -160,11 +169,14 @@ export function SendRequestButton({
                   <Input
                     id="request-title"
                     name="title"
-                    required
                     maxLength={200}
                     placeholder={t("fields.titlePlaceholder")}
                     className="rounded-xl"
+                    {...requiredAttr}
+                    {...getFieldA11y("title")}
+                    onChange={() => clearFieldError("title")}
                   />
+                  <FieldError name="title" formId="send-request" message={fieldErrors.title} />
                   {state.fieldErrors?.title ? (
                     <p className="text-xs text-destructive">{t("errors.title")}</p>
                   ) : null}
@@ -175,13 +187,22 @@ export function SendRequestButton({
                   <Textarea
                     id="request-description"
                     name="description"
-                    required
                     rows={5}
                     maxLength={4000}
                     placeholder={t("fields.descriptionPlaceholder")}
                     className="min-h-[120px] rounded-xl resize-y"
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={(e) => {
+                      setDescription(e.target.value);
+                      clearFieldError("description");
+                    }}
+                    {...requiredAttr}
+                    {...getFieldA11y("description")}
+                  />
+                  <FieldError
+                    name="description"
+                    formId="send-request"
+                    message={fieldErrors.description}
                   />
                   {state.fieldErrors?.description ? (
                     <p className="text-xs text-destructive">{t("errors.description")}</p>

@@ -13,6 +13,8 @@ import {
   type ProviderActionState,
 } from "@/actions/provider.actions";
 import { LocalizedFieldInput } from "@/components/business/localized-field-input";
+import { FieldError } from "@/components/forms/field-error";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -83,6 +85,9 @@ export function ProviderProfileEditor({
   const [submitPending, setSubmitPending] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
+  const profileValidation = useClientFormValidation({ formId: "profile-basic" });
+  const contactValidation = useClientFormValidation({ formId: "profile-contact" });
+
   const handleDelete = async () => {
     if (!confirm(t("deleteConfirm"))) return;
     setDeletePending(true);
@@ -118,7 +123,12 @@ export function ProviderProfileEditor({
               <CardTitle>{t("basicInfo")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <form action={profileAction} className="space-y-4">
+              <form
+                action={profileAction}
+                className="space-y-4"
+                noValidate
+                onSubmit={profileValidation.guardSubmit}
+              >
                 <input type="hidden" name="locale" value={locale} />
                 <input type="hidden" name="category" value={category} />
                 <input type="hidden" name="city" value={city} />
@@ -130,6 +140,9 @@ export function ProviderProfileEditor({
                   existingAr={provider.name.ar}
                   existingEn={provider.name.en}
                   required
+                  formId="profile-basic"
+                  errorMessage={profileValidation.fieldErrors.businessName}
+                  onValueChange={() => profileValidation.clearFieldError("businessName")}
                 />
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
@@ -187,11 +200,29 @@ export function ProviderProfileEditor({
               <CardTitle>{t("contactInfo")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <form action={contactAction} className="space-y-4">
+              <form
+                action={contactAction}
+                className="space-y-4"
+                noValidate
+                onSubmit={contactValidation.guardSubmit}
+              >
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="phone">{t("phone")}</Label>
-                    <Input id="phone" name="phone" type="tel" defaultValue={provider.phone ?? ""} required />
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      defaultValue={provider.phone ?? ""}
+                      {...contactValidation.requiredAttr}
+                      {...contactValidation.getFieldA11y("phone")}
+                      onChange={() => contactValidation.clearFieldError("phone")}
+                    />
+                    <FieldError
+                      name="phone"
+                      formId="profile-contact"
+                      message={contactValidation.fieldErrors.phone}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="whatsapp">{t("whatsapp")}</Label>
@@ -211,7 +242,14 @@ export function ProviderProfileEditor({
                       name="email"
                       type="email"
                       defaultValue={provider.email ?? ""}
-                      required
+                      {...contactValidation.requiredAttr}
+                      {...contactValidation.getFieldA11y("email")}
+                      onChange={() => contactValidation.clearFieldError("email")}
+                    />
+                    <FieldError
+                      name="email"
+                      formId="profile-contact"
+                      message={contactValidation.fieldErrors.email}
                     />
                   </div>
                   <div className="space-y-2">
@@ -284,7 +322,7 @@ export function ProviderProfileEditor({
               <CardTitle>{t("workingHours")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <form action={hoursAction} className="space-y-4">
+              <form action={hoursAction} className="space-y-4" noValidate>
                 <input type="hidden" name="hours" value={JSON.stringify(hours)} />
                 <div className="space-y-3">
                   {hours.map((hour) => (

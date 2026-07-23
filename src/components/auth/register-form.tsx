@@ -5,6 +5,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import { registerAction, type AuthActionState } from "@/actions/auth.actions";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
+import { FieldError } from "@/components/forms/field-error";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +29,8 @@ export function RegisterForm() {
   const t = useTranslations("auth.register");
   const locale = useLocale() as Locale;
   const [state, formAction, isPending] = useActionState(registerAction, initialState);
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId: "register" });
 
   const errorMessage = resolveError(t, state.error);
 
@@ -52,15 +56,38 @@ export function RegisterForm() {
         <CardDescription>{t("subtitle")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="space-y-4">
+        <form
+          action={formAction}
+          className="space-y-4"
+          noValidate
+          onSubmit={guardSubmit}
+        >
           <input type="hidden" name="locale" value={locale} />
           <div className="space-y-2">
             <Label htmlFor="name">{t("name")}</Label>
-            <Input id="name" name="name" required disabled={isPending} minLength={2} />
+            <Input
+              id="name"
+              name="name"
+              disabled={isPending}
+              minLength={2}
+              {...requiredAttr}
+              {...getFieldA11y("name")}
+              onChange={() => clearFieldError("name")}
+            />
+            <FieldError name="name" formId="register" message={fieldErrors.name} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">{t("email")}</Label>
-            <Input id="email" name="email" type="email" required disabled={isPending} />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              disabled={isPending}
+              {...requiredAttr}
+              {...getFieldA11y("email")}
+              onChange={() => clearFieldError("email")}
+            />
+            <FieldError name="email" formId="register" message={fieldErrors.email} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">{t("password")}</Label>
@@ -68,10 +95,13 @@ export function RegisterForm() {
               id="password"
               name="password"
               type="password"
-              required
               disabled={isPending}
               minLength={6}
+              {...requiredAttr}
+              {...getFieldA11y("password")}
+              onChange={() => clearFieldError("password")}
             />
+            <FieldError name="password" formId="register" message={fieldErrors.password} />
           </div>
           {errorMessage ? (
             <p className="text-sm text-destructive" role="alert">

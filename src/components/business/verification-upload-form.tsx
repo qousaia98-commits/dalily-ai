@@ -11,6 +11,8 @@ import {
 } from "@/actions/verification.actions";
 import type { BusinessVerificationView } from "@/lib/verification/queries";
 import type { ProviderStatus } from "@/types/database.types";
+import { FieldError } from "@/components/forms/field-error";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,9 +41,17 @@ function UploadField({
 }) {
   const t = useTranslations("business.verification");
   const [state, action, pending] = useActionState(uploadVerificationDocumentAction, initialState);
+  const formId = `verify-${docType}`;
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId });
 
   return (
-    <form action={action} className="space-y-2 rounded-lg border p-4">
+    <form
+      action={action}
+      className="space-y-2 rounded-lg border p-4"
+      noValidate
+      onSubmit={guardSubmit}
+    >
       <div className="flex items-center justify-between gap-2">
         <Label htmlFor={`${docType}-file`}>{label}</Label>
         {uploaded ? (
@@ -56,9 +66,12 @@ function UploadField({
         name="file"
         type="file"
         accept="image/jpeg,image/png,image/webp"
-        required={!uploaded}
         disabled={disabled || pending}
+        {...(!uploaded ? requiredAttr : {})}
+        {...getFieldA11y("file")}
+        onChange={() => clearFieldError("file")}
       />
+      <FieldError name="file" formId={formId} message={fieldErrors.file} />
       <Button type="submit" variant="outline" className="gap-2" disabled={disabled || pending}>
         {pending ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
         {t("upload")}
@@ -154,6 +167,7 @@ export function VerificationUploadForm({
             {allUploaded ? (
               <form
                 action={submitAction}
+                noValidate
                 onSubmit={() => {
                   setTimeout(() => router.refresh(), 300);
                 }}

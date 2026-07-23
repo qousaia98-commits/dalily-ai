@@ -12,6 +12,8 @@ import {
 } from "@/actions/verification.actions";
 import type { AdminVerificationItem } from "@/lib/verification/queries";
 import { getLocalizedField } from "@/types/provider.types";
+import { FieldError } from "@/components/forms/field-error";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -56,6 +58,9 @@ function RejectForm({ providerId }: { providerId: string }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState(rejectVerificationAction, initialState);
+  const formId = `reject-${providerId}`;
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId });
 
   if (!open) {
     return (
@@ -70,7 +75,11 @@ function RejectForm({ providerId }: { providerId: string }) {
     <form
       action={action}
       className="flex w-full flex-col gap-2 sm:flex-row sm:items-end"
-      onSubmit={() => setTimeout(() => router.refresh(), 300)}
+      noValidate
+      onSubmit={(event) => {
+        if (!guardSubmit(event)) return;
+        setTimeout(() => router.refresh(), 300);
+      }}
     >
       <input type="hidden" name="providerId" value={providerId} />
       <div className="flex-1 space-y-1">
@@ -78,10 +87,17 @@ function RejectForm({ providerId }: { providerId: string }) {
         <Input
           id={`reject-${providerId}`}
           name="rejectionReason"
-          required
           minLength={3}
           maxLength={500}
           placeholder={t("rejectionPlaceholder")}
+          {...requiredAttr}
+          {...getFieldA11y("rejectionReason")}
+          onChange={() => clearFieldError("rejectionReason")}
+        />
+        <FieldError
+          name="rejectionReason"
+          formId={formId}
+          message={fieldErrors.rejectionReason}
         />
       </div>
       <div className="flex gap-2">

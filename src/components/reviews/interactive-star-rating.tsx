@@ -1,6 +1,7 @@
 "use client";
 
 import { Star } from "lucide-react";
+import { FieldError } from "@/components/forms/field-error";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -9,6 +10,8 @@ type Props = {
   onChange: (value: number) => void;
   disabled?: boolean;
   label: string;
+  errorMessage?: string | null;
+  formId?: string;
 };
 
 export function InteractiveStarRating({
@@ -17,12 +20,28 @@ export function InteractiveStarRating({
   onChange,
   disabled,
   label,
+  errorMessage,
+  formId,
 }: Props) {
+  const errorId = formId ? `${formId}-${name}-error` : `${name}-error`;
+
   return (
-    <fieldset className="space-y-2" disabled={disabled}>
+    <fieldset className="space-y-2" disabled={disabled} aria-describedby={errorMessage ? errorId : undefined}>
       <legend className="text-sm font-medium">{label}</legend>
-      <input type="hidden" name={name} value={value || ""} required />
-      <div className="flex gap-1" role="radiogroup" aria-label={label}>
+      <input
+        type="hidden"
+        name={name}
+        value={value || ""}
+        data-required
+        aria-required={true}
+        aria-invalid={Boolean(errorMessage) || undefined}
+      />
+      <div
+        className="flex gap-1"
+        role="radiogroup"
+        aria-label={label}
+        aria-invalid={Boolean(errorMessage) || undefined}
+      >
         {[1, 2, 3, 4, 5].map((n) => {
           const active = n <= value;
           return (
@@ -45,6 +64,7 @@ export function InteractiveStarRating({
           );
         })}
       </div>
+      <FieldError name={name} formId={formId} message={errorMessage} />
     </fieldset>
   );
 }

@@ -5,6 +5,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { Building2, Check, Loader2, MapPin } from "lucide-react";
 import { saveOnboardingProfileAction } from "@/actions/provider.actions";
 import { CategorySelect } from "@/components/categories/category-select";
+import { FieldError } from "@/components/forms/field-error";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 import type { CategoryGroupWithLeaves } from "@/lib/categories/types";
 import type { ManagedProvider } from "@/types/provider.types";
 import { getLocalizedField } from "@/types/provider.types";
@@ -62,6 +64,13 @@ export function OnboardingProfileStep({
   );
   const [category, setCategory] = useState(categorySlug);
   const [city, setCity] = useState(citySlugFromId(provider.cityId));
+  const {
+    fieldErrors,
+    validateForm,
+    getFieldA11y,
+    requiredAttr,
+    clearFieldError,
+  } = useClientFormValidation({ formId: "onboarding-profile" });
 
   function persist() {
     const form = formRef.current;
@@ -96,6 +105,8 @@ export function OnboardingProfileStep({
   function handleFinish() {
     const form = formRef.current;
     if (!form) return;
+    if (!validateForm(form)) return;
+
     const fd = new FormData(form);
     setError(null);
 
@@ -122,6 +133,7 @@ export function OnboardingProfileStep({
       <form
         ref={formRef}
         className="space-y-4"
+        noValidate
         onSubmit={(e) => {
           e.preventDefault();
           handleFinish();
@@ -137,11 +149,18 @@ export function OnboardingProfileStep({
             value={businessName}
             onChange={(e) => {
               setBusinessName(e.target.value);
+              clearFieldError("businessName");
               scheduleAutosave();
             }}
-            required
             minLength={2}
             className="h-12 rounded-xl"
+            {...requiredAttr}
+            {...getFieldA11y("businessName")}
+          />
+          <FieldError
+            name="businessName"
+            formId="onboarding-profile"
+            message={fieldErrors.businessName}
           />
         </div>
 
@@ -169,12 +188,15 @@ export function OnboardingProfileStep({
             value={phone}
             onChange={(e) => {
               setPhone(e.target.value);
+              clearFieldError("phone");
               scheduleAutosave();
             }}
-            required
             minLength={7}
             className="h-12 rounded-xl"
+            {...requiredAttr}
+            {...getFieldA11y("phone")}
           />
+          <FieldError name="phone" formId="onboarding-profile" message={fieldErrors.phone} />
         </div>
 
         <div className="space-y-1.5">
@@ -185,13 +207,16 @@ export function OnboardingProfileStep({
             value={about}
             onChange={(e) => {
               setAbout(e.target.value);
+              clearFieldError("about");
               scheduleAutosave();
             }}
-            required
             minLength={10}
             rows={4}
             className="rounded-xl"
+            {...requiredAttr}
+            {...getFieldA11y("about")}
           />
+          <FieldError name="about" formId="onboarding-profile" message={fieldErrors.about} />
         </div>
 
         <div className="space-y-1.5">
@@ -230,14 +255,17 @@ export function OnboardingProfileStep({
               value={address}
               onChange={(e) => {
                 setAddress(e.target.value);
+                clearFieldError("address");
                 scheduleAutosave();
               }}
-              required
               minLength={3}
               className="h-12 rounded-xl ps-10"
               placeholder={t("addressPlaceholder")}
+              {...requiredAttr}
+              {...getFieldA11y("address")}
             />
           </div>
+          <FieldError name="address" formId="onboarding-profile" message={fieldErrors.address} />
         </div>
 
         <div className="flex min-h-5 items-center justify-center gap-1.5 text-xs text-muted-foreground">

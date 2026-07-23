@@ -10,6 +10,8 @@ import {
   updateCategoryAction,
 } from "@/actions/admin-category.actions";
 import { CategoryIcon } from "@/components/categories/category-icon";
+import { FieldError } from "@/components/forms/field-error";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 import { localizedField } from "@/lib/categories/format";
 import type { CategoryRecord } from "@/lib/categories/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -65,6 +67,8 @@ export function AdminCategoryManager({ categories }: AdminCategoryManagerProps) 
   const [pending, startTransition] = useTransition();
   const [editor, setEditor] = useState<EditorState | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
+    useClientFormValidation({ formId: "admin-category" });
 
   const groups = useMemo(
     () => categories.filter((category) => category.depth === 0),
@@ -138,6 +142,8 @@ export function AdminCategoryManager({ categories }: AdminCategoryManagerProps) 
           <CardContent>
             <form
               className="grid gap-4 sm:grid-cols-2"
+              noValidate
+              onSubmit={guardSubmit}
               action={(formData) => {
                 run(() =>
                   editor.id ? updateCategoryAction(formData) : createCategoryAction(formData),
@@ -154,9 +160,14 @@ export function AdminCategoryManager({ categories }: AdminCategoryManagerProps) 
                   id="slug"
                   name="slug"
                   value={editor.slug}
-                  onChange={(e) => setEditor({ ...editor, slug: e.target.value })}
-                  required
+                  onChange={(e) => {
+                    setEditor({ ...editor, slug: e.target.value });
+                    clearFieldError("slug");
+                  }}
+                  {...requiredAttr}
+                  {...getFieldA11y("slug")}
                 />
+                <FieldError name="slug" formId="admin-category" message={fieldErrors.slug} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="icon">{t("fields.icon")}</Label>
@@ -165,13 +176,18 @@ export function AdminCategoryManager({ categories }: AdminCategoryManagerProps) 
                     id="icon"
                     name="icon"
                     value={editor.icon}
-                    onChange={(e) => setEditor({ ...editor, icon: e.target.value })}
-                    required
+                    onChange={(e) => {
+                      setEditor({ ...editor, icon: e.target.value });
+                      clearFieldError("icon");
+                    }}
+                    {...requiredAttr}
+                    {...getFieldA11y("icon")}
                   />
                   <div className="flex size-10 items-center justify-center rounded-md border">
                     <CategoryIcon name={editor.icon} />
                   </div>
                 </div>
+                <FieldError name="icon" formId="admin-category" message={fieldErrors.icon} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="nameEn">{t("fields.nameEn")}</Label>
@@ -179,9 +195,14 @@ export function AdminCategoryManager({ categories }: AdminCategoryManagerProps) 
                   id="nameEn"
                   name="nameEn"
                   value={editor.nameEn}
-                  onChange={(e) => setEditor({ ...editor, nameEn: e.target.value })}
-                  required
+                  onChange={(e) => {
+                    setEditor({ ...editor, nameEn: e.target.value });
+                    clearFieldError("nameEn");
+                  }}
+                  {...requiredAttr}
+                  {...getFieldA11y("nameEn")}
                 />
+                <FieldError name="nameEn" formId="admin-category" message={fieldErrors.nameEn} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="nameAr">{t("fields.nameAr")}</Label>
@@ -189,10 +210,15 @@ export function AdminCategoryManager({ categories }: AdminCategoryManagerProps) 
                   id="nameAr"
                   name="nameAr"
                   value={editor.nameAr}
-                  onChange={(e) => setEditor({ ...editor, nameAr: e.target.value })}
+                  onChange={(e) => {
+                    setEditor({ ...editor, nameAr: e.target.value });
+                    clearFieldError("nameAr");
+                  }}
                   dir="rtl"
-                  required
+                  {...requiredAttr}
+                  {...getFieldA11y("nameAr")}
                 />
+                <FieldError name="nameAr" formId="admin-category" message={fieldErrors.nameAr} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="descriptionEn">{t("fields.descriptionEn")}</Label>
@@ -222,10 +248,17 @@ export function AdminCategoryManager({ categories }: AdminCategoryManagerProps) 
                   name="sortOrder"
                   type="number"
                   value={editor.sortOrder}
-                  onChange={(e) =>
-                    setEditor({ ...editor, sortOrder: Number(e.target.value) || 0 })
-                  }
-                  required
+                  onChange={(e) => {
+                    setEditor({ ...editor, sortOrder: Number(e.target.value) || 0 });
+                    clearFieldError("sortOrder");
+                  }}
+                  {...requiredAttr}
+                  {...getFieldA11y("sortOrder")}
+                />
+                <FieldError
+                  name="sortOrder"
+                  formId="admin-category"
+                  message={fieldErrors.sortOrder}
                 />
               </div>
               {editor.depth === 1 ? (

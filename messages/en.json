@@ -11,7 +11,13 @@
     "theme": "Theme",
     "light": "Light",
     "dark": "Dark",
-    "system": "System"
+    "system": "System",
+    "validation": {
+      "required": "This field is required",
+      "email": "Please enter a valid email address",
+      "minLength": "Please enter a longer value",
+      "selectRequired": "Please make a selection"
+    }
   },
   "nav": {
     "search": "Search",

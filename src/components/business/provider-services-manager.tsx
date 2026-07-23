@@ -11,6 +11,7 @@ import {
   type ProviderActionState,
 } from "@/actions/provider.actions";
 import { LocalizedFieldInput } from "@/components/business/localized-field-input";
+import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLocalizedField, type ManagedProvider } from "@/types/provider.types";
@@ -30,13 +31,15 @@ function EditServiceForm({
   const t = useTranslations("business.services");
   const locale = useLocale() as Locale;
   const [state, formAction, pending] = useActionState(updateServiceAction, initialState);
+  const formId = `edit-service-${service.id}`;
+  const { fieldErrors, guardSubmit, clearFieldError } = useClientFormValidation({ formId });
 
   useEffect(() => {
     if (state.success) onSaved();
   }, [state.success, onSaved]);
 
   return (
-    <form action={formAction} className="space-y-3">
+    <form action={formAction} className="space-y-3" noValidate onSubmit={guardSubmit}>
       <input type="hidden" name="serviceId" value={service.id} />
       <input type="hidden" name="locale" value={locale} />
       <LocalizedFieldInput
@@ -48,6 +51,9 @@ function EditServiceForm({
         existingEn={service.name.en}
         required
         disabled={pending}
+        formId={formId}
+        errorMessage={fieldErrors.name}
+        onValueChange={() => clearFieldError("name")}
       />
       <div className="flex gap-2">
         <Button type="submit" size="sm" disabled={pending} className="gap-2">
@@ -69,6 +75,9 @@ export function ProviderServicesManager({ provider }: { provider: ManagedProvide
   const [addState, addAction, addPending] = useActionState(addServiceAction, initialState);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  const { fieldErrors, guardSubmit, clearFieldError } = useClientFormValidation({
+    formId: "add-service",
+  });
 
   return (
     <div className="space-y-6">
@@ -121,7 +130,7 @@ export function ProviderServicesManager({ provider }: { provider: ManagedProvide
             ))}
           </ul>
 
-          <form action={addAction} className="space-y-3 border-t pt-4">
+          <form action={addAction} className="space-y-3 border-t pt-4" noValidate onSubmit={guardSubmit}>
             <input type="hidden" name="locale" value={locale} />
             <p className="text-sm font-medium">{t("addNew")}</p>
             <LocalizedFieldInput
@@ -130,6 +139,9 @@ export function ProviderServicesManager({ provider }: { provider: ManagedProvide
               label={t("name")}
               required
               disabled={addPending}
+              formId="add-service"
+              errorMessage={fieldErrors.name}
+              onValueChange={() => clearFieldError("name")}
             />
             {addState.error ? (
               <p className="text-sm text-destructive">{t(`errors.${addState.error}` as "errors.unknown")}</p>

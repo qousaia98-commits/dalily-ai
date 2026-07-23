@@ -19,7 +19,11 @@ export function RequestSettingsForm({ settings }: { settings: ProviderRequestSet
   const [state, action, pending] = useActionState(saveProviderRequestSettingsAction, initial);
 
   return (
-    <form action={action} className="space-y-5 rounded-3xl border border-border bg-card p-5 shadow-sm">
+    <form
+      action={action}
+      className="space-y-5 rounded-3xl border border-border bg-card p-5 shadow-sm"
+      noValidate
+    >
       <div className="flex items-center justify-between gap-3">
         <div>
           <Label htmlFor="acceptingRequests">{t("accepting")}</Label>

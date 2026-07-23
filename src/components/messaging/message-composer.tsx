@@ -33,7 +33,7 @@ export function MessageComposer({ conversationId }: { conversationId: string }) 
   };
 
   return (
-    <form onSubmit={onSubmit} className="border-t border-border px-4 py-3">
+    <form onSubmit={onSubmit} className="border-t border-border px-4 py-3" noValidate>
       <div className="flex gap-2">
         <Textarea
           value={body}
