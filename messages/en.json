@@ -899,18 +899,21 @@
       "profileStrength": {
         "eyebrow": "Grow faster",
         "title": "Complete your profile",
-        "subtitle": "Businesses with a complete profile receive more customer requests.",
+        "subtitle": "Complete profiles receive more customer requests on Dalily.",
+        "bonusHint": "Logo, photos, hours and services are optional — add them anytime from your dashboard.",
+        "optional": "Optional",
         "label": "Profile strength",
         "progressAria": "Profile strength {percent} percent",
-        "cta": "Continue",
+        "cta": "Improve profile",
         "completeTitle": "Your business profile is complete.",
-        "completeBody": "You’re ready to attract more customers on Dalily.",
+        "completeBody": "Strong profiles get more visibility and customer requests.",
         "items": {
           "identity": "Identity verified",
           "profile": "Business profile completed",
-          "logo": "Upload your logo",
-          "gallery": "Add at least 3 photos",
-          "hours": "Add opening hours"
+          "logo": "Upload logo",
+          "gallery": "Upload work photos",
+          "hours": "Add opening hours",
+          "services": "Add more services"
         }
       },
       "upgradeCard": {
@@ -1041,8 +1044,8 @@
     },
     "onboarding": {
       "eyebrow": "Business setup",
-      "title": "Let’s get your business ready",
-      "subtitle": "Two short steps. We’ll guide you — no hunting for pages.",
+      "title": "Register your business",
+      "subtitle": "Account, identity, then profile essentials — logo and photos come later.",
       "progressLabel": "Onboarding progress",
       "stepOf": "Step {current} of {total}",
       "submitting": "Submitting for review…",
@@ -1053,7 +1056,7 @@
       },
       "identity": {
         "title": "Verify your identity",
-        "subtitle": "Upload clear photos of your ID. This helps customers trust your business.",
+        "subtitle": "Upload clear photos of your government ID. This is required to register.",
         "why": "Dalily verifies every business so customers can book with confidence. Your documents are reviewed privately by our team.",
         "idFront": "ID front",
         "idBack": "ID back",
@@ -1065,33 +1068,33 @@
       },
       "profile": {
         "title": "Your business profile",
-        "subtitle": "Confirm the essentials customers need to find and contact you.",
+        "subtitle": "Name, category, description, city and contact — enough to go live. Photos are optional later.",
         "businessName": "Business name",
         "category": "Category",
         "categoryPlaceholder": "Choose a category",
         "phone": "Phone number",
         "description": "Description",
-        "city": "City",
+        "city": "City / service area",
         "address": "Address / area",
         "addressPlaceholder": "Neighbourhood or street",
-        "autosaveHint": "Changes save automatically.",
+        "autosaveHint": "Changes save automatically. Logo and gallery are not required here.",
         "saving": "Saving…",
         "saved": "Saved",
         "back": "Back",
-        "finish": "Finish setup",
+        "finish": "Finish registration",
         "errors": {
           "validation": "Please check all fields and try again."
         }
       },
       "success": {
-        "title": "Your business profile has been created successfully.",
-        "review": "We are reviewing your verification.",
-        "dashboardHint": "You can already access your dashboard.",
+        "title": "Your business is registered.",
+        "review": "We are reviewing your identity verification.",
+        "dashboardHint": "Open your dashboard — add logo and photos anytime to get more requests.",
         "cta": "Go to Dashboard",
         "bullets": {
-          "created": "Your business profile is ready.",
+          "created": "Your business profile essentials are ready.",
           "reviewing": "Our team is reviewing your identity documents.",
-          "access": "You can explore your dashboard while you wait."
+          "access": "Complete optional extras on the dashboard to attract more customers."
         }
       }
     },

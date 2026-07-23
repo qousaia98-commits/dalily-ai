@@ -11,6 +11,14 @@ function hasBothLocales(value: LocalizedJson | null | undefined): boolean {
   return Boolean(value.ar.trim() && value.en.trim());
 }
 
+/**
+ * Profile completeness for ranking & UI.
+ *
+ * Core business fields alone can reach a strong score — logo/gallery/cover
+ * are optional richness, never a large penalty for missing photos.
+ *
+ * Core max ≈ 88 · Optional media/hours bonus ≈ +12 → 100
+ */
 export function calculateProfileCompleteness(input: {
   name: LocalizedJson;
   about: LocalizedJson | null;
@@ -26,30 +34,34 @@ export function calculateProfileCompleteness(input: {
   galleryCount: number;
   workingHours: WorkingHour[];
 }): number {
-  let score = 0;
+  let core = 0;
 
-  if (hasBothLocales(input.name)) score += 10;
-  else if (hasText(input.name)) score += 5;
+  if (hasBothLocales(input.name)) core += 16;
+  else if (hasText(input.name)) core += 10;
 
-  if (hasBothLocales(input.about)) score += 10;
-  else if (hasText(input.about)) score += 5;
+  if (hasBothLocales(input.about)) core += 16;
+  else if (hasText(input.about)) core += 10;
 
-  if (input.phone?.trim()) score += 5;
-  if (input.whatsapp?.trim()) score += 5;
-  if (input.email?.trim()) score += 5;
-  if (input.website?.trim()) score += 5;
-  if (input.categoryId && input.cityId) score += 10;
-  if (input.avatarImageId) score += 15;
-  if (input.coverImageId) score += 10;
-  if (input.servicesCount > 0) score += 15;
-  if (input.galleryCount > 0) score += 10;
+  if (input.phone?.trim()) core += 12;
+  if (input.whatsapp?.trim()) core += 8;
+  if (input.email?.trim()) core += 6;
+  if (input.website?.trim()) core += 5;
+  if (input.categoryId && input.cityId) core += 15;
+  if (input.servicesCount > 0) core += 10;
+
+  // Optional richness — small positive bonus only (not required to rank well)
+  let bonus = 0;
+  if (input.avatarImageId) bonus += 4;
+  if (input.coverImageId) bonus += 2;
+  if (input.galleryCount >= 3) bonus += 4;
+  else if (input.galleryCount > 0) bonus += 2;
 
   const configuredHours = input.workingHours.filter(
     (h) => h.isClosed || (h.opensAt && h.closesAt),
   );
-  if (configuredHours.length >= 5) score += 5;
+  if (configuredHours.length >= 5) bonus += 4;
 
-  return Math.min(100, score);
+  return Math.min(100, core + bonus);
 }
 
 export function completenessFromProvider(provider: ManagedProvider): number {

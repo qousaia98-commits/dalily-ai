@@ -13,6 +13,10 @@ export type BusinessHealthResult = {
   suggestions: HealthChecklistItem[];
 };
 
+/**
+ * Business health for growth UI.
+ * Core trust/contact/location dominate — media is a small optional boost.
+ */
 export function calculateBusinessHealth(provider: ManagedProvider): BusinessHealthResult {
   const configuredHours = provider.workingHours.filter(
     (h) => h.isClosed || (h.opensAt && h.closesAt),
@@ -20,66 +24,66 @@ export function calculateBusinessHealth(provider: ManagedProvider): BusinessHeal
 
   const items: HealthChecklistItem[] = [
     {
-      id: "logo",
-      done: Boolean(provider.avatarImageId),
-      weight: 12,
-      suggestionKey: "logo",
-    },
-    {
-      id: "cover",
-      done: Boolean(provider.coverImageId),
-      weight: 10,
-      suggestionKey: "cover",
-    },
-    {
-      id: "gallery",
-      done: provider.gallery.length >= 3,
-      weight: 12,
-      suggestionKey: "gallery",
-    },
-    {
-      id: "description",
-      done: Boolean(provider.about?.ar?.trim() || provider.about?.en?.trim()),
-      weight: 12,
-      suggestionKey: "description",
-    },
-    {
-      id: "hours",
-      done: configuredHours >= 5,
-      weight: 10,
-      suggestionKey: "hours",
-    },
-    {
       id: "verification",
       done:
         provider.verificationStatus === "verified" ||
         provider.verificationStatus === "partially_verified",
-      weight: 14,
+      weight: 18,
       suggestionKey: "verification",
+    },
+    {
+      id: "description",
+      done: Boolean(provider.about?.ar?.trim() || provider.about?.en?.trim()),
+      weight: 14,
+      suggestionKey: "description",
     },
     {
       id: "phone",
       done: Boolean(provider.phone?.trim()),
-      weight: 8,
+      weight: 12,
       suggestionKey: "phone",
     },
     {
       id: "whatsapp",
       done: Boolean(provider.whatsapp?.trim()),
-      weight: 8,
+      weight: 10,
       suggestionKey: "whatsapp",
-    },
-    {
-      id: "categories",
-      done: Boolean(provider.categoryId) && provider.services.length > 0,
-      weight: 8,
-      suggestionKey: "categories",
     },
     {
       id: "location",
       done: Boolean(provider.cityId),
-      weight: 6,
+      weight: 10,
       suggestionKey: "location",
+    },
+    {
+      id: "categories",
+      done: Boolean(provider.categoryId) && provider.services.length > 0,
+      weight: 10,
+      suggestionKey: "categories",
+    },
+    {
+      id: "hours",
+      done: configuredHours >= 5,
+      weight: 8,
+      suggestionKey: "hours",
+    },
+    {
+      id: "logo",
+      done: Boolean(provider.avatarImageId),
+      weight: 6,
+      suggestionKey: "logo",
+    },
+    {
+      id: "cover",
+      done: Boolean(provider.coverImageId),
+      weight: 5,
+      suggestionKey: "cover",
+    },
+    {
+      id: "gallery",
+      done: provider.gallery.length >= 3,
+      weight: 7,
+      suggestionKey: "gallery",
     },
   ];
 

@@ -124,9 +124,11 @@ export function scoreSpecialization(
   matchesTarget: boolean,
   profileCompleteness: number,
 ): number {
-  const completeness = clamp01(profileCompleteness / 100);
-  if (matchesTarget) return clamp01(0.75 + completeness * 0.25);
-  return clamp01(0.35 + completeness * 0.25);
+  // Category match dominates. Completeness is only a small positive bonus —
+  // missing photos must not tank ranking (completeness is media-light).
+  const base = matchesTarget ? 0.82 : 0.4;
+  const richnessBonus = clamp01(profileCompleteness / 100) * 0.12;
+  return clamp01(base + richnessBonus);
 }
 
 /** Premium / plan lift — intentionally small in Smart Match. */
@@ -155,10 +157,11 @@ export function scoreBusinessQuality(
   const completeness = clamp01(provider.profile_completeness / 100);
   const trust = clamp01(provider.trust_score / 100);
   return clamp01(
-    verification * 0.35 +
-      rating * 0.3 +
+    verification * 0.38 +
+      rating * 0.32 +
       response * 0.2 +
-      ((completeness + trust) / 2) * 0.15,
+      // Small profile richness signal — never dominated by media gaps
+      ((completeness + trust) / 2) * 0.1,
   );
 }
 

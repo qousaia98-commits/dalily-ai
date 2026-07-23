@@ -9,7 +9,8 @@ export type ProfileStrengthItemId =
   | "profile"
   | "logo"
   | "gallery"
-  | "hours";
+  | "hours"
+  | "services";
 
 export type ProfileStrengthItem = {
   id: ProfileStrengthItemId;
@@ -134,6 +135,10 @@ export function getProfileStrength(
     {
       id: "hours",
       done: hasConfiguredOpeningHours(provider),
+    },
+    {
+      id: "services",
+      done: provider.services.length > 0,
     },
   ];
 

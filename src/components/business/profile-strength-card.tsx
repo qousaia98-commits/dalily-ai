@@ -7,6 +7,7 @@ import {
   IdCard,
   ImageIcon,
   Images,
+  ListChecks,
   Sparkles,
 } from "lucide-react";
 import type { ProfileStrength } from "@/lib/business/onboarding";
@@ -14,11 +15,12 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const ITEM_META = {
-  identity: { href: "/business/verification", icon: IdCard },
-  profile: { href: "/business/profile", icon: Sparkles },
-  logo: { href: "/business/profile", icon: ImageIcon },
-  gallery: { href: "/business/gallery", icon: Images },
-  hours: { href: "/business/profile", icon: Clock3 },
+  identity: { href: "/business/verification", icon: IdCard, optional: false },
+  profile: { href: "/business/profile", icon: Sparkles, optional: false },
+  logo: { href: "/business/profile", icon: ImageIcon, optional: true },
+  gallery: { href: "/business/gallery", icon: Images, optional: true },
+  hours: { href: "/business/profile", icon: Clock3, optional: true },
+  services: { href: "/business/profile", icon: ListChecks, optional: true },
 } as const;
 
 type Props = {
@@ -52,6 +54,9 @@ export async function ProfileStrengthCard({ strength }: Props) {
 
   const nextIncomplete = strength.items.find((item) => !item.done);
   const nextHref = nextIncomplete ? ITEM_META[nextIncomplete.id].href : "/business/profile";
+  const optionalIncomplete = strength.items.filter(
+    (item) => !item.done && ITEM_META[item.id].optional,
+  );
 
   return (
     <section
@@ -70,6 +75,9 @@ export async function ProfileStrengthCard({ strength }: Props) {
             {t("title")}
           </h2>
           <p className="max-w-md text-sm leading-relaxed text-muted-foreground">{t("subtitle")}</p>
+          {optionalIncomplete.length > 0 ? (
+            <p className="max-w-md text-xs leading-relaxed text-muted-foreground">{t("bonusHint")}</p>
+          ) : null}
         </div>
         <div className="rounded-2xl bg-[var(--dalily-navy)] px-3 py-2 text-center text-white">
           <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-white/70">
@@ -122,6 +130,11 @@ export async function ProfileStrengthCard({ strength }: Props) {
                 >
                   {t(`items.${item.id}`)}
                 </span>
+                {!item.done && meta.optional ? (
+                  <span className="text-[0.65rem] font-semibold uppercase tracking-wide text-muted-foreground">
+                    {t("optional")}
+                  </span>
+                ) : null}
               </Link>
             </li>
           );
