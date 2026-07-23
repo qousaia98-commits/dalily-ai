@@ -26,18 +26,30 @@ export async function transcribeVoiceQueryAction(
   formData: FormData,
 ): Promise<TranscribeVoiceQueryResult> {
   const file = formData.get("audio");
+  console.log("[voice] transcribeVoiceQueryAction received:", {
+    isFile: file instanceof File,
+    size: file instanceof File ? file.size : null,
+    type: file instanceof File ? file.type : null,
+  });
+
   if (!(file instanceof File) || file.size === 0) {
+    console.error("[voice] rejected: no audio file in FormData (or empty)");
     return { success: false, error: "no_audio" };
   }
   if (file.size > MAX_AUDIO_BYTES) {
+    console.error(`[voice] rejected: file too large (${file.size} bytes > ${MAX_AUDIO_BYTES})`);
     return { success: false, error: "file_too_large" };
   }
   if (file.type && !isAllowedAudioType(file.type)) {
+    console.error(`[voice] rejected: unsupported mime type "${file.type}"`);
     return { success: false, error: "invalid_file_type" };
   }
 
   const apiKey = process.env.SEARCH_LLM_API_KEY ?? process.env.OPENAI_API_KEY;
   if (!apiKey) {
+    console.error(
+      "[voice] transcription skipped: no SEARCH_LLM_API_KEY/OPENAI_API_KEY configured",
+    );
     return { success: false, error: "transcription_failed" };
   }
 
@@ -50,6 +62,12 @@ export async function transcribeVoiceQueryAction(
     openaiForm.set("model", "whisper-1");
     openaiForm.set("response_format", "verbose_json");
 
+    console.log("[voice] sending to Whisper:", {
+      size: file.size,
+      type: file.type,
+      name: file.name,
+    });
+
     const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}` },
@@ -58,17 +76,22 @@ export async function transcribeVoiceQueryAction(
     });
 
     if (!response.ok) {
+      const body = await response.text().catch(() => "");
+      console.error(`[voice] Whisper request failed (${response.status}):`, body);
       return { success: false, error: "transcription_failed" };
     }
 
     const payload = (await response.json()) as { text?: string; language?: string };
+    console.log("[voice] Whisper response:", payload);
     const text = payload.text?.trim();
     if (!text) {
+      console.error("[voice] Whisper returned an empty transcript");
       return { success: false, error: "transcription_failed" };
     }
 
     return { success: true, text, language: payload.language ?? null };
-  } catch {
+  } catch (error) {
+    console.error("[voice] transcription request threw:", error);
     return { success: false, error: "transcription_failed" };
   } finally {
     clearTimeout(timeout);

@@ -10,7 +10,13 @@ import { transcribeVoiceQueryAction } from "@/actions/voice.actions";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "permission" | "recording" | "transcribing" | "ready" | "error";
-type ErrorReason = "permission_denied" | "not_supported" | "transcription_failed";
+type ErrorReason =
+  | "permission_denied"
+  | "not_supported"
+  | "no_audio"
+  | "file_too_large"
+  | "invalid_file_type"
+  | "transcription_failed";
 
 type Props = {
   onTranscript: (text: string, language: string | null) => void;
@@ -51,12 +57,24 @@ export function VoiceSearchButton({ onTranscript, className }: Props) {
     const blob = await recorder.stop();
     recorderRef.current = null;
 
+    console.log("[voice] recorded blob:", { size: blob.size, type: blob.type });
+
+    if (blob.size === 0) {
+      console.error("[voice] recording produced an empty blob — mic captured no audio data");
+      setErrorReason("no_audio");
+      setStatus("error");
+      return;
+    }
+
     const formData = new FormData();
     formData.set("audio", blob, "voice-query.webm");
 
+    console.log("[voice] calling transcribeVoiceQueryAction...");
     const result = await transcribeVoiceQueryAction(formData);
+    console.log("[voice] transcribeVoiceQueryAction result:", result);
+
     if (!result.success) {
-      setErrorReason("transcription_failed");
+      setErrorReason(result.error);
       setStatus("error");
       return;
     }
@@ -81,11 +99,13 @@ export function VoiceSearchButton({ onTranscript, className }: Props) {
   }, [finishRecording]);
 
   const startRecording = useCallback(async () => {
+    console.log("[voice] mic clicked — requesting getUserMedia permission");
     setStatus("permission");
     const recorder = new VoiceRecorder();
     try {
       await recorder.start();
     } catch (error) {
+      console.error("[voice] recorder.start() failed:", error);
       const reason: ErrorReason =
         error instanceof VoiceRecorderError && error.reason !== "unknown"
           ? error.reason
@@ -95,6 +115,7 @@ export function VoiceSearchButton({ onTranscript, className }: Props) {
       return;
     }
 
+    console.log("[voice] recording started");
     recorderRef.current = recorder;
     setElapsedMs(0);
     setStatus("recording");

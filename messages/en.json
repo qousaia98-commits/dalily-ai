@@ -275,6 +275,9 @@
       "errors": {
         "permission_denied": "Microphone access was denied. Enable it in your browser settings to use voice search.",
         "not_supported": "Voice search isn't supported in this browser.",
+        "no_audio": "We didn't capture any audio. Please try recording again.",
+        "file_too_large": "That recording is too long or too large. Please try a shorter recording.",
+        "invalid_file_type": "That recording format isn't supported. Please try again.",
         "transcription_failed": "We couldn't understand that. Please try again or type your search."
       }
     },
