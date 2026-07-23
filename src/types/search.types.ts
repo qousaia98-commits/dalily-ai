@@ -27,6 +27,10 @@ export type ProviderListItem = {
   completedJobs?: number;
   /** Why Dalily recommends this business */
   matchReasons?: import("@/lib/search/smart-match/reasons").MatchReason[];
+  /** Sprint 40 — recommendation badges (1–3) */
+  recommendationBadges?: import("@/lib/dalily-ranking/types").RecommendationBadge[];
+  /** Sprint 40 — overall Dalily Score 0–100 */
+  dalilyScore?: number;
   /**
    * Match confidence from Learning data quality.
    * null/undefined = hide indicator (insufficient data). Never invent.

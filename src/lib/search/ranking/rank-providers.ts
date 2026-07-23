@@ -9,6 +9,8 @@ import {
   toRankingSnapshot,
 } from "@/lib/search/ranking/ranking-engine";
 import { applyLearningLayer } from "@/lib/search/learning/layer";
+import { applyDalilyRankingLayer } from "@/lib/dalily-ranking/apply-layer";
+import type { DalilyScoreBreakdown, RecommendationBadge } from "@/lib/dalily-ranking/types";
 import type {
   CustomerPreferenceProfile,
   MatchConfidence,
@@ -42,6 +44,8 @@ export type RankProvidersContext = {
   performanceByProviderId?: Map<string, ProviderPerformanceRow>;
   customerPreferences?: CustomerPreferenceProfile | null;
   applyLearning?: boolean;
+  /** Sprint 40 Dalily Ranking — default on */
+  applyDalilyRanking?: boolean;
 };
 
 export type RankProvidersResult = {
@@ -49,10 +53,13 @@ export type RankProvidersResult = {
   candidates: RankedCandidate[];
   snapshot: RankingSnapshotEntry[];
   confidenceByProviderId?: Map<string, MatchConfidence | null>;
+  dalilyBreakdownByProviderId?: Map<string, DalilyScoreBreakdown>;
+  recommendationBadgesByProviderId?: Map<string, RecommendationBadge[]>;
 };
 
 /**
- * Canonical ranking entry — Smart Match first, then optional Learning Layer.
+ * Canonical ranking entry:
+ * Smart Match → Learning Layer → Dalily Ranking (Sprint 40).
  */
 export function rankProvidersDetailed(
   rows: ProviderRow[],
@@ -89,11 +96,32 @@ export function rankProvidersDetailed(
     confidenceByProviderId = learned.confidenceByProviderId;
   }
 
+  let dalilyBreakdownByProviderId: Map<string, DalilyScoreBreakdown> | undefined;
+  let recommendationBadgesByProviderId: Map<string, RecommendationBadge[]> | undefined;
+
+  if (context.applyDalilyRanking !== false) {
+    const dalily = applyDalilyRankingLayer({
+      candidates,
+      sort: context.sort,
+      performanceByProviderId: context.performanceByProviderId,
+      targetCategorySlug: context.targetCategorySlug,
+      categorySlugByProviderId: context.categorySlugByProviderId,
+      radiusKm: context.radiusKm,
+    });
+    candidates = dalily.candidates;
+    dalilyBreakdownByProviderId = dalily.breakdownByProviderId;
+    recommendationBadgesByProviderId = new Map(
+      dalily.candidates.map((c) => [c.provider.id, c.recommendationBadges]),
+    );
+  }
+
   return {
     providers: candidates.map((c) => c.provider),
     candidates,
     snapshot: toRankingSnapshot(candidates),
     confidenceByProviderId,
+    dalilyBreakdownByProviderId,
+    recommendationBadgesByProviderId,
   };
 }
 

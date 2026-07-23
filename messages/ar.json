@@ -655,6 +655,17 @@
         "highest_rated": "الأعلى تقييماً",
         "verified": "الموثقون أولاً"
       }
+    },
+    "recommendationBadges": {
+      "label": "شارات التوصية",
+      "highly_rated": "تقييم مرتفع",
+      "fast_response": "يرد خلال دقائق",
+      "available_today": "متاح اليوم",
+      "very_close": "قريب جداً منك",
+      "verified": "مزود موثّق",
+      "top_category": "الأفضل في هذا التصنيف",
+      "excellent_completion": "معدل إتمام ممتاز",
+      "newest_trusted": "أحدث مزود موثوق"
     }
   },
   "provider": {
@@ -2245,6 +2256,39 @@
           "top_rated": "أعلى تقييماً",
           "profile_complete": "ملف مكتمل"
         }
+      },
+      "dalilyRanking": {
+        "title": "درجة دليلي",
+        "subtitle": "مكونات ترتيب شفافة تؤثر على الظهور في البحث.",
+        "overall": "الدرجة الإجمالية",
+        "position": "الترتيب التقديري #{n}",
+        "allComponents": "كل المكونات",
+        "tipsTitle": "نصائح للتحسين",
+        "weightsNote": "الأوزان تُضبط من الخادم (مثلاً المسافة {distance}% والجودة {quality}%).",
+        "components": {
+          "quality": "الجودة",
+          "trust": "الثقة",
+          "reliability": "الموثوقية",
+          "activity": "النشاط",
+          "availability": "التوفر",
+          "distance": "المسافة",
+          "experience": "الخبرة",
+          "profileQuality": "جودة الملف",
+          "popularity": "الشعبية",
+          "response": "الاستجابة"
+        },
+        "tips": {
+          "improve_quality": "اطلب تقييمات من العملاء الراضين لرفع الجودة.",
+          "improve_trust": "أكمل التوثيق لرفع الثقة.",
+          "improve_reliability": "اقبل وأكمل المزيد من الحجوزات بثبات.",
+          "improve_activity": "حدّث معرض أعمالك وابقَ نشطاً على دليلي.",
+          "improve_availability": "وسّع ساعات العمل واقبل الحجوزات.",
+          "improve_distance": "خدم المناطق القريبة وحافظ على دقة الموقع.",
+          "improve_experience": "أضف خدمات وزد الأعمال المكتملة.",
+          "improve_profileQuality": "أكمل تفاصيل ملفك والوسائط.",
+          "improve_popularity": "حوّل مشاهدات البحث إلى حجوزات.",
+          "improve_response": "ردّ أسرع على الرسائل وطلبات الحجز."
+        }
       }
     }
   },
@@ -2263,7 +2307,8 @@
       "businesses": "الأعمال",
       "messages": "الرسائل",
       "marketplace": "السوق",
-      "learning": "ذكاء التعلم"
+      "learning": "ذكاء التعلم",
+      "ranking": "الترتيب"
     },
     "learning": {
       "eyebrow": "داخلي · Learning AI",
@@ -2821,6 +2866,28 @@
       "daily": "طلبات يومية",
       "monthly": "طلبات شهرية",
       "empty": "لا توجد بيانات بعد."
+    },
+    "ranking": {
+      "eyebrow": "داخلي · الترتيب",
+      "title": "مفتش ترتيب دليلي",
+      "subtitle": "عرض للقراءة فقط لدرجات المكونات والأوزان. التعديل لاحقاً.",
+      "weightsTitle": "الأوزان المطبقة",
+      "weightsBody": "قيم افتراضية من الخادم. لا يمكن للمزودين تغييرها.",
+      "empty": "لا مزودين نشطين للتقييم.",
+      "score": "درجة دليلي",
+      "strengths": "أقوى النقاط",
+      "components": {
+        "quality": "الجودة",
+        "trust": "الثقة",
+        "reliability": "الموثوقية",
+        "activity": "النشاط",
+        "availability": "التوفر",
+        "distance": "المسافة",
+        "experience": "الخبرة",
+        "profileQuality": "جودة الملف",
+        "popularity": "الشعبية",
+        "response": "الاستجابة"
+      }
     }
   },
   "auth": {

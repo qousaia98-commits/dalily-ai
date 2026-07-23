@@ -27,6 +27,8 @@ import {
   resolveBadges,
   resolveProviderLevel,
 } from "@/lib/provider-success/achievements";
+import { calculateDalilyScore } from "@/lib/dalily-ranking/score-calculator";
+import { improvementTipsFromBreakdown } from "@/lib/dalily-ranking/explanation";
 import type {
   ActivityItem,
   ChartPoint,
@@ -220,15 +222,32 @@ export const getProviderSuccessDashboard = cache(
         ? Math.round((completed.length / completionDenom) * 100)
         : null;
 
-    const dalilyScore = Math.round(
-      Math.min(
-        100,
-        (reviewStats.trustScore || 0) * 0.45 +
-          profileCompletion * 0.25 +
-          Math.min(100, completed.length * 2) * 0.15 +
-          (acceptanceRate ?? 50) * 0.15,
-      ),
+    const dalilyBreakdown = calculateDalilyScore(
+      {
+        providerId: provider.id,
+        ratingAvg: reviewStats.ratingAvg || provider.ratingAvg,
+        reviewCount: reviewStats.reviewCount || provider.reviewCount,
+        trustScore: reviewStats.trustScore || 0,
+        verificationStatus: provider.verificationStatus,
+        profileCompleteness: profileCompletion,
+        responseTimeHours: provider.responseTimeHours,
+        completedJobs: completed.length,
+        distanceKm: null,
+        acceptanceRate: acceptanceRate != null ? acceptanceRate / 100 : null,
+        completionRate: completionRate != null ? completionRate / 100 : null,
+        cancellationRate: cancellationRate != null ? cancellationRate / 100 : null,
+        createdAt: provider.createdAt,
+        updatedAt: provider.createdAt,
+        profileViews,
+        searchAppearances,
+        bookingConversionRate,
+        repeatCustomers,
+        matchesCategory: true,
+      },
+      { blendWithSmartMatch: false },
     );
+    const dalilyScore = dalilyBreakdown.overall;
+    const rankingTips = improvementTipsFromBreakdown(dalilyBreakdown, 4);
 
     const kpis = {
       todayAppointments: todaySchedule.length,
@@ -393,6 +412,8 @@ export const getProviderSuccessDashboard = cache(
       level,
       achievements,
       badges,
+      dalilyBreakdown,
+      rankingTips,
     };
   },
 );

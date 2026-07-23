@@ -655,6 +655,17 @@
         "highest_rated": "Highest rated",
         "verified": "Verified first"
       }
+    },
+    "recommendationBadges": {
+      "label": "Recommendation badges",
+      "highly_rated": "Highly rated",
+      "fast_response": "Responds within minutes",
+      "available_today": "Available today",
+      "very_close": "Very close to you",
+      "verified": "Verified provider",
+      "top_category": "Top in this category",
+      "excellent_completion": "Excellent completion rate",
+      "newest_trusted": "Newest trusted provider"
     }
   },
   "provider": {
@@ -2522,6 +2533,39 @@
           "top_rated": "Top rated",
           "profile_complete": "Profile complete"
         }
+      },
+      "dalilyRanking": {
+        "title": "Dalily Score",
+        "subtitle": "Transparent ranking components that shape search visibility.",
+        "overall": "Overall score",
+        "position": "Estimated rank #{n}",
+        "allComponents": "All components",
+        "tipsTitle": "Improvement tips",
+        "weightsNote": "Weights are server-configured (e.g. distance {distance}%, quality {quality}%).",
+        "components": {
+          "quality": "Quality",
+          "trust": "Trust",
+          "reliability": "Reliability",
+          "activity": "Activity",
+          "availability": "Availability",
+          "distance": "Distance",
+          "experience": "Experience",
+          "profileQuality": "Profile quality",
+          "popularity": "Popularity",
+          "response": "Response"
+        },
+        "tips": {
+          "improve_quality": "Ask happy customers for reviews to lift quality.",
+          "improve_trust": "Complete verification to raise trust.",
+          "improve_reliability": "Accept and complete more bookings reliably.",
+          "improve_activity": "Update your portfolio and stay active on Dalily.",
+          "improve_availability": "Open more working hours and accept bookings.",
+          "improve_distance": "Serve nearby areas and keep location accurate.",
+          "improve_experience": "Add services and grow completed jobs.",
+          "improve_profileQuality": "Complete your profile details and media.",
+          "improve_popularity": "Respond to search interest and convert views.",
+          "improve_response": "Reply faster to messages and booking requests."
+        }
       }
     }
   },
@@ -2540,7 +2584,8 @@
       "subscriptions": "Subscription approvals",
       "messages": "Messages",
       "marketplace": "Marketplace",
-      "learning": "Learning AI"
+      "learning": "Learning AI",
+      "ranking": "Ranking"
     },
     "learning": {
       "eyebrow": "Internal · Learning AI",
@@ -3097,6 +3142,28 @@
         "validation_error": "Please enter a longer note.",
         "update_failed": "Could not save the decision.",
         "unknown": "Something went wrong."
+      }
+    },
+    "ranking": {
+      "eyebrow": "Internal · Ranking",
+      "title": "Dalily Ranking Inspector",
+      "subtitle": "Read-only score breakdowns and active weights. Editing comes later.",
+      "weightsTitle": "Applied weights",
+      "weightsBody": "Server-side defaults. Providers cannot change these values.",
+      "empty": "No active providers to score.",
+      "score": "Dalily Score",
+      "strengths": "Top strengths",
+      "components": {
+        "quality": "Quality",
+        "trust": "Trust",
+        "reliability": "Reliability",
+        "activity": "Activity",
+        "availability": "Availability",
+        "distance": "Distance",
+        "experience": "Experience",
+        "profileQuality": "Profile quality",
+        "popularity": "Popularity",
+        "response": "Response"
       }
     }
   },

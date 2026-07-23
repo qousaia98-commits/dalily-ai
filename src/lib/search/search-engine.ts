@@ -169,6 +169,8 @@ export class DalilySearchEngine {
       snapshot,
       candidates,
       confidenceByProviderId,
+      dalilyBreakdownByProviderId,
+      recommendationBadgesByProviderId,
     } = rankProvidersDetailed(filtered, {
       priority,
       planSlugsByProviderId,
@@ -181,6 +183,7 @@ export class DalilySearchEngine {
       performanceByProviderId,
       customerPreferences,
       applyLearning: true,
+      applyDalilyRanking: true,
     });
 
     const ranked = rankedAll.slice(0, TOP_N);
@@ -205,6 +208,14 @@ export class DalilySearchEngine {
       confidenceMap.set(id, confidenceByProviderId?.get(id) ?? null);
     }
 
+    const dalilyScoreMap = new Map<string, number>();
+    if (dalilyBreakdownByProviderId) {
+      for (const id of displayIds) {
+        const b = dalilyBreakdownByProviderId.get(id);
+        if (b) dalilyScoreMap.set(id, b.overall);
+      }
+    }
+
     const providers = mapProviderRowsToListItems(
       ranked,
       imagePathById,
@@ -215,6 +226,8 @@ export class DalilySearchEngine {
       completedJobsMap,
       input.locale === "ar" ? "ar" : "en",
       confidenceMap,
+      recommendationBadgesByProviderId,
+      dalilyScoreMap,
     );
 
     const advisor = analyzeServiceRequest({
@@ -244,13 +257,22 @@ export class DalilySearchEngine {
 
     void this.logSearch(input, parsed?.normalized ?? null, result, snapshot, displayIds);
 
-    // Learning: recommendation_shown (append-only, non-blocking)
+    // Learning + Dalily ranking analytics (append-only, non-blocking)
     for (const [index, id] of displayIds.entries()) {
+      const breakdown = dalilyBreakdownByProviderId?.get(id);
       void logLearningEvent({
         eventType: "recommendation_shown",
         providerId: id,
         customerId: input.userId ?? null,
-        metadata: { position: index + 1, problemId, categorySlug: categorySlug ?? null },
+        metadata: {
+          position: index + 1,
+          problemId,
+          categorySlug: categorySlug ?? null,
+          source: "dalily_ranking",
+          dalilyScore: breakdown?.overall ?? null,
+          finalScore: breakdown?.finalScore ?? null,
+          badges: recommendationBadgesByProviderId?.get(id)?.map((b) => b.id) ?? [],
+        },
       });
     }
 

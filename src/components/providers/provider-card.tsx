@@ -7,6 +7,7 @@ import { PlanBadge } from "@/components/shared/plan-badge";
 import { StarRating } from "@/components/providers/star-rating";
 import { SerpClickLink } from "@/components/providers/serp-click-link";
 import { MatchReasonsList } from "@/components/search/match-reasons-list";
+import { RecommendationBadgesList } from "@/components/search/recommendation-badges-list";
 import { getLocalizedText } from "@/types/domain.types";
 import type { ProviderListItem } from "@/types/search.types";
 import type { Locale } from "@/lib/i18n/config";
@@ -35,8 +36,9 @@ export async function ProviderCard({
   const providerName = getLocalizedText(provider.name, locale);
   const planSlug = provider.planSlug ?? "free";
   const benefits = getBenefits(planSlug);
-  const health = provider.profileCompleteness ?? provider.trustScore;
+  const health = provider.dalilyScore ?? provider.profileCompleteness ?? provider.trustScore;
   const reasons = provider.matchReasons ?? [];
+  const badges = provider.recommendationBadges ?? [];
 
   return (
     <SerpClickLink
@@ -131,6 +133,10 @@ export async function ProviderCard({
               </span>
             ) : null}
           </div>
+
+          {badges.length > 0 ? (
+            <RecommendationBadgesList badges={badges} />
+          ) : null}
 
           {showMatchReasons && reasons.length > 0 ? (
             <div className="border-t border-border/60 pt-3">

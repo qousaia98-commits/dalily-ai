@@ -12,6 +12,7 @@ import {
   AchievementsPanel,
 } from "@/components/provider-success/leaderboard-card";
 import { SuccessChartsLazy } from "@/components/provider-success/success-charts-lazy";
+import { DalilyScoreBreakdownCard } from "@/components/provider-success/dalily-score-breakdown-card";
 
 type Props = {
   data: ProviderSuccessDashboard;
@@ -26,6 +27,11 @@ export function ProviderSuccessDashboardView({ data, showVerify }: Props) {
   return (
     <div className="space-y-8">
       <SuccessKpiGrid kpis={data.kpis} />
+
+      <DalilyScoreBreakdownCard
+        breakdown={data.dalilyBreakdown}
+        tips={data.rankingTips}
+      />
 
       <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
         <TodaySchedule appointments={data.todaySchedule} />

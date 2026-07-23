@@ -141,4 +141,7 @@ export type ProviderSuccessDashboard = {
   level: ProviderLevel;
   achievements: Achievement[];
   badges: string[];
+  /** Sprint 40 — modular Dalily Score breakdown */
+  dalilyBreakdown: import("@/lib/dalily-ranking/types").DalilyScoreBreakdown;
+  rankingTips: Array<{ component: string; tipKey: string }>;
 };

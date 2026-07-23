@@ -34,7 +34,15 @@ export function mapProviderRowsToListItems(
   distanceByProviderId?: Map<string, number | null>,
   completedJobsByProviderId?: Map<string, number>,
   locale: "en" | "ar" = "en",
-  confidenceByProviderId?: Map<string, import("@/lib/search/learning/types").MatchConfidence | null>,
+  confidenceByProviderId?: Map<
+    string,
+    import("@/lib/search/learning/types").MatchConfidence | null
+  >,
+  recommendationBadgesByProviderId?: Map<
+    string,
+    import("@/lib/dalily-ranking/types").RecommendationBadge[]
+  >,
+  dalilyScoreByProviderId?: Map<string, number>,
 ): ProviderListItem[] {
   const items: ProviderListItem[] = [];
 
@@ -98,6 +106,8 @@ export function mapProviderRowsToListItems(
       responseTimeHours: row.response_time_hours,
       completedJobs,
       matchReasons,
+      recommendationBadges: recommendationBadgesByProviderId?.get(row.id),
+      dalilyScore: dalilyScoreByProviderId?.get(row.id),
       matchConfidence: confidenceByProviderId?.get(row.id) ?? null,
     });
   }

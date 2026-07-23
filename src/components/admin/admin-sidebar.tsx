@@ -12,6 +12,7 @@ import {
   Banknote,
   Megaphone,
   Brain,
+  Gauge,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
@@ -34,6 +35,7 @@ const navItems = [
   { href: "/admin/subscriptions", icon: CreditCard, key: "subscriptions" },
   { href: "/admin/marketplace", icon: Megaphone, key: "marketplace" },
   { href: "/admin/learning", icon: Brain, key: "learning" },
+  { href: "/admin/ranking", icon: Gauge, key: "ranking" },
   { href: "/admin/verification", icon: ShieldCheck, key: "verification" },
   { href: "/admin/categories", icon: Tags, key: "categories" },
   { href: "/admin/searches", icon: Search, key: "searches" },
