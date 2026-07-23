@@ -282,8 +282,11 @@
       }
     },
     "diagnosis": {
+      "assistantName": "مساعد دليلي",
+      "typingAriaLabel": "المساعد يكتب…",
       "skip": "تخطّي — البحث مباشرة",
       "back": "رجوع",
+      "finish": "إنهاء الآن",
       "findProviders": "ابحث عن مزودين",
       "startOver": "البدء من جديد",
       "stepOf": "السؤال {current} من {total}",
@@ -293,6 +296,7 @@
         "urgencyLabel": "الأولوية",
         "possibleCauseLabel": "السبب المحتمل",
         "confidenceCaption": "تقدير بناءً على إجاباتك — نسبة الثقة {percent}%",
+        "autoRedirectCaption": "جارٍ البحث عن مزودين مطابقين…",
         "categories": {
           "electrical": "كهربائي",
           "plumbing": "سباك",

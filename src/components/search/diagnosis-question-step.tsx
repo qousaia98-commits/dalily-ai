@@ -1,52 +1,60 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AssistantBubble } from "@/components/search/diagnosis-chat-bubble";
 import type { DiagnosisQuestion } from "@/lib/diagnosis/types";
 import type { ProblemId } from "@/lib/search/engine/types";
+import { cn } from "@/lib/utils";
 
 type Props = {
   problemId: ProblemId;
   question: DiagnosisQuestion;
+  disabled?: boolean;
   onAnswer: (optionId: string) => void;
-  onBack: () => void;
 };
 
-export function DiagnosisQuestionStep({ problemId, question, onAnswer, onBack }: Props) {
+export function DiagnosisQuestionStep({
+  problemId,
+  question,
+  disabled = false,
+  onAnswer,
+}: Props) {
   const t = useTranslations("search.diagnosis");
   const base = `problems.${problemId}.questions.${question.id}` as const;
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-base font-bold text-[var(--dalily-navy)]">
+    <div className="animate-fade-in-up space-y-3">
+      <AssistantBubble>
         {t(`${base}.label` as "problems.power_outage.questions.state.label")}
-      </h3>
-      <div className="grid gap-2">
+      </AssistantBubble>
+
+      <div
+        className="grid gap-2 ps-0 sm:ps-9"
+        role="group"
+        aria-label={t(`${base}.label` as "problems.power_outage.questions.state.label")}
+      >
         {question.options.map((option) => (
-          <Button
+          <button
             key={option.id}
             type="button"
-            variant="outline"
-            className="h-auto justify-start rounded-2xl px-4 py-3 text-start text-sm font-medium whitespace-normal"
+            disabled={disabled}
             onClick={() => onAnswer(option.id)}
+            className={cn(
+              "min-h-12 w-full rounded-2xl border border-border/80 bg-card px-4 py-3.5",
+              "text-start text-sm font-semibold leading-snug text-foreground sm:text-base",
+              "shadow-sm transition duration-150",
+              "hover:border-[var(--dalily-gold)]/50 hover:bg-[color-mix(in_oklab,var(--dalily-gold)_8%,var(--card))]",
+              "active:scale-[0.99]",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)]",
+              "disabled:pointer-events-none disabled:opacity-50",
+            )}
           >
             {t(
               `${base}.options.${option.id}` as "problems.power_outage.questions.state.options.off",
             )}
-          </Button>
+          </button>
         ))}
       </div>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className="gap-1.5 text-muted-foreground"
-        onClick={onBack}
-      >
-        <ArrowLeft className="size-3.5" aria-hidden />
-        {t("back")}
-      </Button>
     </div>
   );
 }

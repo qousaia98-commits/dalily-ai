@@ -282,8 +282,11 @@
       }
     },
     "diagnosis": {
+      "assistantName": "Dalily Assistant",
+      "typingAriaLabel": "Assistant is typing",
       "skip": "Skip — search directly instead",
       "back": "Back",
+      "finish": "Finish now",
       "findProviders": "Find providers",
       "startOver": "Start over",
       "stepOf": "Question {current} of {total}",
@@ -293,6 +296,7 @@
         "urgencyLabel": "Urgency",
         "possibleCauseLabel": "Possible cause",
         "confidenceCaption": "Estimate based on your answers — {percent}% confidence",
+        "autoRedirectCaption": "Finding matching providers…",
         "categories": {
           "electrical": "Electrician",
           "plumbing": "Plumber",

@@ -99,6 +99,10 @@ export function SearchForm({
         <DiagnosisWizard
           problemId={activeProblemId}
           onExit={() => setMode("input")}
+          onSkip={() => {
+            setMode("input");
+            navigate(query.trim());
+          }}
           onComplete={(result: DiagnosisResult) => navigate(query.trim(), result.urgency)}
         />
       </div>

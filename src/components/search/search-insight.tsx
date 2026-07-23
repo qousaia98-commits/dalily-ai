@@ -48,7 +48,9 @@ export async function SearchInsight({
   }
 
   const urgency = priority ?? advisor?.urgency ?? null;
-  const questions = advisor?.clarifyingQuestions ?? [];
+  // After the interactive Diagnosis Wizard, clarifying questions are already answered.
+  // Showing them again as a static list feels broken ("can see but cannot answer").
+  const questions = urgency ? [] : (advisor?.clarifyingQuestions ?? []);
 
   return (
     <div className="mb-6 space-y-3 rounded-xl border bg-muted/30 px-4 py-3 text-sm">
