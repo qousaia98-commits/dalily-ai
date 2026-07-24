@@ -373,16 +373,23 @@ export const getProviderSuccessDashboard = cache(
     });
     activity.sort((a, b) => +new Date(b.at) - +new Date(a.at));
 
-    const notificationItems: NotificationWidgetItem[] = notifications.map((n) => ({
-      id: n.id,
-      category: categorizeNotification(n.type),
-      titleKey: n.title_key,
-      bodyKey: n.body_key,
-      bodyParams: n.body_params,
-      href: n.href,
-      read: Boolean(n.read_at),
-      createdAt: n.created_at,
-    }));
+    const DALILY_DASHBOARD_TYPES = new Set(["dalily_message", "admin_broadcast"]);
+    const notificationItems: NotificationWidgetItem[] = notifications
+      .filter((n) => {
+        // Official Dalily inbox alerts: only show while unread.
+        if (DALILY_DASHBOARD_TYPES.has(n.type) && n.read_at) return false;
+        return true;
+      })
+      .map((n) => ({
+        id: n.id,
+        category: categorizeNotification(n.type),
+        titleKey: n.title_key,
+        bodyKey: n.body_key,
+        bodyParams: n.body_params,
+        href: n.href,
+        read: Boolean(n.read_at),
+        createdAt: n.created_at,
+      }));
 
     const level = resolveProviderLevel(dalilyScore);
     const achievements = resolveAchievements({

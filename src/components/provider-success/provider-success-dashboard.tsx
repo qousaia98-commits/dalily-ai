@@ -14,22 +14,33 @@ import { SuccessChartsLazy } from "@/components/provider-success/success-charts-
 import { DalilyScoreBreakdownCard } from "@/components/provider-success/dalily-score-breakdown-card";
 import { TodayOverviewStrip } from "@/components/provider-success/today-overview-strip";
 import { MyBusinessStrip } from "@/components/provider-success/my-business-strip";
+import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 import { getTranslations } from "next-intl/server";
 
 type Props = {
   data: ProviderSuccessDashboard;
   showVerify: boolean;
+  userId: string;
+  providerId?: string | null;
 };
 
 /**
  * Provider Success Dashboard — hierarchy optimized for “what do I need to do today?”
  * Widgets reused; no business-logic changes.
  */
-export async function ProviderSuccessDashboardView({ data, showVerify }: Props) {
+export async function ProviderSuccessDashboardView({
+  data,
+  showVerify,
+  userId,
+  providerId,
+}: Props) {
   const t = await getTranslations("business.success.sections");
 
   return (
     <div className="space-y-10">
+      {/* Keep notification cards in sync when Dalily messages are marked read. */}
+      <MarketplaceRealtimeBridge userId={userId} providerId={providerId} />
+
       {/* Section 1 — Today's Overview */}
       <section className="space-y-4" aria-labelledby="today-overview-title">
         <header className="space-y-1">

@@ -129,7 +129,12 @@ export default async function BusinessDashboardPage() {
         galleryCount={provider.gallery.length}
       />
 
-      <ProviderSuccessDashboardView data={success} showVerify={showVerification} />
+      <ProviderSuccessDashboardView
+        data={success}
+        showVerify={showVerification}
+        userId={authUser.id}
+        providerId={provider.id}
+      />
 
       <DashboardConversationsPreview conversations={conversations} />
     </div>

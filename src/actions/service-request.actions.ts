@@ -922,5 +922,7 @@ export async function markNotificationReadAction(notificationId: string) {
     .eq("id", notificationId)
     .eq("user_id", authUser.id);
   revalidatePath("/", "layout");
+  revalidatePath("/business");
+  revalidatePath("/business", "layout");
   return { success: true };
 }

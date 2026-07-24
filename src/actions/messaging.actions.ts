@@ -68,6 +68,7 @@ export async function markConversationReadAction(
   }
 
   revalidatePath("/business", "layout");
+  revalidatePath("/business");
   revalidatePath("/business/messages");
   revalidatePath(`/business/messages/${conversationId}`);
   revalidatePath("/messages");

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
 import { Bell } from "lucide-react";
@@ -80,6 +81,24 @@ export function NotificationsWidget({
   unreadCount: number;
 }) {
   const { t, titleOf, bodyOf, isDalilyInboxAlert } = useNotificationCopy();
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(() => new Set());
+
+  // Server list is source of truth; clear local dismissals when props refresh.
+  useEffect(() => {
+    setDismissedIds(new Set());
+  }, [items]);
+
+  const visibleItems = useMemo(
+    () => items.filter((item) => !dismissedIds.has(item.id)),
+    [items, dismissedIds],
+  );
+
+  const visibleUnread = useMemo(() => {
+    const dismissedUnread = items.filter(
+      (item) => dismissedIds.has(item.id) && !item.read,
+    ).length;
+    return Math.max(0, unreadCount - dismissedUnread);
+  }, [items, dismissedIds, unreadCount]);
 
   return (
     <section className="space-y-3" aria-labelledby="notif-widget-title">
@@ -87,7 +106,7 @@ export function NotificationsWidget({
         <div className="flex items-center gap-2">
           <span className="relative">
             <Bell className="size-5 text-[var(--dalily-gold)]" aria-hidden />
-            {unreadCount > 0 ? (
+            {visibleUnread > 0 ? (
               <span
                 className="absolute -end-1 -top-1 size-2.5 rounded-full bg-destructive"
                 aria-hidden
@@ -98,17 +117,17 @@ export function NotificationsWidget({
             {t("title")}
           </h2>
         </div>
-        {unreadCount > 0 ? (
+        {visibleUnread > 0 ? (
           <span className="rounded-full bg-[var(--dalily-gold)] px-2 py-0.5 text-xs font-bold text-[var(--dalily-navy)]">
-            {unreadCount}
+            {visibleUnread}
           </span>
         ) : null}
       </div>
-      {items.length === 0 ? (
+      {visibleItems.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("empty")}</p>
       ) : (
         <ul className="space-y-2">
-          {items.slice(0, 6).map((item) => {
+          {visibleItems.slice(0, 6).map((item) => {
             const reason =
               typeof item.bodyParams?.reason === "string" ? item.bodyParams.reason : "";
             const dalily = isDalilyInboxAlert(item);
@@ -144,7 +163,12 @@ export function NotificationsWidget({
                     href={item.href}
                     className="block min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)]"
                     onClick={() => {
-                      if (!item.read) void markNotificationReadAction(item.id);
+                      if (!item.read) {
+                        if (dalily) {
+                          setDismissedIds((prev) => new Set(prev).add(item.id));
+                        }
+                        void markNotificationReadAction(item.id);
+                      }
                     }}
                   >
                     {inner}
