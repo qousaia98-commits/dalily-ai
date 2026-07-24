@@ -22,13 +22,14 @@ import type { AdminProviderReview } from "@/lib/admin/queries";
 import { getLocalizedField } from "@/types/provider.types";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { AdminProviderSubscriptionCard } from "@/components/admin/admin-provider-subscription-card";
+import { AdminVerificationFeedbackDialog } from "@/components/admin/admin-verification-feedback-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { PlanSlug } from "@/lib/subscription/types";
+import type { VerificationAdminFeedback } from "@/lib/verification/feedback";
 
 type Props = { provider: AdminProviderReview };
-
 type DialogMode = "changes" | "reject" | null;
 
 const CHECKLIST_KEYS = [
@@ -50,7 +51,6 @@ export function AdminBusinessReviewWorkspace({ provider }: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [dialog, setDialog] = useState<DialogMode>(null);
-  const [note, setNote] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<{ src: string; alt: string } | null>(null);
   const [mobileSection, setMobileSection] = useState<"info" | "assets" | "verify">("info");
@@ -81,7 +81,6 @@ export function AdminBusinessReviewWorkspace({ provider }: Props) {
         return;
       }
       setDialog(null);
-      setNote("");
       router.refresh();
     });
   }
@@ -339,57 +338,30 @@ export function AdminBusinessReviewWorkspace({ provider }: Props) {
         </section>
       </div>
 
-      {dialog ? (
-        <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/50 p-4 sm:items-center">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="review-dialog-title"
-            className="w-full max-w-md rounded-3xl bg-background p-6 shadow-xl"
-          >
-            <h3 id="review-dialog-title" className="text-lg font-bold text-[var(--dalily-navy)]">
-              {dialog === "changes" ? t("changesDialogTitle") : t("rejectDialogTitle")}
-            </h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {dialog === "changes" ? t("changesDialogBody") : t("rejectDialogBody")}
-            </p>
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              rows={4}
-              className="mt-4 w-full rounded-2xl border border-border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)]"
-              placeholder={dialog === "changes" ? t("changesPlaceholder") : t("rejectPlaceholder")}
-            />
-            <div className="mt-4 flex gap-2">
-              <Button
-                variant="outline"
-                className="flex-1"
-                disabled={pending}
-                onClick={() => {
-                  setDialog(null);
-                  setNote("");
-                }}
-              >
-                {t("cancel")}
-              </Button>
-              <Button
-                className="flex-1"
-                variant={dialog === "reject" ? "destructive" : "default"}
-                disabled={pending || note.trim().length < 3}
-                onClick={() =>
-                  run(() =>
-                    dialog === "changes"
-                      ? requestBusinessChangesAction(provider.id, note)
-                      : rejectBusinessAction(provider.id, note),
-                  )
-                }
-              >
-                {pending ? <Loader2 className="size-4 animate-spin" /> : t("confirm")}
-              </Button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <AdminVerificationFeedbackDialog
+        open={dialog !== null}
+        mode={dialog === "reject" ? "reject" : "changes"}
+        pending={pending}
+        onClose={() => setDialog(null)}
+        onSubmit={async (feedback: VerificationAdminFeedback) => {
+          setError(null);
+          await new Promise<void>((resolve) => {
+            startTransition(async () => {
+              const result =
+                dialog === "changes"
+                  ? await requestBusinessChangesAction(provider.id, feedback)
+                  : await rejectBusinessAction(provider.id, feedback);
+              if (!result.success) {
+                setError(t(`errors.${result.error ?? "update_failed"}`));
+              } else {
+                setDialog(null);
+                router.refresh();
+              }
+              resolve();
+            });
+          });
+        }}
+      />
 
       {preview ? (
         <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/80 p-4">

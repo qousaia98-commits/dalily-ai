@@ -101,9 +101,12 @@ export function resolveOnboardingPhase(
 export function shouldForceOnboarding(
   provider: ManagedProvider,
 ): boolean {
-  // Only incomplete drafts are gently guided — never changes_requested loops.
+  // Only incomplete drafts are gently guided — never changes_requested / rejection loops.
+  // After rejection, providers stay on dashboard/verification (Sprint 44 resubmission).
   // Session "Later" defer is checked by the caller via cookie.
-  return provider.status === "draft";
+  if (provider.status !== "draft") return false;
+  if (provider.verificationStatus === "rejected") return false;
+  return true;
 }
 
 /** True when the provider has not started identity docs yet (show calm welcome first). */

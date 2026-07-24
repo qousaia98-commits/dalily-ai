@@ -94,6 +94,7 @@ export type NotificationWidgetItem = {
   category: "message" | "booking" | "review" | "verification" | "system";
   titleKey: string;
   bodyKey: string;
+  bodyParams?: Record<string, string | number>;
   href: string | null;
   read: boolean;
   createdAt: string;

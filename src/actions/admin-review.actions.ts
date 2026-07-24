@@ -13,6 +13,11 @@ import {
 } from "@/lib/email/dalily-email";
 import { getProviderOwnerEmailContext } from "@/lib/email/provider-email-context";
 import { ensureFreeSubscription } from "@/lib/subscription/repository";
+import {
+  serializeVerificationFeedback,
+  type VerificationAdminFeedback,
+} from "@/lib/verification/feedback";
+import { notifyProviderVerificationEvent } from "@/lib/verification/notify";
 
 export type AdminReviewActionState = {
   success: boolean;
@@ -36,6 +41,28 @@ function revalidateReview(providerId: string) {
 
 const idSchema = z.string().uuid();
 const noteSchema = z.string().trim().min(3).max(1000);
+const optionalNoteSchema = z.string().trim().max(1000).optional().or(z.literal(""));
+
+function normalizeFeedback(
+  input: VerificationAdminFeedback | string,
+): VerificationAdminFeedback | null {
+  if (typeof input === "string") {
+    const parsed = noteSchema.safeParse(input);
+    if (!parsed.success) return null;
+    return { reason: parsed.data };
+  }
+  const reason = noteSchema.safeParse(input.reason);
+  if (!reason.success) return null;
+  const note = optionalNoteSchema.safeParse(input.note ?? "");
+  const recommendation = optionalNoteSchema.safeParse(input.recommendation ?? "");
+  return {
+    reason: reason.data,
+    ...(note.success && note.data ? { note: note.data } : {}),
+    ...(recommendation.success && recommendation.data
+      ? { recommendation: recommendation.data }
+      : {}),
+  };
+}
 
 export async function approveBusinessAction(
   providerId: string,
@@ -84,6 +111,12 @@ export async function approveBusinessAction(
       locale: owner.locale,
     });
   }
+  if (owner?.ownerId) {
+    await notifyProviderVerificationEvent({
+      ownerId: owner.ownerId,
+      kind: "approved",
+    });
+  }
 
   await logAdminAudit({
     actorId: authUser.id,
@@ -98,17 +131,18 @@ export async function approveBusinessAction(
 
 export async function requestBusinessChangesAction(
   providerId: string,
-  note: string,
+  feedbackInput: VerificationAdminFeedback | string,
 ): Promise<AdminReviewActionState> {
   const authUser = await requireAdminUser();
   if (!isPlatformAdmin(authUser.roles)) return forbidden();
 
   const parsedId = idSchema.safeParse(providerId);
-  const parsedNote = noteSchema.safeParse(note);
-  if (!parsedId.success || !parsedNote.success) {
+  const feedback = normalizeFeedback(feedbackInput);
+  if (!parsedId.success || !feedback) {
     return { success: false, error: "validation_error" };
   }
 
+  const serialized = serializeVerificationFeedback(feedback);
   const admin = createAdminClient();
   const now = new Date().toISOString();
 
@@ -116,7 +150,7 @@ export async function requestBusinessChangesAction(
     .from("providers")
     .update({
       status: "changes_requested",
-      admin_review_note: parsedNote.data,
+      admin_review_note: serialized,
       changes_requested_at: now,
       updated_by: authUser.id,
     })
@@ -129,8 +163,15 @@ export async function requestBusinessChangesAction(
     await sendBusinessChangesRequestedEmail({
       to: owner.email,
       businessName: owner.businessName,
-      note: parsedNote.data,
+      note: feedback.reason,
       locale: owner.locale,
+    });
+  }
+  if (owner?.ownerId) {
+    await notifyProviderVerificationEvent({
+      ownerId: owner.ownerId,
+      kind: "changes_requested",
+      feedback,
     });
   }
 
@@ -139,7 +180,7 @@ export async function requestBusinessChangesAction(
     action: "provider_changes_requested",
     entityType: "provider",
     entityId: parsedId.data,
-    metadata: { note: parsedNote.data },
+    metadata: { note: feedback.reason, feedback },
   });
 
   revalidateReview(parsedId.data);
@@ -148,17 +189,18 @@ export async function requestBusinessChangesAction(
 
 export async function rejectBusinessAction(
   providerId: string,
-  reason: string,
+  feedbackInput: VerificationAdminFeedback | string,
 ): Promise<AdminReviewActionState> {
   const authUser = await requireAdminUser();
   if (!isPlatformAdmin(authUser.roles)) return forbidden();
 
   const parsedId = idSchema.safeParse(providerId);
-  const parsedReason = noteSchema.safeParse(reason);
-  if (!parsedId.success || !parsedReason.success) {
+  const feedback = normalizeFeedback(feedbackInput);
+  if (!parsedId.success || !feedback) {
     return { success: false, error: "validation_error" };
   }
 
+  const serialized = serializeVerificationFeedback(feedback);
   const admin = createAdminClient();
   const now = new Date().toISOString();
 
@@ -167,7 +209,7 @@ export async function rejectBusinessAction(
     .update({
       status: "draft",
       verification_status: "rejected",
-      admin_review_note: parsedReason.data,
+      admin_review_note: serialized,
       changes_requested_at: null,
       updated_by: authUser.id,
     })
@@ -179,7 +221,7 @@ export async function rejectBusinessAction(
     .from("provider_verifications")
     .update({
       status: "rejected",
-      rejection_reason: parsedReason.data,
+      rejection_reason: serialized,
       reviewed_by: authUser.id,
       reviewed_at: now,
     })
@@ -190,8 +232,15 @@ export async function rejectBusinessAction(
     await sendBusinessRejectedEmail({
       to: owner.email,
       businessName: owner.businessName,
-      reason: parsedReason.data,
+      reason: feedback.reason,
       locale: owner.locale,
+    });
+  }
+  if (owner?.ownerId) {
+    await notifyProviderVerificationEvent({
+      ownerId: owner.ownerId,
+      kind: "rejected",
+      feedback,
     });
   }
 
@@ -200,7 +249,7 @@ export async function rejectBusinessAction(
     action: "provider_rejected",
     entityType: "provider",
     entityId: parsedId.data,
-    metadata: { reason: parsedReason.data },
+    metadata: { reason: feedback.reason, feedback },
   });
 
   revalidateReview(parsedId.data);

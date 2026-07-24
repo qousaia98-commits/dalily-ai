@@ -17,6 +17,8 @@ export type BusinessVerificationView = {
   idBackUploaded: boolean;
   selfieUploaded: boolean;
   reviewedAt: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
 };
 
 export type AdminVerificationItem = {
@@ -70,6 +72,8 @@ export function toBusinessVerificationView(
       idBackUploaded: false,
       selfieUploaded: false,
       reviewedAt: null,
+      createdAt: null,
+      updatedAt: null,
     };
   }
 
@@ -82,6 +86,8 @@ export function toBusinessVerificationView(
     idBackUploaded: Boolean(row.id_back_url),
     selfieUploaded: Boolean(row.selfie_url),
     reviewedAt: row.reviewed_at,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
   };
 }
 

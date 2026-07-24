@@ -371,6 +371,7 @@ export const getProviderSuccessDashboard = cache(
       category: categorizeNotification(n.type),
       titleKey: n.title_key,
       bodyKey: n.body_key,
+      bodyParams: n.body_params,
       href: n.href,
       read: Boolean(n.read_at),
       createdAt: n.created_at,

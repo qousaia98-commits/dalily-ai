@@ -35,7 +35,7 @@ const navItems = [
   { href: "/business/services", icon: Wrench, key: "services" },
   { href: "/business/media", icon: Images, key: "media" },
   { href: "/business/analytics", icon: BarChart3, key: "analytics" },
-  { href: "/business/verification", icon: ShieldCheck, key: "verification" },
+  { href: "/business/verification", icon: ShieldCheck, key: "verification", badgeKey: "verification" as const },
   { href: "/business/settings", icon: Settings, key: "settings" },
   { href: "/business/subscription", icon: Star, key: "upgrade" },
 ] as const;
@@ -43,7 +43,7 @@ const navItems = [
 type BusinessSidebarProps = {
   planSlug?: PlanSlug | string;
   businessName?: string | null;
-  badges?: { messages?: number; requests?: number };
+  badges?: { messages?: number; requests?: number; verification?: number };
 };
 
 export function BusinessSidebar({

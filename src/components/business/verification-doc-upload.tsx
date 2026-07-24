@@ -30,6 +30,8 @@ type Props = {
   providerId: string;
   uploaded: boolean;
   disabled: boolean;
+  /** Allow replacing an already-uploaded document (resubmission). */
+  allowReplace?: boolean;
   variant?: "onboarding" | "page";
   className?: string;
 };
@@ -47,6 +49,7 @@ export function VerificationDocUpload({
   providerId,
   uploaded,
   disabled,
+  allowReplace = false,
   variant = "page",
   className,
 }: Props) {
@@ -138,6 +141,9 @@ export function VerificationDocUpload({
             ? t("progress.submitted")
             : null;
 
+  const showPicker = !uploaded || allowReplace;
+  const lockDrop = disabled || (uploaded && !allowReplace);
+
   return (
     <div
       className={cn(
@@ -148,11 +154,11 @@ export function VerificationDocUpload({
       )}
       onDragEnter={(e) => {
         e.preventDefault();
-        if (!disabled && !uploaded) setDragOver(true);
+        if (!lockDrop) setDragOver(true);
       }}
       onDragOver={(e) => {
         e.preventDefault();
-        if (!disabled && !uploaded) setDragOver(true);
+        if (!lockDrop) setDragOver(true);
       }}
       onDragLeave={(e) => {
         e.preventDefault();
@@ -161,7 +167,7 @@ export function VerificationDocUpload({
       onDrop={(e) => {
         e.preventDefault();
         setDragOver(false);
-        if (disabled || uploaded) return;
+        if (lockDrop) return;
         const file = e.dataTransfer.files?.[0];
         void handleFile(file);
       }}
@@ -176,7 +182,7 @@ export function VerificationDocUpload({
         ) : null}
       </div>
 
-      {previewUrl && !uploaded ? (
+      {previewUrl && (!uploaded || allowReplace) ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={previewUrl}
@@ -185,7 +191,7 @@ export function VerificationDocUpload({
         />
       ) : null}
 
-      {!uploaded ? (
+      {showPicker ? (
         <>
           <p className="hidden text-xs text-muted-foreground sm:block">{t("dropHint")}</p>
           <div className="flex flex-wrap gap-2">
@@ -197,7 +203,7 @@ export function VerificationDocUpload({
               onClick={() => cameraRef.current?.click()}
             >
               <Camera className="size-4" aria-hidden />
-              {t("camera")}
+              {uploaded && allowReplace ? t("replace") : t("camera")}
             </Button>
             <Button
               type="button"
@@ -207,7 +213,7 @@ export function VerificationDocUpload({
               onClick={() => galleryRef.current?.click()}
             >
               <ImagePlus className="size-4" aria-hidden />
-              {t("gallery")}
+              {uploaded && allowReplace ? t("replaceGallery") : t("gallery")}
             </Button>
           </div>
         </>

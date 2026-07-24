@@ -5,24 +5,17 @@ import {
   getProviderVerificationForOwner,
   toBusinessVerificationView,
 } from "@/lib/verification/queries";
+import {
+  buildVerificationTimeline,
+  resolveVerificationFeedback,
+  resolveVerificationUiStatus,
+} from "@/lib/verification/status";
+import { markVerificationNotificationsRead } from "@/lib/service-requests/queries";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { VerificationUploadForm } from "@/components/business/verification-upload-form";
+import { VerificationTimeline } from "@/components/business/verification-timeline";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import type { ProviderVerificationStatus } from "@/lib/verification/queries";
-import type { VerificationDisplayStatus } from "@/components/business/verification-status-panel";
-
-function resolveDisplayStatus(
-  providerStatus: string,
-  verificationStatus: ProviderVerificationStatus | null,
-  docsComplete: boolean,
-): VerificationDisplayStatus {
-  if (verificationStatus === "approved") return "approved";
-  if (verificationStatus === "rejected") return "rejected";
-  if (verificationStatus === "pending" && docsComplete) return "pending_review";
-  if (providerStatus === "pending_review") return "pending_review";
-  return "draft";
-}
 
 export default async function BusinessVerificationPage() {
   const t = await getTranslations("business.verification");
@@ -41,11 +34,18 @@ export default async function BusinessVerificationPage() {
     );
   }
 
+  // Opening the verification page clears verification notification badges.
+  await markVerificationNotificationsRead(authUser.id);
+
   const verificationRow = await getProviderVerificationForOwner(provider.id);
   const verification = toBusinessVerificationView(verificationRow);
-  const docsComplete =
-    verification.idFrontUploaded && verification.idBackUploaded && verification.selfieUploaded;
-  const displayStatus = resolveDisplayStatus(provider.status, verification.status, docsComplete);
+  const displayStatus = resolveVerificationUiStatus(provider, verification);
+  const feedback = resolveVerificationFeedback(provider, verification);
+  const timeline = buildVerificationTimeline({
+    provider,
+    verification,
+    feedback,
+  });
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -67,9 +67,19 @@ export default async function BusinessVerificationPage() {
               }
               className="mb-2"
             >
-              {t(`displayStatus.${displayStatus}`)}
+              {t(`displayStatus.${displayStatus === "changes_requested" ? "changes_requested" : displayStatus === "expired" ? "draft" : displayStatus}`)}
             </Badge>
-            <p className="text-sm text-muted-foreground">{t(`displayNotes.${displayStatus}`)}</p>
+            <p className="text-sm text-muted-foreground">
+              {t(
+                `displayNotes.${
+                  displayStatus === "changes_requested"
+                    ? "changes_requested"
+                    : displayStatus === "expired"
+                      ? "draft"
+                      : displayStatus
+                }`,
+              )}
+            </p>
           </div>
           <div className="text-end">
             <p className="text-3xl font-bold">{provider.trustScore}%</p>
@@ -83,7 +93,10 @@ export default async function BusinessVerificationPage() {
         providerStatus={provider.status}
         verification={verification}
         displayStatus={displayStatus}
+        feedback={feedback}
       />
+
+      <VerificationTimeline events={timeline} />
     </div>
   );
 }

@@ -23,10 +23,10 @@ import { getOnboardingReminderState } from "@/lib/business/onboarding-reminders"
 import { getProviderSuccessDashboard } from "@/lib/provider-success/dashboard-service";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { GrowthHero } from "@/components/business/growth-hero";
-import { ChangesRequiredCard } from "@/components/business/changes-required-card";
 import { FirstRequestMediaBanner } from "@/components/business/first-request-media-banner";
 import { DashboardConversationsPreview } from "@/components/business/conversation-list";
 import { ProviderSuccessDashboardView } from "@/components/provider-success/provider-success-dashboard";
+import { VerificationDashboardAlert } from "@/components/business/verification-dashboard-alert";
 import { OnboardingDashboardCard } from "@/components/business/onboarding/onboarding-dashboard-card";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -102,7 +102,9 @@ export default async function BusinessDashboardPage() {
     provider.status === "changes_requested";
 
   const onboardingHref =
-    provider.status === "changes_requested" || verification.status === "rejected"
+    provider.status === "changes_requested" ||
+    verification.status === "rejected" ||
+    provider.verificationStatus === "rejected"
       ? "/business/verification"
       : "/business/welcome";
 
@@ -115,12 +117,10 @@ export default async function BusinessDashboardPage() {
         unreadMessages={unreadMessages}
       />
 
+      <VerificationDashboardAlert provider={provider} verification={verification} />
+
       {reminder.showDashboardCard ? (
         <OnboardingDashboardCard copyId={reminder.copyId} href={onboardingHref} />
-      ) : null}
-
-      {provider.status === "changes_requested" && provider.adminReviewNote ? (
-        <ChangesRequiredCard note={provider.adminReviewNote} />
       ) : null}
 
       <FirstRequestMediaBanner

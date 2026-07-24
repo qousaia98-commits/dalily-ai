@@ -28,6 +28,11 @@ import {
   isVerificationComplete,
 } from "@/lib/verification/queries";
 import { getApprovalReadiness } from "@/lib/providers/approval-readiness";
+import {
+  serializeVerificationFeedback,
+  type VerificationAdminFeedback,
+} from "@/lib/verification/feedback";
+import { notifyProviderVerificationEvent } from "@/lib/verification/notify";
 
 export type VerificationActionState = {
   success: boolean;
@@ -265,6 +270,12 @@ export async function approveVerificationAction(
       locale: owner.locale,
     });
   }
+  if (owner?.ownerId) {
+    await notifyProviderVerificationEvent({
+      ownerId: owner.ownerId,
+      kind: "approved",
+    });
+  }
 
   await logAdminAudit({
     actorId: authUser.id,
@@ -283,6 +294,8 @@ export async function approveVerificationAction(
 const rejectSchema = z.object({
   providerId: z.string().uuid(),
   rejectionReason: z.string().trim().min(3).max(500),
+  additionalNote: z.string().trim().max(1000).optional(),
+  recommendation: z.string().trim().max(1000).optional(),
 });
 
 export async function rejectVerificationAction(
@@ -297,9 +310,22 @@ export async function rejectVerificationAction(
   const parsed = rejectSchema.safeParse({
     providerId: formData.get("providerId"),
     rejectionReason: formData.get("rejectionReason"),
+    additionalNote: formData.get("additionalNote") || undefined,
+    recommendation: formData.get("recommendation") || undefined,
   });
 
   if (!parsed.success) return validationError();
+
+  const feedback: VerificationAdminFeedback = {
+    reason: parsed.data.rejectionReason,
+    ...(parsed.data.additionalNote
+      ? { note: parsed.data.additionalNote }
+      : {}),
+    ...(parsed.data.recommendation
+      ? { recommendation: parsed.data.recommendation }
+      : {}),
+  };
+  const serialized = serializeVerificationFeedback(feedback);
 
   const admin = createAdminClient();
   const now = new Date().toISOString();
@@ -319,7 +345,7 @@ export async function rejectVerificationAction(
     .from("provider_verifications")
     .update({
       status: "rejected",
-      rejection_reason: parsed.data.rejectionReason,
+      rejection_reason: serialized,
       reviewed_by: authUser.id,
       reviewed_at: now,
     })
@@ -332,6 +358,7 @@ export async function rejectVerificationAction(
     .update({
       status: "pending_review",
       verification_status: "rejected",
+      admin_review_note: serialized,
       updated_by: authUser.id,
     })
     .eq("id", parsed.data.providerId);
@@ -343,8 +370,15 @@ export async function rejectVerificationAction(
     await sendBusinessRejectedEmail({
       to: owner.email,
       businessName: owner.businessName,
-      reason: parsed.data.rejectionReason,
+      reason: feedback.reason,
       locale: owner.locale,
+    });
+  }
+  if (owner?.ownerId) {
+    await notifyProviderVerificationEvent({
+      ownerId: owner.ownerId,
+      kind: "rejected",
+      feedback,
     });
   }
 
@@ -355,7 +389,8 @@ export async function rejectVerificationAction(
     entityId: parsed.data.providerId,
     metadata: {
       verificationId: verification.id,
-      rejectionReason: parsed.data.rejectionReason,
+      rejectionReason: feedback.reason,
+      feedback,
     },
   });
 

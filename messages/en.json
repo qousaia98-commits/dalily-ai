@@ -1114,6 +1114,18 @@
     "bookingIssueReported": {
       "title": "Customer reported an issue",
       "body": "A customer reported a problem with an appointment. Chat stays open."
+    },
+    "verificationApproved": {
+      "title": "Verification approved",
+      "body": "Your identity has been successfully verified. Your profile is now trusted by customers."
+    },
+    "verificationRejected": {
+      "title": "Verification rejected",
+      "body": "Your verification could not be approved. Please review the reason below and upload new documents."
+    },
+    "verificationChangesRequested": {
+      "title": "Additional information required",
+      "body": "We need a few changes before we can approve your verification. Review the requested changes and upload the required documents."
     }
   },
   "footer": {
@@ -2025,13 +2037,19 @@
       "documentsHint": "Choose a normal phone photo. We prepare and optimize it automatically.",
       "camera": "Camera",
       "gallery": "Gallery",
+      "replace": "Retake photo",
+      "replaceGallery": "Choose new photo",
       "dropHint": "Or drag and drop a photo here",
       "upload": "Upload",
       "uploaded": "Uploaded",
       "uploadSuccess": "Document uploaded successfully.",
       "submitForReview": "Submit for review",
+      "submitAgain": "Submit again",
       "submitSuccess": "Your documents were submitted. We will notify you after review.",
       "draftHint": "Upload your ID documents, then submit for review. Logo and photos can be added later from your dashboard.",
+      "resubmitHint": "Your profile information is kept. Only upload the documents that need to be fixed.",
+      "resubmitTitle": "Upload new documents",
+      "resubmitSubtitle": "Review the reason above, then replace the photos that need improvement.",
       "approvedBanner": "Your business is verified and visible in search results.",
       "pendingBanner": "Your documents are under review. You will be notified once an admin decides.",
       "rejectionTitle": "Verification rejected",
@@ -2040,6 +2058,64 @@
         "optimizing": "Optimizing image…",
         "uploading": "Uploading…",
         "submitted": "Verification submitted."
+      },
+      "statusCard": {
+        "reasonLabel": "Reason",
+        "noteLabel": "Additional note",
+        "recommendationLabel": "Recommendation",
+        "cta": {
+          "continue": "Continue verification",
+          "uploadAgain": "Upload new documents"
+        },
+        "draft": {
+          "title": "Complete your verification",
+          "why": "Verified profiles earn more customer trust.",
+          "next": "Upload your ID documents when you are ready.",
+          "action": "Continue to finish verification."
+        },
+        "pending_review": {
+          "title": "Documents under review",
+          "why": "Your documents are currently under review.",
+          "next": "We’ll notify you as soon as a decision is ready.",
+          "action": "No action required right now."
+        },
+        "approved": {
+          "title": "Verification completed successfully",
+          "why": "Your identity has been successfully verified.",
+          "next": "Your profile is now trusted by customers.",
+          "action": "Keep your profile complete to attract more bookings."
+        },
+        "rejected": {
+          "title": "Verification could not be approved",
+          "why": "Your verification could not be approved.",
+          "next": "Review the reason below and upload new documents.",
+          "action": "Only the documents need to be updated — your profile stays."
+        },
+        "changes_requested": {
+          "title": "Additional information is required",
+          "why": "We need a few changes before we can approve your verification.",
+          "next": "Review the requested changes and upload the required documents.",
+          "action": "Continue verification without restarting onboarding."
+        },
+        "expired": {
+          "title": "Verification expired",
+          "why": "Your verification needs to be renewed.",
+          "next": "Upload documents again when ready.",
+          "action": "Continue verification."
+        }
+      },
+      "timeline": {
+        "title": "Verification timeline",
+        "subtitle": "Follow every step of your verification journey.",
+        "events": {
+          "registered": "Registration completed",
+          "submitted": "Verification submitted",
+          "under_review": "Documents under review",
+          "changes_requested": "Changes requested",
+          "resubmitted": "Documents uploaded again",
+          "approved": "Verification approved",
+          "rejected": "Verification rejected"
+        }
       },
       "statusPanel": {
         "draft": {
@@ -2071,13 +2147,15 @@
         "draft": "Draft",
         "pending_review": "Pending review",
         "approved": "Approved",
-        "rejected": "Rejected"
+        "rejected": "Rejected",
+        "changes_requested": "Changes requested"
       },
       "displayNotes": {
         "draft": "Upload all required documents and submit them for review.",
         "pending_review": "An admin is reviewing your documents. Search visibility starts after approval.",
         "approved": "Your business is approved and can appear in search results.",
-        "rejected": "Please review the reason below, upload new documents, and submit again."
+        "rejected": "Please review the reason below, upload new documents, and submit again.",
+        "changes_requested": "Review the requested changes, then upload the required documents."
       },
       "documents": {
         "idFront": "ID front side",
@@ -3268,6 +3346,28 @@
         "validation_error": "Please enter a longer note.",
         "update_failed": "Could not save the decision.",
         "unknown": "Something went wrong."
+      }
+    },
+    "verificationFeedback": {
+      "rejectTitle": "Reject verification",
+      "rejectBody": "Explain why verification cannot be approved. The provider will see this message.",
+      "changesTitle": "Request changes",
+      "changesBody": "Tell the provider exactly what to fix. They will keep their profile and only update documents.",
+      "reason": "Reason",
+      "reasonPlaceholder": "Identity document is blurry…",
+      "note": "Additional note",
+      "notePlaceholder": "Optional details for the provider…",
+      "recommendation": "Recommendation",
+      "recommendationPlaceholder": "Please retake the photo in better lighting…",
+      "previewLabel": "Provider notification preview",
+      "cancel": "Cancel",
+      "submit": "Submit",
+      "presets": {
+        "blurry": "Identity document is blurry.",
+        "backMissing": "Back side is missing.",
+        "selfieMissing": "Selfie is missing.",
+        "expired": "Document has expired.",
+        "unreadable": "Business license cannot be read."
       }
     },
     "ranking": {

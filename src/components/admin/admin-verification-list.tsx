@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, ExternalLink, Loader2, XCircle } from "lucide-react";
@@ -12,12 +12,9 @@ import {
 } from "@/actions/verification.actions";
 import type { AdminVerificationItem } from "@/lib/verification/queries";
 import { getLocalizedField } from "@/types/provider.types";
-import { FieldError } from "@/components/forms/field-error";
-import { useClientFormValidation } from "@/hooks/use-client-form-validation";
+import { AdminVerificationFeedbackDialog } from "@/components/admin/admin-verification-feedback-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 
 const initialState: VerificationActionState = { success: false };
@@ -57,60 +54,40 @@ function RejectForm({ providerId }: { providerId: string }) {
   const t = useTranslations("admin.verification");
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [state, action, pending] = useActionState(rejectVerificationAction, initialState);
-  const formId = `reject-${providerId}`;
-  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
-    useClientFormValidation({ formId });
+  const [pending, startTransition] = useTransition();
+  const [state, setState] = useState<VerificationActionState>(initialState);
 
-  if (!open) {
-    return (
+  return (
+    <>
       <Button type="button" variant="destructive" size="sm" onClick={() => setOpen(true)}>
         <XCircle className="size-4" />
         {t("reject")}
       </Button>
-    );
-  }
-
-  return (
-    <form
-      action={action}
-      className="flex w-full flex-col gap-2 sm:flex-row sm:items-end"
-      noValidate
-      onSubmit={(event) => {
-        if (!guardSubmit(event)) return;
-        setTimeout(() => router.refresh(), 300);
-      }}
-    >
-      <input type="hidden" name="providerId" value={providerId} />
-      <div className="flex-1 space-y-1">
-        <Label htmlFor={`reject-${providerId}`}>{t("rejectionReason")}</Label>
-        <Input
-          id={`reject-${providerId}`}
-          name="rejectionReason"
-          minLength={3}
-          maxLength={500}
-          placeholder={t("rejectionPlaceholder")}
-          {...requiredAttr}
-          {...getFieldA11y("rejectionReason")}
-          onChange={() => clearFieldError("rejectionReason")}
-        />
-        <FieldError
-          name="rejectionReason"
-          formId={formId}
-          message={fieldErrors.rejectionReason}
-        />
-      </div>
-      <div className="flex gap-2">
-        <Button type="submit" variant="destructive" disabled={pending} className="gap-2">
-          {pending ? <Loader2 className="size-4 animate-spin" /> : null}
-          {t("confirmReject")}
-        </Button>
-        <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
-          {t("cancel")}
-        </Button>
-      </div>
-      {state.error ? <p className="text-sm text-destructive">{t(`errors.${state.error}`)}</p> : null}
-    </form>
+      <AdminVerificationFeedbackDialog
+        open={open}
+        mode="reject"
+        pending={pending}
+        onClose={() => setOpen(false)}
+        onSubmit={async (feedback) => {
+          startTransition(async () => {
+            const fd = new FormData();
+            fd.set("providerId", providerId);
+            fd.set("rejectionReason", feedback.reason);
+            if (feedback.note) fd.set("additionalNote", feedback.note);
+            if (feedback.recommendation) fd.set("recommendation", feedback.recommendation);
+            const result = await rejectVerificationAction(initialState, fd);
+            setState(result);
+            if (result.success) {
+              setOpen(false);
+              router.refresh();
+            }
+          });
+        }}
+      />
+      {state.error ? (
+        <p className="text-sm text-destructive">{t(`errors.${state.error}`)}</p>
+      ) : null}
+    </>
   );
 }
 
