@@ -6,8 +6,9 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { BusinessNotification } from "@/lib/business/notification-inbox";
+import { DALILY_CONVERSATION_ID } from "@/lib/dalily-messages/official-account";
 
-export const DALILY_CONVERSATION_ID = "dalily";
+export { DALILY_CONVERSATION_ID };
 
 export const DALILY_MESSAGE_TYPES = [
   "dalily_message",
@@ -56,7 +57,7 @@ function mapRowToInboxItem(row: DalilyMessageRow): BusinessNotification {
     icon: "message",
     titleKey: "dalilyOfficial.title",
     bodyKey: "dalilyOfficial.body",
-    bodyParams: { title, body },
+    bodyParams: params,
     bodyText,
     createdAt: row.created_at,
     unread: !row.read_at,

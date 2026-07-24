@@ -193,11 +193,39 @@
       "businessSubtitle": "محادثة مع عمل",
       "dalilyName": "دليلي",
       "dalilySender": "فريق دليلي",
-      "dalilySubtitle": "رسائل رسمية من فريق دليلي",
+      "dalilySubtitle": "الفريق الرسمي لدليلي",
+      "dalilyDescription": "ستجد هنا جميع الرسائل الرسمية والإعلانات المهمة من دليلي.",
+      "dalilyReadOnly": "هذه قناة رسمية من دليلي.\nلا يمكن الرد على هذه الرسائل.",
+      "dalilySince": "إطلاق المنصة",
+      "verifiedLabel": "موثّق",
+      "openProfile": "عرض ملف {name}",
       "composerHint": "تُرسل الرسائل فوراً.",
+      "richCtaDefault": "فتح",
       "customerHint": "افتح ملف عمل وأرسل طلباً للبدء.",
       "noMessagesYet": "لا رسائل بعد",
       "yesterday": "أمس",
+      "categories": {
+        "announcement": "إعلان",
+        "security": "أمان",
+        "feature": "ميزة جديدة",
+        "billing": "فوترة",
+        "maintenance": "صيانة",
+        "verification": "تحقق"
+      },
+      "profile": {
+        "actions": "إجراءات الحساب",
+        "channel": "القناة",
+        "officialChannel": "قناة تواصل رسمية",
+        "accountType": "نوع الحساب",
+        "systemAccount": "حساب نظام",
+        "status": "الحالة",
+        "verified": "موثّق",
+        "since": "منذ",
+        "viewAnnouncements": "عرض الإعلانات",
+        "mute": "كتم المحادثة",
+        "report": "الإبلاغ عن مشكلة",
+        "notificationSettings": "إعدادات الإشعارات"
+      },
       "dalilyWelcome": {
         "body": "أهلاً في رسائل دليلي. الرسائل الرسمية من دليلي بتظهر بهالمحادثة."
       },
@@ -1005,26 +1033,6 @@
       "draftNote": "ملفك في وضع المسودة. أكمله وأرسله للمراجعة.",
       "pendingNote": "ملفك قيد المراجعة. سنُعلمك عند الموافقة.",
       "activeNote": "ملفك منشور ومرئي للعملاء.",
-      "profileStrength": {
-        "eyebrow": "نمُ أسرع",
-        "title": "كمّل ملفك",
-        "subtitle": "الأعمال بملف مكتمل بتستقبل طلبات أكثر من الزباين على دليلي.",
-        "bonusHint": "الشعار والصور وساعات العمل والخدمات اختيارية — تقدر تضيفها أي وقت من لوحة التحكم.",
-        "optional": "اختياري",
-        "label": "قوة الملف",
-        "progressAria": "قوة الملف {percent} بالمئة",
-        "cta": "حسّن ملفك",
-        "completeTitle": "ملف نشاطك مكتمل.",
-        "completeBody": "الملفات القوية بتحصل ظهور أقوى وطلبات أكثر من الزباين.",
-        "items": {
-          "identity": "تم التحقق من الهوية",
-          "profile": "اكتمل ملف النشاط",
-          "logo": "ارفع شعارك",
-          "gallery": "ارفع صور شغلك",
-          "hours": "أضف ساعات العمل",
-          "services": "أضف خدمات أكثر"
-        }
-      },
       "firstRequest": {
         "title": "🎉 مبروك!",
         "body": "وصلك أول طلب من زبون.",
@@ -1098,29 +1106,11 @@
         "empty": "التتبع قريباً",
         "unlockPro": "افتح مع PRO"
       },
-      "todayOverview": {
-        "title": "يحتاج انتباهك",
-        "subtitle": "ابدأ من هنا — ثم الباقي.",
-        "requests": "طلبات جديدة",
-        "profileViews": "مشاهدات الملف",
-        "messages": "الرسائل",
-        "contacts": "تواصلات جديدة",
-        "growth": "ظهرت في البحث"
-      },
       "growth": {
         "title": "النمو",
         "bodyUnlocked": "صحة الملف {score}% · {searches} ظهور بالبحث هالأسبوع.",
         "bodyLocked": "رقّي حتى تفتح رؤى النمو والتحليلات.",
         "cta": "فتح النمو"
-      },
-      "quickActions": {
-        "title": "إجراءات سريعة",
-        "profile": "تعديل الملف",
-        "services": "إدارة الخدمات",
-        "public": "الملف العام",
-        "messages": "الرسائل",
-        "verification": "التحقق",
-        "upgrade": "ترقية"
       }
     },
     "welcome": {
@@ -1821,32 +1811,6 @@
           "rejected": "تم رفض التحقق"
         }
       },
-      "statusPanel": {
-        "draft": {
-          "title": "جاهز لما تكون جاهز",
-          "why": "صور هوية واضحة بتساعد الزباين يثقوا بشغلك.",
-          "next": "بعد ما ترسل، فريقنا بيراجع المستندات.",
-          "action": "التقط أو اختار صورة — نحنا منحسّنها إلك."
-        },
-        "pending_review": {
-          "title": "قيد المراجعة",
-          "why": "مستنداتك حالياً عم تنراجع.",
-          "next": "منبلّغك أول ما يصير القرار.",
-          "action": "ما في شي مطلوب هلق — تقدر تستخدم لوحة التحكم عادي."
-        },
-        "approved": {
-          "title": "موثّق",
-          "why": "تم توثيق نشاطك بنجاح.",
-          "next": "النشاطات الموثّقة بتاخد ثقة أقوى وظهور أفضل.",
-          "action": "خلّي ملفك مكتمل لتستقطب حجوزات أكثر."
-        },
-        "rejected": {
-          "title": "يلزم معلومات إضافية",
-          "why": "لازم معلومات إضافية لنكمّل التوثيق.",
-          "next": "ارفع صور أوضح وأعد الإرسال.",
-          "action": "شوف الملاحظة تحت، بعدين اختار صور جديدة."
-        }
-      },
       "displayStatus": {
         "draft": "مسودة",
         "pending_review": "قيد المراجعة",
@@ -2105,12 +2069,6 @@
         }
       }
     },
-    "changesRequired": {
-      "title": "مطلوب تعديلات",
-      "subtitle": "راجع فريق دليلي طلبك. كمّل النقاط التالية.",
-      "noteLabel": "ملاحظة الإدارة",
-      "cta": "متابعة التحقق"
-    },
     "messages": {
       "eyebrow": "الوارد",
       "title": "الرسائل",
@@ -2182,17 +2140,45 @@
       "openMessages": "فتح الرسائل",
       "dalilyName": "دليلي",
       "dalilySender": "فريق دليلي",
-      "dalilySubtitle": "رسائل رسمية من فريق دليلي",
+      "dalilySubtitle": "الفريق الرسمي لدليلي",
+      "dalilyDescription": "ستجد هنا جميع الرسائل الرسمية والإعلانات المهمة من دليلي.",
+      "dalilyReadOnly": "هذه قناة رسمية من دليلي.\nلا يمكن الرد على هذه الرسائل.",
+      "dalilySince": "إطلاق المنصة",
+      "verifiedLabel": "موثّق",
+      "openProfile": "عرض ملف {name}",
       "customerSubtitle": "محادثة زبون",
       "customerHint": "محادثات الزبائن بتظهر هون لما يبعتوا لك.",
       "back": "رجوع للمحادثات",
       "threadLabel": "رسائل مع {name}",
       "composerHint": "تُرسل الرسائل فوراً.",
+      "richCtaDefault": "فتح",
       "searchPlaceholder": "ابحث بالاسم أو الهاتف أو النشاط…",
       "searchEmpty": "ما في محادثات مطابقة.",
       "unreadCount": "{count} غير مقروء",
       "noMessagesYet": "لا رسائل بعد",
       "yesterday": "أمس",
+      "categories": {
+        "announcement": "إعلان",
+        "security": "أمان",
+        "feature": "ميزة جديدة",
+        "billing": "فوترة",
+        "maintenance": "صيانة",
+        "verification": "تحقق"
+      },
+      "profile": {
+        "actions": "إجراءات الحساب",
+        "channel": "القناة",
+        "officialChannel": "قناة تواصل رسمية",
+        "accountType": "نوع الحساب",
+        "systemAccount": "حساب نظام",
+        "status": "الحالة",
+        "verified": "موثّق",
+        "since": "منذ",
+        "viewAnnouncements": "عرض الإعلانات",
+        "mute": "كتم المحادثة",
+        "report": "الإبلاغ عن مشكلة",
+        "notificationSettings": "إعدادات الإشعارات"
+      },
       "dalilyWelcome": {
         "body": "أهلاً في رسائل دليلي. التحديثات المهمة عن نشاطك بتظهر بهالمحادثة."
       },

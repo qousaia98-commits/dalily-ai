@@ -47,9 +47,6 @@ export class VoiceRecorder {
 
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      console.log("[voice] getUserMedia succeeded", {
-        tracks: this.stream.getAudioTracks().map((t) => ({ label: t.label, kind: t.kind })),
-      });
     } catch (error) {
       const name = error instanceof Error ? error.name : "";
       console.error("[voice] getUserMedia failed:", name, error);
@@ -63,7 +60,6 @@ export class VoiceRecorder {
     }
 
     this.mimeType = pickMimeType();
-    console.log("[voice] selected MediaRecorder mimeType:", this.mimeType || "(browser default)");
     this.chunks = [];
 
     this.audioContext = new AudioContext();
@@ -78,7 +74,6 @@ export class VoiceRecorder {
       this.mimeType ? { mimeType: this.mimeType } : undefined,
     );
     this.mediaRecorder.ondataavailable = (event) => {
-      console.log("[voice] MediaRecorder chunk:", event.data.size, "bytes");
       if (event.data.size > 0) this.chunks.push(event.data);
     };
     this.mediaRecorder.onerror = (event) => {
@@ -86,7 +81,6 @@ export class VoiceRecorder {
     };
     this.mediaRecorder.onstop = () => {
       const blob = new Blob(this.chunks, { type: this.mimeType || "audio/webm" });
-      console.log("[voice] MediaRecorder stopped, chunks:", this.chunks.length, "blob size:", blob.size);
       this.stopResolve?.(blob);
       this.stopResolve = null;
     };

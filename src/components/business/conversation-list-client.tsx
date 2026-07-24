@@ -8,6 +8,8 @@ import type { BusinessConversation } from "@/lib/business/conversations";
 import { filterConversations } from "@/lib/business/conversations";
 import { formatConversationListTime } from "@/lib/messaging/format-conversation-time";
 import { useMarketplaceRealtime } from "@/hooks/use-marketplace-realtime";
+import { OfficialDalilyAvatar } from "@/components/messaging/official-dalily-avatar";
+import { VerifiedBadge } from "@/components/messaging/verified-badge";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -86,6 +88,7 @@ export function ConversationListClient({
             const timeLabel = formatConversationListTime(c.updatedAt, locale, {
               yesterday: t("yesterday"),
             });
+            const isOfficial = c.kind === "dalily" || c.official;
 
             return (
               <li key={c.id}>
@@ -96,23 +99,29 @@ export function ConversationListClient({
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)]",
                     active
                       ? "border-[var(--dalily-gold)]/40 bg-[color-mix(in_oklab,var(--dalily-gold)_10%,var(--card))]"
-                      : "border-border bg-card hover:bg-muted/40",
+                      : isOfficial
+                        ? "border-[var(--dalily-gold)]/20 bg-card hover:bg-muted/40"
+                        : "border-border bg-card hover:bg-muted/40",
                   )}
                 >
-                  <span
-                    className={cn(
-                      "flex size-11 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-                      c.avatarTone === "dalily"
-                        ? "bg-[var(--dalily-navy)] text-[var(--dalily-gold)]"
-                        : "bg-muted text-foreground",
-                    )}
-                    aria-hidden
-                  >
-                    {c.avatarTone === "dalily" ? "D" : (name.slice(0, 1) || "?").toUpperCase()}
-                  </span>
+                  {isOfficial ? (
+                    <OfficialDalilyAvatar size="md" />
+                  ) : (
+                    <span
+                      className="flex size-11 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold text-foreground"
+                      aria-hidden
+                    >
+                      {(name.slice(0, 1) || "?").toUpperCase()}
+                    </span>
+                  )}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="truncate text-sm font-bold text-foreground">{name}</p>
+                      <div className="flex min-w-0 items-center gap-1">
+                        <p className="truncate text-sm font-bold text-foreground">{name}</p>
+                        {c.verified || isOfficial ? (
+                          <VerifiedBadge size="sm" label={t("verifiedLabel")} />
+                        ) : null}
+                      </div>
                       {timeLabel ? (
                         <time
                           className="shrink-0 text-[0.65rem] text-muted-foreground"

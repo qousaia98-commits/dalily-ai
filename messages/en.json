@@ -193,11 +193,39 @@
       "businessSubtitle": "Business conversation",
       "dalilyName": "Dalily",
       "dalilySender": "Dalily Team",
-      "dalilySubtitle": "Official messages from Dalily Team",
+      "dalilySubtitle": "Official Dalily Team",
+      "dalilyDescription": "Official announcements, verification updates and important information from Dalily.",
+      "dalilyReadOnly": "This is an official Dalily channel.\nReplies are not available.",
+      "dalilySince": "Platform launch",
+      "verifiedLabel": "Verified",
+      "openProfile": "View {name} profile",
       "composerHint": "Messages send instantly.",
+      "richCtaDefault": "Open",
       "customerHint": "Open a business profile and send a request to get started.",
       "noMessagesYet": "No messages yet",
       "yesterday": "Yesterday",
+      "categories": {
+        "announcement": "Announcement",
+        "security": "Security",
+        "feature": "Feature",
+        "billing": "Billing",
+        "maintenance": "Maintenance",
+        "verification": "Verification"
+      },
+      "profile": {
+        "actions": "Account actions",
+        "channel": "Channel",
+        "officialChannel": "Official communication channel",
+        "accountType": "Account type",
+        "systemAccount": "System Account",
+        "status": "Status",
+        "verified": "Verified",
+        "since": "Since",
+        "viewAnnouncements": "View announcements",
+        "mute": "Mute conversation",
+        "report": "Report a problem",
+        "notificationSettings": "Notification settings"
+      },
       "dalilyWelcome": {
         "body": "Welcome to Dalily Messages. Official updates from Dalily will appear in this chat."
       },
@@ -1146,7 +1174,7 @@
     },
     "dalilyMessage": {
       "title": "New message from Dalily",
-      "body": "Open Messages to read your message from Dalily."
+      "body": "Open Messages to read it."
     },
     "adminWarning": {
       "title": "Important notice from Dalily",
@@ -1332,26 +1360,6 @@
       "draftNote": "Your profile is in draft. Complete it and submit for review.",
       "pendingNote": "Your profile is under review. We'll notify you when it's approved.",
       "activeNote": "Your profile is live and visible to customers.",
-      "profileStrength": {
-        "eyebrow": "Grow faster",
-        "title": "Complete your profile",
-        "subtitle": "Complete profiles receive more customer requests on Dalily.",
-        "bonusHint": "Logo, photos, hours and services are optional — add them anytime from your dashboard.",
-        "optional": "Optional",
-        "label": "Profile strength",
-        "progressAria": "Profile strength {percent} percent",
-        "cta": "Improve profile",
-        "completeTitle": "Your business profile is complete.",
-        "completeBody": "Strong profiles get more visibility and customer requests.",
-        "items": {
-          "identity": "Identity verified",
-          "profile": "Business profile completed",
-          "logo": "Upload logo",
-          "gallery": "Upload work photos",
-          "hours": "Add opening hours",
-          "services": "Add more services"
-        }
-      },
       "firstRequest": {
         "title": "🎉 Congratulations!",
         "body": "You received your first customer request.",
@@ -1425,29 +1433,11 @@
         "empty": "Tracking soon",
         "unlockPro": "Unlock with PRO"
       },
-      "todayOverview": {
-        "title": "Needs attention",
-        "subtitle": "Start here — then everything else.",
-        "requests": "New requests",
-        "profileViews": "Profile views",
-        "messages": "Messages",
-        "contacts": "New contacts",
-        "growth": "Seen in search"
-      },
       "growth": {
         "title": "Growth",
         "bodyUnlocked": "Health score {score}% · {searches} search appearances this week.",
         "bodyLocked": "Upgrade to unlock full growth insights and analytics.",
         "cta": "Open Growth"
-      },
-      "quickActions": {
-        "title": "Quick actions",
-        "profile": "Edit Profile",
-        "services": "Manage Services",
-        "public": "Public Profile",
-        "messages": "Messages",
-        "verification": "Verification",
-        "upgrade": "Upgrade"
       }
     },
     "welcome": {
@@ -2148,32 +2138,6 @@
           "rejected": "Verification rejected"
         }
       },
-      "statusPanel": {
-        "draft": {
-          "title": "Ready when you are",
-          "why": "Uploading clear ID photos helps customers trust your business.",
-          "next": "After you submit, our team reviews your documents.",
-          "action": "Take or choose a photo — we optimize it for you."
-        },
-        "pending_review": {
-          "title": "Under review",
-          "why": "Your documents are currently being reviewed.",
-          "next": "We’ll notify you as soon as a decision is ready.",
-          "action": "No action needed right now — you can keep using your dashboard."
-        },
-        "approved": {
-          "title": "Verified",
-          "why": "Your business has been successfully verified.",
-          "next": "Verified businesses earn more trust and stronger search presence.",
-          "action": "Keep your profile complete to attract more bookings."
-        },
-        "rejected": {
-          "title": "Additional information needed",
-          "why": "Additional information is required to finish verification.",
-          "next": "Upload clearer photos and submit again.",
-          "action": "Check the note below, then choose new photos."
-        }
-      },
       "displayStatus": {
         "draft": "Draft",
         "pending_review": "Pending review",
@@ -2434,12 +2398,6 @@
         }
       }
     },
-    "changesRequired": {
-      "title": "Changes Required",
-      "subtitle": "The admin reviewed your submission. Please complete the following items.",
-      "noteLabel": "Admin note",
-      "cta": "Continue Verification"
-    },
     "messages": {
       "eyebrow": "Inbox",
       "title": "Messages",
@@ -2511,17 +2469,45 @@
       "openMessages": "Open Messages",
       "dalilyName": "Dalily",
       "dalilySender": "Dalily Team",
-      "dalilySubtitle": "Official messages from Dalily Team",
+      "dalilySubtitle": "Official Dalily Team",
+      "dalilyDescription": "Official announcements, verification updates and important information from Dalily.",
+      "dalilyReadOnly": "This is an official Dalily channel.\nReplies are not available.",
+      "dalilySince": "Platform launch",
+      "verifiedLabel": "Verified",
+      "openProfile": "View {name} profile",
       "customerSubtitle": "Customer conversation",
       "customerHint": "Customer chats will appear here when people message you.",
       "back": "Back to conversations",
       "threadLabel": "Messages with {name}",
       "composerHint": "Messages send instantly.",
+      "richCtaDefault": "Open",
       "searchPlaceholder": "Search by name, phone, or business…",
       "searchEmpty": "No conversations match your search.",
       "unreadCount": "{count} unread",
       "noMessagesYet": "No messages yet",
       "yesterday": "Yesterday",
+      "categories": {
+        "announcement": "Announcement",
+        "security": "Security",
+        "feature": "Feature",
+        "billing": "Billing",
+        "maintenance": "Maintenance",
+        "verification": "Verification"
+      },
+      "profile": {
+        "actions": "Account actions",
+        "channel": "Channel",
+        "officialChannel": "Official communication channel",
+        "accountType": "Account type",
+        "systemAccount": "System Account",
+        "status": "Status",
+        "verified": "Verified",
+        "since": "Since",
+        "viewAnnouncements": "View announcements",
+        "mute": "Mute conversation",
+        "report": "Report a problem",
+        "notificationSettings": "Notification settings"
+      },
       "dalilyWelcome": {
         "body": "Welcome to Dalily Messages. Important updates about your business will appear in this chat."
       },

@@ -20,8 +20,4 @@ export {
   recomputeCustomerPreferences,
   scheduleLearningUpdate,
 } from "./recompute";
-export {
-  buildFeatureVector,
-  predictWithFutureModel,
-  type FutureMlModelSlot,
-} from "./future-ml";
+export { type FutureMlModelSlot } from "./future-ml";

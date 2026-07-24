@@ -4,27 +4,6 @@ import { getLocalizedField } from "@/types/provider.types";
 
 export type OnboardingPhase = "identity" | "profile" | "success";
 
-export type ProfileStrengthItemId =
-  | "identity"
-  | "profile"
-  | "logo"
-  | "gallery"
-  | "hours"
-  | "services";
-
-export type ProfileStrengthItem = {
-  id: ProfileStrengthItemId;
-  done: boolean;
-};
-
-export type ProfileStrength = {
-  items: ProfileStrengthItem[];
-  completedCount: number;
-  totalCount: number;
-  percent: number;
-  allDone: boolean;
-};
-
 function hasLocalizedText(
   value: { ar?: string; en?: string } | null | undefined,
 ): boolean {
@@ -117,52 +96,4 @@ export function shouldShowWelcomeLanding(
   if (provider.status === "active" || provider.status === "pending_review") return false;
   if (verification.status === "approved" || verification.status === "pending") return false;
   return !hasIdentityDocuments(verification);
-}
-
-export function getProfileStrength(
-  provider: ManagedProvider,
-  verification: BusinessVerificationView,
-  locale: string = "ar",
-): ProfileStrength {
-  const items: ProfileStrengthItem[] = [
-    {
-      id: "identity",
-      done:
-        hasIdentityDocuments(verification) ||
-        verification.status === "approved" ||
-        provider.verificationStatus === "verified",
-    },
-    {
-      id: "profile",
-      done: isBusinessProfileBasicsComplete(provider, locale),
-    },
-    {
-      id: "logo",
-      done: Boolean(provider.avatarImageId),
-    },
-    {
-      id: "gallery",
-      done: provider.gallery.length >= 3,
-    },
-    {
-      id: "hours",
-      done: hasConfiguredOpeningHours(provider),
-    },
-    {
-      id: "services",
-      done: provider.services.length > 0,
-    },
-  ];
-
-  const completedCount = items.filter((i) => i.done).length;
-  const totalCount = items.length;
-  const percent = Math.round((completedCount / totalCount) * 100);
-
-  return {
-    items,
-    completedCount,
-    totalCount,
-    percent,
-    allDone: completedCount === totalCount,
-  };
 }

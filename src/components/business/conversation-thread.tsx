@@ -6,7 +6,10 @@ import type { ServiceRequestDetail } from "@/lib/service-requests/types";
 import { MarkConversationRead } from "@/components/business/mark-conversation-read";
 import { ChatThreadClientShell } from "@/components/messaging/chat-thread-client-shell";
 import { ConversationQuickActions } from "@/components/messaging/conversation-quick-actions";
+import { OfficialDalilyAvatar } from "@/components/messaging/official-dalily-avatar";
+import { OfficialMessageCard } from "@/components/messaging/official-message-card";
 import { ReadReceiptIcon } from "@/components/messaging/read-receipt-icon";
+import { VerifiedBadge } from "@/components/messaging/verified-badge";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +41,8 @@ export async function ConversationThread({
   const locale = await getLocale();
   const name = conversation.nameKey ? t(conversation.nameKey) : (conversation.name ?? "Chat");
   const lastMessageAt = resolveLatestMessageAt(conversation.messages);
+  const isOfficial = conversation.kind === "dalily" || conversation.official;
+  const profileHref = `${messagesPath}/dalily/about`;
 
   const chatOpen = request ? canChat(request.status) : conversation.kind === "customer";
 
@@ -64,36 +69,51 @@ export async function ConversationThread({
               <ArrowLeft className="size-4" />
             </Link>
           </Button>
-          <span
-            className={cn(
-              "flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-              conversation.avatarTone === "dalily"
-                ? "bg-[var(--dalily-navy)] text-[var(--dalily-gold)]"
-                : "bg-muted text-foreground",
-            )}
-            aria-hidden
-          >
-            {conversation.avatarTone === "dalily" ? "D" : name.slice(0, 1).toUpperCase()}
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="truncate font-bold text-foreground">{name}</p>
-            {request ? (
-              <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                <span className="truncate text-xs text-muted-foreground">{request.title}</span>
-                <Badge variant="secondary" className="text-[0.65rem]">
-                  {tm(`status.${request.status}`)}
-                </Badge>
+          {isOfficial ? (
+            <Link
+              href={profileHref}
+              className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)]"
+              aria-label={t("openProfile", { name })}
+            >
+              <OfficialDalilyAvatar size="md" />
+              <div className="min-w-0 flex-1 text-start">
+                <div className="flex items-center gap-1.5">
+                  <p className="truncate font-bold text-foreground">{name}</p>
+                  <VerifiedBadge size="sm" label={t("verifiedLabel")} />
+                </div>
+                <p className="truncate text-xs font-medium text-muted-foreground">
+                  {t("dalilySubtitle")}
+                </p>
+                <p className="mt-0.5 line-clamp-2 text-[0.7rem] leading-snug text-muted-foreground/90">
+                  {t("dalilyDescription")}
+                </p>
               </div>
-            ) : (
-              <p className="text-xs text-muted-foreground">
-                {conversation.kind === "dalily"
-                  ? t("dalilySubtitle")
-                  : viewer === "customer"
-                    ? t("businessSubtitle")
-                    : t("customerSubtitle")}
-              </p>
-            )}
-          </div>
+            </Link>
+          ) : (
+            <>
+              <span
+                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-bold text-foreground"
+                aria-hidden
+              >
+                {name.slice(0, 1).toUpperCase()}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-bold text-foreground">{name}</p>
+                {request ? (
+                  <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+                    <span className="truncate text-xs text-muted-foreground">{request.title}</span>
+                    <Badge variant="secondary" className="text-[0.65rem]">
+                      {tm(`status.${request.status}`)}
+                    </Badge>
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    {viewer === "customer" ? t("businessSubtitle") : t("customerSubtitle")}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
           {conversation.kind === "customer" ? (
             <ConversationQuickActions
               conversationId={conversation.id}
@@ -147,30 +167,47 @@ export async function ConversationThread({
         aria-label={t("threadLabel", { name })}
       >
         {conversation.messages.map((msg) => {
-          const isOfficialChat = Boolean(msg.bodyText) && msg.from === "dalily";
-          const isSystem = !isOfficialChat && (msg.isSystem || msg.from === "dalily");
+          const isOfficialChat = msg.from === "dalily";
+          const isSystemCard =
+            isOfficialChat && !msg.bodyText && !msg.rich && msg.id === "dalily_welcome"
+              ? false
+              : isOfficialChat && !msg.bodyText && !msg.rich;
           const mine =
-            !isSystem &&
             !isOfficialChat &&
             (viewer === "customer" ? msg.from === "customer" : msg.from === "business");
           const body = msg.bodyText ? msg.bodyText : t(msg.bodyKey, msg.bodyParams ?? {});
           const timeLabel = formatMessageTime(msg.createdAt, locale);
 
-          if (isSystem) {
-            return (
-              <div key={msg.id} className="flex justify-center">
-                <div className="max-w-[90%] rounded-2xl border border-[var(--dalily-gold)]/30 bg-[color-mix(in_oklab,var(--dalily-gold)_10%,var(--card))] px-3.5 py-2 text-center text-xs leading-relaxed text-foreground sm:max-w-[75%]">
-                  <p className="font-medium whitespace-pre-wrap">{body}</p>
-                  {timeLabel && isValidMessageTimestamp(msg.createdAt) ? (
-                    <time
-                      className="mt-1 block text-[0.6rem] text-muted-foreground"
-                      dateTime={msg.createdAt}
-                    >
-                      {timeLabel}
-                    </time>
-                  ) : null}
+          if (isOfficialChat) {
+            if (isSystemCard) {
+              return (
+                <div key={msg.id} className="flex justify-center">
+                  <div className="max-w-[90%] rounded-2xl border border-[var(--dalily-gold)]/30 bg-[color-mix(in_oklab,var(--dalily-gold)_10%,var(--card))] px-3.5 py-2 text-center text-xs leading-relaxed text-foreground sm:max-w-[75%]">
+                    <p className="font-medium whitespace-pre-wrap">{body}</p>
+                    {timeLabel && isValidMessageTimestamp(msg.createdAt) ? (
+                      <time
+                        className="mt-1 block text-[0.6rem] text-muted-foreground"
+                        dateTime={msg.createdAt}
+                      >
+                        {timeLabel}
+                      </time>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
+              );
+            }
+
+            return (
+              <OfficialMessageCard
+                key={msg.id}
+                body={body}
+                category={msg.category}
+                rich={msg.rich}
+                timeLabel={timeLabel && isValidMessageTimestamp(msg.createdAt) ? timeLabel : null}
+                createdAt={msg.createdAt}
+                namespace={namespace}
+                senderLabel={t("dalilySender")}
+              />
             );
           }
 
@@ -184,16 +221,9 @@ export async function ConversationThread({
                   "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed shadow-sm sm:max-w-[70%]",
                   mine
                     ? "rounded-ee-md bg-[var(--dalily-navy)] text-white"
-                    : isOfficialChat
-                      ? "rounded-es-md border border-[var(--dalily-gold)]/35 bg-[color-mix(in_oklab,var(--dalily-gold)_8%,var(--card))] text-foreground"
-                      : "rounded-es-md border border-border bg-card text-foreground",
+                    : "rounded-es-md border border-border bg-card text-foreground",
                 )}
               >
-                {isOfficialChat ? (
-                  <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-wide text-[var(--dalily-gold)]">
-                    {t("dalilySender")}
-                  </p>
-                ) : null}
                 <p className="whitespace-pre-wrap">{body}</p>
                 {msg.messageType === "location" && msg.locationLat != null && msg.locationLng != null ? (
                   <a
@@ -241,8 +271,10 @@ export async function ConversationThread({
           <p className="text-center text-xs text-muted-foreground">{tm("chatLocked")}</p>
         </div>
       ) : (
-        <div className="border-t border-border px-4 py-3">
-          <p className="text-center text-xs text-muted-foreground">{t("composerHint")}</p>
+        <div className="border-t border-border bg-[color-mix(in_oklab,var(--dalily-navy)_4%,var(--card))] px-4 py-4">
+          <p className="text-center text-sm font-medium text-foreground whitespace-pre-line">
+            {t("dalilyReadOnly")}
+          </p>
         </div>
       )}
     </div>

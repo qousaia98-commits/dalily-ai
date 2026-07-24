@@ -26,24 +26,3 @@ export type FutureMlPrediction = {
   score: number | null;
   version: string | null;
 };
-
-/** Build a training-ready feature row from current learning state. */
-export function buildFeatureVector(
-  input: Omit<FutureMlFeatureVector, "eventCounts"> & {
-    eventCounts?: Record<string, number>;
-  },
-): FutureMlFeatureVector {
-  return {
-    ...input,
-    eventCounts: input.eventCounts ?? {},
-  };
-}
-
-/** Placeholder — returns null until a model is registered. */
-export function predictWithFutureModel(
-  slot: FutureMlModelSlot,
-  _features: FutureMlFeatureVector,
-): FutureMlPrediction {
-  void _features;
-  return { model: slot, score: null, version: null };
-}

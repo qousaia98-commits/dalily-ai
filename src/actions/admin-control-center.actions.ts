@@ -212,7 +212,12 @@ export async function sendAdminBroadcastAction(input: {
       type: "dalily_message",
       titleKey: "notifications.dalilyMessage.title",
       bodyKey: "notifications.dalilyMessage.body",
-      bodyParams: { title, body, broadcastId },
+      bodyParams: {
+        title,
+        body,
+        broadcastId,
+        category: "announcement",
+      },
     },
     { max: 2000, hrefByUserId },
   );

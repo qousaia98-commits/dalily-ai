@@ -200,12 +200,6 @@ export async function listVerificationsForAdmin(params: {
   };
 }
 
-/** @deprecated Use listVerificationsForAdmin with status pending */
-export async function listPendingVerificationsForAdmin(): Promise<AdminVerificationItem[]> {
-  const result = await listVerificationsForAdmin({ status: "pending", pageSize: 100 });
-  return result.items;
-}
-
 export async function createSignedVerificationUrl(path: string, expiresIn = 3600): Promise<string | null> {
   const admin = createAdminClient();
   const { data, error } = await admin.storage

@@ -1,6 +1,16 @@
 import type { BusinessNotification } from "@/lib/business/notification-inbox";
 import type { MsgReadMap } from "@/lib/business/message-read-state";
 import { resolveLatestMessageAt } from "@/lib/messaging/format-conversation-time";
+import {
+  getOfficialAccountByConversationId,
+  OFFICIAL_ACCOUNTS,
+} from "@/lib/dalily-messages/official-account";
+import {
+  parseDalilyCategory,
+  parseDalilyRichContent,
+  type DalilyMessageCategory,
+  type DalilyRichContent,
+} from "@/lib/dalily-messages/message-meta";
 
 export type ConversationKind = "dalily" | "customer";
 export type ConversationState = "unread" | "read" | "archived";
@@ -20,6 +30,10 @@ export type ConversationMessage = {
   locationLat?: number | null;
   locationLng?: number | null;
   locationLabel?: string | null;
+  /** Official channel category badge (future-ready; absent on legacy rows). */
+  category?: DalilyMessageCategory | null;
+  /** Optional rich layout for official messages. */
+  rich?: DalilyRichContent | null;
   attachments?: Array<{
     id: string;
     fileName: string;
@@ -47,6 +61,9 @@ export type BusinessConversation = {
   isTyping?: boolean;
   pinned?: boolean;
   archived?: boolean;
+  /** Official verified system account (Dalily). */
+  official?: boolean;
+  verified?: boolean;
   peerUserId?: string | null;
   peerOnline?: boolean | null;
   messages: ConversationMessage[];
@@ -55,7 +72,7 @@ export type BusinessConversation = {
 
 /**
  * Build WhatsApp-style conversations.
- * Dalily is a permanent system thread; customer chats are structured for future realtime.
+ * Dalily is a permanent official system thread; customer chats are structured for future realtime.
  */
 export function buildBusinessConversations(input: {
   notifications: BusinessNotification[];
@@ -63,6 +80,7 @@ export function buildBusinessConversations(input: {
 }): BusinessConversation[] {
   const readMap = input.readMap ?? {};
   const dalilyReadAt = readMap.dalily ? new Date(readMap.dalily).getTime() : 0;
+  const account = OFFICIAL_ACCOUNTS.dalily;
 
   const dalilyMessages: ConversationMessage[] = input.notifications
     .filter((n) => n.source === "dalily" || n.source === "admin")
@@ -79,6 +97,8 @@ export function buildBusinessConversations(input: {
         read: markedRead || !n.unread,
         isSystem: true,
         messageType: "system" as const,
+        category: parseDalilyCategory(n.bodyParams),
+        rich: parseDalilyRichContent(n.bodyParams),
       };
     });
 
@@ -90,6 +110,7 @@ export function buildBusinessConversations(input: {
       createdAt: "",
       from: "dalily",
       read: true,
+      category: "announcement",
     });
   }
 
@@ -115,9 +136,9 @@ export function buildBusinessConversations(input: {
     : undefined;
 
   const dalily: BusinessConversation = {
-    id: "dalily",
+    id: account.conversationId,
     kind: "dalily",
-    nameKey: "dalilyName",
+    nameKey: account.nameKey,
     avatarTone: "dalily",
     previewKey: previewLine ? undefined : last.bodyKey,
     previewText: previewLine,
@@ -125,16 +146,24 @@ export function buildBusinessConversations(input: {
     updatedAt: resolveLatestMessageAt(dalilyMessages),
     unreadCount,
     state: unreadCount > 0 ? "unread" : "read",
+    pinned: true,
+    official: true,
+    verified: true,
     messages: dalilyMessages,
   };
 
   return [dalily].sort(compareConversationsByLatestMessage);
 }
 
+/** Sort with official Dalily pinned near the top, then by latest message. */
 export function compareConversationsByLatestMessage(
   a: BusinessConversation,
   b: BusinessConversation,
 ) {
+  const aOfficial = a.official || a.kind === "dalily" ? 1 : 0;
+  const bOfficial = b.official || b.kind === "dalily" ? 1 : 0;
+  if (aOfficial !== bOfficial) return bOfficial - aOfficial;
+
   const aMs = a.updatedAt ? Date.parse(a.updatedAt) : 0;
   const bMs = b.updatedAt ? Date.parse(b.updatedAt) : 0;
   return (Number.isFinite(bMs) ? bMs : 0) - (Number.isFinite(aMs) ? aMs : 0);
@@ -189,12 +218,28 @@ export function filterConversations(
     const phone = (c.phone ?? "").toLowerCase();
     const preview = (c.previewText ?? "").toLowerCase();
     const messageHit = c.messages.some((m) => (m.bodyText ?? "").toLowerCase().includes(q));
+    const account = getOfficialAccountByConversationId(c.id);
+    const aliasHit = Boolean(
+      account?.searchAliases.some(
+        (alias) => alias.toLowerCase().includes(q) || q.includes(alias.toLowerCase()),
+      ),
+    );
+    const officialHit =
+      c.kind === "dalily" &&
+      (q.includes("official") ||
+        q.includes("system") ||
+        q.includes("dalily") ||
+        q.includes("دليلي") ||
+        aliasHit);
+
     return (
       name.includes(q) ||
       phone.includes(q) ||
       preview.includes(q) ||
       messageHit ||
-      c.id.includes(q)
+      c.id.includes(q) ||
+      aliasHit ||
+      officialHit
     );
   });
 }

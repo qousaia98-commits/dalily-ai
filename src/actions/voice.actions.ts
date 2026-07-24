@@ -26,11 +26,6 @@ export async function transcribeVoiceQueryAction(
   formData: FormData,
 ): Promise<TranscribeVoiceQueryResult> {
   const file = formData.get("audio");
-  console.log("[voice] transcribeVoiceQueryAction received:", {
-    isFile: file instanceof File,
-    size: file instanceof File ? file.size : null,
-    type: file instanceof File ? file.type : null,
-  });
 
   if (!(file instanceof File) || file.size === 0) {
     console.error("[voice] rejected: no audio file in FormData (or empty)");
@@ -62,12 +57,6 @@ export async function transcribeVoiceQueryAction(
     openaiForm.set("model", "whisper-1");
     openaiForm.set("response_format", "verbose_json");
 
-    console.log("[voice] sending to Whisper:", {
-      size: file.size,
-      type: file.type,
-      name: file.name,
-    });
-
     const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}` },
@@ -82,7 +71,6 @@ export async function transcribeVoiceQueryAction(
     }
 
     const payload = (await response.json()) as { text?: string; language?: string };
-    console.log("[voice] Whisper response:", payload);
     const text = payload.text?.trim();
     if (!text) {
       console.error("[voice] Whisper returned an empty transcript");
