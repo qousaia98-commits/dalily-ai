@@ -4,8 +4,8 @@ import type { SyncLocalizedFieldInput, TranslationProvider } from "@/lib/transla
 
 /**
  * Builds a bilingual JSON field from a single source locale.
- * Translation is best-effort: on any provider failure the opposite
- * language is left empty and the original language is always preserved.
+ * Translation is best-effort: on provider failure the existing target
+ * locale (if any) is preserved and never overwritten with an empty string.
  */
 export async function syncLocalizedField(
   provider: TranslationProvider,
@@ -38,15 +38,18 @@ export async function syncLocalizedField(
   }
 
   try {
-    result[targetLocale] = await provider.translate(sourceText, sourceLocale, targetLocale);
+    const translated = (await provider.translate(sourceText, sourceLocale, targetLocale)).trim();
+    // Never persist an empty translation over an existing good value.
+    if (translated) {
+      result[targetLocale] = translated;
+    }
   } catch (error) {
     console.error("[translation] syncLocalizedField failed — keeping source language only", {
       sourceLocale,
       targetLocale,
       message: error instanceof Error ? error.message : String(error),
     });
-    // Do not invent a copy; leave the opposite language empty.
-    result[targetLocale] = "";
+    // Keep any existing target translation; do not overwrite with "".
   }
 
   return result;

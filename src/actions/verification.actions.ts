@@ -267,6 +267,10 @@ export async function approveVerificationAction(
     return { success: false, error: "not_found" };
   }
 
+  if (!isVerificationComplete(verification)) {
+    return { success: false, error: "documents_incomplete" };
+  }
+
   const { error: verificationError } = await admin
     .from("provider_verifications")
     .update({

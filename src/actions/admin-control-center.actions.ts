@@ -85,6 +85,16 @@ export async function moderateReviewAction(input: {
   const admin = createAdminClient();
   const now = new Date().toISOString();
 
+  const { data: reviewRow, error: fetchError } = await admin
+    .from("service_reviews")
+    .select("id, provider_id")
+    .eq("id", parsed.data)
+    .maybeSingle();
+
+  if (fetchError || !reviewRow?.provider_id) {
+    return { success: false, error: "not_found" };
+  }
+
   if (input.action === "delete") {
     const { error } = await admin
       .from("service_reviews")
@@ -100,15 +110,22 @@ export async function moderateReviewAction(input: {
     if (error) return { success: false, error: "update_failed" };
   }
 
+  // Recompute provider.rating_avg / review_count / trust via existing RPC.
+  await admin.rpc("recompute_provider_trust_score", {
+    p_provider_id: reviewRow.provider_id,
+  });
+
   await logAdminAction({
     actorId: authUser.id,
     action: `review_${input.action}`,
     entityType: "service_review",
     entityId: parsed.data,
+    metadata: { providerId: reviewRow.provider_id },
   });
 
   revalidatePath("/admin/reviews");
   revalidatePath("/admin");
+  revalidatePath(`/providers/${reviewRow.provider_id}`);
   return { success: true };
 }
 

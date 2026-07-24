@@ -605,6 +605,47 @@ export async function confirmProviderImageUploadAction(meta: {
 
   if (kind === "avatar" || kind === "cover") {
     const existingId = kind === "avatar" ? provider.avatarImageId : provider.coverImageId;
+
+    const { data: imageRow, error: imageError } = await supabase
+      .from("images")
+      .insert({
+        owner_id: authUser.id,
+        provider_id: provider.id,
+        path,
+        kind,
+        mime_type: parsed.data.mimeType,
+        size_bytes: parsed.data.size,
+        sort_order: 0,
+      })
+      .select("id")
+      .single();
+
+    if (imageError || !imageRow) {
+      await supabase.storage.from(PROVIDER_MEDIA_BUCKET).remove([path]);
+      return { success: false, error: "upload_failed" };
+    }
+
+    const providerPatch =
+      kind === "avatar"
+        ? { avatar_image_id: imageRow.id }
+        : { cover_image_id: imageRow.id };
+
+    const { error: providerError } = await supabase
+      .from("providers")
+      .update({ ...providerPatch, updated_by: authUser.id })
+      .eq("id", provider.id);
+
+    if (providerError) {
+      // Roll back the new image row + storage object; keep the previous avatar/cover.
+      await supabase
+        .from("images")
+        .update({ deleted_at: new Date().toISOString() })
+        .eq("id", imageRow.id);
+      await supabase.storage.from(PROVIDER_MEDIA_BUCKET).remove([path]);
+      return { success: false, error: "upload_failed" };
+    }
+
+    // Only after the provider points at the new image, retire the old one.
     if (existingId) {
       const { data: oldImage } = await supabase
         .from("images")
@@ -615,10 +656,17 @@ export async function confirmProviderImageUploadAction(meta: {
         .from("images")
         .update({ deleted_at: new Date().toISOString() })
         .eq("id", existingId);
-      if (oldImage?.path) {
+      if (oldImage?.path && oldImage.path !== path) {
         await supabase.storage.from(PROVIDER_MEDIA_BUCKET).remove([oldImage.path]);
       }
     }
+
+    await syncProfileCompleteness(authUser.id);
+    await revalidateBusiness(provider.id);
+    return {
+      success: true,
+      message: kind === "avatar" ? "logo_updated" : "cover_updated",
+    };
   }
 
   const { data: imageRow, error: imageError } = await supabase
@@ -640,25 +688,11 @@ export async function confirmProviderImageUploadAction(meta: {
     return { success: false, error: "upload_failed" };
   }
 
-  const providerPatch =
-    kind === "avatar"
-      ? { avatar_image_id: imageRow.id }
-      : kind === "cover"
-        ? { cover_image_id: imageRow.id }
-        : {};
-
-  if (kind !== "gallery") {
-    await supabase
-      .from("providers")
-      .update({ ...providerPatch, updated_by: authUser.id })
-      .eq("id", provider.id);
-  }
-
   await syncProfileCompleteness(authUser.id);
   await revalidateBusiness(provider.id);
   return {
     success: true,
-    message: kind === "avatar" ? "logo_updated" : kind === "cover" ? "cover_updated" : "uploaded",
+    message: "uploaded",
   };
 }
 

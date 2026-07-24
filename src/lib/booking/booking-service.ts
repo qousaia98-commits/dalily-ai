@@ -5,6 +5,7 @@ import type {
   BookingStatus,
   PreferredContact,
 } from "@/lib/booking/types";
+import { isBookingTransitionAllowed } from "@/lib/booking/status-machine";
 
 type BookingRow = Record<string, unknown>;
 
@@ -94,6 +95,13 @@ export async function updateBookingStatus(input: {
   status: BookingStatus;
   patch?: Record<string, unknown>;
 }): Promise<{ success: boolean; error?: string; booking?: Booking }> {
+  const current = await getBookingById(input.bookingId);
+  if (!current) return { success: false, error: "not_found" };
+
+  if (!isBookingTransitionAllowed(current.status, input.status)) {
+    return { success: false, error: "invalid_status_transition" };
+  }
+
   const supabase = await createClient();
   const patch: Record<string, unknown> = {
     status: input.status,
@@ -120,6 +128,7 @@ export async function updateBookingStatus(input: {
     .from("bookings")
     .update(patch)
     .eq("id", input.bookingId)
+    .eq("status", current.status)
     .is("deleted_at", null)
     .select("*")
     .maybeSingle();
@@ -129,6 +138,9 @@ export async function updateBookingStatus(input: {
       return { success: false, error: "overlap" };
     }
     return { success: false, error: "update_failed" };
+  }
+  if (!data) {
+    return { success: false, error: "invalid_status_transition" };
   }
   return { success: true, booking: mapBooking(data as BookingRow) };
 }
