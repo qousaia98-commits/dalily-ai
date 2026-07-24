@@ -2,7 +2,7 @@
 
 /**
  * Shared verification document upload with automatic compress/resize before upload.
- * Reuses compressImageFile — no verification logic changes.
+ * Reuses prepareVerificationImage — no verification logic changes.
  */
 
 import { useActionState, useEffect, useRef, useState, useTransition } from "react";
@@ -13,7 +13,7 @@ import {
   uploadVerificationDocumentAction,
   type VerificationActionState,
 } from "@/actions/verification.actions";
-import { compressImageFile } from "@/lib/media/compress-image";
+import { prepareVerificationImage } from "@/lib/media/compress-image";
 import { FieldError } from "@/components/forms/field-error";
 import { useClientFormValidation } from "@/hooks/use-client-form-validation";
 import { Button } from "@/components/ui/button";
@@ -36,10 +36,13 @@ type Props = {
   className?: string;
 };
 
-function mapUploadErrorCode(code: string | undefined): "friendly_large" | "invalid_file_type" | "file_required" | "upload_failed" {
+function mapUploadErrorCode(
+  code: string | undefined,
+): "friendly_large" | "invalid_file_type" | "file_required" | "upload_failed" | "save_failed" {
   if (code === "file_too_large") return "friendly_large";
   if (code === "invalid_file_type") return "invalid_file_type";
   if (code === "file_required") return "file_required";
+  if (code === "save_failed") return "save_failed";
   return "upload_failed";
 }
 
@@ -70,9 +73,12 @@ export function VerificationDocUpload({
   useEffect(() => {
     if (state.success) {
       setProgress("done");
+      setLocalError(null);
       router.refresh();
+    } else if (state.error) {
+      setProgress("idle");
     }
-  }, [state.success, router]);
+  }, [state.success, state.error, router]);
 
   useEffect(() => {
     return () => {
@@ -88,36 +94,22 @@ export function VerificationDocUpload({
 
     try {
       setProgress("optimizing");
-      let compressed = await compressImageFile(file, {
-        maxEdge: 1600,
-        quality: 0.82,
-        preferWebp: true,
-      });
+      const prepared = await prepareVerificationImage(file, 1_500_000);
 
-      // Phone photos must never fail on size — retry more aggressively if still large.
-      if (compressed.file.size > 4_500_000) {
-        compressed = await compressImageFile(compressed.file, {
-          maxEdge: 1280,
-          quality: 0.72,
-          preferWebp: true,
-        });
-      }
-      if (compressed.file.size > 4_500_000) {
-        compressed = await compressImageFile(compressed.file, {
-          maxEdge: 1024,
-          quality: 0.65,
-          preferWebp: false,
-        });
+      if (prepared.file.size > 4_500_000) {
+        setProgress("idle");
+        setLocalError(t("errors.friendly_large"));
+        return;
       }
 
       if (previewUrl) URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(URL.createObjectURL(compressed.file));
+      setPreviewUrl(URL.createObjectURL(prepared.file));
 
       setProgress("uploading");
       const fd = new FormData();
       fd.set("docType", docType);
       fd.set("providerId", providerId);
-      fd.set("file", compressed.file, compressed.file.name);
+      fd.set("file", prepared.file, prepared.file.name || `${docType}.jpg`);
 
       startTransition(() => {
         formAction(fd);
@@ -137,7 +129,7 @@ export function VerificationDocUpload({
         ? t("progress.optimizing")
         : progress === "uploading"
           ? t("progress.uploading")
-          : progress === "done" || uploaded
+          : progress === "done" || (uploaded && !state.error)
             ? t("progress.submitted")
             : null;
 
@@ -168,13 +160,13 @@ export function VerificationDocUpload({
         e.preventDefault();
         setDragOver(false);
         if (lockDrop) return;
-        const file = e.dataTransfer.files?.[0];
-        void handleFile(file);
+        const dropped = e.dataTransfer.files?.[0];
+        void handleFile(dropped);
       }}
     >
       <div className="flex items-center justify-between gap-2">
         <Label className="text-sm font-semibold">{label}</Label>
-        {uploaded ? (
+        {uploaded && !state.error ? (
           <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
             <CheckCircle2 className="size-3.5" aria-hidden />
             {variant === "onboarding" ? to("uploaded") : t("uploaded")}
@@ -248,7 +240,7 @@ export function VerificationDocUpload({
         }}
       />
 
-      {busy || progressLabel ? (
+      {busy || (progressLabel && !state.error && !localError) ? (
         <p className="flex items-center gap-2 text-sm text-muted-foreground" role="status" aria-live="polite">
           {busy ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <Upload className="size-4" aria-hidden />}
           {progressLabel}

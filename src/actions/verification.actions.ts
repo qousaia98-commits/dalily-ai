@@ -72,7 +72,13 @@ export async function uploadVerificationDocumentAction(
     return { success: false, error: "file_too_large" };
   }
 
-  if (!ALLOWED_VERIFICATION_TYPES.includes(file.type as (typeof ALLOWED_VERIFICATION_TYPES)[number])) {
+  // Normalize MIME — some browsers send empty type or image/jpg after canvas encode.
+  const normalizedType =
+    !file.type || file.type === "image/jpg"
+      ? "image/jpeg"
+      : file.type;
+
+  if (!ALLOWED_VERIFICATION_TYPES.includes(normalizedType as (typeof ALLOWED_VERIFICATION_TYPES)[number])) {
     return { success: false, error: "invalid_file_type" };
   }
 
@@ -91,12 +97,13 @@ export async function uploadVerificationDocumentAction(
 
   const docType = parsed.data as VerificationDocType;
   const supabase = await createClient();
-  const path = buildVerificationStoragePath(authUser.id, provider.id, docType, file.name);
+  const safeName = file.name?.trim() || `${docType}.jpg`;
+  const path = buildVerificationStoragePath(authUser.id, provider.id, docType, safeName);
   const buffer = Buffer.from(await file.arrayBuffer());
 
   const { error: uploadError } = await supabase.storage
     .from(PROVIDER_VERIFICATION_BUCKET)
-    .upload(path, buffer, { contentType: file.type, upsert: false });
+    .upload(path, buffer, { contentType: normalizedType, upsert: false });
 
   if (uploadError) return { success: false, error: "upload_failed" };
 
@@ -131,20 +138,31 @@ export async function uploadVerificationDocumentAction(
           ? existing.id_back_url
           : existing.selfie_url;
 
+    // After rejection, new uploads must return the row to pending (RLS + resubmit UX).
+    const resetAfterReject =
+      existing.status === "rejected"
+        ? {
+            status: "pending" as const,
+            rejection_reason: null,
+            reviewed_at: null,
+            reviewed_by: null,
+          }
+        : {};
+
     const updateResult =
       docType === "id_front"
         ? await supabase
             .from("provider_verifications")
-            .update({ id_front_url: path })
+            .update({ id_front_url: path, ...resetAfterReject })
             .eq("provider_id", provider.id)
         : docType === "id_back"
           ? await supabase
               .from("provider_verifications")
-              .update({ id_back_url: path })
+              .update({ id_back_url: path, ...resetAfterReject })
               .eq("provider_id", provider.id)
           : await supabase
               .from("provider_verifications")
-              .update({ selfie_url: path })
+              .update({ selfie_url: path, ...resetAfterReject })
               .eq("provider_id", provider.id);
 
     const updateError = updateResult.error;

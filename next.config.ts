@@ -9,7 +9,8 @@ const nextConfig: NextConfig = {
   experimental: {
     cpus: 1,
     serverActions: {
-      bodySizeLimit: "2mb",
+      // Verification docs: client compresses to ~1.5MB; allow headroom for FormData.
+      bodySizeLimit: "6mb",
     },
   },
   // Duplicate lint/tsc workers during `next build` OOM on some Windows hosts.
