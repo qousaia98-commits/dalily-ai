@@ -1,95 +1,10 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
-import { CheckCircle2, IdCard, Loader2, ShieldCheck } from "lucide-react";
-import {
-  uploadVerificationDocumentAction,
-  type VerificationActionState,
-} from "@/actions/verification.actions";
+import { IdCard, ShieldCheck } from "lucide-react";
 import type { BusinessVerificationView } from "@/lib/verification/queries";
-import { FieldError } from "@/components/forms/field-error";
-import { useClientFormValidation } from "@/hooks/use-client-form-validation";
+import { VerificationDocUpload } from "@/components/business/verification-doc-upload";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-
-const initial: VerificationActionState = { success: false };
-
-function DocUpload({
-  label,
-  docType,
-  providerId,
-  uploaded,
-  disabled,
-}: {
-  label: string;
-  docType: "id_front" | "id_back" | "selfie";
-  providerId: string;
-  uploaded: boolean;
-  disabled: boolean;
-}) {
-  const t = useTranslations("business.onboarding.identity");
-  const te = useTranslations("business.verification");
-  const router = useRouter();
-  const [state, action, pending] = useActionState(uploadVerificationDocumentAction, initial);
-  const formId = `onboard-${docType}`;
-  const { fieldErrors, guardSubmit, getFieldA11y, requiredAttr, clearFieldError } =
-    useClientFormValidation({ formId });
-
-  useEffect(() => {
-    if (state.success) router.refresh();
-  }, [state.success, router]);
-
-  return (
-    <form
-      action={action}
-      className="space-y-2.5 rounded-2xl border border-border/80 bg-card p-4"
-      noValidate
-      onSubmit={guardSubmit}
-    >
-      <input type="hidden" name="docType" value={docType} />
-      <input type="hidden" name="providerId" value={providerId} />
-      <div className="flex items-center justify-between gap-2">
-        <Label htmlFor={`onboard-${docType}`} className="text-sm font-semibold">
-          {label}
-        </Label>
-        {uploaded ? (
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
-            <CheckCircle2 className="size-3.5" aria-hidden />
-            {t("uploaded")}
-          </span>
-        ) : null}
-      </div>
-      <Input
-        id={`onboard-${docType}`}
-        name="file"
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        disabled={disabled || pending}
-        className="rounded-xl"
-        {...(!uploaded ? requiredAttr : {})}
-        {...getFieldA11y("file")}
-        onChange={() => clearFieldError("file")}
-      />
-      <FieldError name="file" formId={formId} message={fieldErrors.file} />
-      <Button
-        type="submit"
-        variant="outline"
-        className="min-h-11 w-full rounded-xl"
-        disabled={disabled || pending}
-      >
-        {pending ? <Loader2 className="size-4 animate-spin" /> : t("upload")}
-      </Button>
-      {state.error ? (
-        <p className="text-sm text-destructive" role="alert">
-          {te(`errors.${state.error as "upload_failed"}`)}
-        </p>
-      ) : null}
-    </form>
-  );
-}
 
 type Props = {
   providerId: string;
@@ -123,30 +38,34 @@ export function OnboardingIdentityStep({ providerId, verification, onContinue }:
       </div>
 
       <div className="space-y-3">
-        <DocUpload
+        <VerificationDocUpload
           label={t("idFront")}
           docType="id_front"
           providerId={providerId}
           uploaded={verification.idFrontUploaded}
           disabled={uploadLocked}
+          variant="onboarding"
         />
-        <DocUpload
+        <VerificationDocUpload
           label={t("idBack")}
           docType="id_back"
           providerId={providerId}
           uploaded={verification.idBackUploaded}
           disabled={uploadLocked}
+          variant="onboarding"
         />
-        <DocUpload
+        <VerificationDocUpload
           label={t("selfie")}
           docType="selfie"
           providerId={providerId}
           uploaded={verification.selfieUploaded}
           disabled={uploadLocked}
+          variant="onboarding"
         />
       </div>
 
       <p className="text-center text-xs text-muted-foreground">{t("autosaveHint")}</p>
+      <p className="text-center text-xs text-muted-foreground">{t("photoHint")}</p>
 
       <Button
         type="button"

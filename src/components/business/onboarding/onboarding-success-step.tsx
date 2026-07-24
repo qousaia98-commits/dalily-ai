@@ -1,12 +1,24 @@
 "use client";
 
+import { useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/routing";
+import { Link, useRouter } from "@/lib/i18n/routing";
 import { CheckCircle2, Images, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { deferOnboardingAction } from "@/actions/onboarding-preference.actions";
 
 export function OnboardingSuccessStep() {
   const t = useTranslations("business.onboarding.success");
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+
+  function goLater() {
+    startTransition(async () => {
+      await deferOnboardingAction();
+      router.push("/business");
+      router.refresh();
+    });
+  }
 
   return (
     <div className="space-y-8 text-center">
@@ -48,14 +60,14 @@ export function OnboardingSuccessStep() {
           </Link>
         </Button>
         <Button
-          asChild
+          type="button"
           variant="outline"
           className="h-12 rounded-2xl font-semibold sm:min-w-44"
+          disabled={pending}
+          onClick={goLater}
         >
-          <Link href="/business" className="gap-2">
-            <LayoutDashboard className="size-4" aria-hidden />
-            {t("maybeLater")}
-          </Link>
+          <LayoutDashboard className="size-4" aria-hidden />
+          {t("maybeLater")}
         </Button>
       </div>
     </div>

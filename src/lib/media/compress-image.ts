@@ -81,7 +81,11 @@ export async function compressImageFile(
     if (!blob || blob.size === 0) {
       blob = await canvasToBlob(canvas, "image/jpeg", quality);
     }
-    if (!blob || blob.size >= originalBytes * 0.95) {
+    // Always prefer the canvas output when we resized OR when the original is large.
+    if (!blob) {
+      return { file, wasCompressed: false, originalBytes, outputBytes: originalBytes };
+    }
+    if (blob.size >= originalBytes * 0.95 && scale >= 1 && originalBytes < 2_000_000) {
       return { file, wasCompressed: false, originalBytes, outputBytes: originalBytes };
     }
 

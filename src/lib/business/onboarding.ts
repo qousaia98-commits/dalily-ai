@@ -101,8 +101,19 @@ export function resolveOnboardingPhase(
 export function shouldForceOnboarding(
   provider: ManagedProvider,
 ): boolean {
-  // Keep drafts / changes-requested in the guided flow until they submit.
-  return provider.status === "draft" || provider.status === "changes_requested";
+  // Only incomplete drafts are gently guided — never changes_requested loops.
+  // Session "Later" defer is checked by the caller via cookie.
+  return provider.status === "draft";
+}
+
+/** True when the provider has not started identity docs yet (show calm welcome first). */
+export function shouldShowWelcomeLanding(
+  provider: ManagedProvider,
+  verification: BusinessVerificationView,
+): boolean {
+  if (provider.status === "active" || provider.status === "pending_review") return false;
+  if (verification.status === "approved" || verification.status === "pending") return false;
+  return !hasIdentityDocuments(verification);
 }
 
 export function getProfileStrength(

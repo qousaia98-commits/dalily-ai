@@ -1462,14 +1462,15 @@
       },
       "identity": {
         "title": "Verify your identity",
-        "subtitle": "Upload clear photos of your government ID. This is required to register.",
-        "why": "Dalily verifies every business so customers can book with confidence. Your documents are reviewed privately by our team.",
+        "subtitle": "Clear photos of your ID help customers trust your business.",
+        "why": "Verified businesses get more trust and booking requests. Your documents stay private and are reviewed only by our team.",
         "idFront": "ID front",
         "idBack": "ID back",
         "selfie": "Selfie holding your ID",
         "upload": "Upload",
         "uploaded": "Saved",
         "autosaveHint": "Each upload saves automatically.",
+        "photoHint": "A normal phone photo is enough — we optimize it for you.",
         "continue": "Continue"
       },
       "profile": {
@@ -1504,6 +1505,54 @@
           "created": "Your business profile essentials are ready.",
           "reviewing": "Our team is reviewing your identity documents.",
           "access": "Complete optional extras on the Media page to attract more customers."
+        }
+      },
+      "welcome": {
+        "title": "Welcome to Dalily 🎉",
+        "subtitle": "Your business account has been created successfully.",
+        "body": "Complete your profile to increase customer trust and receive more booking requests.",
+        "benefits": {
+          "visibility": "Higher visibility in search results",
+          "score": "Better Dalily Score",
+          "trust": "More customer trust",
+          "bookings": "More booking opportunities"
+        },
+        "completeNow": "Complete profile now",
+        "later": "Later",
+        "laterHint": "You can finish anytime from your dashboard — no pressure."
+      },
+      "dashboardCard": {
+        "title": "Complete your profile",
+        "benefits": {
+          "bookings": "Receive more bookings",
+          "score": "Increase Dalily Score",
+          "trust": "Build customer trust",
+          "ranking": "Improve ranking"
+        },
+        "complete": "Complete profile",
+        "remindLater": "Remind me later",
+        "dismiss": "Dismiss"
+      },
+      "reminders": {
+        "incomplete": {
+          "title": "Complete your profile",
+          "body": "Complete your profile to receive more customers."
+        },
+        "day3": {
+          "title": "Stand out in search",
+          "body": "Verified providers appear higher in search results."
+        },
+        "day7": {
+          "title": "You’re almost there",
+          "body": "You are close to completing your profile."
+        },
+        "day14": {
+          "title": "Build more trust",
+          "body": "Complete verification to increase customer trust."
+        },
+        "day30": {
+          "title": "Unlock more bookings",
+          "body": "A complete profile helps you get more booking requests."
         }
       }
     },
@@ -1970,18 +2019,54 @@
     },
     "verification": {
       "title": "Identity verification",
-      "subtitle": "Upload your documents for manual review before your business appears in search",
+      "subtitle": "Upload your documents for review — verified businesses earn more trust",
       "trustScore": "Trust score",
       "documentsTitle": "Verification documents",
+      "documentsHint": "Choose a normal phone photo. We prepare and optimize it automatically.",
+      "camera": "Camera",
+      "gallery": "Gallery",
+      "dropHint": "Or drag and drop a photo here",
       "upload": "Upload",
       "uploaded": "Uploaded",
       "uploadSuccess": "Document uploaded successfully.",
       "submitForReview": "Submit for review",
       "submitSuccess": "Your documents were submitted. We will notify you after review.",
-      "draftHint": "Upload your ID documents, then submit for admin review. Logo and photos can be added later from your dashboard.",
+      "draftHint": "Upload your ID documents, then submit for review. Logo and photos can be added later from your dashboard.",
       "approvedBanner": "Your business is verified and visible in search results.",
       "pendingBanner": "Your documents are under review. You will be notified once an admin decides.",
       "rejectionTitle": "Verification rejected",
+      "progress": {
+        "preparing": "Preparing image…",
+        "optimizing": "Optimizing image…",
+        "uploading": "Uploading…",
+        "submitted": "Verification submitted."
+      },
+      "statusPanel": {
+        "draft": {
+          "title": "Ready when you are",
+          "why": "Uploading clear ID photos helps customers trust your business.",
+          "next": "After you submit, our team reviews your documents.",
+          "action": "Take or choose a photo — we optimize it for you."
+        },
+        "pending_review": {
+          "title": "Under review",
+          "why": "Your documents are currently being reviewed.",
+          "next": "We’ll notify you as soon as a decision is ready.",
+          "action": "No action needed right now — you can keep using your dashboard."
+        },
+        "approved": {
+          "title": "Verified",
+          "why": "Your business has been successfully verified.",
+          "next": "Verified businesses earn more trust and stronger search presence.",
+          "action": "Keep your profile complete to attract more bookings."
+        },
+        "rejected": {
+          "title": "Additional information needed",
+          "why": "Additional information is required to finish verification.",
+          "next": "Upload clearer photos and submit again.",
+          "action": "Check the note below, then choose new photos."
+        }
+      },
       "displayStatus": {
         "draft": "Draft",
         "pending_review": "Pending review",
@@ -2001,11 +2086,12 @@
       },
       "errors": {
         "validation_error": "Please check the form and try again.",
-        "file_required": "Please choose a file to upload.",
-        "file_too_large": "File is too large. Maximum size is 5 MB.",
-        "invalid_file_type": "Only JPG, PNG, or WebP images are allowed.",
-        "upload_failed": "Upload failed. Please try again.",
-        "save_failed": "Could not save your document. Please try again.",
+        "file_required": "Please choose a photo to upload.",
+        "file_too_large": "This photo is too large. Please try another one.",
+        "friendly_large": "This photo is still a bit large. Please try another clear photo from your gallery.",
+        "invalid_file_type": "Please choose a photo (JPG, PNG, or WebP).",
+        "upload_failed": "We couldn’t upload that photo. Please try again.",
+        "save_failed": "We couldn’t save your document. Please try again.",
         "already_approved": "Your business is already verified.",
         "already_submitted": "Your documents are already under review.",
         "documents_incomplete": "Upload all three documents before submitting.",
@@ -2468,8 +2554,8 @@
           "address": "Address",
           "services": "Services",
           "gallery": "Portfolio images",
-          "verification": "Verification",
-          "category": "Category"
+          "verification": "Business verification",
+          "category": "Categories"
         }
       },
       "quickActions": {

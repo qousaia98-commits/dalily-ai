@@ -10,12 +10,13 @@ import { VerificationUploadForm } from "@/components/business/verification-uploa
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { ProviderVerificationStatus } from "@/lib/verification/queries";
+import type { VerificationDisplayStatus } from "@/components/business/verification-status-panel";
 
 function resolveDisplayStatus(
   providerStatus: string,
   verificationStatus: ProviderVerificationStatus | null,
   docsComplete: boolean,
-): "draft" | "pending_review" | "approved" | "rejected" {
+): VerificationDisplayStatus {
   if (verificationStatus === "approved") return "approved";
   if (verificationStatus === "rejected") return "rejected";
   if (verificationStatus === "pending" && docsComplete) return "pending_review";
@@ -53,7 +54,7 @@ export default async function BusinessVerificationPage() {
         <p className="mt-1 text-muted-foreground">{t("subtitle")}</p>
       </div>
 
-      <Card>
+      <Card className="rounded-2xl">
         <CardContent className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <Badge
@@ -81,6 +82,7 @@ export default async function BusinessVerificationPage() {
         providerId={provider.id}
         providerStatus={provider.status}
         verification={verification}
+        displayStatus={displayStatus}
       />
     </div>
   );

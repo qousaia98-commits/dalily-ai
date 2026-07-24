@@ -10,6 +10,7 @@ import type { BusinessVerificationView } from "@/lib/verification/queries";
 import type { CategoryGroupWithLeaves } from "@/lib/categories/types";
 import type { OnboardingPhase } from "@/lib/business/onboarding";
 import { cn } from "@/lib/utils";
+import { WelcomeLanding } from "./welcome-landing";
 import { OnboardingIdentityStep } from "./onboarding-identity-step";
 import { OnboardingProfileStep } from "./onboarding-profile-step";
 import { OnboardingSuccessStep } from "./onboarding-success-step";
@@ -23,6 +24,7 @@ type Props = {
   categorySlug: string;
   initialPhase: OnboardingPhase;
   alreadySubmitted: boolean;
+  showWelcomeFirst: boolean;
 };
 
 export function BusinessOnboardingWizard({
@@ -32,10 +34,12 @@ export function BusinessOnboardingWizard({
   categorySlug,
   initialPhase,
   alreadySubmitted,
+  showWelcomeFirst,
 }: Props) {
   const t = useTranslations("business.onboarding");
   const te = useTranslations("business.verification");
   const router = useRouter();
+  const [showIntro, setShowIntro] = useState(showWelcomeFirst && initialPhase === "identity");
   const [phase, setPhase] = useState<OnboardingPhase>(initialPhase);
   const [pending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -45,7 +49,10 @@ export function BusinessOnboardingWizard({
   function finishAndSubmit() {
     setSubmitError(null);
     startTransition(async () => {
-      if (!alreadySubmitted && provider.status === "draft") {
+      if (
+        !alreadySubmitted &&
+        (provider.status === "draft" || provider.status === "changes_requested")
+      ) {
         const result = await submitVerificationAction();
         if (!result.success && result.error !== "already_submitted") {
           setSubmitError(
@@ -57,6 +64,10 @@ export function BusinessOnboardingWizard({
       setPhase("success");
       router.refresh();
     });
+  }
+
+  if (showIntro) {
+    return <WelcomeLanding onCompleteNow={() => setShowIntro(false)} />;
   }
 
   return (

@@ -1,4 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
 import { redirect } from "@/lib/i18n/routing";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
@@ -12,6 +13,13 @@ import {
   toBusinessVerificationView,
 } from "@/lib/verification/queries";
 import { shouldForceOnboarding } from "@/lib/business/onboarding";
+import {
+  ONBOARDING_CARD_DISMISS_COOKIE,
+  ONBOARDING_DEFER_COOKIE,
+  ONBOARDING_REMINDER_DISMISS_COOKIE,
+  parseTimestampCookie,
+} from "@/lib/business/onboarding-preference";
+import { getOnboardingReminderState } from "@/lib/business/onboarding-reminders";
 import { getProviderSuccessDashboard } from "@/lib/provider-success/dashboard-service";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { GrowthHero } from "@/components/business/growth-hero";
@@ -19,12 +27,12 @@ import { ChangesRequiredCard } from "@/components/business/changes-required-card
 import { FirstRequestMediaBanner } from "@/components/business/first-request-media-banner";
 import { DashboardConversationsPreview } from "@/components/business/conversation-list";
 import { ProviderSuccessDashboardView } from "@/components/provider-success/provider-success-dashboard";
+import { OnboardingDashboardCard } from "@/components/business/onboarding/onboarding-dashboard-card";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
 
 /**
- * Provider Success Dashboard — central business workspace (Sprint 39).
- * Reuses Booking, Chat, Reviews, Analytics, Notifications, Provider modules.
+ * Provider Success Dashboard — soft onboarding encouragement only (no popup loops).
  */
 export default async function BusinessDashboardPage() {
   const t = await getTranslations("business.dashboard");
@@ -49,9 +57,26 @@ export default async function BusinessDashboardPage() {
   const verificationRow = await getProviderVerificationForOwner(provider.id);
   const verification = toBusinessVerificationView(verificationRow);
 
-  if (shouldForceOnboarding(provider)) {
+  const jar = await cookies();
+  const deferredAt = parseTimestampCookie(jar.get(ONBOARDING_DEFER_COOKIE)?.value);
+  const onboardingDeferred = Boolean(deferredAt);
+
+  // Force welcome only for unfinished drafts — never after “Later” in this session.
+  if (shouldForceOnboarding(provider) && !onboardingDeferred) {
     redirect({ href: "/business/welcome", locale });
   }
+
+  const cardDismissedAt = parseTimestampCookie(jar.get(ONBOARDING_CARD_DISMISS_COOKIE)?.value);
+  const reminderDismissedAt = parseTimestampCookie(
+    jar.get(ONBOARDING_REMINDER_DISMISS_COOKIE)?.value,
+  );
+  const reminder = getOnboardingReminderState({
+    provider,
+    verification,
+    cardDismissedAt,
+    reminderDismissedAt,
+    locale,
+  });
 
   const [{ subscription }, { conversations }, pendingRequests, totalRequests, success] =
     await Promise.all([
@@ -76,6 +101,11 @@ export default async function BusinessDashboardPage() {
     provider.status === "pending_review" ||
     provider.status === "changes_requested";
 
+  const onboardingHref =
+    provider.status === "changes_requested" || verification.status === "rejected"
+      ? "/business/verification"
+      : "/business/welcome";
+
   return (
     <div className="w-full max-w-full space-y-8 overflow-x-hidden animate-fade-in">
       <GrowthHero
@@ -84,6 +114,10 @@ export default async function BusinessDashboardPage() {
         pendingRequests={pendingRequests}
         unreadMessages={unreadMessages}
       />
+
+      {reminder.showDashboardCard ? (
+        <OnboardingDashboardCard copyId={reminder.copyId} href={onboardingHref} />
+      ) : null}
 
       {provider.status === "changes_requested" && provider.adminReviewNote ? (
         <ChangesRequiredCard note={provider.adminReviewNote} />
