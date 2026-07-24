@@ -1,15 +1,16 @@
 "use client";
 
-import { useActionState } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useState } from "react";
+import { useRouter } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/routing";
 import { useTranslations } from "next-intl";
-import { Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, LayoutDashboard } from "lucide-react";
 import {
   submitVerificationAction,
   type VerificationActionState,
 } from "@/actions/verification.actions";
 import type { BusinessVerificationView } from "@/lib/verification/queries";
-import type { ProviderStatus } from "@/types/database.types";
+import type { ProviderStatus, VerificationStatus } from "@/types/database.types";
 import type { VerificationAdminFeedback } from "@/lib/verification/feedback";
 import type { VerificationUiStatus } from "@/lib/verification/feedback";
 import { VerificationDocUpload } from "@/components/business/verification-doc-upload";
@@ -22,6 +23,7 @@ const initialState: VerificationActionState = { success: false };
 type VerificationUploadFormProps = {
   providerId: string;
   providerStatus: ProviderStatus;
+  providerVerificationStatus: VerificationStatus;
   verification: BusinessVerificationView;
   displayStatus: VerificationUiStatus;
   feedback?: VerificationAdminFeedback | null;
@@ -30,6 +32,7 @@ type VerificationUploadFormProps = {
 export function VerificationUploadForm({
   providerId,
   providerStatus,
+  providerVerificationStatus,
   verification,
   displayStatus,
   feedback = null,
@@ -40,30 +43,80 @@ export function VerificationUploadForm({
     submitVerificationAction,
     initialState,
   );
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    if (submitState.success) {
+      setShowSuccess(true);
+      router.refresh();
+    }
+  }, [submitState.success, router]);
 
   const isApproved = verification.status === "approved";
-  const isPendingReview =
-    verification.status === "pending" &&
-    verification.idFrontUploaded &&
-    verification.idBackUploaded &&
-    verification.selfieUploaded;
-  const isRejected = verification.status === "rejected";
-  const canUpload =
-    !isApproved &&
-    (!isPendingReview || isRejected || providerStatus === "changes_requested");
-
   const allUploaded =
     verification.idFrontUploaded &&
     verification.idBackUploaded &&
     verification.selfieUploaded;
 
-  const showResubmitHint = isRejected || providerStatus === "changes_requested";
+  // Still replacing docs after reject / changes — do not lock the form yet.
+  const isResubmitting =
+    providerVerificationStatus === "rejected" ||
+    providerStatus === "changes_requested" ||
+    verification.status === "rejected";
+
+  const lockedForAdminReview =
+    verification.status === "pending" &&
+    allUploaded &&
+    !isResubmitting &&
+    (providerStatus === "pending_review" || providerVerificationStatus === "pending");
+
+  const canUpload = !isApproved && !lockedForAdminReview && !showSuccess;
+  const showResubmitHint = isResubmitting && !showSuccess;
+
+  // After successful submit — local success + pending card (no full onboarding restart).
+  if (showSuccess || (displayStatus === "pending_review" && submitState.success)) {
+    return (
+      <div className="space-y-6">
+        <VerificationStatusCard status="pending_review" showAction={false} />
+
+        <div className="rounded-3xl border border-sky-500/30 bg-sky-500/10 p-6 text-center sm:p-8">
+          <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-sky-500/20 text-sky-700">
+            <CheckCircle2 className="size-8" aria-hidden />
+          </div>
+          <h2 className="mt-4 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+            {t("resubmitSuccess.title")}
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {t("resubmitSuccess.body")}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            {t("resubmitSuccess.next")}
+          </p>
+          <Button
+            asChild
+            className="mt-6 h-12 min-h-11 w-full rounded-2xl bg-[var(--dalily-gold)] font-bold text-[var(--dalily-navy)] hover:bg-[var(--dalily-gold-light)] sm:w-auto sm:min-w-52"
+          >
+            <Link href="/business" className="gap-2">
+              <LayoutDashboard className="size-4" aria-hidden />
+              {t("resubmitSuccess.dashboard")}
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <VerificationStatusCard
-        status={displayStatus === "expired" ? "draft" : displayStatus}
-        feedback={feedback}
+        status={
+          lockedForAdminReview
+            ? "pending_review"
+            : displayStatus === "expired"
+              ? "draft"
+              : displayStatus
+        }
+        feedback={isResubmitting ? feedback : null}
         showAction={false}
       />
 
@@ -110,13 +163,7 @@ export function VerificationUploadForm({
             />
 
             {allUploaded ? (
-              <form
-                action={submitAction}
-                noValidate
-                onSubmit={() => {
-                  setTimeout(() => router.refresh(), 300);
-                }}
-              >
+              <form action={submitAction} noValidate>
                 <Button
                   type="submit"
                   className="min-h-11 w-full gap-2 rounded-2xl"
@@ -128,11 +175,6 @@ export function VerificationUploadForm({
                 {submitState.error ? (
                   <p className="mt-2 text-sm text-destructive" role="alert">
                     {t(`errors.${submitState.error}`)}
-                  </p>
-                ) : null}
-                {submitState.success ? (
-                  <p className="mt-2 text-sm text-emerald-600 dark:text-emerald-400">
-                    {t("submitSuccess")}
                   </p>
                 ) : null}
               </form>

@@ -44,6 +44,7 @@ const docTypeSchema = z.enum(["id_front", "id_back", "selfie"]);
 
 async function revalidateVerificationPaths() {
   revalidatePath("/business/verification");
+  revalidatePath("/business");
   revalidatePath("/admin/verification");
   revalidatePath("/search");
   revalidatePath("/", "layout");
@@ -200,7 +201,12 @@ export async function submitVerificationAction(): Promise<VerificationActionStat
     return { success: false, error: "already_approved" };
   }
 
-  if (verification.status === "pending" && provider.status === "pending_review") {
+  // Allow resubmit after rejection even when provider.status is still pending_review.
+  if (
+    verification.status === "pending" &&
+    provider.status === "pending_review" &&
+    provider.verificationStatus !== "rejected"
+  ) {
     return { success: false, error: "already_submitted" };
   }
 
@@ -222,11 +228,18 @@ export async function submitVerificationAction(): Promise<VerificationActionStat
     .update({
       status: "pending_review",
       verification_status: "pending",
+      admin_review_note: null,
+      changes_requested_at: null,
       updated_by: authUser.id,
     })
     .eq("id", provider.id);
 
   if (providerError) return { success: false, error: "submit_failed" };
+
+  await notifyProviderVerificationEvent({
+    ownerId: authUser.id,
+    kind: "resubmitted",
+  });
 
   await revalidateVerificationPaths();
   return { success: true, message: "submitted" };

@@ -1126,6 +1126,18 @@
     "verificationChangesRequested": {
       "title": "Additional information required",
       "body": "We need a few changes before we can approve your verification. Review the requested changes and upload the required documents."
+    },
+    "verificationResubmitted": {
+      "title": "Verification documents received",
+      "body": "Your updated verification documents have been received. Your request is now under review."
+    },
+    "adminBroadcast": {
+      "title": "Dalily announcement",
+      "body": "You have a new message from Dalily."
+    },
+    "adminWarning": {
+      "title": "Important notice from Dalily",
+      "body": "Please review this message from the Dalily team."
     }
   },
   "footer": {
@@ -2046,6 +2058,12 @@
       "submitForReview": "Submit for review",
       "submitAgain": "Submit again",
       "submitSuccess": "Your documents were submitted. We will notify you after review.",
+      "resubmitSuccess": {
+        "title": "Verification request submitted successfully",
+        "body": "We have received your updated documents. Your verification request is now under review.",
+        "next": "We will notify you as soon as the review is complete.",
+        "dashboard": "Return to Dashboard"
+      },
       "draftHint": "Upload your ID documents, then submit for review. Logo and photos can be added later from your dashboard.",
       "resubmitHint": "Your profile information is kept. Only upload the documents that need to be fixed.",
       "resubmitTitle": "Upload new documents",
@@ -2112,7 +2130,7 @@
           "submitted": "Verification submitted",
           "under_review": "Documents under review",
           "changes_requested": "Changes requested",
-          "resubmitted": "Documents uploaded again",
+          "resubmitted": "Updated documents submitted",
           "approved": "Verification approved",
           "rejected": "Verification rejected"
         }
@@ -3474,7 +3492,9 @@
       "title": "Broadcast center",
       "subtitle": "Send platform messages to all users, providers, customers, or a single user.",
       "send": "Send now",
-      "sent": "Broadcast sent.",
+      "sending": "Sending…",
+      "sent": "Broadcast sent successfully.",
+      "sentWithCount": "Broadcast sent successfully. Delivered to {count} users.",
       "scheduleReady": "Scheduling architecture is ready — send immediately for now.",
       "history": "Delivery history",
       "emptyHistory": "No broadcasts yet.",
@@ -3490,9 +3510,19 @@
         "customers": "Customers",
         "single": "Single user"
       },
+      "diagnostics": {
+        "title": "Developer diagnostics",
+        "recipients": "Recipients found",
+        "created": "Notifications created",
+        "success": "Delivery success",
+        "failures": "Delivery failures",
+        "skipped": "Skipped users"
+      },
       "errors": {
         "forbidden": "Only admins can broadcast.",
         "validation_error": "Check title and message.",
+        "no_recipients": "No recipients found for this audience.",
+        "delivery_failed": "Could not deliver the message. Please try again.",
         "failed": "Could not send broadcast."
       }
     },

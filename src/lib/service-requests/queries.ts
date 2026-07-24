@@ -345,6 +345,7 @@ const VERIFICATION_NOTIFY_TYPES = [
   "verification_approved",
   "verification_rejected",
   "verification_changes_requested",
+  "verification_resubmitted",
 ] as const;
 
 export async function getUnreadVerificationNotificationCount(

@@ -62,7 +62,7 @@ export async function resolveBroadcastRecipients(
       .from("providers")
       .select("owner_id")
       .is("deleted_at", null)
-      .in("status", ["active", "pending_review", "changes_requested"]);
+      .in("status", ["active", "pending_review", "changes_requested", "draft"]);
     return [...new Set((data ?? []).map((r) => r.owner_id).filter(Boolean))];
   }
 

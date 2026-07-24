@@ -7,8 +7,18 @@ import { isAdminUser, isPlatformAdmin } from "@/lib/auth/roles";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAdminAction } from "@/lib/admin/action-log";
 import { resolveBroadcastRecipients, type BroadcastTarget } from "@/lib/admin/broadcasts";
+import {
+  deliverMarketplaceNotification,
+  deliverMarketplaceNotificationsBatch,
+  type BroadcastDeliveryDiagnostics,
+} from "@/lib/notifications/deliver";
 
-export type AdminModerationState = { success: boolean; error?: string };
+export type AdminModerationState = {
+  success: boolean;
+  error?: string;
+  deliveryCount?: number;
+  diagnostics?: BroadcastDeliveryDiagnostics;
+};
 
 function forbidden(): AdminModerationState {
   return { success: false, error: "forbidden" };
@@ -114,14 +124,13 @@ export async function warnUserAction(input: {
   if (!parsed.success) return { success: false, error: "validation_error" };
   if (!input.message.trim()) return { success: false, error: "validation_error" };
 
-  const admin = createAdminClient();
-  await admin.rpc("notify_marketplace_user", {
-    p_user_id: parsed.data,
-    p_type: "admin_warning",
-    p_title_key: "notifications.adminWarning.title",
-    p_body_key: "notifications.adminWarning.body",
-    p_body_params: { message: input.message.trim(), role: input.role },
-    p_href: "/account",
+  await deliverMarketplaceNotification({
+    userId: parsed.data,
+    type: "admin_warning",
+    titleKey: "notifications.adminWarning.title",
+    bodyKey: "notifications.adminWarning.body",
+    bodyParams: { message: input.message.trim(), role: input.role },
+    href: input.role === "provider" ? "/business" : "/account",
   });
 
   await logAdminAction({
@@ -150,42 +159,71 @@ export async function sendAdminBroadcastAction(input: {
   if (title.length < 2 || body.length < 2) return { success: false, error: "validation_error" };
 
   const recipients = await resolveBroadcastRecipients(input.target, input.targetUserId);
+  if (recipients.length === 0) {
+    return { success: false, error: "no_recipients" };
+  }
+
+  const href =
+    input.href ??
+    (input.target === "providers" || input.target === "all" ? "/business" : "/");
+
+  const diagnostics = await deliverMarketplaceNotificationsBatch(
+    recipients,
+    {
+      type: "admin_broadcast",
+      titleKey: "notifications.adminBroadcast.title",
+      bodyKey: "notifications.adminBroadcast.body",
+      bodyParams: { title, body },
+      href,
+    },
+    { max: 2000 },
+  );
+
   const admin = createAdminClient();
   const now = new Date().toISOString();
 
-  let deliveryCount = 0;
-  for (const userId of recipients.slice(0, 2000)) {
-    const { error } = await admin.rpc("notify_marketplace_user", {
-      p_user_id: userId,
-      p_type: "admin_broadcast",
-      p_title_key: "notifications.adminBroadcast.title",
-      p_body_key: "notifications.adminBroadcast.body",
-      p_body_params: { title, body },
-      p_href: input.href ?? "/",
-    });
-    if (!error) deliveryCount += 1;
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (admin as any).from("admin_broadcasts").insert({
+  const { error: historyError } = await (admin as any).from("admin_broadcasts").insert({
     created_by: authUser.id,
     title,
     body,
     target: input.target,
     target_user_id: input.target === "single" ? input.targetUserId ?? null : null,
-    href: input.href ?? null,
-    status: "sent",
+    href,
+    status: diagnostics.deliverySuccess > 0 ? "sent" : "failed",
     sent_at: now,
-    delivery_count: deliveryCount,
+    delivery_count: diagnostics.deliverySuccess,
   });
+
+  if (historyError) {
+    // Delivery may have succeeded — still report counts; history write is secondary.
+  }
 
   await logAdminAction({
     actorId: authUser.id,
     action: "broadcast_sent",
     entityType: "admin_broadcast",
-    metadata: { target: input.target, deliveryCount },
+    metadata: {
+      target: input.target,
+      deliveryCount: diagnostics.deliverySuccess,
+      diagnostics,
+    },
   });
 
   revalidatePath("/admin/broadcasts");
-  return { success: true };
+
+  if (diagnostics.deliverySuccess === 0) {
+    return {
+      success: false,
+      error: "delivery_failed",
+      deliveryCount: 0,
+      diagnostics,
+    };
+  }
+
+  return {
+    success: true,
+    deliveryCount: diagnostics.deliverySuccess,
+    diagnostics,
+  };
 }

@@ -1,16 +1,18 @@
 /**
- * Instant in-app verification notifications — reuses notify_marketplace_user.
+ * Instant in-app verification notifications.
+ * Uses direct admin insert (service role) — RPC auth.uid() blocks service-role calls.
  * Does not change approval workflows.
  */
 
-import { createAdminClient } from "@/lib/supabase/admin";
 import type { VerificationAdminFeedback } from "@/lib/verification/feedback";
 import { feedbackToPlainReason } from "@/lib/verification/feedback";
+import { deliverMarketplaceNotification } from "@/lib/notifications/deliver";
 
 export type VerificationNotifyKind =
   | "approved"
   | "rejected"
-  | "changes_requested";
+  | "changes_requested"
+  | "resubmitted";
 
 const KEYS: Record<
   VerificationNotifyKind,
@@ -31,6 +33,11 @@ const KEYS: Record<
     titleKey: "notifications.verificationChangesRequested.title",
     bodyKey: "notifications.verificationChangesRequested.body",
   },
+  resubmitted: {
+    type: "verification_resubmitted",
+    titleKey: "notifications.verificationResubmitted.title",
+    bodyKey: "notifications.verificationResubmitted.body",
+  },
 };
 
 export async function notifyProviderVerificationEvent(input: {
@@ -40,31 +47,25 @@ export async function notifyProviderVerificationEvent(input: {
   href?: string;
 }): Promise<void> {
   const keys = KEYS[input.kind];
-  const admin = createAdminClient();
   const reason = input.feedback ? feedbackToPlainReason(input.feedback) : "";
 
-  try {
-    await admin.rpc("notify_marketplace_user", {
-      p_user_id: input.ownerId,
-      p_type: keys.type,
-      p_title_key: keys.titleKey,
-      p_body_key: keys.bodyKey,
-      p_body_params: {
-        reason: reason || "",
-        note: input.feedback?.note ?? "",
-        recommendation: input.feedback?.recommendation ?? "",
-      },
-      p_href: input.href ?? "/business/verification",
-      p_request_id: null,
-      p_conversation_id: null,
-    });
-  } catch {
-    /* soft — never block admin review on notify failure */
-  }
+  await deliverMarketplaceNotification({
+    userId: input.ownerId,
+    type: keys.type,
+    titleKey: keys.titleKey,
+    bodyKey: keys.bodyKey,
+    bodyParams: {
+      reason: reason || "",
+      note: input.feedback?.note ?? "",
+      recommendation: input.feedback?.recommendation ?? "",
+    },
+    href: input.href ?? "/business/verification",
+  });
 }
 
 export const VERIFICATION_NOTIFICATION_TYPES = [
   "verification_approved",
   "verification_rejected",
   "verification_changes_requested",
+  "verification_resubmitted",
 ] as const;

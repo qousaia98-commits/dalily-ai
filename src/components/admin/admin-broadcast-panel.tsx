@@ -3,8 +3,10 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 import { sendAdminBroadcastAction } from "@/actions/admin-control-center.actions";
 import type { AdminBroadcastItem, BroadcastTarget } from "@/lib/admin/broadcasts";
+import type { BroadcastDeliveryDiagnostics } from "@/lib/notifications/deliver";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -19,8 +21,13 @@ export function AdminBroadcastPanel({ history }: Props) {
   const [target, setTarget] = useState<BroadcastTarget>("all");
   const [targetUserId, setTargetUserId] = useState("");
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState(false);
+  const [diagnostics, setDiagnostics] = useState<BroadcastDeliveryDiagnostics | null>(null);
 
   function send() {
+    setMessage(null);
+    setError(false);
+    setDiagnostics(null);
     startTransition(async () => {
       const result = await sendAdminBroadcastAction({
         title,
@@ -28,11 +35,17 @@ export function AdminBroadcastPanel({ history }: Props) {
         target,
         targetUserId: target === "single" ? targetUserId : undefined,
       });
-      setMessage(result.success ? t("sent") : t(`errors.${result.error ?? "failed"}`));
+      if (result.diagnostics) setDiagnostics(result.diagnostics);
       if (result.success) {
+        setMessage(
+          t("sentWithCount", { count: result.deliveryCount ?? result.diagnostics?.deliverySuccess ?? 0 }),
+        );
         setTitle("");
         setBody("");
         router.refresh();
+      } else {
+        setError(true);
+        setMessage(t(`errors.${result.error ?? "failed"}`));
       }
     });
   }
@@ -84,10 +97,43 @@ export function AdminBroadcastPanel({ history }: Props) {
           aria-label={t("fields.body")}
         />
         <p className="text-xs text-muted-foreground">{t("scheduleReady")}</p>
-        <Button type="submit" disabled={pending}>
-          {t("send")}
+        <Button type="submit" disabled={pending} className="min-h-11 gap-2">
+          {pending ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
+          {pending ? t("sending") : t("send")}
         </Button>
-        {message ? <p className="text-sm text-muted-foreground">{message}</p> : null}
+        {message ? (
+          <p
+            className={
+              error ? "text-sm text-destructive" : "text-sm text-emerald-600 dark:text-emerald-400"
+            }
+            role={error ? "alert" : "status"}
+          >
+            {message}
+          </p>
+        ) : null}
+
+        {diagnostics ? (
+          <div className="rounded-xl border border-dashed border-border bg-muted/30 p-3 font-mono text-xs text-muted-foreground">
+            <p className="font-semibold text-foreground">{t("diagnostics.title")}</p>
+            <ul className="mt-2 space-y-0.5">
+              <li>
+                {t("diagnostics.recipients")}: {diagnostics.recipientsFound}
+              </li>
+              <li>
+                {t("diagnostics.created")}: {diagnostics.notificationsCreated}
+              </li>
+              <li>
+                {t("diagnostics.success")}: {diagnostics.deliverySuccess}
+              </li>
+              <li>
+                {t("diagnostics.failures")}: {diagnostics.deliveryFailures}
+              </li>
+              <li>
+                {t("diagnostics.skipped")}: {diagnostics.skippedUsers}
+              </li>
+            </ul>
+          </div>
+        ) : null}
       </form>
 
       <section aria-labelledby="broadcast-history">

@@ -91,6 +91,7 @@ export default async function BusinessVerificationPage() {
       <VerificationUploadForm
         providerId={provider.id}
         providerStatus={provider.status}
+        providerVerificationStatus={provider.verificationStatus}
         verification={verification}
         displayStatus={displayStatus}
         feedback={feedback}

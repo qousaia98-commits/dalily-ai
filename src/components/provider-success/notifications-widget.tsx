@@ -21,11 +21,23 @@ function useNotificationCopy() {
     if (item.titleKey.includes("verificationChangesRequested")) {
       return tn("verificationChangesRequested.title");
     }
+    if (item.titleKey.includes("verificationResubmitted")) {
+      return tn("verificationResubmitted.title");
+    }
+    if (item.titleKey.includes("adminBroadcast")) {
+      const custom = item.bodyParams?.title;
+      return typeof custom === "string" && custom.trim()
+        ? custom
+        : tn("adminBroadcast.title");
+    }
+    if (item.titleKey.includes("adminWarning")) {
+      return tn("adminWarning.title");
+    }
     return t(`fallback.${item.category}`);
   }
 
   function bodyOf(item: NotificationWidgetItem): string {
-    if (item.titleKey.includes("verificationApproved") || item.bodyKey.includes("verificationApproved")) {
+    if (item.bodyKey.includes("verificationApproved")) {
       return tn("verificationApproved.body");
     }
     if (item.bodyKey.includes("verificationRejected")) {
@@ -33,6 +45,21 @@ function useNotificationCopy() {
     }
     if (item.bodyKey.includes("verificationChangesRequested")) {
       return tn("verificationChangesRequested.body");
+    }
+    if (item.bodyKey.includes("verificationResubmitted")) {
+      return tn("verificationResubmitted.body");
+    }
+    if (item.bodyKey.includes("adminBroadcast")) {
+      const custom = item.bodyParams?.body;
+      return typeof custom === "string" && custom.trim()
+        ? custom
+        : tn("adminBroadcast.body");
+    }
+    if (item.bodyKey.includes("adminWarning")) {
+      const msg = item.bodyParams?.message;
+      return typeof msg === "string" && msg.trim()
+        ? msg
+        : tn("adminWarning.body");
     }
     return t(`fallback.${item.category}`);
   }
@@ -92,7 +119,7 @@ export function NotificationsWidget({
                   {t(`categories.${item.category}`)}
                 </p>
                 <p className="text-sm font-medium">{titleOf(item)}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">{bodyOf(item)}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground line-clamp-3">{bodyOf(item)}</p>
                 {reason ? (
                   <p className="mt-1 line-clamp-2 text-xs text-foreground/80">{reason}</p>
                 ) : null}

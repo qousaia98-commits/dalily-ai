@@ -39,6 +39,7 @@ export function resolveVerificationUiStatus(
     return "approved";
   }
   if (provider.status === "changes_requested") return "changes_requested";
+  // Keep showing rejected until the provider finishes resubmit (provider.verificationStatus flips on submit).
   if (
     provider.verificationStatus === "rejected" ||
     verification.status === "rejected"
@@ -133,17 +134,38 @@ export function buildVerificationTimeline(input: {
     });
   }
 
+  // Resubmit: docs updated after a prior review/rejection (or pending after re-upload).
+  const looksLikeResubmit =
+    Boolean(verification.updatedAt) &&
+    (Boolean(verification.reviewedAt) ||
+      provider.verificationStatus === "rejected" ||
+      status === "pending_review") &&
+    verification.updatedAt !== verification.createdAt;
+
   if (
-    verification.updatedAt &&
-    verification.reviewedAt &&
-    verification.updatedAt > verification.reviewedAt &&
+    looksLikeResubmit &&
     (status === "pending_review" || status === "rejected" || status === "changes_requested")
   ) {
+    const resubmitAt =
+      verification.updatedAt &&
+      verification.reviewedAt &&
+      verification.updatedAt > verification.reviewedAt
+        ? verification.updatedAt
+        : verification.updatedAt;
     events.push({
       id: "resubmitted",
-      at: verification.updatedAt,
-      current: status === "pending_review",
+      at: resubmitAt,
+      current: false,
     });
+  }
+
+  if (status === "pending_review" && looksLikeResubmit) {
+    // Ensure "under review" is current after resubmit.
+    const underReview = events.find((e) => e.id === "under_review");
+    if (underReview) {
+      underReview.current = true;
+      underReview.at = verification.updatedAt ?? underReview.at;
+    }
   }
 
   if (status === "approved") {
