@@ -12,6 +12,7 @@ import {
   rejectPaymentAction,
 } from "@/actions/admin-subscription.actions";
 import { getLocalizedField } from "@/types/provider.types";
+import { formatDate } from "@/lib/format/datetime";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -64,7 +65,7 @@ export function AdminSubscriptionsPanel({ subscriptions, payments }: AdminSubscr
                 <div>
                   <p className="font-medium">{getLocalizedField(payment.providerName, locale)}</p>
                   <p className="text-sm text-muted-foreground">
-                    ${payment.amount} {payment.currency} · {new Date(payment.createdAt).toLocaleDateString(locale)}
+                    ${payment.amount} {payment.currency} · {formatDate(payment.createdAt, locale)}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -111,7 +112,7 @@ export function AdminSubscriptionsPanel({ subscriptions, payments }: AdminSubscr
                 </div>
                 {sub.expiresAt ? (
                   <span className="text-xs text-muted-foreground">
-                    {new Date(sub.expiresAt).toLocaleDateString(locale)}
+                    {formatDate(sub.expiresAt, locale)}
                   </span>
                 ) : null}
               </CardHeader>

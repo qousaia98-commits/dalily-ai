@@ -28,6 +28,19 @@ export function mapAuthErrorCode(message: string): string {
   if (lower.includes("invalid login credentials")) return "invalid_credentials";
   if (lower.includes("user already registered")) return "email_taken";
   if (lower.includes("email not confirmed")) return "email_not_confirmed";
+  // Supabase surfaces signup/request throttling with messages like "email rate
+  // limit exceeded", "request rate limit reached", or "you can only request
+  // this after N seconds" — all previously fell through to the generic
+  // "unknown" error, which is how a rate-limited signup that partially
+  // succeeded (see resumeIncompleteRegistration) read to the user as an
+  // unexplained failure.
+  if (
+    lower.includes("rate limit") ||
+    lower.includes("only request this after") ||
+    lower.includes("too many requests")
+  ) {
+    return "rate_limited";
+  }
   if (lower.includes("password")) return "weak_password";
 
   return "unknown";

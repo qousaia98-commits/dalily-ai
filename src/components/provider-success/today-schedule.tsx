@@ -7,6 +7,7 @@ import type { TodayAppointment } from "@/lib/provider-success/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { buildNavigationUrl } from "@/lib/smart-map/navigation";
+import { formatTime } from "@/lib/format/datetime";
 
 export function TodaySchedule({ appointments }: { appointments: TodayAppointment[] }) {
   const t = useTranslations("business.success.schedule");
@@ -28,10 +29,10 @@ export function TodaySchedule({ appointments }: { appointments: TodayAppointment
       ) : (
         <ul className="space-y-3">
           {appointments.map((a) => {
-            const time = new Date(a.startsAt).toLocaleTimeString(
-              locale === "ar" ? "ar" : "en",
-              { hour: "2-digit", minute: "2-digit" },
-            );
+            const time = formatTime(a.startsAt, locale === "ar" ? "ar" : "en", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
             const navHref =
               a.locationLat != null && a.locationLng != null
                 ? buildNavigationUrl(a.locationLat, a.locationLng)

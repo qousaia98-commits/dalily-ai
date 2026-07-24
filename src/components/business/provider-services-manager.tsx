@@ -75,9 +75,23 @@ export function ProviderServicesManager({ provider }: { provider: ManagedProvide
   const [addState, addAction, addPending] = useActionState(addServiceAction, initialState);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  const [addFormKey, setAddFormKey] = useState(0);
   const { fieldErrors, guardSubmit, clearFieldError } = useClientFormValidation({
     formId: "add-service",
   });
+
+  useEffect(() => {
+    if (addState.success) {
+      // Remount the "add" field (clears its uncontrolled value) and refetch
+      // the provider so the newly added service actually shows up — this
+      // component's `provider` prop is server-fetched once and doesn't
+      // otherwise pick up the insert. Depends on the whole `addState` object
+      // (a new reference each time the action resolves), not just `.success`,
+      // so back-to-back successful submits each still trigger this.
+      setAddFormKey((k) => k + 1);
+      router.refresh();
+    }
+  }, [addState, router]);
 
   return (
     <div className="space-y-6">
@@ -134,13 +148,14 @@ export function ProviderServicesManager({ provider }: { provider: ManagedProvide
             <input type="hidden" name="locale" value={locale} />
             <p className="text-sm font-medium">{t("addNew")}</p>
             <LocalizedFieldInput
+              key={addFormKey}
               id="serviceName"
               name="name"
               label={t("name")}
               required
               disabled={addPending}
               formId="add-service"
-              errorMessage={fieldErrors.name}
+              errorMessage={fieldErrors.name ?? addState.fieldErrors?.name?.[0]}
               onValueChange={() => clearFieldError("name")}
             />
             {addState.error ? (

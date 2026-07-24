@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formatDate, formatTime } from "@/lib/format/datetime";
 
 type ServiceOption = { id: string; name: string };
 
@@ -75,7 +76,7 @@ export function BookingForm({
   const grouped = useMemo(() => {
     const map = new Map<string, TimeSlot[]>();
     for (const slot of slots) {
-      const day = new Date(slot.startsAt).toLocaleDateString(locale === "ar" ? "ar" : "en", {
+      const day = formatDate(slot.startsAt, locale === "ar" ? "ar" : "en", {
         weekday: "short",
         month: "short",
         day: "numeric",
@@ -164,10 +165,10 @@ export function BookingForm({
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {daySlots.map((slot) => {
-                    const label = new Date(slot.startsAt).toLocaleTimeString(
-                      locale === "ar" ? "ar" : "en",
-                      { hour: "2-digit", minute: "2-digit" },
-                    );
+                    const label = formatTime(slot.startsAt, locale === "ar" ? "ar" : "en", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    });
                     const active = selected?.startsAt === slot.startsAt;
                     return (
                       <Button

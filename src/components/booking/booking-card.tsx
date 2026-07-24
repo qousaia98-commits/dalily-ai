@@ -15,6 +15,7 @@ import { CompletionConfirmationPanel } from "@/components/booking/completion-con
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { formatDateTime } from "@/lib/format/datetime";
 
 type Props = {
   booking: Booking;
@@ -27,7 +28,7 @@ export function BookingCard({ booking, viewer }: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  const when = new Date(booking.startsAt).toLocaleString(locale === "ar" ? "ar" : "en", {
+  const when = formatDateTime(booking.startsAt, locale === "ar" ? "ar" : "en", {
     dateStyle: "medium",
     timeStyle: "short",
   });

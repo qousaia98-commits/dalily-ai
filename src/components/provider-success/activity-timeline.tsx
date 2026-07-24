@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
 import type { ActivityItem } from "@/lib/provider-success/types";
+import { formatDateTime } from "@/lib/format/datetime";
 
 export function ActivityTimeline({ items }: { items: ActivityItem[] }) {
   const t = useTranslations("business.success.activity");
@@ -18,7 +19,7 @@ export function ActivityTimeline({ items }: { items: ActivityItem[] }) {
       ) : (
         <ol className="relative space-y-3 border-s border-border ps-4">
           {items.map((item) => {
-            const when = new Date(item.at).toLocaleString(locale === "ar" ? "ar" : "en", {
+            const when = formatDateTime(item.at, locale === "ar" ? "ar" : "en", {
               dateStyle: "medium",
               timeStyle: "short",
             });

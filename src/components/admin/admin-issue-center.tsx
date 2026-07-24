@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { updateIssueModerationAction } from "@/actions/admin-control-center.actions";
 import type { AdminIssueItem } from "@/lib/admin/issue-center";
+import { formatDateTime } from "@/lib/format/datetime";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/i18n/routing";
 
@@ -42,7 +43,7 @@ export function AdminIssueCenter({ items }: Props) {
                   <p className="font-semibold">{item.reason}</p>
               {item.details ? <p className="text-sm text-muted-foreground">{item.details}</p> : null}
               <p className="text-xs text-muted-foreground">
-                {new Date(item.createdAt).toLocaleString()} ·{" "}
+                {formatDateTime(item.createdAt)} ·{" "}
                 <Link href={`/admin/providers/${item.providerId}`} className="underline">
                   {t("viewProvider")}
                 </Link>

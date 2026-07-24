@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import type { AdminActivityItem } from "@/lib/admin/control-center";
+import { formatDateTime } from "@/lib/format/datetime";
 import { cn } from "@/lib/utils";
 
 const KNOWN_ACTIONS = new Set([
@@ -40,7 +41,7 @@ export async function ControlCenterActivityFeed({ items }: { items: AdminActivit
               <p className="mt-1 text-xs text-muted-foreground">
                 {item.actorName ? t("by", { name: item.actorName }) : t("system")}
                 {" · "}
-                {new Date(item.createdAt).toLocaleString()}
+                {formatDateTime(item.createdAt)}
               </p>
             </li>
           ))}

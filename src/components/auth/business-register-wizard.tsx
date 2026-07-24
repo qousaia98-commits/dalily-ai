@@ -329,12 +329,21 @@ export function BusinessRegisterWizard({
               {t("back")}
             </Button>
             {step < STEPS.length - 1 ? (
-              <Button type="button" onClick={next} disabled={!canNext() || isPending} className="gap-2">
+              // key="next-button" forces React to unmount/remount rather than
+              // mutate this node's `type` attribute in place when the step
+              // advances to the final (submit) step. Without a distinct key,
+              // React reuses the same <button> DOM element and flips its type
+              // from "button" to "submit" while the click that triggered the
+              // step change is still resolving its default action — the
+              // browser then treats that same click as a form submit, so the
+              // Review step silently auto-submits before the user ever
+              // presses "Complete registration".
+              <Button key="next-button" type="button" onClick={next} disabled={!canNext() || isPending} className="gap-2">
                 {t("next")}
                 <ChevronRight className="size-4" />
               </Button>
             ) : (
-              <Button type="submit" disabled={!canNext() || isPending} className="gap-2">
+              <Button key="submit-button" type="submit" disabled={!canNext() || isPending} className="gap-2">
                 {isPending ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />}
                 {t("finish")}
               </Button>

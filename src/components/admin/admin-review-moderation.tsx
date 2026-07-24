@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { moderateReviewAction, warnUserAction } from "@/actions/admin-control-center.actions";
 import type { AdminModerationReview } from "@/lib/admin/review-moderation";
+import { formatDateTime } from "@/lib/format/datetime";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/i18n/routing";
 
@@ -46,7 +47,7 @@ export function AdminReviewModerationPanel({ items, spamReady }: Props) {
                       {t("provider")}
                     </Link>
                     {" · "}
-                    {new Date(item.createdAt).toLocaleString()}
+                    {formatDateTime(item.createdAt)}
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">

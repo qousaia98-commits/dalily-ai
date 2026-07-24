@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { sendAdminBroadcastAction } from "@/actions/admin-control-center.actions";
 import type { AdminBroadcastItem, BroadcastTarget } from "@/lib/admin/broadcasts";
 import type { BroadcastDeliveryDiagnostics } from "@/lib/notifications/deliver";
+import { formatDateTime } from "@/lib/format/datetime";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -149,7 +150,7 @@ export function AdminBroadcastPanel({ history }: Props) {
                 <p className="font-medium">{item.title}</p>
                 <p className="text-muted-foreground">
                   {t(`targets.${item.target}`)} · {item.status} · {item.deliveryCount} ·{" "}
-                  {new Date(item.createdAt).toLocaleString()}
+                  {formatDateTime(item.createdAt)}
                 </p>
               </li>
             ))}

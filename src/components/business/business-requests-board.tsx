@@ -7,6 +7,7 @@ import { Link } from "@/lib/i18n/routing";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { formatDateTime } from "@/lib/format/datetime";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
 import {
   BUSINESS_REQUEST_TABS,
@@ -113,7 +114,7 @@ export function BusinessRequestsBoard({ requests, badges, userId, providerId }: 
                   {request.description}
                 </p>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  {new Date(request.created_at).toLocaleString()}
+                  {formatDateTime(request.created_at)}
                 </p>
               </Link>
             </li>

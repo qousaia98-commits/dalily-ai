@@ -6,6 +6,7 @@ import type { Booking } from "@/lib/booking/types";
 import { BookingCard } from "@/components/booking/booking-card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/lib/format/datetime";
 
 type View = "day" | "week" | "month" | "agenda";
 
@@ -61,7 +62,7 @@ export function BookingCalendar({ bookings, viewer }: Props) {
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm font-medium">
-          {anchor.toLocaleDateString(locale === "ar" ? "ar" : "en", {
+          {formatDate(anchor, locale === "ar" ? "ar" : "en", {
             month: "long",
             year: "numeric",
             day: view === "day" ? "numeric" : undefined,

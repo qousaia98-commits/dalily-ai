@@ -56,6 +56,16 @@ export async function enforceRouteAuth(
   const roles = (roleRows ?? []).map((row) => row.role as AppRole);
 
   if (isAuthRoute(pathname)) {
+    // Exception: authenticated users who aren't a business yet must still be
+    // able to reach /register/business to complete business onboarding —
+    // otherwise they'd be bounced straight back by this same rule that also
+    // sends them here from the /business guard below.
+    const isBusinessRegistrationRoute =
+      pathname === "/register/business" || pathname.startsWith("/register/business/");
+    if (isBusinessRegistrationRoute && !isBusinessUser(roles)) {
+      return response;
+    }
+
     const destination = getPostLoginPath(roles);
     return NextResponse.redirect(new URL(`${prefix}${destination}`, request.url));
   }

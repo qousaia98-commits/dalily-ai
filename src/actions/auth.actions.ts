@@ -179,6 +179,48 @@ async function bootstrapUserAfterSignUp(params: {
   });
 }
 
+/**
+ * Self-heal a "ghost" account: a Supabase Auth user that exists (and can log
+ * in) but never got its `public.users` / `profiles` / `user_roles` rows,
+ * because the post-signUp bootstrap failed independently of the signUp call
+ * itself (e.g. a transient DB error, or the whole signup racing a rate
+ * limit). Reconstructs those rows from the metadata captured at signup time,
+ * so a user who was told registration failed — but whose account actually
+ * exists — ends up with a working profile the moment they log in instead of
+ * being stuck with a broken account forever.
+ *
+ * Best-effort: never throws. If it fails, login still proceeds; the account
+ * remains a ghost and this is retried on the next login.
+ */
+async function resumeIncompleteRegistration(user: {
+  id: string;
+  email?: string | null;
+  user_metadata?: Record<string, unknown> | null;
+}): Promise<void> {
+  try {
+    const metadata = user.user_metadata ?? {};
+    const role: AppRole = metadata.role === "business" ? "business" : "user";
+    const rawName = typeof metadata.display_name === "string" ? metadata.display_name.trim() : "";
+    const displayName = rawName || user.email?.split("@")[0] || "User";
+    const locale = await getLocale();
+
+    await bootstrapUserAfterSignUp({
+      userId: user.id,
+      email: user.email ?? "",
+      displayName,
+      role,
+      locale,
+      hasSession: true,
+    });
+    logRegisterStep("resumeIncompleteRegistration", true, { userId: user.id, role });
+  } catch (error) {
+    logRegisterStep("resumeIncompleteRegistration", false, {
+      userId: user.id,
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+
 export async function loginAction(
   _prevState: AuthActionState,
   formData: FormData,
@@ -214,11 +256,23 @@ export async function loginAction(
     return { success: false, error: "unknown" };
   }
 
-  const { data: userRow } = await supabase
+  let { data: userRow } = await supabase
     .from("users")
     .select("status")
     .eq("id", data.user.id)
     .maybeSingle();
+
+  if (!userRow) {
+    // Confirmed, loggable-in Auth account with no application-level profile
+    // — a prior registration's bootstrap step failed after signUp succeeded.
+    // Resume it now rather than let them log into a broken account.
+    await resumeIncompleteRegistration(data.user);
+    ({ data: userRow } = await supabase
+      .from("users")
+      .select("status")
+      .eq("id", data.user.id)
+      .maybeSingle());
+  }
 
   if (userRow?.status === "suspended" || userRow?.status === "banned") {
     await supabase.auth.signOut();

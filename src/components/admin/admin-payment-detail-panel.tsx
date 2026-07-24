@@ -12,6 +12,7 @@ import { getLocalizedField } from "@/types/provider.types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { formatDateTime } from "@/lib/format/datetime";
 
 type PaymentEvent = {
   id: string;
@@ -141,7 +142,7 @@ export function AdminPaymentDetailPanel({ payment }: { payment: PaymentDetail })
                     {t(`timeline.${event.eventType}`)}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {new Date(event.createdAt).toLocaleString(locale)}
+                    {formatDateTime(event.createdAt, locale)}
                     {event.actorName ? ` · ${event.actorName}` : ""}
                   </p>
                   {event.note ? (

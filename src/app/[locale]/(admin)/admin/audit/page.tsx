@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { requireAdminUser } from "@/lib/auth/session";
 import { listAdminActivityFeed } from "@/lib/admin/control-center";
 import { listAdminActionLogs } from "@/lib/admin/action-log";
+import { formatDateTime } from "@/lib/format/datetime";
 
 export default async function AdminAuditPage() {
   await requireAdminUser();
@@ -34,7 +35,7 @@ export default async function AdminAuditPage() {
                   {row.entityId ? ` · ${row.entityId.slice(0, 8)}` : ""}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {new Date(row.createdAt).toLocaleString()}
+                  {formatDateTime(row.createdAt)}
                 </p>
               </li>
             ))}
@@ -54,7 +55,7 @@ export default async function AdminAuditPage() {
                   {row.action} · {row.entityType}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {row.actorName ?? "—"} · {new Date(row.createdAt).toLocaleString()}
+                  {row.actorName ?? "—"} · {formatDateTime(row.createdAt)}
                 </p>
               </li>
             ))}

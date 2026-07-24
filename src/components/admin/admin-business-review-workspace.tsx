@@ -26,6 +26,7 @@ import { AdminVerificationFeedbackDialog } from "@/components/admin/admin-verifi
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/lib/format/datetime";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { VerificationAdminFeedback } from "@/lib/verification/feedback";
 
@@ -148,7 +149,7 @@ export function AdminBusinessReviewWorkspace({ provider }: Props) {
               { label: t("fields.email"), value: provider.email ?? provider.ownerEmail },
               {
                 label: t("fields.registered"),
-                value: new Date(provider.createdAt).toLocaleDateString(locale),
+                value: formatDate(provider.createdAt, locale),
               },
               { label: t("fields.status"), value: tStatus(provider.status) },
               { label: t("fields.plan"), value: planLabel },

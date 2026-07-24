@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { ExternalLink, FileText } from "lucide-react";
 import { Link } from "@/lib/i18n/routing";
 import { getLocalizedField } from "@/types/provider.types";
+import { formatDateTime } from "@/lib/format/datetime";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -79,7 +80,7 @@ export function AdminPaymentsTable({ payments }: { payments: PaymentRow[] }) {
                 )}
               </td>
               <td className="whitespace-nowrap px-4 py-3.5 text-muted-foreground">
-                {new Date(payment.createdAt).toLocaleString(locale)}
+                {formatDateTime(payment.createdAt, locale)}
               </td>
               <td className="px-4 py-3.5">
                 <Badge variant="secondary">{t(`status.${payment.paymentStatus}`)}</Badge>

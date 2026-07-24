@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { previewLocalizedFieldAction } from "@/actions/translation.actions";
 import { FieldError } from "@/components/forms/field-error";
@@ -43,22 +43,44 @@ export function LocalizedFieldInput({
   const locale = useLocale() as Locale;
   const t = useTranslations("business.translation");
   const [preview, setPreview] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
+
+  const fetchPreview = (text: string) => {
+    setIsPending(true);
+    previewLocalizedFieldAction(locale, text, existingAr, existingEn)
+      .then((result) => {
+        if (result.success && result.result) {
+          const opposite = locale === "ar" ? result.result.en : result.result.ar;
+          setPreview(opposite?.trim() ? opposite : null);
+        }
+      })
+      .finally(() => setIsPending(false));
+  };
+
+  // Debounced off typing (not blur): triggering this fresh the instant the
+  // user blurs the field — which is exactly what happens when they click a
+  // submit button right after typing — raced this request against the
+  // form's own submit action. Both are separate POSTs to the same route,
+  // and firing them back-to-back could leave the submit's response
+  // unprocessed, so the form silently appeared to do nothing. Debouncing off
+  // keystrokes means the preview request has normally already completed
+  // well before the user ever reaches for the submit button.
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    onValueChange?.();
     const text = event.target.value;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
     if (!text.trim()) {
       setPreview(null);
       return;
     }
-
-    startTransition(async () => {
-      const result = await previewLocalizedFieldAction(locale, text, existingAr, existingEn);
-      if (result.success && result.result) {
-        const opposite = locale === "ar" ? result.result.en : result.result.ar;
-        setPreview(opposite?.trim() ? opposite : null);
-      }
-    });
+    debounceRef.current = setTimeout(() => fetchPreview(text), 500);
   };
 
   const errorId = formId ? `${formId}-${name}-error` : `${name}-error`;
@@ -70,9 +92,14 @@ export function LocalizedFieldInput({
     ...(required
       ? ({ "data-required": true, "aria-required": true } as const)
       : {}),
-    disabled: disabled || isPending,
-    onBlur: handleBlur,
-    onChange: onValueChange,
+    // NOTE: intentionally NOT tied to `isPending` (the background translation
+    // preview's own transition). A disabled field's value is excluded from
+    // FormData on submit, and the client-side required-field check also
+    // skips disabled fields (src/lib/forms/client-validation.ts) — so
+    // disabling this input while a preview request is in flight let a submit
+    // right after typing go out with an empty/missing value, silently.
+    disabled,
+    onChange: handleChange,
     dir: locale === "ar" ? ("rtl" as const) : ("ltr" as const),
     "aria-invalid": Boolean(errorMessage) || undefined,
     "aria-describedby": errorMessage ? errorId : undefined,

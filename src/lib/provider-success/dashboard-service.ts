@@ -37,6 +37,7 @@ import type {
   ProviderSuccessDashboard,
   TodayAppointment,
 } from "@/lib/provider-success/types";
+import { formatDateTime } from "@/lib/format/datetime";
 
 function startOfDay(d = new Date()): Date {
   const x = new Date(d);
@@ -57,7 +58,7 @@ function weekLabel(d: Date): string {
 }
 
 function monthLabel(d: Date): string {
-  return d.toLocaleString("en", { month: "short" });
+  return formatDateTime(d, "en", { month: "short" });
 }
 
 function categorizeNotification(type: string): NotificationWidgetItem["category"] {

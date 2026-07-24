@@ -21,6 +21,7 @@ import { SubscriptionUpgradeSummary } from "@/components/business/subscription-u
 import { SubscriptionFaq } from "@/components/business/subscription-faq";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import type { PlanSlug } from "@/lib/subscription/types";
+import { formatDate } from "@/lib/format/datetime";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -244,7 +245,7 @@ export function BusinessSubscriptionPanel({
             </div>
             {expiresAt ? (
               <p className="text-sm text-muted-foreground">
-                {t("expiresAt", { date: new Date(expiresAt).toLocaleDateString(locale) })}
+                {t("expiresAt", { date: formatDate(expiresAt, locale) })}
               </p>
             ) : (
               <p className="text-sm text-muted-foreground">{t("noExpiration")}</p>
@@ -304,7 +305,7 @@ export function BusinessSubscriptionPanel({
                 ) : null}
                 <Badge variant="secondary">{t(`paymentStatus.${payment.paymentStatus}`)}</Badge>
                 <span className="text-muted-foreground">
-                  {new Date(payment.createdAt).toLocaleDateString(locale)}
+                  {formatDate(payment.createdAt, locale)}
                 </span>
               </li>
             ))}

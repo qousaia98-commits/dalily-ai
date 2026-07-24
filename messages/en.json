@@ -3629,6 +3629,7 @@
         "email_not_confirmed": "Please confirm your email first",
         "validation_error": "Please check the form fields",
         "auth_callback_failed": "We could not confirm your email link. Please try again or request a new one.",
+        "rate_limited": "Too many attempts. Please wait a few minutes and try again.",
         "unknown": "Something went wrong. Please try again"
       }
     },
@@ -3650,8 +3651,9 @@
       "errors": {
         "invalid": "Please fill all fields — password must be at least 6 characters",
         "email_taken": "This email is already registered",
-        "profile_creation_failed": "Could not create your profile. Please try again",
+        "profile_creation_failed": "We hit a snag finishing your account setup. Try logging in — your account may already be ready.",
         "validation_error": "Please check the form fields",
+        "rate_limited": "Too many attempts. Please wait a few minutes and try again.",
         "unknown": "Something went wrong. Please try again"
       }
     },
@@ -3688,8 +3690,9 @@
       "errors": {
         "password_mismatch": "Passwords do not match",
         "email_taken": "This email is already registered",
-        "profile_creation_failed": "Could not create the business account. Please try again",
+        "profile_creation_failed": "We hit a snag finishing your business setup. Try logging in — your account may already be ready.",
         "validation_error": "Please check all fields",
+        "rate_limited": "Too many attempts. Please wait a few minutes and try again.",
         "unknown": "Something went wrong. Please try again"
       }
     }

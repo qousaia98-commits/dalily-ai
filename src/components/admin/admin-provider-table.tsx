@@ -10,6 +10,7 @@ import {
 } from "@/actions/admin.actions";
 import type { AdminProviderItem } from "@/lib/admin/queries";
 import { getLocalizedField } from "@/types/provider.types";
+import { formatDate } from "@/lib/format/datetime";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -76,7 +77,7 @@ export function AdminProviderTable({ items }: AdminProviderTableProps) {
               <p className="text-xs text-muted-foreground">
                 ★ {item.ratingAvg.toFixed(1)} · {t("metrics.trust")}: {item.trustScore} ·{" "}
                 {t("metrics.completion")}: {item.profileCompleteness}% ·{" "}
-                {t("metrics.lastActive")}: {new Date(item.updatedAt).toLocaleDateString(locale)}
+                {t("metrics.lastActive")}: {formatDate(item.updatedAt, locale)}
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-2">

@@ -13,6 +13,7 @@ import {
 } from "@/lib/search/schema-capabilities";
 import type { Locale } from "@/lib/i18n/config";
 import type { PlanSlug } from "@/lib/subscription/types";
+import { formatDate } from "@/lib/format/datetime";
 
 export type WeeklyInsights = {
   profileViews: number | null;
@@ -206,7 +207,7 @@ export async function getLocationInsights(
       }
 
       if (input.isPremium && row.created_at) {
-        const day = new Date(row.created_at as string).toLocaleDateString(input.locale, {
+        const day = formatDate(row.created_at as string, input.locale, {
           weekday: "long",
         });
         dayCounts.set(day, (dayCounts.get(day) ?? 0) + 1);

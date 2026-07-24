@@ -403,7 +403,12 @@ export async function addServiceAction(
   const parsed = serviceInputSchema.safeParse({
     locale: formData.get("locale"),
     name: formData.get("name"),
-    description: formData.get("description"),
+    // FormData.get() returns `null` (not `undefined`) for a field that isn't
+    // present in the form — this form has no description input at all, so
+    // that was always `null` here, which fails zod's `.optional()` (it only
+    // accepts `undefined`) and made every submission fail validation
+    // regardless of `name`.
+    description: formData.get("description") || undefined,
   });
 
   if (!parsed.success) return validationError(parsed.error);
@@ -450,7 +455,9 @@ export async function updateServiceAction(
     serviceId: formData.get("serviceId"),
     locale: formData.get("locale"),
     name: formData.get("name"),
-    description: formData.get("description"),
+    // Same FormData null-vs-undefined issue as addServiceAction above — this
+    // form has no description input either.
+    description: formData.get("description") || undefined,
   });
 
   if (!parsed.success) return validationError(parsed.error);
