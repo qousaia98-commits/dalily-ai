@@ -73,9 +73,12 @@ export function buildBusinessConversations(input: {
         id: n.id,
         bodyKey: n.bodyKey,
         bodyParams: n.bodyParams,
+        bodyText: n.bodyText,
         createdAt: n.createdAt,
         from: "dalily" as const,
         read: markedRead || !n.unread,
+        isSystem: true,
+        messageType: "system" as const,
       };
     });
 
@@ -107,13 +110,17 @@ export function buildBusinessConversations(input: {
 
   const last = dalilyMessages[dalilyMessages.length - 1];
   const unreadCount = dalilyMessages.filter((m) => !m.read).length;
+  const previewLine = last.bodyText
+    ? last.bodyText.split("\n").map((l) => l.trim()).filter(Boolean)[0]
+    : undefined;
 
   const dalily: BusinessConversation = {
     id: "dalily",
     kind: "dalily",
     nameKey: "dalilyName",
     avatarTone: "dalily",
-    previewKey: last.bodyKey,
+    previewKey: previewLine ? undefined : last.bodyKey,
+    previewText: previewLine,
     previewParams: last.bodyParams,
     updatedAt: resolveLatestMessageAt(dalilyMessages),
     unreadCount,

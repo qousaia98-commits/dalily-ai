@@ -1,7 +1,6 @@
 /**
  * Deliver marketplace notifications without relying on notify_marketplace_user auth.uid().
  * Service-role admin client can insert directly (bypasses RLS).
- * Used for admin broadcasts, warnings, and verification system notices.
  */
 
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -21,6 +20,7 @@ export type MarketplaceDeliveryResult = {
   userId: string;
   ok: boolean;
   error?: string;
+  notificationId?: string;
 };
 
 /**
@@ -31,21 +31,29 @@ export async function deliverMarketplaceNotification(
 ): Promise<MarketplaceDeliveryResult> {
   const admin = createAdminClient();
   try {
-    const { error } = await admin.from("marketplace_notifications").insert({
-      user_id: input.userId,
-      type: input.type,
-      title_key: input.titleKey,
-      body_key: input.bodyKey,
-      body_params: input.bodyParams ?? {},
-      href: input.href ?? null,
-      service_request_id: input.requestId ?? null,
-      conversation_id: input.conversationId ?? null,
-    });
+    const { data, error } = await admin
+      .from("marketplace_notifications")
+      .insert({
+        user_id: input.userId,
+        type: input.type,
+        title_key: input.titleKey,
+        body_key: input.bodyKey,
+        body_params: input.bodyParams ?? {},
+        href: input.href ?? null,
+        service_request_id: input.requestId ?? null,
+        conversation_id: input.conversationId ?? null,
+      })
+      .select("id")
+      .maybeSingle();
 
     if (error) {
       return { userId: input.userId, ok: false, error: error.message };
     }
-    return { userId: input.userId, ok: true };
+    return {
+      userId: input.userId,
+      ok: true,
+      notificationId: data?.id,
+    };
   } catch (e) {
     return {
       userId: input.userId,
@@ -66,11 +74,17 @@ export type BroadcastDeliveryDiagnostics = {
 
 /**
  * Deliver to many users — continue on individual failures.
+ * Optional per-user href via hrefByUserId.
  */
 export async function deliverMarketplaceNotificationsBatch(
   userIds: string[],
-  payload: Omit<MarketplaceNotifyInput, "userId">,
-  options?: { max?: number },
+  payload: Omit<MarketplaceNotifyInput, "userId" | "href"> & {
+    href?: string | null;
+  },
+  options?: {
+    max?: number;
+    hrefByUserId?: Map<string, string>;
+  },
 ): Promise<BroadcastDeliveryDiagnostics> {
   const max = options?.max ?? 2000;
   const recipients = userIds.slice(0, max);
@@ -81,9 +95,12 @@ export async function deliverMarketplaceNotificationsBatch(
   const failedUserIds: string[] = [];
 
   for (const userId of recipients) {
+    const href =
+      options?.hrefByUserId?.get(userId) ?? payload.href ?? null;
     const result = await deliverMarketplaceNotification({
       ...payload,
       userId,
+      href,
     });
     if (result.ok) {
       deliverySuccess += 1;

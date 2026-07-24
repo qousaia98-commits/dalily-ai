@@ -191,11 +191,20 @@
       "back": "العودة للمحادثات",
       "threadLabel": "محادثة مع {name}",
       "businessSubtitle": "محادثة مع عمل",
-      "dalilySubtitle": "تحديثات دليلي الرسمية",
+      "dalilyName": "دليلي",
+      "dalilySender": "فريق دليلي",
+      "dalilySubtitle": "رسائل رسمية من فريق دليلي",
       "composerHint": "تُرسل الرسائل فوراً.",
       "customerHint": "افتح ملف عمل وأرسل طلباً للبدء.",
       "noMessagesYet": "لا رسائل بعد",
-      "yesterday": "أمس"
+      "yesterday": "أمس",
+      "dalilyWelcome": {
+        "body": "أهلاً في رسائل دليلي. الرسائل الرسمية من دليلي بتظهر بهالمحادثة."
+      },
+      "dalilyOfficial": {
+        "title": "دليلي",
+        "body": "{title}"
+      }
     }
   },
   "location": {
@@ -2172,7 +2181,8 @@
       },
       "openMessages": "فتح الرسائل",
       "dalilyName": "دليلي",
-      "dalilySubtitle": "تحديثات دليلي الرسمية",
+      "dalilySender": "فريق دليلي",
+      "dalilySubtitle": "رسائل رسمية من فريق دليلي",
       "customerSubtitle": "محادثة زبون",
       "customerHint": "محادثات الزبائن بتظهر هون لما يبعتوا لك.",
       "back": "رجوع للمحادثات",
@@ -2185,6 +2195,10 @@
       "yesterday": "أمس",
       "dalilyWelcome": {
         "body": "أهلاً في رسائل دليلي. التحديثات المهمة عن نشاطك بتظهر بهالمحادثة."
+      },
+      "dalilyOfficial": {
+        "title": "دليلي",
+        "body": "{title}"
       }
     },
     "locationInsights": {
@@ -3193,7 +3207,7 @@
       "send": "إرسال الآن",
       "sending": "جارٍ الإرسال…",
       "sent": "تم إرسال الرسالة بنجاح.",
-      "sentWithCount": "تم إرسال الرسالة بنجاح. وصلت إلى {count} مستخدم.",
+      "sentWithCount": "تم توصيل البث بنجاح. وصل لـ {count} مستخدم.",
       "scheduleReady": "جدولة البث جاهزة معمارياً — الإرسال فوري حالياً.",
       "history": "سجل التسليم",
       "emptyHistory": "لا بث بعد.",
@@ -3692,8 +3706,12 @@
       "body": "تم استلام مستنداتك الجديدة. طلب التحقق صار قيد المراجعة."
     },
     "adminBroadcast": {
-      "title": "إعلان من دليلي",
-      "body": "عندك رسالة جديدة من دليلي."
+      "title": "لديك رسالة جديدة من دليلي.",
+      "body": "افتح الرسائل لتقرأ رسالة دليلي."
+    },
+    "dalilyMessage": {
+      "title": "لديك رسالة جديدة من دليلي.",
+      "body": "افتح الرسائل لتقرأ رسالة دليلي."
     },
     "adminWarning": {
       "title": "تنبيه مهم من دليلي",

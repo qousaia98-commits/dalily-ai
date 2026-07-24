@@ -10,6 +10,8 @@ export type BusinessNotification = {
   titleKey: string;
   bodyKey: string;
   bodyParams?: Record<string, string | number>;
+  /** Plain text for official Dalily chat messages (broadcasts). */
+  bodyText?: string;
   createdAt: string;
   /** Server-side "needs attention" — drives unread badges. */
   unread: boolean;

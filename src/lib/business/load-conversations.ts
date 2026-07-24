@@ -10,6 +10,7 @@ import {
 } from "@/lib/business/conversations";
 import { MSG_READ_COOKIE, parseMsgReadCookie } from "@/lib/business/message-read-state";
 import { loadConversationsForBusiness } from "@/lib/messaging/queries";
+import { listDalilyInboxMessages } from "@/lib/dalily-messages/inbox";
 import type { PlanSlug } from "@/lib/subscription/types";
 
 function planLabel(slug: string): string {
@@ -24,11 +25,15 @@ export const loadBusinessConversations = cache(async function loadBusinessConver
 ) {
   const jar = await cookies();
   const readMap = parseMsgReadCookie(jar.get(MSG_READ_COOKIE)?.value);
+  const dalilyInbox = await listDalilyInboxMessages(userId);
 
   const provider = await getOwnedProvider(userId);
   if (!provider) {
     return {
-      conversations: buildBusinessConversations({ notifications: [], readMap }),
+      conversations: buildBusinessConversations({
+        notifications: dalilyInbox,
+        readMap,
+      }),
       planSlug: "free" as PlanSlug,
       provider: null,
     };
@@ -45,7 +50,7 @@ export const loadBusinessConversations = cache(async function loadBusinessConver
         Date.now() - new Date(p.approvedAt).getTime() < 1000 * 60 * 60 * 24,
     );
 
-    const notifications = buildBusinessNotifications({
+    const statusNotifications = buildBusinessNotifications({
       providerStatus: provider.status,
       verificationStatus: provider.verificationStatus,
       planSlug,
@@ -70,6 +75,7 @@ export const loadBusinessConversations = cache(async function loadBusinessConver
       reviewCount: provider.reviewCount,
     });
 
+    const notifications = [...statusNotifications, ...dalilyInbox];
     const dalilyConversations = buildBusinessConversations({ notifications, readMap });
     const customerConversations = applyConversationReadState(
       await loadConversationsForBusiness(userId),
@@ -85,7 +91,7 @@ export const loadBusinessConversations = cache(async function loadBusinessConver
       provider,
     };
   } catch {
-    const notifications = buildBusinessNotifications({
+    const statusNotifications = buildBusinessNotifications({
       providerStatus: provider.status,
       verificationStatus: provider.verificationStatus,
       planSlug: "free",
@@ -94,6 +100,7 @@ export const loadBusinessConversations = cache(async function loadBusinessConver
       changesRequestedAt: provider.changesRequestedAt,
       reviewCount: provider.reviewCount,
     });
+    const notifications = [...statusNotifications, ...dalilyInbox];
     const dalilyConversations = buildBusinessConversations({ notifications, readMap });
     const customerConversations = applyConversationReadState(
       await loadConversationsForBusiness(userId),

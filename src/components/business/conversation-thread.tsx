@@ -147,9 +147,11 @@ export async function ConversationThread({
         aria-label={t("threadLabel", { name })}
       >
         {conversation.messages.map((msg) => {
-          const isSystem = msg.isSystem || msg.from === "dalily";
+          const isOfficialChat = Boolean(msg.bodyText) && msg.from === "dalily";
+          const isSystem = !isOfficialChat && (msg.isSystem || msg.from === "dalily");
           const mine =
             !isSystem &&
+            !isOfficialChat &&
             (viewer === "customer" ? msg.from === "customer" : msg.from === "business");
           const body = msg.bodyText ? msg.bodyText : t(msg.bodyKey, msg.bodyParams ?? {});
           const timeLabel = formatMessageTime(msg.createdAt, locale);
@@ -158,7 +160,7 @@ export async function ConversationThread({
             return (
               <div key={msg.id} className="flex justify-center">
                 <div className="max-w-[90%] rounded-2xl border border-[var(--dalily-gold)]/30 bg-[color-mix(in_oklab,var(--dalily-gold)_10%,var(--card))] px-3.5 py-2 text-center text-xs leading-relaxed text-foreground sm:max-w-[75%]">
-                  <p className="font-medium">{body}</p>
+                  <p className="font-medium whitespace-pre-wrap">{body}</p>
                   {timeLabel && isValidMessageTimestamp(msg.createdAt) ? (
                     <time
                       className="mt-1 block text-[0.6rem] text-muted-foreground"
@@ -173,16 +175,26 @@ export async function ConversationThread({
           }
 
           return (
-            <div key={msg.id} className={cn("flex", mine ? "justify-end" : "justify-start")}>
+            <div
+              key={msg.id}
+              className={cn("flex", mine ? "justify-end" : "justify-start")}
+            >
               <div
                 className={cn(
                   "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed shadow-sm sm:max-w-[70%]",
                   mine
                     ? "rounded-ee-md bg-[var(--dalily-navy)] text-white"
-                    : "rounded-es-md border border-border bg-card text-foreground",
+                    : isOfficialChat
+                      ? "rounded-es-md border border-[var(--dalily-gold)]/35 bg-[color-mix(in_oklab,var(--dalily-gold)_8%,var(--card))] text-foreground"
+                      : "rounded-es-md border border-border bg-card text-foreground",
                 )}
               >
-                <p>{body}</p>
+                {isOfficialChat ? (
+                  <p className="mb-1 text-[0.65rem] font-semibold uppercase tracking-wide text-[var(--dalily-gold)]">
+                    {t("dalilySender")}
+                  </p>
+                ) : null}
+                <p className="whitespace-pre-wrap">{body}</p>
                 {msg.messageType === "location" && msg.locationLat != null && msg.locationLng != null ? (
                   <a
                     href={`https://www.openstreetmap.org/?mlat=${msg.locationLat}&mlon=${msg.locationLng}#map=16/${msg.locationLat}/${msg.locationLng}`}

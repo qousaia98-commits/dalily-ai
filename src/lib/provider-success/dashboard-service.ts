@@ -61,7 +61,14 @@ function monthLabel(d: Date): string {
 }
 
 function categorizeNotification(type: string): NotificationWidgetItem["category"] {
-  if (type.includes("message") || type.includes("inquiry")) return "message";
+  if (
+    type.includes("message") ||
+    type.includes("inquiry") ||
+    type === "dalily_message" ||
+    type === "admin_broadcast"
+  ) {
+    return "message";
+  }
   if (type.includes("booking") || type.includes("request") || type.includes("quote")) {
     return "booking";
   }

@@ -163,54 +163,91 @@ export async function sendAdminBroadcastAction(input: {
     return { success: false, error: "no_recipients" };
   }
 
-  const href =
-    input.href ??
-    (input.target === "providers" || input.target === "all" ? "/business" : "/");
+  const admin = createAdminClient();
+  const now = new Date().toISOString();
+
+  // Create broadcast row first so deliveries can reference it (audit + read tracking).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: broadcastRow, error: createError } = await (admin as any)
+    .from("admin_broadcasts")
+    .insert({
+      created_by: authUser.id,
+      title,
+      body,
+      target: input.target,
+      target_user_id: input.target === "single" ? input.targetUserId ?? null : null,
+      href: null,
+      status: "sent",
+      sent_at: now,
+      delivery_count: 0,
+      metadata: { recipientCount: recipients.length, readCount: 0 },
+    })
+    .select("id")
+    .maybeSingle();
+
+  if (createError || !broadcastRow?.id) {
+    return { success: false, error: "update_failed" };
+  }
+
+  const broadcastId = broadcastRow.id as string;
+
+  await logAdminAction({
+    actorId: authUser.id,
+    action: "broadcast_created",
+    entityType: "admin_broadcast",
+    entityId: broadcastId,
+    metadata: {
+      target: input.target,
+      recipients: recipients.length,
+      title,
+    },
+  });
+
+  const { resolveDalilyInboxHrefs } = await import("@/lib/dalily-messages/inbox");
+  const hrefByUserId = await resolveDalilyInboxHrefs(recipients);
 
   const diagnostics = await deliverMarketplaceNotificationsBatch(
     recipients,
     {
-      type: "admin_broadcast",
-      titleKey: "notifications.adminBroadcast.title",
-      bodyKey: "notifications.adminBroadcast.body",
-      bodyParams: { title, body },
-      href,
+      type: "dalily_message",
+      titleKey: "notifications.dalilyMessage.title",
+      bodyKey: "notifications.dalilyMessage.body",
+      bodyParams: { title, body, broadcastId },
     },
-    { max: 2000 },
+    { max: 2000, hrefByUserId },
   );
 
-  const admin = createAdminClient();
-  const now = new Date().toISOString();
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error: historyError } = await (admin as any).from("admin_broadcasts").insert({
-    created_by: authUser.id,
-    title,
-    body,
-    target: input.target,
-    target_user_id: input.target === "single" ? input.targetUserId ?? null : null,
-    href,
-    status: diagnostics.deliverySuccess > 0 ? "sent" : "failed",
-    sent_at: now,
-    delivery_count: diagnostics.deliverySuccess,
-  });
-
-  if (historyError) {
-    // Delivery may have succeeded — still report counts; history write is secondary.
-  }
+  await (admin as any)
+    .from("admin_broadcasts")
+    .update({
+      status: diagnostics.deliverySuccess > 0 ? "sent" : "failed",
+      delivery_count: diagnostics.deliverySuccess,
+      metadata: {
+        recipientCount: recipients.length,
+        readCount: 0,
+        diagnostics,
+      },
+    })
+    .eq("id", broadcastId);
 
   await logAdminAction({
     actorId: authUser.id,
-    action: "broadcast_sent",
+    action: "broadcast_delivered",
     entityType: "admin_broadcast",
+    entityId: broadcastId,
     metadata: {
       target: input.target,
+      recipients: recipients.length,
       deliveryCount: diagnostics.deliverySuccess,
+      deliveryStatus: diagnostics.deliverySuccess > 0 ? "delivered" : "failed",
       diagnostics,
     },
   });
 
   revalidatePath("/admin/broadcasts");
+  revalidatePath("/business/messages");
+  revalidatePath("/messages");
 
   if (diagnostics.deliverySuccess === 0) {
     return {

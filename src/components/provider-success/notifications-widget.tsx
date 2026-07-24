@@ -11,6 +11,15 @@ function useNotificationCopy() {
   const tn = useTranslations("notifications");
   const t = useTranslations("business.success.notifications");
 
+  function isDalilyInboxAlert(item: NotificationWidgetItem): boolean {
+    return (
+      item.titleKey.includes("dalilyMessage") ||
+      item.bodyKey.includes("dalilyMessage") ||
+      item.titleKey.includes("adminBroadcast") ||
+      item.bodyKey.includes("adminBroadcast")
+    );
+  }
+
   function titleOf(item: NotificationWidgetItem): string {
     if (item.titleKey.includes("verificationApproved")) {
       return tn("verificationApproved.title");
@@ -24,11 +33,8 @@ function useNotificationCopy() {
     if (item.titleKey.includes("verificationResubmitted")) {
       return tn("verificationResubmitted.title");
     }
-    if (item.titleKey.includes("adminBroadcast")) {
-      const custom = item.bodyParams?.title;
-      return typeof custom === "string" && custom.trim()
-        ? custom
-        : tn("adminBroadcast.title");
+    if (isDalilyInboxAlert(item)) {
+      return tn("dalilyMessage.title");
     }
     if (item.titleKey.includes("adminWarning")) {
       return tn("adminWarning.title");
@@ -49,11 +55,8 @@ function useNotificationCopy() {
     if (item.bodyKey.includes("verificationResubmitted")) {
       return tn("verificationResubmitted.body");
     }
-    if (item.bodyKey.includes("adminBroadcast")) {
-      const custom = item.bodyParams?.body;
-      return typeof custom === "string" && custom.trim()
-        ? custom
-        : tn("adminBroadcast.body");
+    if (isDalilyInboxAlert(item)) {
+      return tn("dalilyMessage.body");
     }
     if (item.bodyKey.includes("adminWarning")) {
       const msg = item.bodyParams?.message;

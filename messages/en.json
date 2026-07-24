@@ -191,11 +191,20 @@
       "back": "Back to conversations",
       "threadLabel": "Chat with {name}",
       "businessSubtitle": "Business conversation",
-      "dalilySubtitle": "Official Dalily updates",
+      "dalilyName": "Dalily",
+      "dalilySender": "Dalily Team",
+      "dalilySubtitle": "Official messages from Dalily Team",
       "composerHint": "Messages send instantly.",
       "customerHint": "Open a business profile and send a request to get started.",
       "noMessagesYet": "No messages yet",
-      "yesterday": "Yesterday"
+      "yesterday": "Yesterday",
+      "dalilyWelcome": {
+        "body": "Welcome to Dalily Messages. Official updates from Dalily will appear in this chat."
+      },
+      "dalilyOfficial": {
+        "title": "Dalily",
+        "body": "{title}"
+      }
     }
   },
   "location": {
@@ -1132,8 +1141,12 @@
       "body": "Your updated verification documents have been received. Your request is now under review."
     },
     "adminBroadcast": {
-      "title": "Dalily announcement",
-      "body": "You have a new message from Dalily."
+      "title": "New message from Dalily",
+      "body": "Open Messages to read your message from Dalily."
+    },
+    "dalilyMessage": {
+      "title": "New message from Dalily",
+      "body": "Open Messages to read your message from Dalily."
     },
     "adminWarning": {
       "title": "Important notice from Dalily",
@@ -2497,7 +2510,8 @@
       },
       "openMessages": "Open Messages",
       "dalilyName": "Dalily",
-      "dalilySubtitle": "Official Dalily updates",
+      "dalilySender": "Dalily Team",
+      "dalilySubtitle": "Official messages from Dalily Team",
       "customerSubtitle": "Customer conversation",
       "customerHint": "Customer chats will appear here when people message you.",
       "back": "Back to conversations",
@@ -2510,6 +2524,10 @@
       "yesterday": "Yesterday",
       "dalilyWelcome": {
         "body": "Welcome to Dalily Messages. Important updates about your business will appear in this chat."
+      },
+      "dalilyOfficial": {
+        "title": "Dalily",
+        "body": "{title}"
       }
     },
     "locationInsights": {
@@ -3494,7 +3512,7 @@
       "send": "Send now",
       "sending": "Sending…",
       "sent": "Broadcast sent successfully.",
-      "sentWithCount": "Broadcast sent successfully. Delivered to {count} users.",
+      "sentWithCount": "Broadcast delivered successfully. Delivered to {count} users.",
       "scheduleReady": "Scheduling architecture is ready — send immediately for now.",
       "history": "Delivery history",
       "emptyHistory": "No broadcasts yet.",

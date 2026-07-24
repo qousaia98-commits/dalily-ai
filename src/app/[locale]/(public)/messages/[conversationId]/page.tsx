@@ -26,7 +26,8 @@ export default async function CustomerConversationPage({ params }: PageProps) {
 
   if (!conversation) notFound();
 
-  const request = await getRequestByConversationId(conversationId);
+  const request =
+    conversationId === "dalily" ? null : await getRequestByConversationId(conversationId);
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-4 overflow-x-hidden animate-fade-in px-4 py-6 sm:px-6">
