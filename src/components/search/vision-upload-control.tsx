@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { Camera, ImagePlus, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
@@ -22,11 +22,23 @@ export type VisionAnalyzeSuccess = {
   diagnosisProblemId: ProblemId | null;
 };
 
+export type VisionUploadHandle = {
+  openCamera: () => void;
+  openGallery: () => void;
+  hasImage: () => boolean;
+};
+
 type Props = {
   onAnalyzed: (result: VisionAnalyzeSuccess) => void;
   onError?: (message: string) => void;
+  onImageChange?: (hasImage: boolean) => void;
   className?: string;
   compact?: boolean;
+  /** When true, only render preview / hidden inputs — triggers live in parent toolbar */
+  toolbarMode?: boolean;
+  /** Auto-run analysis after pick (legacy). Default false for clearer UX. */
+  autoAnalyze?: boolean;
+  hidden?: boolean;
 };
 
 type LocalError =
@@ -37,12 +49,19 @@ type LocalError =
   | "analysis_failed"
   | "no_image";
 
-export function VisionUploadControl({
-  onAnalyzed,
-  onError,
-  className,
-  compact = false,
-}: Props) {
+export const VisionUploadControl = forwardRef<VisionUploadHandle, Props>(function VisionUploadControl(
+  {
+    onAnalyzed,
+    onError,
+    onImageChange,
+    className,
+    compact = false,
+    toolbarMode = false,
+    autoAnalyze = false,
+    hidden = false,
+  },
+  ref,
+) {
   const t = useTranslations("search.vision");
   const inputId = useId();
   const galleryRef = useRef<HTMLInputElement>(null);
@@ -59,9 +78,20 @@ export function VisionUploadControl({
       return null;
     });
     fingerprintsRef.current = [];
-  }, []);
+    onImageChange?.(false);
+  }, [onImageChange]);
 
   useEffect(() => () => clearImage(), [clearImage]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      openCamera: () => cameraRef.current?.click(),
+      openGallery: () => galleryRef.current?.click(),
+      hasImage: () => Boolean(image),
+    }),
+    [image],
+  );
 
   const reportError = useCallback(
     (code: LocalError) => {
@@ -71,27 +101,13 @@ export function VisionUploadControl({
     [onError, t],
   );
 
-  const ingestFile = useCallback(
-    async (file: File, { autoAnalyze = true }: { autoAnalyze?: boolean } = {}) => {
-      setLocalError(null);
-      const prepared = await prepareVisionImage(file, fingerprintsRef.current);
-      if (!prepared.success) {
-        reportError(prepared.error);
-        return;
-      }
-
-      setImage((prev) => {
-        revokeVisionPreview(prev);
-        return prepared.image;
-      });
-      fingerprintsRef.current = [prepared.image.fingerprint];
-
-      if (!autoAnalyze) return;
-
+  const runAnalyze = useCallback(
+    async (local: VisionLocalImage) => {
       setAnalyzing(true);
+      setLocalError(null);
       try {
         const formData = new FormData();
-        formData.set("image", prepared.image.file, prepared.image.file.name || "problem.webp");
+        formData.set("image", local.file, local.file.name || "problem.webp");
         const result = await analyzeVisionProblemAction(formData);
 
         if (!result.success) {
@@ -108,6 +124,27 @@ export function VisionUploadControl({
       }
     },
     [onAnalyzed, reportError],
+  );
+
+  const ingestFile = useCallback(
+    async (file: File, { analyze = autoAnalyze }: { analyze?: boolean } = {}) => {
+      setLocalError(null);
+      const prepared = await prepareVisionImage(file, fingerprintsRef.current);
+      if (!prepared.success) {
+        reportError(prepared.error);
+        return;
+      }
+
+      setImage((prev) => {
+        revokeVisionPreview(prev);
+        return prepared.image;
+      });
+      fingerprintsRef.current = [prepared.image.fingerprint];
+      onImageChange?.(true);
+
+      if (analyze) await runAnalyze(prepared.image);
+    },
+    [autoAnalyze, onImageChange, reportError, runAnalyze],
   );
 
   const onFileInput = (files: FileList | null) => {
@@ -127,83 +164,8 @@ export function VisionUploadControl({
     return () => window.removeEventListener("paste", onPaste);
   }, [ingestFile]);
 
-  return (
-    <div className={cn("w-full space-y-3", className)}>
-      {!image ? (
-        <div
-          role="group"
-          aria-label={t("dropzoneLabel")}
-          onDragEnter={(e) => {
-            e.preventDefault();
-            setDragOver(true);
-          }}
-          onDragOver={(e) => {
-            e.preventDefault();
-            setDragOver(true);
-          }}
-          onDragLeave={() => setDragOver(false)}
-          onDrop={(e) => {
-            e.preventDefault();
-            setDragOver(false);
-            const files = extractImageFilesFromDataTransfer(e.dataTransfer);
-            if (files[0]) void ingestFile(files[0]);
-          }}
-          className={cn(
-            "rounded-2xl border border-dashed border-border/80 bg-card/60 p-3 transition",
-            dragOver && "border-primary bg-primary/5",
-            compact ? "p-2" : "p-3",
-          )}
-        >
-          <p className="mb-2 text-center text-xs text-muted-foreground sm:text-sm">
-            {t("hint")}
-          </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="min-h-11 gap-2 rounded-xl"
-              onClick={() => cameraRef.current?.click()}
-              aria-label={t("camera")}
-            >
-              <Camera className="size-4" aria-hidden />
-              {t("camera")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="min-h-11 gap-2 rounded-xl"
-              onClick={() => galleryRef.current?.click()}
-              aria-label={t("gallery")}
-            >
-              <ImagePlus className="size-4" aria-hidden />
-              {t("gallery")}
-            </Button>
-          </div>
-          <p className="mt-2 text-center text-[11px] text-muted-foreground">{t("pasteHint")}</p>
-        </div>
-      ) : (
-        <VisionImagePreview
-          image={image}
-          analyzing={analyzing}
-          onRemove={clearImage}
-          onReplace={() => galleryRef.current?.click()}
-          onRetake={() => cameraRef.current?.click()}
-        />
-      )}
-
-      {analyzing ? (
-        <p className="flex items-center justify-center gap-2 text-sm text-muted-foreground" role="status">
-          <Loader2 className="size-4 animate-spin" aria-hidden />
-          {t("analyzing")}
-        </p>
-      ) : null}
-
-      {localError ? (
-        <p className="text-sm text-destructive" role="alert">
-          {t(`errors.${localError}`)}
-        </p>
-      ) : null}
-
+  const fileInputs = (
+    <>
       <input
         ref={galleryRef}
         id={inputId}
@@ -230,6 +192,91 @@ export function VisionUploadControl({
           e.target.value = "";
         }}
       />
+    </>
+  );
+
+  if (hidden) {
+    return <div className="hidden">{fileInputs}</div>;
+  }
+
+  return (
+    <div className={cn("w-full space-y-3", className)}>
+      {image ? (
+        <VisionImagePreview
+          image={image}
+          analyzing={analyzing}
+          onRemove={clearImage}
+          onReplace={() => galleryRef.current?.click()}
+          onRetake={() => cameraRef.current?.click()}
+          onAnalyze={autoAnalyze ? undefined : () => void runAnalyze(image)}
+          showAnalyze={!autoAnalyze}
+        />
+      ) : toolbarMode ? null : (
+        <div
+          role="group"
+          aria-label={t("dropzoneLabel")}
+          onDragEnter={(e) => {
+            e.preventDefault();
+            setDragOver(true);
+          }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragOver(true);
+          }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragOver(false);
+            const files = extractImageFilesFromDataTransfer(e.dataTransfer);
+            if (files[0]) void ingestFile(files[0]);
+          }}
+          className={cn(
+            "rounded-2xl border border-dashed border-border/80 bg-card/60 p-3 transition",
+            dragOver && "border-primary bg-primary/5",
+            compact ? "p-2" : "p-3",
+          )}
+        >
+          <p className="mb-2 text-center text-xs text-muted-foreground sm:text-sm">{t("hint")}</p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="min-h-11 gap-2 rounded-xl"
+              onClick={() => cameraRef.current?.click()}
+              aria-label={t("camera")}
+            >
+              <Camera className="size-4" aria-hidden />
+              {t("camera")}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="min-h-11 gap-2 rounded-xl"
+              onClick={() => galleryRef.current?.click()}
+              aria-label={t("gallery")}
+            >
+              <ImagePlus className="size-4" aria-hidden />
+              {t("gallery")}
+            </Button>
+          </div>
+          <p className="mt-2 text-center text-[11px] text-muted-foreground">{t("pasteHint")}</p>
+        </div>
+      )}
+
+      {analyzing && !image ? (
+        <p className="flex items-center justify-center gap-2 text-sm text-muted-foreground" role="status">
+          <Loader2 className="size-4 animate-spin" aria-hidden />
+          {t("analyzing")}
+        </p>
+      ) : null}
+
+      {localError ? (
+        <p className="text-sm text-destructive" role="alert">
+          {t(`errors.${localError}`)}
+        </p>
+      ) : null}
+
+      {fileInputs}
     </div>
   );
-}
+});

@@ -5,20 +5,28 @@ import { Link } from "@/lib/i18n/routing";
 import { ArrowUpRight, Lightbulb } from "lucide-react";
 import type { ProviderInsight } from "@/lib/provider-success/types";
 
-export function InsightsPanel({ insights }: { insights: ProviderInsight[] }) {
+export function InsightsPanel({
+  insights,
+  hideHeader = false,
+}: {
+  insights: ProviderInsight[];
+  hideHeader?: boolean;
+}) {
   const t = useTranslations("business.success.insights");
 
   return (
-    <section className="space-y-3" aria-labelledby="insights-title">
-      <div className="flex items-center gap-2">
-        <Lightbulb className="size-5 text-[var(--dalily-gold)]" aria-hidden />
-        <div>
-          <h2 id="insights-title" className="text-lg font-bold tracking-tight">
-            {t("title")}
-          </h2>
-          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
+    <section className="space-y-3" aria-labelledby={hideHeader ? undefined : "insights-title"}>
+      {!hideHeader ? (
+        <div className="flex items-center gap-2">
+          <Lightbulb className="size-5 text-[var(--dalily-gold)]" aria-hidden />
+          <div>
+            <h2 id="insights-title" className="text-lg font-bold tracking-tight">
+              {t("title")}
+            </h2>
+            <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
+          </div>
         </div>
-      </div>
+      ) : null}
       {insights.length === 0 ? (
         <p className="rounded-2xl border border-border bg-card px-4 py-6 text-sm text-muted-foreground">
           {t("empty")}

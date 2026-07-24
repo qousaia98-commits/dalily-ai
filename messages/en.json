@@ -259,8 +259,13 @@
   "search": {
     "title": "Search results",
     "subtitle": "Find trusted service providers across Syria",
-    "placeholder": "e.g. I need a plumber in Damascus",
-    "submit": "Smart search",
+    "placeholder": "What do you need help with?",
+    "submit": "Search",
+    "actions": {
+      "camera": "Camera",
+      "voice": "Voice",
+      "search": "Search"
+    },
     "prompt": "Enter what you are looking for or pick a category on the home page",
     "resultsCount": "{count} results",
     "meta": {
@@ -274,10 +279,15 @@
     },
     "voice": {
       "start": "Search by voice",
+      "startShort": "Voice",
       "recording": "Listening… {time}",
+      "recordingTitle": "Recording…",
       "cancel": "Cancel",
+      "delete": "Delete",
+      "send": "Send",
+      "stop": "Stop",
       "done": "Done",
-      "transcribing": "Transcribing…",
+      "transcribing": "Converting your voice to text…",
       "editHint": "Edit your search or press Search",
       "recordAgain": "Record again",
       "errors": {
@@ -294,10 +304,11 @@
       "dropzoneLabel": "Upload a problem photo",
       "camera": "Camera",
       "gallery": "Gallery",
-      "pasteHint": "Desktop: drag & drop or paste an image (Ctrl+V)",
-      "analyzing": "Analyzing your photo…",
+      "pasteHint": "On a computer you can also paste a photo",
+      "analyzing": "Looking at your photo…",
+      "analyze": "Analyze",
       "previewAlt": "Selected problem photo",
-      "previewHint": "Photo ready for AI vision analysis",
+      "previewHint": "Review the photo, then tap Analyze",
       "zoom": "Zoom",
       "closeZoom": "Close preview",
       "replace": "Replace",
@@ -306,9 +317,9 @@
       "errors": {
         "no_image": "Please choose a photo first.",
         "file_too_large": "That photo is too large. Try a smaller image.",
-        "invalid_file_type": "Please use a JPEG, PNG, WebP, or GIF image.",
+        "invalid_file_type": "Please use a regular photo (JPG or PNG).",
         "duplicate": "That photo was already added.",
-        "unsupported": "I couldn't identify a service-related problem from this image. Please upload another photo or describe your issue.",
+        "unsupported": "We couldn't tell what service you need from this photo. Try another photo or describe the problem.",
         "analysis_failed": "We couldn't analyze that photo. Please try again or describe your issue."
       }
     },
@@ -2355,8 +2366,9 @@
         "title": "Business overview",
         "todayAppointments": "Today's appointments",
         "upcomingBookings": "Upcoming bookings",
-        "pendingBookingRequests": "Pending booking requests",
+        "pendingBookingRequests": "New booking requests",
         "unreadMessages": "Unread messages",
+        "urgentNotifications": "Urgent alerts",
         "averageRating": "Average rating",
         "completedJobs": "Completed jobs",
         "responseTimeHours": "Response time",
@@ -2373,6 +2385,20 @@
           "verified": "Verified",
           "rejected": "Rejected"
         }
+      },
+      "sections": {
+        "today": "Today's overview",
+        "todayHint": "What needs your attention right now.",
+        "business": "My business",
+        "businessHint": "How customers see your profile.",
+        "performance": "Performance",
+        "performanceHint": "Jobs, response speed, and results.",
+        "actions": "Quick actions",
+        "actionsHint": "Jump to the tools you use most.",
+        "recommendations": "Recommendations",
+        "recommendationsHint": "Simple tips to get more work.",
+        "statistics": "Statistics",
+        "statisticsHint": "Charts, history, and achievements."
       },
       "schedule": {
         "title": "Today's schedule",

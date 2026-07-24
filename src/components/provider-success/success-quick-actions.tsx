@@ -24,15 +24,23 @@ const actions = [
   { key: "verify", href: "/business/verification", icon: ShieldCheck },
 ] as const;
 
-export function SuccessQuickActions({ showVerify }: { showVerify: boolean }) {
+export function SuccessQuickActions({
+  showVerify,
+  hideHeader = false,
+}: {
+  showVerify: boolean;
+  hideHeader?: boolean;
+}) {
   const t = useTranslations("business.success.quickActions");
   const list = showVerify ? actions : actions.filter((a) => a.key !== "verify");
 
   return (
-    <section className="space-y-3" aria-labelledby="success-qa-title">
-      <h2 id="success-qa-title" className="text-lg font-bold tracking-tight">
-        {t("title")}
-      </h2>
+    <section className="space-y-3" aria-labelledby={hideHeader ? undefined : "success-qa-title"}>
+      {!hideHeader ? (
+        <h2 id="success-qa-title" className="text-lg font-bold tracking-tight">
+          {t("title")}
+        </h2>
+      ) : null}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {list.map(({ key, href, icon: Icon }) => (
           <Link

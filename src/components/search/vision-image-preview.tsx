@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Camera, ImageIcon, Replace, Trash2, ZoomIn, X } from "lucide-react";
+import { Camera, ImageIcon, Replace, Trash2, ZoomIn, X, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,8 @@ type Props = {
   onRemove: () => void;
   onReplace: () => void;
   onRetake: () => void;
+  onAnalyze?: () => void;
+  showAnalyze?: boolean;
   className?: string;
 };
 
@@ -22,6 +24,8 @@ export function VisionImagePreview({
   onRemove,
   onReplace,
   onRetake,
+  onAnalyze,
+  showAnalyze = false,
   className,
 }: Props) {
   const t = useTranslations("search.vision");
@@ -49,10 +53,7 @@ export function VisionImagePreview({
           src={image.previewUrl}
           alt={t("previewAlt")}
           loading="lazy"
-          className={cn(
-            "h-40 w-full object-cover sm:h-48",
-            analyzing && "opacity-60",
-          )}
+          className={cn("h-40 w-full object-cover sm:h-48", analyzing && "opacity-60")}
         />
 
         {analyzing ? (
@@ -65,18 +66,20 @@ export function VisionImagePreview({
           </div>
         ) : null}
 
-        <div className="flex flex-wrap gap-2 border-t border-border/70 bg-card/90 p-2 backdrop-blur-sm">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="min-h-11 gap-1.5 rounded-xl"
-            onClick={() => setZoomOpen(true)}
-            aria-label={t("zoom")}
-          >
-            <ZoomIn className="size-4" aria-hidden />
-            {t("zoom")}
-          </Button>
+        <div className="flex flex-wrap gap-2 border-t border-border/70 bg-card/90 p-2.5 backdrop-blur-sm">
+          {showAnalyze && onAnalyze ? (
+            <Button
+              type="button"
+              size="sm"
+              className="min-h-11 flex-1 gap-1.5 rounded-xl sm:flex-none"
+              onClick={onAnalyze}
+              disabled={analyzing}
+              aria-label={t("analyze")}
+            >
+              <Sparkles className="size-4" aria-hidden />
+              {t("analyze")}
+            </Button>
+          ) : null}
           <Button
             type="button"
             variant="outline"
@@ -112,6 +115,17 @@ export function VisionImagePreview({
           >
             <Trash2 className="size-4" aria-hidden />
             {t("remove")}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="min-h-11 gap-1.5 rounded-xl"
+            onClick={() => setZoomOpen(true)}
+            aria-label={t("zoom")}
+          >
+            <ZoomIn className="size-4" aria-hidden />
+            {t("zoom")}
           </Button>
         </div>
       </div>

@@ -78,7 +78,7 @@ export function MobileBottomNav({ role, badges = {} }: MobileBottomNavProps) {
                   "motion-safe:active:scale-[0.92]",
                   pressed && "motion-safe:scale-[0.92]",
                   active
-                    ? "text-[var(--dalily-gold)]"
+                    ? "bg-[color-mix(in_oklab,var(--dalily-gold)_14%,transparent)] text-[var(--dalily-gold)]"
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >

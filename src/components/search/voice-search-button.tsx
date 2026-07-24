@@ -2,14 +2,21 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Loader2, Mic, RotateCcw, Square, X } from "lucide-react";
+import { Loader2, Mic, RotateCcw, Send, Square, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { VoiceWaveform } from "@/components/search/voice-waveform";
 import { VoiceRecorder, VoiceRecorderError, MAX_RECORDING_MS } from "@/lib/voice/recorder";
 import { transcribeVoiceQueryAction } from "@/actions/voice.actions";
 import { cn } from "@/lib/utils";
 
-type Status = "idle" | "permission" | "recording" | "transcribing" | "ready" | "error";
+export type VoiceStatus =
+  | "idle"
+  | "permission"
+  | "recording"
+  | "transcribing"
+  | "ready"
+  | "error";
+
 type ErrorReason =
   | "permission_denied"
   | "not_supported"
@@ -20,7 +27,11 @@ type ErrorReason =
 
 type Props = {
   onTranscript: (text: string, language: string | null) => void;
+  onStatusChange?: (status: VoiceStatus) => void;
+  /** Idle trigger button className */
   className?: string;
+  /** Larger touch target for toolbar layout */
+  toolbar?: boolean;
 };
 
 function formatTime(ms: number): string {
@@ -30,14 +41,27 @@ function formatTime(ms: number): string {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
-export function VoiceSearchButton({ onTranscript, className }: Props) {
+export function VoiceSearchButton({
+  onTranscript,
+  onStatusChange,
+  className,
+  toolbar = false,
+}: Props) {
   const t = useTranslations("search.voice");
-  const [status, setStatus] = useState<Status>("idle");
+  const [status, setStatus] = useState<VoiceStatus>("idle");
   const [errorReason, setErrorReason] = useState<ErrorReason>("transcription_failed");
   const [elapsedMs, setElapsedMs] = useState(0);
   const [level, setLevel] = useState(0);
   const recorderRef = useRef<VoiceRecorder | null>(null);
   const frameRef = useRef<number | null>(null);
+
+  const updateStatus = useCallback(
+    (next: VoiceStatus) => {
+      setStatus(next);
+      onStatusChange?.(next);
+    },
+    [onStatusChange],
+  );
 
   const stopFrameLoop = useCallback(() => {
     if (frameRef.current != null) {
@@ -53,35 +77,29 @@ export function VoiceSearchButton({ onTranscript, className }: Props) {
     const recorder = recorderRef.current;
     if (!recorder) return;
 
-    setStatus("transcribing");
+    updateStatus("transcribing");
     const blob = await recorder.stop();
     recorderRef.current = null;
 
-    console.log("[voice] recorded blob:", { size: blob.size, type: blob.type });
-
     if (blob.size === 0) {
-      console.error("[voice] recording produced an empty blob — mic captured no audio data");
       setErrorReason("no_audio");
-      setStatus("error");
+      updateStatus("error");
       return;
     }
 
     const formData = new FormData();
     formData.set("audio", blob, "voice-query.webm");
-
-    console.log("[voice] calling transcribeVoiceQueryAction...");
     const result = await transcribeVoiceQueryAction(formData);
-    console.log("[voice] transcribeVoiceQueryAction result:", result);
 
     if (!result.success) {
       setErrorReason(result.error);
-      setStatus("error");
+      updateStatus("error");
       return;
     }
 
     onTranscript(result.text, result.language);
-    setStatus("ready");
-  }, [onTranscript, stopFrameLoop]);
+    updateStatus("ready");
+  }, [onTranscript, stopFrameLoop, updateStatus]);
 
   const runFrameLoop = useCallback(() => {
     const recorder = recorderRef.current;
@@ -99,43 +117,45 @@ export function VoiceSearchButton({ onTranscript, className }: Props) {
   }, [finishRecording]);
 
   const startRecording = useCallback(async () => {
-    console.log("[voice] mic clicked — requesting getUserMedia permission");
-    setStatus("permission");
+    updateStatus("permission");
     const recorder = new VoiceRecorder();
     try {
       await recorder.start();
     } catch (error) {
-      console.error("[voice] recorder.start() failed:", error);
       const reason: ErrorReason =
         error instanceof VoiceRecorderError && error.reason !== "unknown"
           ? error.reason
           : "transcription_failed";
       setErrorReason(reason);
-      setStatus("error");
+      updateStatus("error");
       return;
     }
 
-    console.log("[voice] recording started");
     recorderRef.current = recorder;
     setElapsedMs(0);
-    setStatus("recording");
+    updateStatus("recording");
     frameRef.current = requestAnimationFrame(runFrameLoop);
-  }, [runFrameLoop]);
+  }, [runFrameLoop, updateStatus]);
 
   const cancelRecording = useCallback(() => {
     stopFrameLoop();
     recorderRef.current?.cancel();
     recorderRef.current = null;
-    setStatus("idle");
-  }, [stopFrameLoop]);
+    updateStatus("idle");
+  }, [stopFrameLoop, updateStatus]);
 
   if (status === "idle" || status === "permission") {
     return (
       <Button
         type="button"
-        size="icon"
-        variant="ghost"
-        className={cn("size-10 rounded-2xl text-muted-foreground", className)}
+        size={toolbar ? "lg" : "icon"}
+        variant={toolbar ? "outline" : "ghost"}
+        className={cn(
+          toolbar
+            ? "min-h-12 flex-1 gap-2 rounded-2xl sm:flex-none sm:px-5"
+            : "size-10 rounded-2xl text-muted-foreground",
+          className,
+        )}
         disabled={status === "permission"}
         onClick={() => void startRecording()}
         aria-label={t("start")}
@@ -145,80 +165,101 @@ export function VoiceSearchButton({ onTranscript, className }: Props) {
         ) : (
           <Mic className="size-5" aria-hidden />
         )}
+        {toolbar ? <span>{t("startShort")}</span> : null}
       </Button>
     );
   }
 
-  if (status === "recording") {
-    return (
-      <div className="absolute inset-x-0 top-full z-10 mt-2 flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-3 shadow-lg">
-        <VoiceWaveform level={level} className="flex-1" />
-        <span className="shrink-0 text-sm font-medium tabular-nums text-foreground">
-          {t("recording", { time: formatTime(elapsedMs) })}
-        </span>
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
-          className="size-9 rounded-xl"
-          onClick={cancelRecording}
-          aria-label={t("cancel")}
-        >
-          <X className="size-4" aria-hidden />
-        </Button>
-        <Button
-          type="button"
-          size="icon"
-          className="size-9 rounded-xl"
-          onClick={() => void finishRecording()}
-          aria-label={t("done")}
-        >
-          <Square className="size-4" aria-hidden />
-        </Button>
-      </div>
-    );
-  }
-
-  if (status === "transcribing") {
-    return (
-      <div className="absolute inset-x-0 top-full z-10 mt-2 flex items-center gap-2 rounded-2xl border border-border/80 bg-card p-3 text-sm text-muted-foreground shadow-lg">
-        <Loader2 className="size-4 animate-spin" aria-hidden />
-        {t("transcribing")}
-      </div>
-    );
-  }
-
-  if (status === "error") {
-    return (
-      <div className="absolute inset-x-0 top-full z-10 mt-2 flex items-center gap-2 rounded-2xl border border-destructive/40 bg-card p-3 text-sm text-destructive shadow-lg">
-        <span className="flex-1">{t(`errors.${errorReason}` as "errors.transcription_failed")}</span>
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
-          className="size-8 rounded-xl"
-          onClick={() => setStatus("idle")}
-          aria-label={t("recordAgain")}
-        >
-          <RotateCcw className="size-4" aria-hidden />
-        </Button>
-      </div>
-    );
-  }
-
+  // Dedicated recording / status panel — never overlays the search field
   return (
-    <div className="absolute inset-x-0 top-full z-10 mt-2 flex items-center justify-between gap-2 rounded-2xl border border-border/80 bg-card p-3 text-sm shadow-lg">
-      <span className="text-muted-foreground">{t("editHint")}</span>
-      <Button
-        type="button"
-        size="sm"
-        variant="ghost"
-        className="gap-1.5 rounded-xl"
-        onClick={() => void startRecording()}
-      >
-        <RotateCcw className="size-3.5" aria-hidden />
-        {t("recordAgain")}
-      </Button>
+    <div
+      className="w-full rounded-2xl border border-border/80 bg-card p-4 shadow-sm"
+      role="status"
+      aria-live="polite"
+    >
+      {status === "recording" ? (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold text-foreground">{t("recordingTitle")}</p>
+            <span className="text-sm font-medium tabular-nums text-muted-foreground">
+              {formatTime(elapsedMs)}
+            </span>
+          </div>
+          <VoiceWaveform level={level} className="w-full" />
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="min-h-12 flex-1 gap-2 rounded-2xl sm:flex-none"
+              onClick={cancelRecording}
+            >
+              <Trash2 className="size-4" aria-hidden />
+              {t("delete")}
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="min-h-12 flex-1 gap-2 rounded-2xl sm:flex-none"
+              onClick={() => void finishRecording()}
+              aria-label={t("stop")}
+            >
+              <Square className="size-4" aria-hidden />
+              {t("stop")}
+            </Button>
+            <Button
+              type="button"
+              className="min-h-12 flex-1 gap-2 rounded-2xl sm:flex-none"
+              onClick={() => void finishRecording()}
+            >
+              <Send className="size-4" aria-hidden />
+              {t("send")}
+            </Button>
+          </div>
+        </div>
+      ) : null}
+
+      {status === "transcribing" ? (
+        <p className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="size-4 animate-spin" aria-hidden />
+          {t("transcribing")}
+        </p>
+      ) : null}
+
+      {status === "error" ? (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <p className="flex-1 text-sm text-destructive">
+            {t(`errors.${errorReason}` as "errors.transcription_failed")}
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            className="min-h-11 gap-2 rounded-2xl"
+            onClick={() => updateStatus("idle")}
+          >
+            <RotateCcw className="size-4" aria-hidden />
+            {t("recordAgain")}
+          </Button>
+        </div>
+      ) : null}
+
+      {status === "ready" ? (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-muted-foreground">{t("editHint")}</p>
+          <Button
+            type="button"
+            variant="ghost"
+            className="min-h-11 gap-1.5 rounded-2xl"
+            onClick={() => void startRecording()}
+          >
+            <RotateCcw className="size-3.5" aria-hidden />
+            {t("recordAgain")}
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
+}
+
+export function isVoiceBusy(status: VoiceStatus): boolean {
+  return status === "permission" || status === "recording" || status === "transcribing";
 }
