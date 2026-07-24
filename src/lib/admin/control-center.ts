@@ -135,11 +135,12 @@ export async function getControlCenterOverview(): Promise<ControlCenterOverview>
 }
 
 export async function getAdminNavBadges(): Promise<AdminNavBadges> {
-  const overview = await getControlCenterOverview();
+  const { getAdminUnreadBadgeCounts } = await import("@/lib/admin/nav-badges");
+  const counts = await getAdminUnreadBadgeCounts();
   return {
-    businesses: overview.pendingBusinesses + overview.changesRequested,
-    payments: overview.pendingPayments,
-    messages: overview.unreadMessages,
+    businesses: counts.businesses ?? 0,
+    payments: counts.payments ?? 0,
+    messages: counts.messages ?? 0,
   };
 }
 

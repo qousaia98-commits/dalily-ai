@@ -20,20 +20,17 @@ import {
   ScrollText,
   BarChart3,
   FolderOpen,
+  MessageCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useAdminBadges } from "@/components/admin/admin-badges-provider";
+import type { AdminBadgeChannel } from "@/lib/admin/badge-ack";
 
 type AdminSidebarProps = {
-  badges?: {
-    businesses?: number;
-    payments?: number;
-    messages?: number;
-    issues?: number;
-  };
   showAdminOnly?: boolean;
 };
 
@@ -41,30 +38,52 @@ const sharedNav = [
   { href: "/admin", icon: LayoutDashboard, key: "dashboard", exact: true },
   { href: "/admin/providers", icon: Building2, key: "businesses", badgeKey: "businesses" as const },
   { href: "/admin/users", icon: Users, key: "customers" },
-  { href: "/admin/verification", icon: ShieldCheck, key: "verification" },
+  {
+    href: "/admin/verification",
+    icon: ShieldCheck,
+    key: "verification",
+    badgeKey: "verification" as const,
+  },
   { href: "/admin/issues", icon: AlertTriangle, key: "issues", badgeKey: "issues" as const },
-  { href: "/admin/reviews", icon: MessageSquareWarning, key: "reviewModeration" },
+  {
+    href: "/admin/reviews",
+    icon: MessageSquareWarning,
+    key: "reviewModeration",
+    badgeKey: "reviews" as const,
+  },
+  { href: "/admin/messages", icon: MessageCircle, key: "messages", badgeKey: "messages" as const },
   { href: "/admin/ranking", icon: Gauge, key: "ranking" },
   { href: "/admin/analytics", icon: BarChart3, key: "analytics" },
   { href: "/admin/searches", icon: Search, key: "searches" },
   { href: "/admin/content", icon: FolderOpen, key: "content" },
   { href: "/admin/health", icon: Activity, key: "health" },
-  { href: "/admin/audit", icon: ScrollText, key: "audit" },
+  { href: "/admin/audit", icon: ScrollText, key: "audit", badgeKey: "audit" as const },
 ] as const;
 
 const adminOnlyNav = [
   { href: "/admin/payments", icon: Banknote, key: "payments", badgeKey: "payments" as const },
-  { href: "/admin/subscriptions", icon: CreditCard, key: "subscriptions" },
+  {
+    href: "/admin/subscriptions",
+    icon: CreditCard,
+    key: "subscriptions",
+    badgeKey: "subscriptions" as const,
+  },
   { href: "/admin/marketplace", icon: Megaphone, key: "marketplace" },
   { href: "/admin/learning", icon: Brain, key: "learning" },
-  { href: "/admin/broadcasts", icon: Radio, key: "broadcasts" },
+  {
+    href: "/admin/broadcasts",
+    icon: Radio,
+    key: "broadcasts",
+    badgeKey: "broadcasts" as const,
+  },
   { href: "/admin/categories", icon: Tags, key: "categories" },
 ] as const;
 
-export function AdminSidebar({ badges = {}, showAdminOnly = true }: AdminSidebarProps) {
+export function AdminSidebar({ showAdminOnly = true }: AdminSidebarProps) {
   const t = useTranslations("admin.nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { badges } = useAdminBadges();
 
   const navItems = showAdminOnly ? [...sharedNav, ...adminOnlyNav] : [...sharedNav];
 
@@ -73,7 +92,7 @@ export function AdminSidebar({ badges = {}, showAdminOnly = true }: AdminSidebar
       {navItems.map((item) => {
         const { href, icon: Icon, key } = item;
         const exact = "exact" in item && item.exact;
-        const badgeKey = "badgeKey" in item ? item.badgeKey : undefined;
+        const badgeKey = "badgeKey" in item ? (item.badgeKey as AdminBadgeChannel) : undefined;
         const badgeCount = badgeKey ? (badges[badgeKey] ?? 0) : 0;
         const active = exact
           ? pathname === href

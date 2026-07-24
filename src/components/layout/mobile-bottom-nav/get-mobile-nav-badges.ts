@@ -1,35 +1,18 @@
-import { createAdminClient } from "@/lib/supabase/admin";
 import { getAuthUser } from "@/lib/auth/session";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
 import { countUnreadConversations } from "@/lib/business/conversations";
 import { countPendingRequestsForOwner } from "@/lib/service-requests/queries";
 import { loadCustomerConversations } from "@/lib/customer/load-conversations";
+import { getAdminUnreadBadgeCounts } from "@/lib/admin/nav-badges";
 import type { MobileNavBadges, MobileNavRole } from "./types";
 
 export async function getMobileNavBadges(role: MobileNavRole): Promise<MobileNavBadges> {
   if (role === "admin") {
     try {
-      const admin = createAdminClient();
-      const [approvals, changes, payments] = await Promise.all([
-        admin
-          .from("providers")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "pending_review")
-          .is("deleted_at", null),
-        admin
-          .from("providers")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "changes_requested")
-          .is("deleted_at", null),
-        admin
-          .from("payments")
-          .select("id", { count: "exact", head: true })
-          .eq("payment_status", "pending_review"),
-      ]);
-
+      const counts = await getAdminUnreadBadgeCounts();
       return {
-        approvals: (approvals.count ?? 0) + (changes.count ?? 0),
-        payments: payments.count ?? 0,
+        approvals: counts.approvals ?? counts.businesses ?? 0,
+        payments: counts.payments ?? 0,
       };
     } catch {
       return {};
