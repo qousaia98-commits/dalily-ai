@@ -43,7 +43,7 @@ src/domains/
 | marketplace | `src/lib/service-requests` | Facade + LEGACY workflow note |
 | matching | `src/domains/matching` (+ salvage ideas from smart-match) | Active (Sprint 3, flag `MATCHING_V2`) |
 | offer | `src/domains/offer` (quotes dual-run legacy) | Active (Sprint 4, flag `OFFERS_V2`) |
-| unlock | *(missing)* | Skeleton only |
+| unlock | `src/domains/unlock` | Active (Sprint 5, flag `UNLOCK_V2`) |
 | payment | `src/lib/payment` | Facade re-export |
 | notification | `src/lib/notifications`, business notification inbox | Facade re-export |
 | chat | `src/lib/chat`, `src/lib/messaging` | Facade re-export |

@@ -34,6 +34,10 @@ Use before local work and before declaring a sprint done.
 | `CUSTOMER_INTENT_FLOW_V2` | Sprint 2 intent intake (default off) |
 | `MATCHING_V2` | Sprint 3 Matching engine (default off) |
 | `OFFERS_V2` | Sprint 4 Offer system (default off) |
+| `UNLOCK_V2` | Sprint 5 Unlock sessions + grants (default off) |
+| `UNLOCK_DEV_BYPASS` | Dev-only grant without payment — **never** in production |
+| `UNLOCK_FEE_AMOUNT` / `UNLOCK_FEE_CURRENCY` / `UNLOCK_SLA_HOURS` | Fee/SLA snapshot defaults (5000 SYP / 24h) |
+| `CRON_SECRET` | Optional bearer for `/api/cron/unlock-sla` |
 
 ## Product flags already in repo
 

@@ -26,17 +26,22 @@
 
 **Non-compressible integrity chain:** `S1 → S4 → S5 → S6 → S7`
 
-## Sprint 4 scope (complete — gate)
+## Sprint 5 scope (complete — gate)
 
-Offer System:
+Unlock Service:
 
-- Flag `OFFERS_V2` (default off)
-- Offers from match assignments; customer compare ≤3; select without PII/chat
-- Legacy quotes disabled for marketplace-native rows when flag on
+- Flag `UNLOCK_V2` (default off); `UNLOCK_DEV_BYPASS` never in production
+- Session + SLA on select; grant on success; timeout/decline fallback once
+- Contact gate: no phone/PII without `contact_release_grants`
+- Payment charge = Sprint 6
 
-See [`sprint-4-notes.md`](./sprint-4-notes.md).
+See [`sprint-5-notes.md`](./sprint-5-notes.md).
 
-**Do not implement Sprint 5 until explicit approval.**
+**Do not implement Sprint 6 until explicit approval.**
+
+## Sprint 4 scope (complete)
+
+Offer System — see [`sprint-4-notes.md`](./sprint-4-notes.md).
 
 ## Sprint 3 scope (complete)
 

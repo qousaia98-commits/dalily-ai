@@ -6,6 +6,9 @@ Sprint 0 establishes the **minimum** verification set. Deeper E2E of unlock flow
 
 ```bash
 npm run verify:foundation
+npm run verify:matching
+npm run verify:offers
+npm run verify:unlock
 npm run lint
 npm run typecheck
 npm run build
@@ -16,6 +19,13 @@ Optional existing scripts (legacy search — still valid while directory exists)
 ```bash
 npm run verify:search
 ```
+
+## Sprint 5 unlock notes
+
+- Flag off ⇒ no sessions/grants; select remains `pending_unlock` only.
+- Contact PII only via `getReleasedContactForCustomer` after grant.
+- SLA worker: `/api/cron/unlock-sla` (protect with `CRON_SECRET` when set).
+- Real unlock fee charge is Sprint 6 — do not treat `UNLOCK_DEV_BYPASS` as prod path.
 
 ## Manual smoke (Sprint 0 — behavior unchanged)
 

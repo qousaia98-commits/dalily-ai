@@ -1,6 +1,6 @@
 # Sprint 4 Notes — Offer System
 
-**Status:** COMPLETE — awaiting approval before Sprint 5  
+**Status:** COMPLETE — approved; Unlock = Sprint 5  
 **Feature flag:** `OFFERS_V2` (default **off**)
 
 ## Goal
