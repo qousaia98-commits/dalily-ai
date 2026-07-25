@@ -2,10 +2,14 @@ import type { CreatePaymentResult, VerifyPaymentResult } from "@/lib/subscriptio
 
 export type CreatePaymentInput = {
   providerId: string;
-  subscriptionId: string;
+  /** Required for subscription upgrades; null for unlock_fee. */
+  subscriptionId?: string | null;
   amount: number;
   currency: string;
   reference: string;
+  purpose?: "subscription" | "unlock_fee";
+  unlockSessionId?: string | null;
+  idempotencyKey?: string | null;
 };
 
 export type VerifyPaymentInput = {

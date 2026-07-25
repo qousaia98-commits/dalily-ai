@@ -52,7 +52,15 @@ export type AuditAction =
   | "category_disabled"
   | "category_enabled";
 
-export type PaymentEventType = "requested" | "receipt_uploaded" | "approved" | "rejected";
+export type PaymentEventType =
+  | "requested"
+  | "receipt_uploaded"
+  | "approved"
+  | "rejected"
+  | "cancelled"
+  | "failed"
+  | "capture_correlated"
+  | "webhook_received";
 
 export type ServiceRequestStatus =
   | "pending"
@@ -638,6 +646,9 @@ export type Database = {
           external_transaction_id: string | null;
           paid_at: string | null;
           created_at: string;
+          purpose: string;
+          unlock_session_id: string | null;
+          idempotency_key: string | null;
         };
         Insert: {
           id?: string;
@@ -659,6 +670,9 @@ export type Database = {
           external_transaction_id?: string | null;
           paid_at?: string | null;
           created_at?: string;
+          purpose?: string;
+          unlock_session_id?: string | null;
+          idempotency_key?: string | null;
         };
         Update: {
           id?: string;
@@ -680,6 +694,9 @@ export type Database = {
           external_transaction_id?: string | null;
           paid_at?: string | null;
           created_at?: string;
+          purpose?: string;
+          unlock_session_id?: string | null;
+          idempotency_key?: string | null;
         };
         Relationships: [];
       };
@@ -707,6 +724,45 @@ export type Database = {
           actor_id?: string | null;
           note?: string | null;
           created_at?: string;
+        };
+        Relationships: [];
+      };
+      payment_webhook_events: {
+        Row: {
+          id: string;
+          provider: string;
+          external_event_id: string;
+          event_type: string;
+          payload: Json;
+          processing_status: string;
+          payment_id: string | null;
+          error_message: string | null;
+          received_at: string;
+          processed_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          provider?: string;
+          external_event_id: string;
+          event_type: string;
+          payload?: Json;
+          processing_status?: string;
+          payment_id?: string | null;
+          error_message?: string | null;
+          received_at?: string;
+          processed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          provider?: string;
+          external_event_id?: string;
+          event_type?: string;
+          payload?: Json;
+          processing_status?: string;
+          payment_id?: string | null;
+          error_message?: string | null;
+          received_at?: string;
+          processed_at?: string | null;
         };
         Relationships: [];
       };
@@ -1375,6 +1431,7 @@ export type Database = {
           fallback_applied: boolean;
           idempotency_key: string;
           payment_stub_ref: string | null;
+          payment_id: string | null;
           opened_at: string;
           updated_at: string;
           closed_at: string | null;
@@ -1392,6 +1449,7 @@ export type Database = {
           fallback_applied?: boolean;
           idempotency_key: string;
           payment_stub_ref?: string | null;
+          payment_id?: string | null;
           opened_at?: string;
           updated_at?: string;
           closed_at?: string | null;
@@ -1409,6 +1467,7 @@ export type Database = {
           fallback_applied?: boolean;
           idempotency_key?: string;
           payment_stub_ref?: string | null;
+          payment_id?: string | null;
           opened_at?: string;
           updated_at?: string;
           closed_at?: string | null;

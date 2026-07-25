@@ -18,12 +18,15 @@ export class ManualPaymentProvider implements PaymentProvider {
       .from("payments")
       .insert({
         provider_id: input.providerId,
-        subscription_id: input.subscriptionId,
+        subscription_id: input.subscriptionId ?? null,
         payment_provider: "manual",
         payment_status: "pending",
         amount: input.amount,
         currency: input.currency,
         payment_reference: input.reference,
+        purpose: input.purpose ?? "subscription",
+        unlock_session_id: input.unlockSessionId ?? null,
+        idempotency_key: input.idempotencyKey ?? null,
       })
       .select("id, payment_reference")
       .single();

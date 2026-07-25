@@ -66,3 +66,14 @@ export function isUnlockDevBypassEnabled(): boolean {
   }
   return envFlag("UNLOCK_DEV_BYPASS");
 }
+
+/**
+ * Sprint 6 — Unlock fee payment capture correlated to grants.
+ * When false: Sprint 5 unlock surfaces stay (bypass/admin manual only).
+ * When true: unlock grant requires verified server-side payment success
+ * (admin approval rail or webhook), except UNLOCK_DEV_BYPASS.
+ * Also freezes new subscription upgrade checkout.
+ */
+export function isUnlockPaymentsV2Enabled(): boolean {
+  return envFlag("UNLOCK_PAYMENTS_V2");
+}
