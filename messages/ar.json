@@ -388,6 +388,99 @@
       "publish_failed": "تعذر نشر الطلب. حاول مرة أخرى."
     }
   },
+  "offerFlow": {
+    "customer": {
+      "title": "العروض",
+      "subtitle": "قارن حتى 3 عروض ثم اختر واحداً. بيانات التواصل تبقى خاصة.",
+      "noContactYet": "اختيار عرض لا يشارك رقمك ولا يفتح الدردشة بعد.",
+      "select": "اختر هذا العرض",
+      "compare": "مقارنة",
+      "removeCompare": "إزالة من المقارنة",
+      "business": "عمل",
+      "verified": "موثّق",
+      "selectedBadge": "مختار",
+      "comparing": "قيد المقارنة",
+      "rating": "{rating}★",
+      "selectedPendingUnlock": "تم اختيار العرض. فتح التواصل يأتي لاحقاً — لم يُشارك شيء بعد."
+    },
+    "provider": {
+      "eyebrow": "المطابقة",
+      "listTitle": "الفرص",
+      "listSubtitle": "طلبات مطابقة لعملك. أرسل عرضاً دون قبول يفتح الدردشة.",
+      "empty": "لا فرص مفتوحة بعد.",
+      "noProvider": "أنشئ ملف عملك أولاً.",
+      "statusOffered": "تم إرسال العرض",
+      "statusOpen": "بانتظار عرضك",
+      "emergency": "طارئ",
+      "back": "كل الفرص",
+      "area": "ملاحظة الموقع",
+      "noAcceptRequired": "لا خطوة قبول — أرسل العرض مباشرة.",
+      "composeTitle": "إرسال عرض",
+      "useTemplate": "ابدأ من قالب",
+      "noTemplate": "عرض فارغ",
+      "etaPlaceholder": "مثال: اليوم ٤–٦ م",
+      "submit": "إرسال العرض",
+      "success": "تم إرسال العرض للزبون.",
+      "offerSent": "أرسلت عرضاً لهذا الطلب مسبقاً.",
+      "saveTemplate": "احفظ الحقول الحالية كقالب",
+      "templateLabel": "اسم القالب",
+      "saveTemplateCta": "حفظ القالب",
+      "templateSaved": "تم حفظ القالب.",
+      "clarifications": "أسئلة الزبون"
+    },
+    "fields": {
+      "price": "السعر",
+      "currency": "العملة",
+      "priceModel": "نوع السعر",
+      "eta": "الوقت المتوقع",
+      "inclusions": "ما يشمله العرض",
+      "message": "نبذة قصيرة"
+    },
+    "priceModel": {
+      "fixed": "ثابت",
+      "hourly": "بالساعة",
+      "estimate": "تقديري"
+    },
+    "quality": {
+      "nudge": "نصيحة: أضف وقتاً متوقعاً ونبذة قصيرة للمقارنة العادلة."
+    },
+    "qa": {
+      "title": "أسئلة سريعة",
+      "hint": "أسئلة محدودة فقط — ليست دردشة كاملة. بدون أرقام هاتف.",
+      "placeholder": "اسأل أو أجب باختصار…",
+      "send": "إرسال",
+      "customer": "أنت",
+      "provider": "العمل",
+      "errors": {
+        "failed": "تعذر الإرسال.",
+        "feature_disabled": "العروض غير مفعّلة.",
+        "body_invalid": "الرسالة يجب أن تكون ١–٥٠٠ حرف.",
+        "offer_closed": "هذا العرض مغلق.",
+        "clarification_limit": "تم بلوغ حد الأسئلة.",
+        "forbidden": "غير مسموح.",
+        "clarification_failed": "تعذر الإرسال."
+      }
+    },
+    "errors": {
+      "failed": "حدث خطأ.",
+      "feature_disabled": "العروض غير مفعّلة.",
+      "login_required": "يرجى تسجيل الدخول.",
+      "forbidden": "غير مسموح.",
+      "assignment_required": "هذه الفرصة غير معيَّنة لك.",
+      "price_invalid": "أدخل سعراً صالحاً.",
+      "not_found": "الطلب غير موجود.",
+      "not_marketplace_native": "هذا الطلب يستخدم المسار القديم.",
+      "legacy_assigned": "هذا الطلب معيَّن مسبقاً.",
+      "already_selected": "يوجد اختيار مسبقاً.",
+      "offer_exists": "لديك عرض نشط مسبقاً.",
+      "offer_failed": "تعذر إنشاء العرض.",
+      "offer_not_found": "العرض غير موجود.",
+      "selection_failed": "تعذر اختيار العرض.",
+      "label_required": "اسم القالب مطلوب.",
+      "template_failed": "تعذر حفظ القالب.",
+      "use_offers": "استخدم مسار العروض لهذا الطلب."
+    }
+  },
   "search": {
     "title": "نتائج البحث",
     "subtitle": "ابحث عن مزودي خدمات موثوقين في سوريا",
@@ -1062,6 +1155,7 @@
       "upgrade": "⭐ تطوير",
       "messages": "الرسائل",
       "requests": "الطلبات",
+      "opportunities": "الفرص",
       "settings": "الإعدادات",
       "bookings": "الحجوزات",
       "calendar": "التقويم",
@@ -3684,7 +3778,8 @@
       "pending_exists": "لديك بالفعل طلب معلق مع هذا العمل.",
       "self_request": "لا يمكنك إرسال طلب إلى عملك الخاص.",
       "settings_failed": "تعذر حفظ الإعدادات.",
-      "provider_not_found": "العمل غير موجود."
+      "provider_not_found": "العمل غير موجود.",
+      "use_offers": "استخدم مسار العروض لهذا الطلب في السوق."
     }
   },
   "notifications": {

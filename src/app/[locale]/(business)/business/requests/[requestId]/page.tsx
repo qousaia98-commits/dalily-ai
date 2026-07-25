@@ -9,6 +9,7 @@ import {
   rejectServiceRequestAction,
 } from "@/actions/service-request.actions";
 import { PendingRequestActions } from "@/components/business/pending-request-actions";
+import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 
 type PageProps = { params: Promise<{ requestId: string }> };
 
@@ -22,10 +23,13 @@ export default async function BusinessRequestDetailPage({ params }: PageProps) {
   const request = await getRequestDetail(requestId);
   if (!request || request.provider_id !== provider.id) notFound();
 
+  const marketplaceNative =
+    isOffersV2Enabled() && (request.lifecycle_version ?? 1) >= 2;
+
   return (
     <div className="mx-auto w-full max-w-4xl space-y-4 overflow-x-hidden animate-fade-in px-1">
       <p className="sr-only">{t("title")}</p>
-      {request.status === "pending" ? (
+      {request.status === "pending" && !marketplaceNative ? (
         <PendingRequestActions
           requestId={request.id}
           acceptAction={acceptServiceRequestAction}
@@ -37,6 +41,7 @@ export default async function BusinessRequestDetailPage({ params }: PageProps) {
         viewer="business"
         userId={authUser.id}
         providerId={provider.id}
+        legacyQuotesEnabled={!marketplaceNative}
       />
     </div>
   );

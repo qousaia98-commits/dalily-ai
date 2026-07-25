@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getAuthUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getOwnedProvider } from "@/lib/providers/database";
+import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import {
   ALLOWED_IMAGE_TYPES,
   MAX_IMAGE_BYTES,
@@ -354,6 +355,9 @@ export async function sendQuoteAction(
     .maybeSingle();
 
   if (!request) return { success: false, error: "not_found" };
+  if (isOffersV2Enabled() && (request.lifecycle_version ?? 1) >= 2) {
+    return { success: false, error: "use_offers" };
+  }
   if (!canSendQuote(request.status as ServiceRequestStatus)) {
     return { success: false, error: "invalid_status" };
   }
@@ -442,6 +446,9 @@ async function decideQuote(
     .maybeSingle();
 
   if (!request) return { success: false, error: "not_found" };
+  if (isOffersV2Enabled() && (request.lifecycle_version ?? 1) >= 2) {
+    return { success: false, error: "use_offers" };
+  }
   if (!request.provider_id) return { success: false, error: "invalid_status" };
   if (!canDecideQuote(request.status as ServiceRequestStatus)) {
     return { success: false, error: "invalid_status" };

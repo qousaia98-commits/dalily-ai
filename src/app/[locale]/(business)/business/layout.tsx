@@ -12,6 +12,7 @@ import { AppHeader } from "@/components/layout/app-header";
 import { MobileBottomNavHost } from "@/components/layout/mobile-bottom-nav";
 import { MobileBottomNavSpacer } from "@/components/layout/mobile-bottom-nav-spacer";
 import { PlanBadge } from "@/components/shared/plan-badge";
+import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import type { Locale } from "@/lib/i18n/config";
 import type { PlanSlug } from "@/lib/subscription/types";
 
@@ -66,6 +67,7 @@ export default async function BusinessLayout({ children }: { children: React.Rea
               requests: pendingRequests,
               verification: unreadVerification,
             }}
+            showOpportunities={isOffersV2Enabled()}
           />
           <div className="min-w-0 flex-1">{children}</div>
         </div>

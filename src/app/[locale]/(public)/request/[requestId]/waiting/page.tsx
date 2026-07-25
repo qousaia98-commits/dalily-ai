@@ -1,8 +1,17 @@
 import { redirect } from "next/navigation";
-import { isCustomerIntentFlowV2Enabled, isMatchingV2Enabled } from "@/lib/config/feature-flags";
+import {
+  isCustomerIntentFlowV2Enabled,
+  isMatchingV2Enabled,
+  isOffersV2Enabled,
+} from "@/lib/config/feature-flags";
 import { getAuthUser } from "@/lib/auth/session";
 import { getRequestDetail } from "@/lib/service-requests/queries";
 import { getMatchPoolSummaryForRequest } from "@/domains/matching/queries";
+import {
+  listOffersForRequest,
+  getActiveSelectionForRequest,
+  listClarifications,
+} from "@/domains/offer";
 import { WaitingRoom } from "@/components/customer/waiting-room";
 
 export default async function RequestWaitingPage({
@@ -29,13 +38,38 @@ export default async function RequestWaitingPage({
     ? await getMatchPoolSummaryForRequest(requestId)
     : null;
 
-  // Offers arrive in Sprint 4 — matching summary is honest progress, not fake offers.
+  const offersEnabled = isOffersV2Enabled();
+  const offers = offersEnabled
+    ? await listOffersForRequest(requestId, { customerId: authUser.id })
+    : [];
+  const selection = offersEnabled
+    ? await getActiveSelectionForRequest(requestId)
+    : null;
+
+  const clarificationsByOffer: Record<string, Awaited<ReturnType<typeof listClarifications>>> =
+    {};
+  if (offersEnabled) {
+    await Promise.all(
+      offers.map(async (o) => {
+        clarificationsByOffer[o.id] = await listClarifications(o.id);
+      }),
+    );
+  }
+
+  const state =
+    offers.length > 0 || (matchSummary && matchSummary.assignedCount > 0)
+      ? "ready"
+      : "empty";
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-6 sm:px-6">
       <WaitingRoom
         request={request}
-        state={matchSummary && matchSummary.assignedCount > 0 ? "ready" : "empty"}
+        state={state}
         matchSummary={matchSummary}
+        offers={offers}
+        selectionOfferId={selection?.offerId ?? null}
+        clarificationsByOffer={clarificationsByOffer}
       />
     </main>
   );

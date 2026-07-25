@@ -15,16 +15,17 @@ import {
   CalendarDays,
   CalendarClock,
   Clock3,
+  Sparkles,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { PlanBadge } from "@/components/shared/plan-badge";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { PlanSlug } from "@/lib/subscription/types";
 
-const navItems = [
+const baseNavItems = [
   { href: "/business", icon: LayoutDashboard, key: "dashboard", exact: true },
   { href: "/business/requests", icon: Inbox, key: "requests", badgeKey: "requests" as const },
   { href: "/business/bookings", icon: CalendarClock, key: "bookings" },
@@ -44,16 +45,28 @@ type BusinessSidebarProps = {
   planSlug?: PlanSlug | string;
   businessName?: string | null;
   badges?: { messages?: number; requests?: number; verification?: number };
+  /** Sprint 4 — match-assignment opportunities when OFFERS_V2 is on. */
+  showOpportunities?: boolean;
 };
 
 export function BusinessSidebar({
   planSlug = "free",
   businessName,
   badges = {},
+  showOpportunities = false,
 }: BusinessSidebarProps) {
   const t = useTranslations("business.nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navItems = useMemo(() => {
+    if (!showOpportunities) return [...baseNavItems];
+    return [
+      baseNavItems[0],
+      { href: "/business/opportunities", icon: Sparkles, key: "opportunities" as const },
+      ...baseNavItems.slice(1),
+    ];
+  }, [showOpportunities]);
 
   const NavContent = () => (
     <nav className="flex flex-col gap-1" aria-label={t("title")}>

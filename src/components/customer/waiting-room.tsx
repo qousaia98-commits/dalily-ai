@@ -4,15 +4,23 @@ import { Loader2, Inbox, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
 import type { MatchPoolSummary } from "@/domains/matching/queries";
+import type { MarketplaceOfferView, OfferClarificationView } from "@/domains/offer/types";
+import { CustomerOfferBoard } from "@/components/customer/customer-offer-board";
 
 export async function WaitingRoom({
   request,
   state,
   matchSummary = null,
+  offers = [],
+  selectionOfferId = null,
+  clarificationsByOffer = {},
 }: {
   request: ServiceRequestDetail | null;
   state: "loading" | "ready" | "empty" | "error";
   matchSummary?: MatchPoolSummary | null;
+  offers?: MarketplaceOfferView[];
+  selectionOfferId?: string | null;
+  clarificationsByOffer?: Record<string, OfferClarificationView[]>;
 }) {
   const t = await getTranslations("intentFlow.waiting");
 
@@ -42,6 +50,7 @@ export async function WaitingRoom({
   const insufficient =
     matchingRan &&
     (assignedCount === 0 || matchSummary?.status === "insufficient_supply");
+  const hasOffers = offers.length > 0;
 
   return (
     <div className="mx-auto max-w-lg space-y-6 py-10">
@@ -54,7 +63,13 @@ export async function WaitingRoom({
         {t("trustNotBroadcast")}
       </div>
 
-      {assignedCount > 0 ? (
+      {hasOffers ? (
+        <CustomerOfferBoard
+          offers={offers}
+          selectionOfferId={selectionOfferId}
+          clarificationsByOffer={clarificationsByOffer}
+        />
+      ) : assignedCount > 0 ? (
         <div className="rounded-2xl border border-border px-5 py-8 text-center">
           <Bell className="mx-auto mb-3 size-8 text-muted-foreground" aria-hidden />
           <p className="font-medium">

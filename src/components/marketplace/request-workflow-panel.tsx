@@ -44,9 +44,20 @@ type Props = {
   viewer: "customer" | "business";
   userId: string;
   providerId?: string | null;
+  /**
+   * When false (OFFERS_V2 + lifecycle_version >= 2), hide legacy quote accept/send
+   * and block chat entry from this panel.
+   */
+  legacyQuotesEnabled?: boolean;
 };
 
-export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Props) {
+export function RequestWorkflowPanel({
+  request,
+  viewer,
+  userId,
+  providerId,
+  legacyQuotesEnabled = true,
+}: Props) {
   const t = useTranslations("marketplace");
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -158,7 +169,7 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
             </dl>
           </section>
 
-          {request.quote ? (
+          {legacyQuotesEnabled && request.quote ? (
             <section className="rounded-3xl border border-border bg-card p-5 shadow-sm">
               <h2 className="mb-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
                 {t("quote.title")}
@@ -209,7 +220,7 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
             </section>
           ) : null}
 
-          {viewer === "business" && canSendQuote(request.status) ? (
+          {legacyQuotesEnabled && viewer === "business" && canSendQuote(request.status) ? (
             <QuoteForm requestId={request.id} />
           ) : null}
 
@@ -301,7 +312,7 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
             </p>
           ) : null}
 
-          {request.conversationId && canChat(request.status) ? (
+          {legacyQuotesEnabled && request.conversationId && canChat(request.status) ? (
             <Button
               variant="outline"
               className="min-h-11 w-full rounded-2xl"

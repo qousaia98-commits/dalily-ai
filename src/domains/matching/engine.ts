@@ -49,7 +49,7 @@ async function notifyAssignees(
       titleKey: "notifications.matchAssignment.title",
       bodyKey: "notifications.matchAssignment.body",
       bodyParams: {},
-      href: "/business/requests",
+      href: "/business/opportunities",
       requestId,
     },
     { max: MATCHING_POLICY.expandedMaxAssignments },

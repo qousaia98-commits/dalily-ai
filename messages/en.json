@@ -388,6 +388,99 @@
       "publish_failed": "Could not publish your request. Try again."
     }
   },
+  "offerFlow": {
+    "customer": {
+      "title": "Offers",
+      "subtitle": "Compare up to 3, then choose one. Contact details stay private.",
+      "noContactYet": "Selecting an offer does not share your phone or open chat yet.",
+      "select": "Choose this offer",
+      "compare": "Compare",
+      "removeCompare": "Remove from compare",
+      "business": "Business",
+      "verified": "Verified",
+      "selectedBadge": "Selected",
+      "comparing": "Comparing",
+      "rating": "{rating}★",
+      "selectedPendingUnlock": "Offer selected. Unlock and contact release come in the next step — nothing is shared yet."
+    },
+    "provider": {
+      "eyebrow": "Matching",
+      "listTitle": "Opportunities",
+      "listSubtitle": "Requests matched to your business. Send an offer without accepting into chat.",
+      "empty": "No open opportunities yet.",
+      "noProvider": "Create your business profile first.",
+      "statusOffered": "Offer sent",
+      "statusOpen": "Awaiting your offer",
+      "emergency": "Emergency",
+      "back": "All opportunities",
+      "area": "Area note",
+      "noAcceptRequired": "No accept step — submit an offer directly.",
+      "composeTitle": "Send offer",
+      "useTemplate": "Start from template",
+      "noTemplate": "Blank offer",
+      "etaPlaceholder": "e.g. today 4–6pm",
+      "submit": "Send offer",
+      "success": "Offer sent to the customer.",
+      "offerSent": "You already sent an offer for this request.",
+      "saveTemplate": "Save current fields as template",
+      "templateLabel": "Template name",
+      "saveTemplateCta": "Save template",
+      "templateSaved": "Template saved.",
+      "clarifications": "Customer questions"
+    },
+    "fields": {
+      "price": "Price",
+      "currency": "Currency",
+      "priceModel": "Price type",
+      "eta": "ETA",
+      "inclusions": "What's included",
+      "message": "Short pitch"
+    },
+    "priceModel": {
+      "fixed": "Fixed",
+      "hourly": "Hourly",
+      "estimate": "Estimate"
+    },
+    "quality": {
+      "nudge": "Tip: add ETA and a short pitch so customers can compare fairly."
+    },
+    "qa": {
+      "title": "Quick questions",
+      "hint": "Limited Q&A only — not full chat. No phone numbers.",
+      "placeholder": "Ask or answer briefly…",
+      "send": "Send",
+      "customer": "You",
+      "provider": "Business",
+      "errors": {
+        "failed": "Could not send.",
+        "feature_disabled": "Offers are not enabled.",
+        "body_invalid": "Message must be 1–500 characters.",
+        "offer_closed": "This offer is closed.",
+        "clarification_limit": "Question limit reached.",
+        "forbidden": "Not allowed.",
+        "clarification_failed": "Could not send."
+      }
+    },
+    "errors": {
+      "failed": "Something went wrong.",
+      "feature_disabled": "Offers are not enabled.",
+      "login_required": "Please sign in.",
+      "forbidden": "Not allowed.",
+      "assignment_required": "This opportunity is not assigned to you.",
+      "price_invalid": "Enter a valid price.",
+      "not_found": "Request not found.",
+      "not_marketplace_native": "This request uses the legacy path.",
+      "legacy_assigned": "This request is already assigned.",
+      "already_selected": "A selection already exists.",
+      "offer_exists": "You already have an active offer.",
+      "offer_failed": "Could not create offer.",
+      "offer_not_found": "Offer not found.",
+      "selection_failed": "Could not select offer.",
+      "label_required": "Template name required.",
+      "template_failed": "Could not save template.",
+      "use_offers": "Use the offers flow for this request."
+    }
+  },
   "search": {
     "title": "Search results",
     "subtitle": "Find trusted service providers across Syria",
@@ -1158,7 +1251,8 @@
       "pending_exists": "You already have a pending request with this business.",
       "self_request": "You cannot send a request to your own business.",
       "settings_failed": "Could not save settings.",
-      "provider_not_found": "Business not found."
+      "provider_not_found": "Business not found.",
+      "use_offers": "Use the offers flow for this marketplace request."
     }
   },
   "notifications": {
@@ -1369,6 +1463,7 @@
       "upgrade": "⭐ Upgrade",
       "messages": "Messages",
       "requests": "Requests",
+      "opportunities": "Opportunities",
       "settings": "Settings",
       "bookings": "Bookings",
       "calendar": "Calendar",
