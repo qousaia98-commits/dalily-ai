@@ -31,3 +31,12 @@ export function isCustomerIntentFlowV2Enabled(): boolean {
 export function isMatchingV2Enabled(): boolean {
   return envFlag("MATCHING_V2");
 }
+
+/**
+ * Sprint 4 — Competing offers + customer select (no PII / chat release).
+ * When false: legacy quotes path unchanged.
+ * Offers must originate from match_assignments.
+ */
+export function isOffersV2Enabled(): boolean {
+  return envFlag("OFFERS_V2");
+}

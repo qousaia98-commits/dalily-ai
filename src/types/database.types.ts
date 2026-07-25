@@ -1232,6 +1232,135 @@ export type Database = {
         };
         Relationships: [];
       };
+      marketplace_offers: {
+        Row: {
+          id: string;
+          service_request_id: string;
+          match_assignment_id: string;
+          provider_id: string;
+          price: number;
+          currency: string;
+          price_model: string;
+          inclusions: string | null;
+          eta_text: string | null;
+          message: string | null;
+          expires_at: string | null;
+          status: string;
+          quality_flags: Json;
+          template_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          service_request_id: string;
+          match_assignment_id: string;
+          provider_id: string;
+          price: number;
+          currency?: string;
+          price_model?: string;
+          inclusions?: string | null;
+          eta_text?: string | null;
+          message?: string | null;
+          expires_at?: string | null;
+          status?: string;
+          quality_flags?: Json;
+          template_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          service_request_id?: string;
+          match_assignment_id?: string;
+          provider_id?: string;
+          price?: number;
+          currency?: string;
+          price_model?: string;
+          inclusions?: string | null;
+          eta_text?: string | null;
+          message?: string | null;
+          expires_at?: string | null;
+          status?: string;
+          quality_flags?: Json;
+          template_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      offer_templates: {
+        Row: {
+          id: string;
+          provider_id: string;
+          label: string;
+          price: number | null;
+          currency: string;
+          price_model: string;
+          inclusions: string | null;
+          eta_text: string | null;
+          message: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          provider_id: string;
+          label: string;
+          price?: number | null;
+          currency?: string;
+          price_model?: string;
+          inclusions?: string | null;
+          eta_text?: string | null;
+          message?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          provider_id?: string;
+          label?: string;
+          price?: number | null;
+          currency?: string;
+          price_model?: string;
+          inclusions?: string | null;
+          eta_text?: string | null;
+          message?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      offer_clarifications: {
+        Row: {
+          id: string;
+          offer_id: string;
+          service_request_id: string;
+          author_id: string;
+          author_role: string;
+          body: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          offer_id: string;
+          service_request_id: string;
+          author_id: string;
+          author_role: string;
+          body: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          offer_id?: string;
+          service_request_id?: string;
+          author_id?: string;
+          author_role?: string;
+          body?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       service_request_images: {
         Row: {
           id: string;
