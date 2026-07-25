@@ -26,19 +26,19 @@
 
 **Non-compressible integrity chain:** `S1 → S4 → S5 → S6 → S7`
 
-## Sprint 1 scope (complete — gate)
+## Sprint 2 scope (complete — gate)
 
-Marketplace Domain strangler:
+Customer Intent Flow:
 
-- Feature flag `MARKETPLACE_DOMAIN_V2` (default off)
-- Lifecycle types + legacy anti-corruption map
-- Additive DB: lifecycle columns, selections placeholder, projections
-- Read enrichment + write projection touch when flag on
-- No Sprint 2 customer intent flow yet
+- Flag `CUSTOMER_INTENT_FLOW_V2` (default off)
+- Intent hero + intake + publish + waiting room
+- Additive DB for urgency/category/city + nullable provider on v2 rows
 
-See [`sprint-1-notes.md`](./sprint-1-notes.md).
+See [`sprint-2-notes.md`](./sprint-2-notes.md).
 
-**Do not implement Sprint 2 until explicit approval.**
+**Do not implement Sprint 3 until explicit approval.**
+
+## Sprint 1 scope (complete)
 
 ## Feature flags (future sprints)
 

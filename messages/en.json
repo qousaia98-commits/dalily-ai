@@ -268,6 +268,9 @@
     "categoriesTitle": "Browse services",
     "categorySearchLabel": "Search for {category}",
     "trustBadge": "Trusted local businesses",
+    "intentTrustBadge": "Only relevant businesses see your request",
+    "intentHeroTitle": "What do you need?",
+    "intentHeroSubtitle": "Describe your problem. Businesses send offers. You choose — and stay private until you unlock contact.",
     "aiPowered": "Smart search",
     "howItWorks": {
       "title": "How Dalily works",
@@ -291,6 +294,94 @@
     "featured": {
       "title": "Featured businesses",
       "subtitle": "Trusted local services across Syria"
+    }
+  },
+  "intentFlow": {
+    "pageTitle": "Tell us what you need",
+    "pageSubtitle": "Usually under a minute — then we notify matching businesses.",
+    "hero": {
+      "placeholder": "What do you need?",
+      "cta": "Continue"
+    },
+    "back": "Back",
+    "continue": "Continue",
+    "trust": {
+      "privacy": "Your phone number stays hidden until you choose a business.",
+      "relevantOnly": "Only relevant businesses receive your request.",
+      "addressLater": "Exact address is shared only after you choose and unlock contact.",
+      "youControl": "You stay in control of who receives your contact details.",
+      "verified": "Verified businesses are clearly identified."
+    },
+    "suggestions": {
+      "s1": "Leaking kitchen pipe",
+      "s2": "AC not cooling",
+      "s3": "Locked out of apartment",
+      "s4": "Need an electrician today"
+    },
+    "steps": {
+      "intent": {
+        "label": "Describe the problem",
+        "placeholder": "Write a short description of what you need…",
+        "continue": "Continue"
+      },
+      "category": {
+        "title": "Confirm the category",
+        "subtitle": "We suggested a match — change it if needed.",
+        "suggested": "Suggested: {category}",
+        "change": "Category"
+      },
+      "photos": {
+        "title": "Add photos (optional)",
+        "subtitle": "Photos help businesses send better offers.",
+        "add": "Add photos",
+        "skip": "Skip",
+        "count": "{count} photo(s) selected"
+      },
+      "location": {
+        "title": "Where do you need help?",
+        "subtitle": "City is enough for matching. Exact address stays private for now.",
+        "city": "City",
+        "areaOptional": "Area or landmark (optional)",
+        "areaPlaceholder": "e.g. near Mazzeh highway"
+      },
+      "urgency": {
+        "title": "Is this an emergency?",
+        "subtitle": "Urgent requests get higher marketplace priority.",
+        "emergency": "Emergency",
+        "normal": "Normal request"
+      },
+      "publish": {
+        "title": "Publish your request",
+        "subtitle": "Matching businesses can send offers. You choose later.",
+        "loginRequired": "Sign in to publish — your number stays private until you choose.",
+        "cta": "Publish request"
+      }
+    },
+    "waiting": {
+      "title": "We’re notifying matching businesses",
+      "subtitle": "You’ll see offers here when providers respond.",
+      "loading": "Loading your request…",
+      "trustNotBroadcast": "Your request is not sent to everyone — only relevant businesses.",
+      "emptyTitle": "No offers yet",
+      "emptyBody": "Matching and offers expand in the next migration steps. Your request is saved.",
+      "requestLabel": "Your request",
+      "emergencyBadge": "Marked as emergency",
+      "myRequests": "My requests",
+      "startNew": "New request",
+      "errorTitle": "Request not found",
+      "errorBody": "This waiting room is unavailable or you don’t have access."
+    },
+    "errors": {
+      "unknown": "Something went wrong. Try again.",
+      "feature_disabled": "This flow is not enabled.",
+      "login_required": "Please sign in to continue.",
+      "intent_too_short": "Please describe what you need in a bit more detail.",
+      "category_required": "Please confirm a category.",
+      "category_invalid": "That category is not available.",
+      "location_required": "Please choose a city.",
+      "location_invalid": "That city is not available.",
+      "urgency_required": "Please confirm urgency.",
+      "publish_failed": "Could not publish your request. Try again."
     }
   },
   "search": {
