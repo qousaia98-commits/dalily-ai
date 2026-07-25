@@ -36,8 +36,15 @@ if (!session.includes("contact_release_grants")) {
 if (!session.includes("UNLOCK_DEV_BYPASS") && !session.includes("isUnlockDevBypassEnabled")) {
   violations.push("grant without payment must gate on UNLOCK_DEV_BYPASS");
 }
-if (session.includes("from(\"conversations\")") || session.includes("canChat")) {
-  violations.push("unlock must not open chat");
+if (session.includes("canChat")) {
+  violations.push("unlock must not use status canChat gate");
+}
+// Sprint 7 may call ensureFullChatSessionForGrant after grant — not status-open chat
+if (
+  session.includes('from("conversations")') &&
+  !session.includes("ensureFullChatSessionForGrant")
+) {
+  violations.push("unlock must not open conversations except via chat domain after grant");
 }
 if (
   session.includes("service_requests") &&

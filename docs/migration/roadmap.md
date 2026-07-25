@@ -26,7 +26,21 @@
 
 **Non-compressible integrity chain:** `S1 → S4 → S5 → S6 → S7`
 
-## Sprint 6 scope (complete — gate)
+## Sprint 7 scope (complete — gate)
+
+Chat Authorization Migration:
+
+- Flag `CHAT_AUTH_V2` (default off)
+- Full chat only with `contact_release_grants` (chat scope)
+- Idempotent conversation create after grant; RLS grant-aware
+- Legacy in-flight backfill; public directory phone begin-hide
+- Q&A remains `offer_clarifications` (pre-unlock)
+
+See [`sprint-7-notes.md`](./sprint-7-notes.md).
+
+**Do not implement Sprint 8 until explicit approval.**
+
+## Sprint 6 scope (complete)
 
 Payment Integration (Unlock Fee):
 
@@ -36,8 +50,6 @@ Payment Integration (Unlock Fee):
 - Webhook ledger + manual admin rail
 
 See [`sprint-6-notes.md`](./sprint-6-notes.md).
-
-**Do not implement Sprint 7 until explicit approval.**
 
 ## Sprint 5 scope (complete)
 

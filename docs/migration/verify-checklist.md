@@ -10,6 +10,7 @@ npm run verify:matching
 npm run verify:offers
 npm run verify:unlock
 npm run verify:payments
+npm run verify:chat
 npm run lint
 npm run typecheck
 npm run build
@@ -20,6 +21,14 @@ Optional existing scripts (legacy search — still valid while directory exists)
 ```bash
 npm run verify:search
 ```
+
+## Sprint 7 chat notes
+
+- Flag off ⇒ legacy status-based `canChat()`.
+- Flag on ⇒ full chat requires `contact_release_grants` with chat scope (lifecycle ≥ 2); legacy dual-run for lifecycle < 2.
+- Q&A stays in `offer_clarifications` (pre-unlock).
+- Public directory phone/WhatsApp hidden when flag on.
+- Soft-break: migration backfills grants for in-flight status-unlocked conversations.
 
 ## Sprint 6 payment notes
 

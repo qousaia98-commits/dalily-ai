@@ -1,6 +1,6 @@
 # Sprint 6 Notes — Payment Integration (Unlock Fee)
 
-**Status:** COMPLETE — awaiting approval before Sprint 7  
+**Status:** COMPLETE — approved; Chat Authorization = Sprint 7  
 **Feature flag:** `UNLOCK_PAYMENTS_V2` (default **off**; requires `UNLOCK_V2` for grants)  
 **Payment rail:** existing manual bank-transfer + admin approval (no new PSP invented)
 

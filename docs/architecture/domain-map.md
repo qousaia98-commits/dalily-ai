@@ -46,7 +46,7 @@ src/domains/
 | unlock | `src/domains/unlock` | Active (Sprint 5, flag `UNLOCK_V2`) |
 | payment | `src/domains/payment` + `src/lib/payment` | Active (Sprint 6, flag `UNLOCK_PAYMENTS_V2`) |
 | notification | `src/lib/notifications`, business notification inbox | Facade re-export |
-| chat | `src/lib/chat`, `src/lib/messaging` | Facade re-export |
+| chat | `src/domains/chat` + `src/lib/chat`, `src/lib/messaging` | Active (Sprint 7, flag `CHAT_AUTH_V2`) |
 | review | `src/lib/reviews` | Facade re-export |
 | verification | `src/lib/verification` | Facade re-export |
 | admin | `src/lib/admin` | Facade re-export |

@@ -41,6 +41,7 @@ Use before local work and before declaring a sprint done.
 | `PAYMENT_WEBHOOK_SECRET` | Required in production for `/api/webhooks/payments/*` |
 | `PAYMENT_WEBHOOK_ALLOW_INSECURE` | Local-only when secret unset |
 | `CRON_SECRET` | Optional bearer for `/api/cron/unlock-sla` |
+| `CHAT_AUTH_V2` | Sprint 7 grant-gated full chat + hide public directory phone (default off) |
 
 ## Product flags already in repo
 
