@@ -5,6 +5,8 @@ import { computeOfferQualityFlags } from "@/domains/offer/quality";
 import type { CreateOfferInput, MarketplaceOfferView } from "@/domains/offer/types";
 import { syncMarketplaceRequestProjection } from "@/domains/marketplace/projection";
 import { openUnlockSessionForSelection } from "@/domains/unlock/session";
+import { deliverMarketplaceNotification } from "@/lib/notifications/deliver";
+import { safeLocalizedText, safeMarketplaceCopy } from "@/lib/translation/guard";
 
 export type CreateOfferResult =
   | { ok: true; offerId: string; qualityFlags: string[] }
@@ -94,11 +96,28 @@ export async function createOfferFromAssignment(input: {
     return { ok: false, error: "offer_failed" };
   }
 
+  // Provider has no ownership column on marketplace-native rows (provider_id null).
+  // Use admin to bump updated_at so customer realtime on service_requests fires.
+  const admin = createAdminClient();
+  await admin
+    .from("service_requests")
+    .update({ updated_at: new Date().toISOString() })
+    .eq("id", request.id);
+
   void syncMarketplaceRequestProjection({
     serviceRequestId: request.id,
     legacyStatus: (request.status as "pending") ?? "pending",
     lifecycleVersion: 2,
     phase: "offering",
+  });
+
+  void deliverMarketplaceNotification({
+    userId: request.customer_id as string,
+    type: "offer_received",
+    titleKey: "notifications.offerReceived.title",
+    bodyKey: "notifications.offerReceived.body",
+    href: `/request/${request.id}/waiting`,
+    requestId: request.id as string,
   });
 
   return { ok: true, offerId: offer.id, qualityFlags };
@@ -111,9 +130,12 @@ function mapOfferRow(row: Record<string, unknown>, provider?: {
 }): MarketplaceOfferView {
   const nameJson = provider?.name as { ar?: string; en?: string } | string | null | undefined;
   let providerName: string | null = null;
-  if (typeof nameJson === "string") providerName = nameJson;
-  else if (nameJson && typeof nameJson === "object") {
-    providerName = nameJson.en || nameJson.ar || null;
+  if (typeof nameJson === "string") {
+    providerName = safeMarketplaceCopy(nameJson);
+  } else if (nameJson && typeof nameJson === "object") {
+    // Prefer Arabic source for Syria marketplace; fall back to safe English.
+    providerName =
+      safeLocalizedText(nameJson, "ar") || safeLocalizedText(nameJson, "en") || null;
   }
 
   return {
@@ -127,9 +149,9 @@ function mapOfferRow(row: Record<string, unknown>, provider?: {
     price: Number(row.price),
     currency: row.currency as string,
     priceModel: row.price_model as MarketplaceOfferView["priceModel"],
-    inclusions: (row.inclusions as string) ?? null,
-    etaText: (row.eta_text as string) ?? null,
-    message: (row.message as string) ?? null,
+    inclusions: safeMarketplaceCopy(row.inclusions as string | null),
+    etaText: safeMarketplaceCopy(row.eta_text as string | null),
+    message: safeMarketplaceCopy(row.message as string | null),
     expiresAt: (row.expires_at as string) ?? null,
     status: row.status as MarketplaceOfferView["status"],
     qualityFlags: Array.isArray(row.quality_flags)

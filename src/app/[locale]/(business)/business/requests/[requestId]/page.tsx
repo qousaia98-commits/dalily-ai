@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
-import { getRequestDetail } from "@/lib/service-requests/queries";
+import { getProviderVisibleRequestDetail } from "@/lib/service-requests/queries";
 import { RequestWorkflowPanel } from "@/components/marketplace/request-workflow-panel";
 import {
   acceptServiceRequestAction,
@@ -23,8 +23,9 @@ export default async function BusinessRequestDetailPage({ params }: PageProps) {
   const provider = await getOwnedProvider(authUser.id);
   if (!provider) notFound();
 
-  const request = await getRequestDetail(requestId);
-  if (!request || request.provider_id !== provider.id) notFound();
+  // Marketplace v2: never gate on service_requests.provider_id (intentionally null).
+  const request = await getProviderVisibleRequestDetail(requestId, provider.id);
+  if (!request) notFound();
 
   const marketplaceNative =
     isOffersV2Enabled() && (request.lifecycle_version ?? 1) >= 2;

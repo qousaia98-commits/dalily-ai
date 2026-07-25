@@ -313,13 +313,19 @@ export async function completeUnlockSuccess(input: {
     .update({ status: "unlocked", updated_at: now })
     .eq("id", session.selection_id);
 
-  // Do NOT set service_requests.provider_id here — Chat Authorization (Sprint 7) opens session.
+  // Do NOT set service_requests.provider_id — Marketplace v2 ACL uses grants/selections.
+  // Advance status so completion CTAs and shared display status work.
+  const { markMarketplaceJobInProgress } = await import(
+    "@/domains/marketplace/completion"
+  );
+  await markMarketplaceJobInProgress(session.service_request_id as string);
+
   void syncMarketplaceRequestProjection({
     serviceRequestId: session.service_request_id as string,
-    legacyStatus: (request.status as "pending") ?? "pending",
+    legacyStatus: "in_progress",
     lifecycleVersion: 2,
     selectionId: session.selection_id as string,
-    phase: "unlocked",
+    phase: "in_progress",
   });
 
   const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
@@ -337,7 +343,7 @@ export async function completeUnlockSuccess(input: {
     type: "unlock_granted",
     titleKey: "notifications.unlockGranted.title",
     bodyKey: "notifications.unlockGranted.body",
-    href: `/request/${session.service_request_id}/waiting`,
+    href: `/account/requests/${session.service_request_id}`,
     requestId: session.service_request_id as string,
   });
 

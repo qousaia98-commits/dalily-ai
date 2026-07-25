@@ -32,6 +32,7 @@ import {
   canSendQuote,
   nextStepHint,
 } from "@/lib/service-requests/status-machine";
+import { resolveOrderDisplayStatus } from "@/lib/orders/display-status";
 import { useMarketplaceRealtime } from "@/hooks/use-marketplace-realtime";
 import { SuccessMoment } from "@/components/shared/success-moment";
 import { FieldError } from "@/components/forms/field-error";
@@ -108,13 +109,14 @@ export function RequestWorkflowPanel({
   };
 
   const nextKey = nextStepHint(request.status, viewer);
+  const displayStatus = resolveOrderDisplayStatus(request);
 
   return (
     <div className="space-y-6 animate-fade-in">
       <header className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-2xl font-bold tracking-tight">{request.title}</h1>
-          <Badge variant="secondary">{t(`status.${request.status}`)}</Badge>
+          <Badge variant="secondary">{t(`status.${displayStatus}`)}</Badge>
         </div>
         <p className="text-sm text-muted-foreground">
           {viewer === "business"

@@ -45,6 +45,19 @@ export {
 
 export { isMarketplaceDomainV2Enabled } from "@/lib/config/feature-flags";
 
+export {
+  getMarketplaceAssignedProviderId,
+  providerCanAccessMarketplaceRequest,
+  marketplaceJobIsUnlocked,
+} from "@/domains/marketplace/access";
+
+export {
+  markMarketplaceJobInProgress,
+  completeMarketplaceJobByProvider,
+  confirmMarketplaceJobByCustomer,
+  resolveMarketplaceReviewProviderId,
+} from "@/domains/marketplace/completion";
+
 /** Legacy status machine still exported for UI until Sprint 7 chat cutover. */
 export {
   TIMELINE_STEPS,

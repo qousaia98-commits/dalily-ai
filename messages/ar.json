@@ -23,6 +23,7 @@
     "search": "البحث",
     "forBusiness": "للأعمال",
     "dashboard": "لوحة التحكم",
+    "orders": "طلباتي",
     "admin": "الإدارة",
     "login": "دخول",
     "register": "تسجيل",
@@ -40,12 +41,14 @@
       "aiAssistant": "المساعد الذكي",
       "messages": "الرسائل",
       "search": "بحث",
+      "orders": "طلباتي",
       "favorites": "المفضلة",
       "account": "الحساب"
     },
     "business": {
       "dashboard": "الرئيسية",
       "requests": "الطلبات",
+      "orders": "طلباتي",
       "messages": "الرسائل",
       "growth": "النمو",
       "account": "الحساب",
@@ -59,6 +62,45 @@
       "messages": "الرسائل",
       "marketplace": "السوق",
       "admin": "الإدارة"
+    }
+  },
+  "orders": {
+    "customerEyebrow": "طلباتي",
+    "customerTitle": "طلباتي",
+    "customerSubtitle": "تابع كل طلب من الانتظار حتى الإنجاز والتقييم — مباشرة.",
+    "providerEyebrow": "طلباتي",
+    "providerTitle": "طلباتي",
+    "providerSubtitle": "فرص وعروض وأعمال نشطة ومكتملة في مكان واحد.",
+    "searchPlaceholder": "ابحث بالعنوان أو الاسم…",
+    "listLabel": "الطلبات حسب الحالة",
+    "emptyTitle": "لا شيء في هذا التبويب",
+    "emptyBody": "عند أي تحديث يظهر هنا فوراً.",
+    "customerTabs": {
+      "pending": "معلق",
+      "accepted": "مقبول",
+      "in_progress": "قيد التنفيذ",
+      "waiting": "بانتظار",
+      "completed": "مكتمل",
+      "cancelled": "ملغى"
+    },
+    "providerTabs": {
+      "new": "طلبات جديدة",
+      "offers": "عروض مرسلة",
+      "accepted": "أعمال مقبولة",
+      "active": "أعمال نشطة",
+      "completed": "أعمال مكتملة"
+    },
+    "status": {
+      "pending": "معلق",
+      "waiting": "بانتظار",
+      "accepted": "مقبول",
+      "quoted": "عرض سعر",
+      "in_progress": "قيد التنفيذ",
+      "completed": "مكتمل — بانتظار التقييم",
+      "cancelled": "ملغى",
+      "rejected": "مرفوض",
+      "disputed": "نزاع",
+      "reviewed": "تم التقييم"
     }
   },
   "mobilePages": {
@@ -423,7 +465,9 @@
       "etaPlaceholder": "مثال: اليوم ٤–٦ م",
       "submit": "إرسال العرض",
       "success": "تم إرسال العرض للزبون.",
-      "offerSent": "أرسلت عرضاً لهذا الطلب مسبقاً.",
+      "offerSentTitle": "تم إرسال عرضك بنجاح.",
+      "offerSentBody": "بانتظار قرار العميل.",
+      "offerSent": "تم إرسال عرضك بنجاح. بانتظار قرار العميل.",
       "saveTemplate": "احفظ الحقول الحالية كقالب",
       "templateLabel": "اسم القالب",
       "saveTemplateCta": "حفظ القالب",
@@ -1236,6 +1280,7 @@
       "upgrade": "⭐ تطوير",
       "messages": "الرسائل",
       "requests": "الطلبات",
+      "orders": "طلباتي",
       "opportunities": "الفرص",
       "unlock": "فتح التواصل",
       "settings": "الإعدادات",
@@ -3770,6 +3815,7 @@
     },
     "status": {
       "pending": "معلق",
+      "waiting": "بانتظار العروض",
       "accepted": "مقبول",
       "quoted": "عرض سعر مرسل",
       "quote_accepted": "تم قبول العرض",
@@ -3962,7 +4008,7 @@
     },
     "serviceCompleted": {
       "title": "اكتملت الخدمة",
-      "body": "تم تعليم «{title}» كمكتمل. يرجى التأكيد."
+      "body": "علّم مزوّد الخدمة «{title}» كمكتمل. يرجى تأكيد الإنجاز."
     },
     "completionConfirmed": {
       "title": "تم تأكيد الإنجاز",
@@ -3981,9 +4027,13 @@
       "body": "لديك رسالة جديدة.",
       "attachmentBody": "وصلك مرفق جديد."
     },
+    "offerReceived": {
+      "title": "عرض جديد",
+      "body": "أرسل مزود عرضاً على طلبك. راجعه في غرفة الانتظار."
+    },
     "matchAssignment": {
       "title": "طلب مطابق جديد",
-      "body": "طلب عميل يناسب عملك. افتح الطلبات للرد بعرض."
+      "body": "طلب عميل يناسب عملك. افتح الفرص للرد بعرض."
     },
     "unlockOpened": {
       "title": "فتح التواصل بانتظارك",
@@ -3991,7 +4041,7 @@
     },
     "unlockGranted": {
       "title": "تم فتح التواصل",
-      "body": "أكمل العمل فتح التواصل. يمكنك الآن رؤية بيانات الاتصال."
+      "body": "أكمل مزوّد الخدمة فتح التواصل. يمكنك الآن رؤية بيانات الاتصال."
     },
     "unlockFallback": {
       "title": "تم اختيار عمل تالٍ",

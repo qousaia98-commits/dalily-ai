@@ -28,6 +28,7 @@ import type { PlanSlug } from "@/lib/subscription/types";
 
 const baseNavItems = [
   { href: "/business", icon: LayoutDashboard, key: "dashboard", exact: true },
+  { href: "/business/orders", icon: Inbox, key: "orders", badgeKey: "requests" as const },
   { href: "/business/requests", icon: Inbox, key: "requests", badgeKey: "requests" as const },
   { href: "/business/bookings", icon: CalendarClock, key: "bookings" },
   { href: "/business/calendar", icon: CalendarDays, key: "calendar" },
@@ -78,6 +79,12 @@ export function BusinessSidebar({
     if (marketplaceHome) {
       const items: NavItem[] = [
         { href: "/business", icon: LayoutDashboard, key: "dashboard", exact: true },
+        {
+          href: "/business/orders",
+          icon: Inbox,
+          key: "orders",
+          badgeKey: "requests",
+        },
       ];
       if (showUnlock) {
         items.push({ href: "/business/unlock", icon: KeyRound, key: "unlock" });

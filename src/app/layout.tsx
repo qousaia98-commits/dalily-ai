@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Noto_Sans_Arabic } from "next/font/google";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { localeDirection } from "@/lib/i18n/config";
-import { buildSiteMetadata } from "@/lib/brand/metadata";
+import { buildSiteMetadata, buildSiteViewport } from "@/lib/brand/metadata";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -28,6 +28,10 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t("description"),
     locale,
   });
+}
+
+export function generateViewport(): Viewport {
+  return buildSiteViewport();
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

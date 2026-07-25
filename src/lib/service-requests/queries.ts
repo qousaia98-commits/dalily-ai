@@ -116,24 +116,109 @@ export async function listProviderRequests(
   search = "",
 ): Promise<ServiceRequestDetail[]> {
   const supabase = await createClient();
-  let query = supabase
+
+  // Legacy RFQ rows still set provider_id.
+  let legacyQuery = supabase
     .from("service_requests")
     .select("*")
     .eq("provider_id", providerId)
     .order("created_at", { ascending: false });
 
   if (tab !== "all") {
-    query = query.in("status", statusesForTab(tab));
+    legacyQuery = legacyQuery.in("status", statusesForTab(tab));
   }
-
   if (search.trim()) {
     const escaped = search.trim().replace(/[%_,]/g, "\\$&");
-    query = query.or(`title.ilike.%${escaped}%,description.ilike.%${escaped}%`);
+    legacyQuery = legacyQuery.or(`title.ilike.%${escaped}%,description.ilike.%${escaped}%`);
   }
 
-  const { data, error } = await query;
-  if (error || !data?.length) return [];
-  return hydrateDetails(data as Record<string, unknown>[]);
+  const { data: legacyRows } = await legacyQuery;
+
+  // Marketplace v2 keeps provider_id null — load via grants / unlocked selections.
+  const [{ data: grants }, { data: selections }] = await Promise.all([
+    supabase
+      .from("contact_release_grants")
+      .select("service_request_id")
+      .eq("provider_id", providerId),
+    supabase
+      .from("marketplace_selections")
+      .select("service_request_id")
+      .eq("provider_id", providerId)
+      .in("status", ["unlocked", "pending_unlock"]),
+  ]);
+
+  const assignedIds = [
+    ...new Set(
+      [
+        ...(grants ?? []).map((g) => g.service_request_id as string),
+        ...(selections ?? []).map((s) => s.service_request_id as string),
+      ].filter(Boolean),
+    ),
+  ];
+
+  let marketplaceRows: Record<string, unknown>[] = [];
+  if (assignedIds.length > 0) {
+    let mQuery = supabase
+      .from("service_requests")
+      .select("*")
+      .in("id", assignedIds)
+      .is("provider_id", null)
+      .order("created_at", { ascending: false });
+    if (tab !== "all") {
+      mQuery = mQuery.in("status", statusesForTab(tab));
+    }
+    if (search.trim()) {
+      const escaped = search.trim().replace(/[%_,]/g, "\\$&");
+      mQuery = mQuery.or(`title.ilike.%${escaped}%,description.ilike.%${escaped}%`);
+    }
+    const { data } = await mQuery;
+    marketplaceRows = (data as Record<string, unknown>[]) ?? [];
+  }
+
+  const byId = new Map<string, Record<string, unknown>>();
+  for (const row of [...(legacyRows ?? []), ...marketplaceRows]) {
+    byId.set(row.id as string, row as Record<string, unknown>);
+  }
+  const merged = [...byId.values()].sort(
+    (a, b) =>
+      new Date(b.created_at as string).getTime() - new Date(a.created_at as string).getTime(),
+  );
+  if (merged.length === 0) return [];
+  return hydrateDetails(merged);
+}
+
+/**
+ * Provider request detail — never requires service_requests.provider_id for v2.
+ */
+export async function getProviderVisibleRequestDetail(
+  requestId: string,
+  providerId: string,
+): Promise<ServiceRequestDetail | null> {
+  const detail = await getRequestDetail(requestId);
+  if (detail?.provider_id === providerId) return detail;
+
+  const { providerCanAccessMarketplaceRequest } = await import(
+    "@/domains/marketplace/access"
+  );
+  const canAccess = await providerCanAccessMarketplaceRequest({
+    providerId,
+    serviceRequestId: requestId,
+  });
+  if (!canAccess) return null;
+
+  if (detail && (detail.lifecycle_version ?? 1) >= 2) return detail;
+
+  // Fallback when user RLS still hides the row (pre-migration).
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from("service_requests")
+    .select("*")
+    .eq("id", requestId)
+    .maybeSingle();
+  if (error || !data) return null;
+  const [hydrated] = await hydrateDetails([data as Record<string, unknown>]);
+  return hydrated ?? null;
 }
 
 export async function listCustomerRequests(userId: string): Promise<ServiceRequestDetail[]> {

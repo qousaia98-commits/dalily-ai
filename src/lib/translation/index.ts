@@ -2,3 +2,8 @@ export { getTranslationService, TranslationService } from "@/lib/translation/tra
 export { syncLocalizedField } from "@/lib/translation/sync-localized-field";
 export type { TranslationProvider, SyncLocalizedFieldInput } from "@/lib/translation/types";
 export { AITranslationProvider } from "@/lib/translation/providers/ai-translation.provider";
+export {
+  looksLikeTranslationFailure,
+  safeLocalizedText,
+  safeMarketplaceCopy,
+} from "@/lib/translation/guard";

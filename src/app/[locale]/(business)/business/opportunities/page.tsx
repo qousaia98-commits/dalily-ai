@@ -6,6 +6,7 @@ import { listProviderOpportunities } from "@/domains/offer/queries";
 import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
 import { Link } from "@/lib/i18n/routing";
 import { redirect } from "next/navigation";
+import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 
 export default async function BusinessOpportunitiesPage() {
   if (!isOffersV2Enabled()) {
@@ -21,6 +22,9 @@ export default async function BusinessOpportunitiesPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6 animate-fade-in">
+      {provider ? (
+        <MarketplaceRealtimeBridge userId={authUser.id} providerId={provider.id} />
+      ) : null}
       <header className="space-y-2">
         <p className="text-xs font-bold tracking-[0.16em] text-[var(--dalily-gold)] uppercase">
           {t("eyebrow")}

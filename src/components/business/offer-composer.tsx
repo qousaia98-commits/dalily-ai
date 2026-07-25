@@ -60,9 +60,13 @@ export function OfferComposer({
 
   if (existingOfferId) {
     return (
-      <p className="rounded-2xl border border-border bg-muted/20 px-4 py-3 text-sm">
-        {t("provider.offerSent")}
-      </p>
+      <div
+        className="space-y-2 rounded-2xl border border-[var(--dalily-gold)]/30 bg-[color-mix(in_oklab,var(--dalily-gold)_8%,var(--card))] px-4 py-4"
+        role="status"
+      >
+        <p className="text-sm font-semibold text-foreground">{t("provider.offerSentTitle")}</p>
+        <p className="text-sm text-muted-foreground">{t("provider.offerSentBody")}</p>
+      </div>
     );
   }
 

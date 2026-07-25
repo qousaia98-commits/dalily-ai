@@ -39,7 +39,7 @@ export default async function AccountPage() {
   const links = authUser
     ? [
         {
-          href: "/account/requests",
+          href: "/account/orders",
           title: t("links.myRequests"),
           description: t("links.myRequestsDesc"),
           icon: ClipboardList,

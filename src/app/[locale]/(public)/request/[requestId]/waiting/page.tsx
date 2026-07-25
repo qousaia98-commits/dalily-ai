@@ -20,6 +20,7 @@ import {
 } from "@/domains/unlock";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { WaitingRoom } from "@/components/customer/waiting-room";
+import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 
 export default async function RequestWaitingPage({
   params,
@@ -96,6 +97,7 @@ export default async function RequestWaitingPage({
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-6 sm:px-6">
+      <MarketplaceRealtimeBridge userId={authUser.id} requestId={requestId} />
       <WaitingRoom
         request={request}
         state={state}

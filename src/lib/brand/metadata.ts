@@ -1,8 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { BRAND } from "@/lib/brand/tokens";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 const CLOSED_BETA = process.env.DALILY_CLOSED_BETA !== "false";
+
+export function buildSiteViewport(): Viewport {
+  return {
+    themeColor: [
+      { media: "(prefers-color-scheme: light)", color: BRAND.colors.surface },
+      { media: "(prefers-color-scheme: dark)", color: BRAND.colors.navy },
+    ],
+  };
+}
 
 export function buildSiteMetadata(params: {
   title: string;
@@ -43,9 +52,5 @@ export function buildSiteMetadata(params: {
       title: BRAND.name,
       statusBarStyle: "black-translucent",
     },
-    themeColor: [
-      { media: "(prefers-color-scheme: light)", color: BRAND.colors.surface },
-      { media: "(prefers-color-scheme: dark)", color: BRAND.colors.navy },
-    ],
   };
 }

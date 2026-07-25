@@ -5,6 +5,7 @@ import { getOwnedProvider } from "@/lib/providers/database";
 import { isUnlockDevBypassEnabled, isUnlockV2Enabled } from "@/lib/config/feature-flags";
 import { listProviderUnlockSessions } from "@/domains/unlock/session";
 import { Link } from "@/lib/i18n/routing";
+import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 
 export default async function BusinessUnlockListPage() {
   if (!isUnlockV2Enabled()) redirect("/business/opportunities");
@@ -16,6 +17,9 @@ export default async function BusinessUnlockListPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6 animate-fade-in">
+      {provider ? (
+        <MarketplaceRealtimeBridge userId={authUser.id} providerId={provider.id} />
+      ) : null}
       <header className="space-y-2">
         <h1 className="text-2xl font-bold tracking-tight">{t("listTitle")}</h1>
         <p className="text-sm text-muted-foreground">{t("listSubtitle")}</p>

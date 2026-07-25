@@ -1,5 +1,5 @@
-import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
 import { afterLegacyMarketplaceWrite } from "@/domains/marketplace/repository";
 import { syncMarketplaceRequestProjection } from "@/domains/marketplace/projection";
 import { runMatchingForRequest } from "@/domains/matching/engine";
@@ -131,8 +131,7 @@ export async function publishIntentRequest(input: {
     }
   }
 
-  revalidatePath("/account/requests");
-  revalidatePath(`/request/${request.id}/waiting`);
+  revalidateOrderSurfaces(request.id);
 
   return { ok: true, requestId: request.id };
 }

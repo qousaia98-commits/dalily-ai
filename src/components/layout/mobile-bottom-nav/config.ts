@@ -1,22 +1,28 @@
 import {
   CheckCircle2,
+  ClipboardList,
   CreditCard,
   Home,
-  Inbox,
-  KeyRound,
   LayoutDashboard,
   Megaphone,
   MessageCircle,
   Search,
-  Sparkles,
-  TrendingUp,
   UserRound,
 } from "lucide-react";
 import type { MobileNavItemConfig, MobileNavRole } from "./types";
 
-export const GUEST_NAV_ITEMS: readonly MobileNavItemConfig[] = [
+/** Customer (and guest) — marketplace discovery + own orders. */
+export const CUSTOMER_NAV_ITEMS: readonly MobileNavItemConfig[] = [
   { id: "home", href: "/", icon: Home, labelKey: "home", exact: true },
-  { id: "ai", href: "/ai", icon: Sparkles, labelKey: "aiAssistant" },
+  { id: "search", href: "/search", icon: Search, labelKey: "search" },
+  {
+    id: "orders",
+    href: "/account/orders",
+    icon: ClipboardList,
+    labelKey: "orders",
+    badgeKey: "orders",
+    matchPrefixes: ["/account/orders", "/account/requests", "/request"],
+  },
   {
     id: "messages",
     href: "/messages",
@@ -25,10 +31,16 @@ export const GUEST_NAV_ITEMS: readonly MobileNavItemConfig[] = [
     badgeKey: "messages",
     matchPrefixes: ["/messages"],
   },
-  { id: "search", href: "/search", icon: Search, labelKey: "search" },
   { id: "account", href: "/account", icon: UserRound, labelKey: "account" },
 ] as const;
 
+/** @deprecated Use CUSTOMER_NAV_ITEMS — kept as alias for older imports. */
+export const GUEST_NAV_ITEMS = CUSTOMER_NAV_ITEMS;
+
+/**
+ * Provider mobile nav — never includes customer search/marketplace discovery.
+ * Dashboard · My Jobs · Messages · Account
+ */
 export const BUSINESS_NAV_ITEMS: readonly MobileNavItemConfig[] = [
   {
     id: "dashboard",
@@ -38,11 +50,17 @@ export const BUSINESS_NAV_ITEMS: readonly MobileNavItemConfig[] = [
     exact: true,
   },
   {
-    id: "requests",
-    href: "/business/requests",
-    icon: Inbox,
-    labelKey: "requests",
-    badgeKey: "requests",
+    id: "orders",
+    href: "/business/orders",
+    icon: ClipboardList,
+    labelKey: "orders",
+    badgeKey: "orders",
+    matchPrefixes: [
+      "/business/orders",
+      "/business/requests",
+      "/business/opportunities",
+      "/business/unlock",
+    ],
   },
   {
     id: "messages",
@@ -52,13 +70,6 @@ export const BUSINESS_NAV_ITEMS: readonly MobileNavItemConfig[] = [
     badgeKey: "messages",
   },
   {
-    id: "growth",
-    href: "/business/analytics",
-    icon: TrendingUp,
-    labelKey: "growth",
-    matchPrefixes: ["/business/analytics", "/business/subscription"],
-  },
-  {
     id: "account",
     href: "/business/account",
     icon: UserRound,
@@ -66,65 +77,13 @@ export const BUSINESS_NAV_ITEMS: readonly MobileNavItemConfig[] = [
   },
 ] as const;
 
-/** Sprint 8 — Unlock / Opportunities first; subscription not required for opportunities. */
-export function getBusinessMarketplaceNavItems(input: {
-  showOpportunities: boolean;
-  showUnlock: boolean;
+/** Sprint 8 marketplace home — same 4-tab spine; My Jobs stays the hub. */
+export function getBusinessMarketplaceNavItems(_opts?: {
+  showOpportunities?: boolean;
+  showUnlock?: boolean;
 }): readonly MobileNavItemConfig[] {
-  const mid: MobileNavItemConfig = input.showOpportunities
-    ? {
-        id: "opportunities",
-        href: "/business/opportunities",
-        icon: Sparkles,
-        labelKey: "opportunities",
-      }
-    : {
-        id: "requests",
-        href: "/business/requests",
-        icon: Inbox,
-        labelKey: "requests",
-        badgeKey: "requests",
-      };
-
-  const fourth: MobileNavItemConfig = input.showUnlock
-    ? {
-        id: "unlock",
-        href: "/business/unlock",
-        icon: KeyRound,
-        labelKey: "unlock",
-      }
-    : {
-        id: "growth",
-        href: "/business/analytics",
-        icon: TrendingUp,
-        labelKey: "growth",
-        matchPrefixes: ["/business/analytics"],
-      };
-
-  return [
-    {
-      id: "dashboard",
-      href: "/business",
-      icon: LayoutDashboard,
-      labelKey: "dashboard",
-      exact: true,
-    },
-    mid,
-    {
-      id: "messages",
-      href: "/business/messages",
-      icon: MessageCircle,
-      labelKey: "messages",
-      badgeKey: "messages",
-    },
-    fourth,
-    {
-      id: "account",
-      href: "/business/account",
-      icon: UserRound,
-      labelKey: "account",
-    },
-  ] as const;
+  void _opts;
+  return BUSINESS_NAV_ITEMS;
 }
 
 export const ADMIN_NAV_ITEMS: readonly MobileNavItemConfig[] = [
@@ -192,8 +151,10 @@ export function getMobileNavItems(
       return BUSINESS_NAV_ITEMS;
     case "admin":
       return ADMIN_NAV_ITEMS;
+    case "customer":
+    case "guest":
     default:
-      return GUEST_NAV_ITEMS;
+      return CUSTOMER_NAV_ITEMS;
   }
 }
 

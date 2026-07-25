@@ -20,6 +20,13 @@ import {
   getActiveUnlockFeePayment,
   type UnlockFeePaymentView,
 } from "@/domains/payment/unlock-fee";
+import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
+
+function revalidateUnlock(sessionId: string, serviceRequestId?: string | null) {
+  revalidateOrderSurfaces(serviceRequestId);
+  revalidatePath(`/business/unlock/${sessionId}`);
+  revalidatePath("/business/unlock");
+}
 
 export type UnlockActionState = {
   success: boolean;
@@ -51,8 +58,7 @@ export async function confirmUnlockDevBypassAction(
   });
   if (!result.ok) return { success: false, error: result.error };
 
-  revalidatePath(`/business/unlock/${sessionId}`);
-  revalidatePath(`/request/${session.serviceRequestId}/waiting`);
+  revalidateUnlock(sessionId, session.serviceRequestId);
   return { success: true, grantId: result.grantId };
 }
 
@@ -80,8 +86,7 @@ export async function adminConfirmUnlockAction(
   });
   if (!result.ok) return { success: false, error: result.error };
 
-  revalidatePath(`/business/unlock/${sessionId}`);
-  revalidatePath(`/request/${session.serviceRequestId}/waiting`);
+  revalidateUnlock(sessionId, session.serviceRequestId);
   return { success: true, grantId: result.grantId };
 }
 
@@ -142,14 +147,18 @@ export async function declineUnlockAction(
   const provider = await getOwnedProvider(authUser.id);
   if (!provider) return { success: false, error: "forbidden" };
 
+  const session = await getUnlockSessionById(sessionId);
+  if (!session || session.providerId !== provider.id) {
+    return { success: false, error: "forbidden" };
+  }
+
   const result = await declineUnlockSession({
     sessionId,
     providerId: provider.id,
   });
   if (!result.ok) return { success: false, error: result.error };
 
-  revalidatePath("/business/unlock");
-  revalidatePath(`/business/unlock/${sessionId}`);
+  revalidateUnlock(sessionId, session.serviceRequestId);
   return { success: true };
 }
 

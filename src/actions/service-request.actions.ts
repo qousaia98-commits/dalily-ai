@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getAuthUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import {
@@ -53,22 +54,14 @@ function validationError(error: { flatten: () => { fieldErrors: Record<string, s
   };
 }
 
-function revalidateMessaging() {
-  revalidatePath("/messages");
-  revalidatePath("/business/messages");
-  revalidatePath("/business/requests");
-  revalidatePath("/account/requests");
-  revalidatePath("/admin/marketplace");
-  revalidatePath("/", "layout");
-  revalidatePath("/business", "layout");
-}
+import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
 
 /** Thin Sprint 1 adapter: legacy write path + optional Marketplace projection sync (flag-gated). */
 function revalidateAfterMarketplaceWrite(
   requestId: string,
   legacyStatus: ServiceRequestStatus,
 ) {
-  revalidateMessaging();
+  revalidateOrderSurfaces(requestId);
   void afterLegacyMarketplaceWrite(requestId, legacyStatus);
 }
 
@@ -557,6 +550,43 @@ export async function completeServiceAction(requestId: string): Promise<ServiceR
   if (!provider) return { success: false, error: "forbidden" };
 
   const supabase = await createClient();
+  const { data: requestMeta } = await supabase
+    .from("service_requests")
+    .select("id, lifecycle_version, provider_id, status")
+    .eq("id", requestId)
+    .maybeSingle();
+
+  // Marketplace v2 — grant-based completion (never requires provider_id).
+  if (requestMeta && (requestMeta.lifecycle_version ?? 1) >= 2 && !requestMeta.provider_id) {
+    const { completeMarketplaceJobByProvider } = await import(
+      "@/domains/marketplace/completion"
+    );
+    const result = await completeMarketplaceJobByProvider({
+      serviceRequestId: requestId,
+      providerId: provider.id,
+      actorUserId: authUser.id,
+    });
+    if (!result.ok) {
+      return {
+        success: false,
+        error:
+          result.error === "forbidden"
+            ? "forbidden"
+            : result.error === "not_unlocked"
+              ? "invalid_status"
+              : result.error === "not_found"
+                ? "not_found"
+                : "invalid_status",
+      };
+    }
+    revalidateAfterMarketplaceWrite(requestId, "completed_by_business");
+    return {
+      success: true,
+      message: "completed_by_business",
+      conversationId: result.conversationId ?? undefined,
+    };
+  }
+
   const { data: request } = await supabase
     .from("service_requests")
     .select("*")
@@ -614,6 +644,38 @@ export async function confirmCompletionAction(
   if (!authUser) return { success: false, error: "login_required" };
 
   const supabase = await createClient();
+  const { data: requestMeta } = await supabase
+    .from("service_requests")
+    .select("id, lifecycle_version, provider_id, status")
+    .eq("id", requestId)
+    .eq("customer_id", authUser.id)
+    .maybeSingle();
+
+  if (!requestMeta) return { success: false, error: "not_found" };
+
+  // Marketplace v2 — grant-based assignment (provider_id stays null).
+  if ((requestMeta.lifecycle_version ?? 1) >= 2 && !requestMeta.provider_id) {
+    const { confirmMarketplaceJobByCustomer } = await import(
+      "@/domains/marketplace/completion"
+    );
+    const result = await confirmMarketplaceJobByCustomer({
+      serviceRequestId: requestId,
+      customerId: authUser.id,
+    });
+    if (!result.ok) {
+      return {
+        success: false,
+        error: result.error === "not_found" ? "not_found" : "invalid_status",
+      };
+    }
+    revalidateAfterMarketplaceWrite(requestId, "completed");
+    return {
+      success: true,
+      message: "completed",
+      conversationId: result.conversationId ?? undefined,
+    };
+  }
+
   const { data: request } = await supabase
     .from("service_requests")
     .select("*")
@@ -709,12 +771,25 @@ export async function reportProblemAction(
     .maybeSingle();
 
   if (!request) return { success: false, error: "not_found" };
-  if (!request.provider_id) return { success: false, error: "invalid_status" };
   if (!canConfirmCompletion(request.status as ServiceRequestStatus)) {
     return { success: false, error: "invalid_status" };
   }
 
-  const { data: updated, error: updateError } = await supabase
+  let assignedProviderId = request.provider_id as string | null;
+  if (!assignedProviderId && (request.lifecycle_version ?? 1) >= 2) {
+    const { getMarketplaceAssignedProviderId } = await import(
+      "@/domains/marketplace/access"
+    );
+    assignedProviderId = await getMarketplaceAssignedProviderId(request.id);
+  }
+  if (!assignedProviderId) return { success: false, error: "invalid_status" };
+
+  const updateClient =
+    (request.lifecycle_version ?? 1) >= 2 && !request.provider_id
+      ? createAdminClient()
+      : supabase;
+
+  const { data: updated, error: updateError } = await updateClient
     .from("service_requests")
     .update({
       status: "disputed",
@@ -733,7 +808,7 @@ export async function reportProblemAction(
   const { data: provider } = await supabase
     .from("providers")
     .select("owner_id")
-    .eq("id", request.provider_id)
+    .eq("id", assignedProviderId)
     .maybeSingle();
 
   const conversationId = await getConversationIdForRequest(request.id);
@@ -782,20 +857,32 @@ export async function submitReviewAction(
     .maybeSingle();
 
   if (!request) return { success: false, error: "not_found" };
-  if (!request.provider_id) return { success: false, error: "invalid_status" };
   if (!canReview(request.status as ServiceRequestStatus)) {
     return { success: false, error: "invalid_status" };
   }
+
+  let reviewProviderId = request.provider_id as string | null;
+  if (!reviewProviderId && (request.lifecycle_version ?? 1) >= 2) {
+    const { resolveMarketplaceReviewProviderId } = await import(
+      "@/domains/marketplace/completion"
+    );
+    reviewProviderId = await resolveMarketplaceReviewProviderId(request.id);
+  }
+  if (!reviewProviderId) return { success: false, error: "invalid_status" };
 
   const recommend =
     parsed.data.recommend === "yes" ? true : parsed.data.recommend === "no" ? false : null;
   const isAnonymous = parsed.data.anonymous === "true";
 
-  const { data: review, error } = await supabase
+  const { data: review, error } = await (
+    (request.lifecycle_version ?? 1) >= 2 && !request.provider_id
+      ? createAdminClient()
+      : supabase
+  )
     .from("service_reviews")
     .insert({
       service_request_id: request.id,
-      provider_id: request.provider_id,
+      provider_id: reviewProviderId,
       customer_id: authUser.id,
       rating: parsed.data.rating,
       comment: parsed.data.comment?.trim() || null,
@@ -817,10 +904,15 @@ export async function submitReviewAction(
     .filter((f): f is File => f instanceof File && f.size > 0);
   if (photoFiles.length > 0) {
     const { uploadReviewImages } = await import("@/actions/review.actions");
-    await uploadReviewImages(review.id, request.provider_id, authUser.id, photoFiles);
+    await uploadReviewImages(review.id, reviewProviderId, authUser.id, photoFiles);
   }
 
-  const { data: reviewed, error: reviewStatusError } = await supabase
+  const statusClient =
+    (request.lifecycle_version ?? 1) >= 2 && !request.provider_id
+      ? createAdminClient()
+      : supabase;
+
+  const { data: reviewed, error: reviewStatusError } = await statusClient
     .from("service_requests")
     .update({ status: "reviewed", reviewed_at: new Date().toISOString() })
     .eq("id", request.id)
@@ -832,15 +924,27 @@ export async function submitReviewAction(
     return { success: false, error: "invalid_status" };
   }
 
+  if ((request.lifecycle_version ?? 1) >= 2) {
+    const { syncMarketplaceRequestProjection } = await import(
+      "@/domains/marketplace/projection"
+    );
+    void syncMarketplaceRequestProjection({
+      serviceRequestId: request.id,
+      legacyStatus: "reviewed",
+      lifecycleVersion: 2,
+      phase: "completed",
+    });
+  }
+
   // Recompute aggregates + trust (subscription-agnostic DB function)
   await supabase.rpc("recompute_provider_trust_score", {
-    p_provider_id: request.provider_id,
+    p_provider_id: reviewProviderId,
   });
 
   const { data: provider } = await supabase
     .from("providers")
     .select("owner_id, review_count, rating_avg")
-    .eq("id", request.provider_id)
+    .eq("id", reviewProviderId)
     .maybeSingle();
 
   const conversationId = await getConversationIdForRequest(request.id);
@@ -863,7 +967,7 @@ export async function submitReviewAction(
   revalidateAfterMarketplaceWrite(request.id, "reviewed");
   void logLearningEvent({
     eventType: "review_submitted",
-    providerId: request.provider_id,
+    providerId: reviewProviderId,
     customerId: authUser.id,
     serviceRequestId: request.id,
     metadata: { rating: parsed.data.rating },
@@ -879,17 +983,17 @@ export async function submitReviewAction(
       .maybeSingle();
     await trackBookingReviewSubmitted({
       bookingId: linkedBooking?.id ?? null,
-      providerId: request.provider_id,
+      providerId: reviewProviderId,
       actorId: authUser.id,
     });
   } catch {
     /* soft analytics */
   }
   scheduleLearningUpdate({
-    providerId: request.provider_id,
+    providerId: reviewProviderId,
     customerId: authUser.id,
   });
-  return { success: true, message: "reviewed" };
+  return { success: true, message: "reviewed", conversationId: conversationId ?? undefined };
 }
 
 export async function sendMessageAction(

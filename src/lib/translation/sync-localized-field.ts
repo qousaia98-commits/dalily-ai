@@ -1,11 +1,13 @@
 import type { Locale } from "@/lib/i18n/config";
 import type { LocalizedJson } from "@/types/database.types";
 import type { SyncLocalizedFieldInput, TranslationProvider } from "@/lib/translation/types";
+import { looksLikeTranslationFailure } from "@/lib/translation/guard";
 
 /**
  * Builds a bilingual JSON field from a single source locale.
  * Translation is best-effort: on provider failure the existing target
  * locale (if any) is preserved and never overwritten with an empty string.
+ * AI meta-responses are never persisted.
  */
 export async function syncLocalizedField(
   provider: TranslationProvider,
@@ -15,9 +17,12 @@ export async function syncLocalizedField(
   const sourceLocale = input.sourceLocale;
   const targetLocale: Locale = sourceLocale === "ar" ? "en" : "ar";
 
+  const scrub = (value: string) =>
+    looksLikeTranslationFailure(value) ? "" : value.trim();
+
   const existing = {
-    ar: (input.existing.ar ?? "").trim(),
-    en: (input.existing.en ?? "").trim(),
+    ar: scrub(input.existing.ar ?? ""),
+    en: scrub(input.existing.en ?? ""),
   };
 
   const result: LocalizedJson = {
@@ -31,7 +36,7 @@ export async function syncLocalizedField(
   }
 
   const sourceChanged = existing[sourceLocale] !== sourceText;
-  const targetEmpty = !existing[targetLocale];
+  const targetEmpty = !result[targetLocale];
 
   if (!targetEmpty && !sourceChanged) {
     return result;
@@ -39,8 +44,7 @@ export async function syncLocalizedField(
 
   try {
     const translated = (await provider.translate(sourceText, sourceLocale, targetLocale)).trim();
-    // Never persist an empty translation over an existing good value.
-    if (translated) {
+    if (translated && !looksLikeTranslationFailure(translated)) {
       result[targetLocale] = translated;
     }
   } catch (error) {

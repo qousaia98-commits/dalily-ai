@@ -8,6 +8,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { ProviderUnlockPanel } from "@/components/business/provider-unlock-panel";
 import { Link } from "@/lib/i18n/routing";
 import { getTranslations } from "next-intl/server";
+import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 
 type PageProps = { params: Promise<{ sessionId: string }> };
 
@@ -43,6 +44,11 @@ export default async function BusinessUnlockDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-4 animate-fade-in">
+      <MarketplaceRealtimeBridge
+        userId={authUser.id}
+        providerId={provider.id}
+        requestId={session.serviceRequestId}
+      />
       <Link href="/business/unlock" className="text-sm text-muted-foreground underline">
         {t("back")}
       </Link>

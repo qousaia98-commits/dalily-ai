@@ -13,6 +13,7 @@ import {
   saveOfferTemplate,
 } from "@/domains/offer/queries";
 import { OFFER_PRICE_MODELS, type OfferPriceModel } from "@/domains/offer/types";
+import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
 
 export type OfferActionState = {
   success: boolean;
@@ -60,9 +61,9 @@ export async function createOfferAction(
 
   if (!result.ok) return { success: false, error: result.error };
 
-  revalidatePath("/business/opportunities");
+  const serviceRequestId = String(formData.get("serviceRequestId") || "");
+  revalidateOrderSurfaces(serviceRequestId || null);
   revalidatePath(`/business/opportunities/${matchAssignmentId}`);
-  revalidatePath(`/request/${String(formData.get("serviceRequestId") || "")}/waiting`);
 
   return {
     success: true,
@@ -79,9 +80,8 @@ export async function selectOfferAction(offerId: string): Promise<OfferActionSta
   const result = await selectOffer({ customerId: authUser.id, offerId });
   if (!result.ok) return { success: false, error: result.error };
 
-  revalidatePath("/account/requests");
-  revalidatePath(`/account/requests/${result.serviceRequestId}`);
-  revalidatePath(`/request/${result.serviceRequestId}/waiting`);
+  revalidateOrderSurfaces(result.serviceRequestId);
+  revalidatePath("/business/unlock");
   return { success: true, selectionId: result.selectionId };
 }
 
@@ -105,6 +105,9 @@ export async function postOfferClarificationAction(
     body,
   });
   if (!result.ok) return { success: false, error: result.error };
+  revalidatePath(`/request/${String(formData.get("serviceRequestId") || "")}/waiting`);
+  revalidatePath("/business/opportunities");
+  revalidatePath(`/account/requests/${String(formData.get("serviceRequestId") || "")}`);
   return { success: true };
 }
 

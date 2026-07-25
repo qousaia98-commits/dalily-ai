@@ -13,6 +13,7 @@ import {
   rejectUnlockFeePayment,
 } from "@/domains/payment/capture";
 import { revalidatePath } from "next/cache";
+import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
 
 export type AdminPaymentActionState = {
   success: boolean;
@@ -54,10 +55,18 @@ export async function approvePaymentAction(paymentId: string): Promise<AdminPaym
           },
         });
 
+        let serviceRequestId: string | null = null;
         if (payment.unlock_session_id) {
           revalidatePath(`/business/unlock/${payment.unlock_session_id}`);
+          const { data: session } = await admin
+            .from("unlock_sessions")
+            .select("service_request_id")
+            .eq("id", payment.unlock_session_id)
+            .maybeSingle();
+          serviceRequestId = (session?.service_request_id as string) ?? null;
         }
         revalidatePath("/admin/payments");
+        revalidateOrderSurfaces(serviceRequestId);
         return { success: true };
       }
     }
@@ -119,10 +128,18 @@ export async function rejectPaymentAction(
             unlockSessionId: payment.unlock_session_id,
           },
         });
+        let serviceRequestId: string | null = null;
         if (payment.unlock_session_id) {
           revalidatePath(`/business/unlock/${payment.unlock_session_id}`);
+          const { data: session } = await admin
+            .from("unlock_sessions")
+            .select("service_request_id")
+            .eq("id", payment.unlock_session_id)
+            .maybeSingle();
+          serviceRequestId = (session?.service_request_id as string) ?? null;
         }
         revalidatePath("/admin/payments");
+        revalidateOrderSurfaces(serviceRequestId);
         return { success: true };
       }
     }

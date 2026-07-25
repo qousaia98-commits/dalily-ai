@@ -23,6 +23,7 @@
     "search": "Search",
     "forBusiness": "For Business",
     "dashboard": "Dashboard",
+    "orders": "My Jobs",
     "admin": "Admin",
     "login": "Log in",
     "register": "Sign up",
@@ -40,12 +41,14 @@
       "aiAssistant": "AI Assistant",
       "messages": "Messages",
       "search": "Search",
+      "orders": "My Orders",
       "favorites": "Favorites",
       "account": "Account"
     },
     "business": {
       "dashboard": "Home",
       "requests": "Requests",
+      "orders": "My Jobs",
       "messages": "Messages",
       "growth": "Growth",
       "account": "Account",
@@ -59,6 +62,45 @@
       "messages": "Messages",
       "marketplace": "Market",
       "admin": "Admin"
+    }
+  },
+  "orders": {
+    "customerEyebrow": "My orders",
+    "customerTitle": "My Orders",
+    "customerSubtitle": "Track every request from pending to completed — live.",
+    "providerEyebrow": "My jobs",
+    "providerTitle": "My Jobs",
+    "providerSubtitle": "New requests, offers, and active jobs in one place.",
+    "searchPlaceholder": "Search by title or name…",
+    "listLabel": "Orders by status",
+    "emptyTitle": "Nothing in this tab",
+    "emptyBody": "When something moves here, it will appear instantly.",
+    "customerTabs": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "in_progress": "In Progress",
+      "waiting": "Waiting",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "providerTabs": {
+      "new": "New Requests",
+      "offers": "Submitted Offers",
+      "accepted": "Accepted Jobs",
+      "active": "Active Jobs",
+      "completed": "Completed Jobs"
+    },
+    "status": {
+      "pending": "Pending",
+      "waiting": "Waiting",
+      "accepted": "Accepted",
+      "quoted": "Quoted",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "disputed": "Disputed",
+      "reviewed": "Reviewed"
     }
   },
   "mobilePages": {
@@ -423,7 +465,9 @@
       "etaPlaceholder": "e.g. today 4–6pm",
       "submit": "Send offer",
       "success": "Offer sent to the customer.",
-      "offerSent": "You already sent an offer for this request.",
+      "offerSentTitle": "Your offer was sent successfully.",
+      "offerSentBody": "Waiting for the customer’s decision.",
+      "offerSent": "Your offer was sent successfully. Waiting for the customer’s decision.",
       "saveTemplate": "Save current fields as template",
       "templateLabel": "Template name",
       "saveTemplateCta": "Save template",
@@ -1175,6 +1219,7 @@
     },
     "status": {
       "pending": "Pending",
+      "waiting": "Waiting",
       "accepted": "Accepted",
       "quoted": "Quoted",
       "quote_accepted": "Quote accepted",
@@ -1367,7 +1412,7 @@
     },
     "serviceCompleted": {
       "title": "Service completed",
-      "body": "“{title}” was marked completed. Please confirm."
+      "body": "The provider marked “{title}” as completed. Please confirm."
     },
     "completionConfirmed": {
       "title": "Completion confirmed",
@@ -1386,9 +1431,13 @@
       "body": "You have a new message.",
       "attachmentBody": "You received a new attachment."
     },
+    "offerReceived": {
+      "title": "New offer",
+      "body": "A provider sent an offer on your request. Review it in the waiting room."
+    },
     "matchAssignment": {
       "title": "New matching request",
-      "body": "A customer request matches your business. Open requests to respond with an offer."
+      "body": "A customer request matches your business. Open Opportunities to respond with an offer."
     },
     "unlockOpened": {
       "title": "Lead unlock pending",
@@ -1561,6 +1610,7 @@
       "plan": "Plan tools",
       "messages": "Messages",
       "requests": "Requests",
+      "orders": "My Jobs",
       "opportunities": "Opportunities",
       "unlock": "Unlock",
       "settings": "Settings",

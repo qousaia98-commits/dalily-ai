@@ -1,9 +1,9 @@
 import { getAuthUser } from "@/lib/auth/session";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
 import { countUnreadConversations } from "@/lib/business/conversations";
-import { countPendingRequestsForOwner } from "@/lib/service-requests/queries";
 import { loadCustomerConversations } from "@/lib/customer/load-conversations";
 import { getAdminUnreadBadgeCounts } from "@/lib/admin/nav-badges";
+import { getUnreadOrderNotificationCount } from "@/lib/orders/notifications";
 import type { MobileNavBadges, MobileNavRole } from "./types";
 
 export async function getMobileNavBadges(role: MobileNavRole): Promise<MobileNavBadges> {
@@ -22,28 +22,35 @@ export async function getMobileNavBadges(role: MobileNavRole): Promise<MobileNav
   if (role === "business") {
     try {
       const authUser = await getAuthUser();
-      if (!authUser) return { messages: 0, requests: 0 };
-      const [{ conversations }, pendingRequests] = await Promise.all([
+      if (!authUser) return { messages: 0, orders: 0 };
+      const [{ conversations }, orders] = await Promise.all([
         loadBusinessConversations(authUser.id),
-        countPendingRequestsForOwner(authUser.id),
+        getUnreadOrderNotificationCount(authUser.id),
       ]);
       return {
         messages: countUnreadConversations(conversations),
-        requests: pendingRequests,
+        orders,
+        requests: orders,
       };
     } catch {
-      return { messages: 0, requests: 0 };
+      return { messages: 0, orders: 0 };
     }
   }
 
-  if (role === "guest") {
+  if (role === "guest" || role === "customer") {
     try {
       const authUser = await getAuthUser();
-      if (!authUser) return { messages: 0 };
-      const { conversations } = await loadCustomerConversations(authUser.id);
-      return { messages: countUnreadConversations(conversations) };
+      if (!authUser) return { messages: 0, orders: 0 };
+      const [{ conversations }, orders] = await Promise.all([
+        loadCustomerConversations(authUser.id),
+        getUnreadOrderNotificationCount(authUser.id),
+      ]);
+      return {
+        messages: countUnreadConversations(conversations),
+        orders,
+      };
     } catch {
-      return { messages: 0 };
+      return { messages: 0, orders: 0 };
     }
   }
 

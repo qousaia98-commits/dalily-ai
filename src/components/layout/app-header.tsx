@@ -35,7 +35,7 @@ export async function AppHeader({
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/95 backdrop-blur-md">
       <div className="mx-auto grid h-16 max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:h-[4.5rem] sm:px-6">
         <Link
-          href="/"
+          href={authUser && businessUser && !platformAdmin ? "/business" : "/"}
           className="justify-self-start rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
           aria-label={t("brand")}
         >
@@ -48,22 +48,35 @@ export async function AppHeader({
           className="hidden items-center justify-center gap-1 md:flex"
           aria-label={tNav("menu")}
         >
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/search">{tNav("search")}</Link>
-          </Button>
-          {platformAdmin ? (
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/admin">{tNav("admin")}</Link>
-            </Button>
-          ) : null}
-          {authUser && businessUser ? (
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/business">{tNav("dashboard")}</Link>
-            </Button>
+          {authUser && businessUser && !platformAdmin ? (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/business">{tNav("dashboard")}</Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/business/orders">{tNav("orders")}</Link>
+              </Button>
+            </>
           ) : (
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/register/business">{tNav("forBusiness")}</Link>
-            </Button>
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/search">{tNav("search")}</Link>
+              </Button>
+              {platformAdmin ? (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/admin">{tNav("admin")}</Link>
+                </Button>
+              ) : null}
+              {authUser && businessUser ? (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/business">{tNav("dashboard")}</Link>
+                </Button>
+              ) : (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/register/business">{tNav("forBusiness")}</Link>
+                </Button>
+              )}
+            </>
           )}
         </nav>
 

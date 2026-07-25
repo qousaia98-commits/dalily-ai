@@ -27,7 +27,9 @@ export function MobileBottomNav({
   showOpportunities = false,
   showUnlock = false,
 }: MobileBottomNavProps) {
-  const t = useTranslations(`mobileNav.${role}`);
+  const t = useTranslations(
+    `mobileNav.${role === "customer" ? "guest" : role}`,
+  );
   const tA11y = useTranslations("mobileNav.a11y");
   const pathname = usePathname();
   const items = getMobileNavItems(role, {
