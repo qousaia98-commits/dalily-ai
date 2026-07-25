@@ -30,6 +30,18 @@ Competing offers from **match assignments** before customer select; legacy quote
 
 **Fix:** Admin hydrate after assignment ownership check + additive RLS migration `20260725195000_sprint4_fix_provider_opportunity_rls.sql`.
 
+### Hotfix 2 — publish fails after RLS migration (42P17)
+
+**Symptom:** UI `publish_failed` / «تعذر نشر الطلب».
+
+**Runtime (authenticated insert):**
+- code: `42P17`
+- message: `infinite recursion detected in policy for relation "service_requests"`
+
+**Break point:** During `service_requests` INSERT … RETURNING (before matching). Policy from `20260725195000` read `match_assignments`, whose RLS reads `service_requests` again.
+
+**Fix:** `20260725200000_sprint4_fix_service_requests_rls_recursion.sql` — SECURITY DEFINER helper for assignment ownership (no recursive RLS).
+
 ## Files
 
 - `src/domains/offer/*`

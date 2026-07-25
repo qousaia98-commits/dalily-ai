@@ -79,6 +79,15 @@ export async function publishIntentRequest(input: {
     .single();
 
   if (error || !request) {
+    console.error("[publishIntentRequest] insert failed", {
+      message: error?.message,
+      code: error?.code,
+      details: error?.details,
+      hint: error?.hint,
+      customerId: input.customerId,
+      categoryId: input.data.categoryId,
+      cityId: input.data.cityId,
+    });
     return { ok: false, error: "publish_failed" };
   }
 
