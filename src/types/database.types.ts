@@ -1015,6 +1015,8 @@ export type Database = {
           currency: string | null;
           created_at: string;
           updated_at: string;
+          lifecycle_version: number;
+          selection_id: string | null;
         };
         Insert: {
           id?: string;
@@ -1044,6 +1046,8 @@ export type Database = {
           currency?: string | null;
           created_at?: string;
           updated_at?: string;
+          lifecycle_version?: number;
+          selection_id?: string | null;
         };
         Update: {
           id?: string;
@@ -1073,6 +1077,68 @@ export type Database = {
           currency?: string | null;
           created_at?: string;
           updated_at?: string;
+          lifecycle_version?: number;
+          selection_id?: string | null;
+        };
+        Relationships: [];
+      };
+      marketplace_selections: {
+        Row: {
+          id: string;
+          service_request_id: string;
+          provider_id: string | null;
+          offer_id: string | null;
+          status: string;
+          selected_at: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          service_request_id: string;
+          provider_id?: string | null;
+          offer_id?: string | null;
+          status?: string;
+          selected_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          service_request_id?: string;
+          provider_id?: string | null;
+          offer_id?: string | null;
+          status?: string;
+          selected_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      marketplace_request_projections: {
+        Row: {
+          service_request_id: string;
+          lifecycle_phase: string;
+          legacy_status: string;
+          selection_id: string | null;
+          lifecycle_version: number;
+          synced_at: string;
+        };
+        Insert: {
+          service_request_id: string;
+          lifecycle_phase: string;
+          legacy_status: string;
+          selection_id?: string | null;
+          lifecycle_version?: number;
+          synced_at?: string;
+        };
+        Update: {
+          service_request_id?: string;
+          lifecycle_phase?: string;
+          legacy_status?: string;
+          selection_id?: string | null;
+          lifecycle_version?: number;
+          synced_at?: string;
         };
         Relationships: [];
       };
