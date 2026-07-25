@@ -50,6 +50,8 @@ type BusinessSidebarProps = {
   showOpportunities?: boolean;
   /** Sprint 5 — unlock sessions when UNLOCK_V2 is on. */
   showUnlock?: boolean;
+  /** Sprint 8 — unlock/opportunities first; subscription de-emphasized. */
+  marketplaceHome?: boolean;
 };
 
 export function BusinessSidebar({
@@ -58,19 +60,55 @@ export function BusinessSidebar({
   badges = {},
   showOpportunities = false,
   showUnlock = false,
+  marketplaceHome = false,
 }: BusinessSidebarProps) {
   const t = useTranslations("business.nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = useMemo(() => {
-    const items: Array<{
+    type NavItem = {
       href: string;
       icon: typeof LayoutDashboard;
       key: string;
       exact?: boolean;
       badgeKey?: "requests" | "messages" | "verification";
-    }> = [...baseNavItems];
+    };
+
+    if (marketplaceHome) {
+      const items: NavItem[] = [
+        { href: "/business", icon: LayoutDashboard, key: "dashboard", exact: true },
+      ];
+      if (showUnlock) {
+        items.push({ href: "/business/unlock", icon: KeyRound, key: "unlock" });
+      }
+      if (showOpportunities) {
+        items.push({ href: "/business/opportunities", icon: Sparkles, key: "opportunities" });
+      }
+      items.push(
+        { href: "/business/messages", icon: MessageCircle, key: "messages", badgeKey: "messages" },
+        { href: "/business/requests", icon: Inbox, key: "requests", badgeKey: "requests" },
+        { href: "/business/bookings", icon: CalendarClock, key: "bookings" },
+        { href: "/business/calendar", icon: CalendarDays, key: "calendar" },
+        { href: "/business/availability", icon: Clock3, key: "availability" },
+        { href: "/business/profile", icon: User, key: "profile" },
+        { href: "/business/services", icon: Wrench, key: "services" },
+        { href: "/business/media", icon: Images, key: "media" },
+        { href: "/business/analytics", icon: BarChart3, key: "analytics" },
+        {
+          href: "/business/verification",
+          icon: ShieldCheck,
+          key: "verification",
+          badgeKey: "verification",
+        },
+        { href: "/business/settings", icon: Settings, key: "settings" },
+        // Plan tools — not primary monetization CTA
+        { href: "/business/subscription", icon: Star, key: "plan" },
+      );
+      return items;
+    }
+
+    const items: NavItem[] = [...baseNavItems];
     if (showOpportunities) {
       items.splice(1, 0, {
         href: "/business/opportunities",
@@ -87,7 +125,7 @@ export function BusinessSidebar({
       });
     }
     return items;
-  }, [showOpportunities, showUnlock]);
+  }, [showOpportunities, showUnlock, marketplaceHome]);
 
   const NavContent = () => (
     <nav className="flex flex-col gap-1" aria-label={t("title")}>

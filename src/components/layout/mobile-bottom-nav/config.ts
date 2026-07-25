@@ -3,6 +3,7 @@ import {
   CreditCard,
   Home,
   Inbox,
+  KeyRound,
   LayoutDashboard,
   Megaphone,
   MessageCircle,
@@ -65,6 +66,67 @@ export const BUSINESS_NAV_ITEMS: readonly MobileNavItemConfig[] = [
   },
 ] as const;
 
+/** Sprint 8 — Unlock / Opportunities first; subscription not required for opportunities. */
+export function getBusinessMarketplaceNavItems(input: {
+  showOpportunities: boolean;
+  showUnlock: boolean;
+}): readonly MobileNavItemConfig[] {
+  const mid: MobileNavItemConfig = input.showOpportunities
+    ? {
+        id: "opportunities",
+        href: "/business/opportunities",
+        icon: Sparkles,
+        labelKey: "opportunities",
+      }
+    : {
+        id: "requests",
+        href: "/business/requests",
+        icon: Inbox,
+        labelKey: "requests",
+        badgeKey: "requests",
+      };
+
+  const fourth: MobileNavItemConfig = input.showUnlock
+    ? {
+        id: "unlock",
+        href: "/business/unlock",
+        icon: KeyRound,
+        labelKey: "unlock",
+      }
+    : {
+        id: "growth",
+        href: "/business/analytics",
+        icon: TrendingUp,
+        labelKey: "growth",
+        matchPrefixes: ["/business/analytics"],
+      };
+
+  return [
+    {
+      id: "dashboard",
+      href: "/business",
+      icon: LayoutDashboard,
+      labelKey: "dashboard",
+      exact: true,
+    },
+    mid,
+    {
+      id: "messages",
+      href: "/business/messages",
+      icon: MessageCircle,
+      labelKey: "messages",
+      badgeKey: "messages",
+    },
+    fourth,
+    {
+      id: "account",
+      href: "/business/account",
+      icon: UserRound,
+      labelKey: "account",
+    },
+  ] as const;
+}
+
 export const ADMIN_NAV_ITEMS: readonly MobileNavItemConfig[] = [
   {
     id: "control",
@@ -111,9 +173,22 @@ export const ADMIN_NAV_ITEMS: readonly MobileNavItemConfig[] = [
   },
 ] as const;
 
-export function getMobileNavItems(role: MobileNavRole): readonly MobileNavItemConfig[] {
+export function getMobileNavItems(
+  role: MobileNavRole,
+  opts?: {
+    marketplaceHome?: boolean;
+    showOpportunities?: boolean;
+    showUnlock?: boolean;
+  },
+): readonly MobileNavItemConfig[] {
   switch (role) {
     case "business":
+      if (opts?.marketplaceHome) {
+        return getBusinessMarketplaceNavItems({
+          showOpportunities: Boolean(opts.showOpportunities),
+          showUnlock: Boolean(opts.showUnlock),
+        });
+      }
       return BUSINESS_NAV_ITEMS;
     case "admin":
       return ADMIN_NAV_ITEMS;
@@ -134,5 +209,9 @@ export function isMobileNavItemActive(
     return true;
   }
 
-  return Boolean(item.matchPrefixes?.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)));
+  return Boolean(
+    item.matchPrefixes?.some(
+      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+    ),
+  );
 }

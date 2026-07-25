@@ -71,18 +71,35 @@ export function OfferComposer({
       {templates.length > 0 ? (
         <div className="space-y-2">
           <Label>{t("provider.useTemplate")}</Label>
-          <select
-            className="flex h-10 w-full rounded-xl border border-input bg-background px-3 text-sm"
-            value={templateId}
-            onChange={(e) => applyTemplate(e.target.value)}
-          >
-            <option value="">{t("provider.noTemplate")}</option>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant={templateId === "" ? "default" : "outline"}
+              onClick={() => {
+                setTemplateId("");
+                setPrice("");
+                setCurrency("SYP");
+                setPriceModel("fixed");
+                setInclusions("");
+                setEtaText("");
+                setMessage("");
+              }}
+            >
+              {t("provider.noTemplate")}
+            </Button>
             {templates.map((tpl) => (
-              <option key={tpl.id} value={tpl.id}>
+              <Button
+                key={tpl.id}
+                type="button"
+                size="sm"
+                variant={templateId === tpl.id ? "default" : "outline"}
+                onClick={() => applyTemplate(tpl.id)}
+              >
                 {tpl.label}
-              </option>
+              </Button>
             ))}
-          </select>
+          </div>
         </div>
       ) : null}
 

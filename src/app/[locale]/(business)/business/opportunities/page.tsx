@@ -3,6 +3,7 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import { listProviderOpportunities } from "@/domains/offer/queries";
+import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
 import { Link } from "@/lib/i18n/routing";
 import { redirect } from "next/navigation";
 
@@ -50,6 +51,7 @@ export default async function BusinessOpportunitiesPage() {
                   {op.hasOffer ? t("statusOffered") : t("statusOpen")}
                   {op.urgency === "emergency" ? ` · ${t("emergency")}` : ""}
                 </p>
+                <WhyMatchedReasons reasons={op.reasons} />
               </Link>
             </li>
           ))}

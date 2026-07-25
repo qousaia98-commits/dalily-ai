@@ -10,6 +10,9 @@ import type { MobileNavBadges, MobileNavRole } from "./types";
 type MobileBottomNavProps = {
   role: MobileNavRole;
   badges?: MobileNavBadges;
+  marketplaceHome?: boolean;
+  showOpportunities?: boolean;
+  showUnlock?: boolean;
 };
 
 function formatBadge(count: number): string {
@@ -17,11 +20,21 @@ function formatBadge(count: number): string {
   return String(count);
 }
 
-export function MobileBottomNav({ role, badges = {} }: MobileBottomNavProps) {
+export function MobileBottomNav({
+  role,
+  badges = {},
+  marketplaceHome = false,
+  showOpportunities = false,
+  showUnlock = false,
+}: MobileBottomNavProps) {
   const t = useTranslations(`mobileNav.${role}`);
   const tA11y = useTranslations("mobileNav.a11y");
   const pathname = usePathname();
-  const items = getMobileNavItems(role);
+  const items = getMobileNavItems(role, {
+    marketplaceHome,
+    showOpportunities,
+    showUnlock,
+  });
   const [pressedId, setPressedId] = useState<string | null>(null);
   const pressTimer = useRef<number | null>(null);
 

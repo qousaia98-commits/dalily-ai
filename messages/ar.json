@@ -48,7 +48,9 @@
       "requests": "الطلبات",
       "messages": "الرسائل",
       "growth": "النمو",
-      "account": "الحساب"
+      "account": "الحساب",
+      "opportunities": "عروض",
+      "unlock": "فتح"
     },
     "admin": {
       "controlCenter": "الرئيسية",
@@ -1239,7 +1241,8 @@
       "settings": "الإعدادات",
       "bookings": "الحجوزات",
       "calendar": "التقويم",
-      "availability": "التوفر"
+      "availability": "التوفر",
+      "plan": "أدوات الخطة"
     },
     "requests": {
       "eyebrow": "الوارد",
@@ -2514,7 +2517,9 @@
         "login_required": "يرجى تسجيل الدخول للمتابعة.",
         "forbidden": "لا يمكنك تغيير هذه الإعدادات.",
         "failed": "حدث خطأ ما."
-      }
+      },
+      "handlesEmergency": "استقبال طلبات الطوارئ",
+      "handlesEmergencyHint": "عند الإيقاف تُستبعد من مطابقات الطوارئ. كن صادقاً — الثقة تعتمد على ذلك."
     },
     "success": {
       "kpis": {
@@ -4128,6 +4133,59 @@
         "validation_error": "يرجى اختيار سبب.",
         "login_required": "يرجى تسجيل الدخول."
       }
+    }
+  },
+  "providerDashboard": {
+    "eyebrow": "أولويات العمل",
+    "title": "{name}",
+    "subtitle": "أكمل فتح العملاء أولاً ثم أرسل العروض. الاشتراك غير مطلوب للفرص.",
+    "pause": {
+      "title": "المطابقة متوقفة",
+      "body": "وضع الإجازة أو إغلاق الطلبات يمنع استلام مطابقات جديدة.",
+      "cta": "تحديث الإعدادات"
+    },
+    "unlock": {
+      "title": "فتح العملاء (أولوية)",
+      "empty": "لا جلسات فتح مفتوحة.",
+      "leadPending": "أكمل الفتح لإتاحة التواصل",
+      "sla": "المهلة: {deadline}",
+      "viewAll": "كل جلسات الفتح",
+      "status": {
+        "opened": "مفتوحة",
+        "payment_pending": "بانتظار الدفع"
+      }
+    },
+    "opportunities": {
+      "title": "الفرص",
+      "empty": "لا فرص مفتوحة بعد.",
+      "open": "بانتظار عرضك",
+      "offered": "تم إرسال العرض",
+      "emergency": "طارئ",
+      "viewAll": "كل الفرص"
+    },
+    "qa": {
+      "title": "أسئلة بانتظار الرد",
+      "empty": "لا أسئلة من الزبائن حالياً."
+    },
+    "jobs": {
+      "title": "أعمال نشطة",
+      "empty": "لا أعمال مفتوحة بعد.",
+      "openChat": "فتح المحادثة"
+    },
+    "reliability": {
+      "title": "موثوقية الفتح (30 يوماً)",
+      "body": "رفض: {declined} · انتهاء مهلة: {timedOut}"
+    },
+    "matchReasons": {
+      "label": "لماذا طابقت",
+      "category_fit": "ملاءمة الفئة",
+      "city_fit": "نفس المدينة",
+      "active_accepting": "يقبل الطلبات",
+      "verified": "موثّق",
+      "emergency_priority": "أولوية الطوارئ",
+      "newcomer_exploration": "استكشاف للأعمال الجديدة",
+      "expanded_area": "نطاق موسّع",
+      "high_rating": "تقييم مرتفع ({rating}★)"
     }
   }
 }

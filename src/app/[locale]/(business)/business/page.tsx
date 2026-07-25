@@ -28,11 +28,15 @@ import { DashboardConversationsPreview } from "@/components/business/conversatio
 import { ProviderSuccessDashboardView } from "@/components/provider-success/provider-success-dashboard";
 import { VerificationDashboardAlert } from "@/components/business/verification-dashboard-alert";
 import { OnboardingDashboardCard } from "@/components/business/onboarding/onboarding-dashboard-card";
+import { ProviderDashboardHomeView } from "@/components/business/provider-dashboard-home";
+import { getProviderDashboardHome } from "@/domains/provider/dashboard";
+import { isProviderDashboardV2Enabled } from "@/lib/config/feature-flags";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
 
 /**
- * Provider Success Dashboard — soft onboarding encouragement only (no popup loops).
+ * Provider home — Sprint 8 unlock-first stack when PROVIDER_DASHBOARD_V2;
+ * otherwise legacy Provider Success dashboard.
  */
 export default async function BusinessDashboardPage() {
   const t = await getTranslations("business.dashboard");
@@ -61,9 +65,20 @@ export default async function BusinessDashboardPage() {
   const deferredAt = parseTimestampCookie(jar.get(ONBOARDING_DEFER_COOKIE)?.value);
   const onboardingDeferred = Boolean(deferredAt);
 
-  // Force welcome only for unfinished drafts — never after “Later” in this session.
   if (shouldForceOnboarding(provider) && !onboardingDeferred) {
     redirect({ href: "/business/welcome", locale });
+  }
+
+  const businessName = getLocalizedField(provider.name, locale) || provider.id;
+
+  if (isProviderDashboardV2Enabled()) {
+    const marketplaceHome = await getProviderDashboardHome(provider.id);
+    return (
+      <div className="w-full max-w-full space-y-6 overflow-x-hidden animate-fade-in">
+        <VerificationDashboardAlert provider={provider} verification={verification} />
+        <ProviderDashboardHomeView data={marketplaceHome} businessName={businessName} />
+      </div>
+    );
   }
 
   const cardDismissedAt = parseTimestampCookie(jar.get(ONBOARDING_CARD_DISMISS_COOKIE)?.value);
@@ -92,7 +107,6 @@ export default async function BusinessDashboardPage() {
     ]);
 
   const planSlug = (subscription?.planSlug ?? "free") as PlanSlug;
-  const businessName = getLocalizedField(provider.name, locale) || provider.id;
   const unreadMessages = countUnreadConversations(conversations);
 
   const showVerification =

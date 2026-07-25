@@ -48,7 +48,9 @@
       "requests": "Requests",
       "messages": "Messages",
       "growth": "Growth",
-      "account": "Account"
+      "account": "Account",
+      "opportunities": "Offers",
+      "unlock": "Unlock"
     },
     "admin": {
       "controlCenter": "Home",
@@ -1556,6 +1558,7 @@
       "analytics": "Analytics",
       "verification": "Verification",
       "upgrade": "⭐ Upgrade",
+      "plan": "Plan tools",
       "messages": "Messages",
       "requests": "Requests",
       "opportunities": "Opportunities",
@@ -1634,7 +1637,9 @@
         "login_required": "Please log in to continue.",
         "forbidden": "You cannot change these settings.",
         "failed": "Something went wrong."
-      }
+      },
+      "handlesEmergency": "Handle emergency requests",
+      "handlesEmergencyHint": "When off, emergency matches skip your business. Be honest — unlock trust depends on it."
     },
     "dashboard": {
       "title": "Dashboard",
@@ -4130,6 +4135,59 @@
         "validation_error": "Please choose a reason.",
         "login_required": "Please log in."
       }
+    }
+  },
+  "providerDashboard": {
+    "eyebrow": "Action stack",
+    "title": "{name}",
+    "subtitle": "Unlock leads first, then send offers. Subscription is not required for opportunities.",
+    "pause": {
+      "title": "Matching paused",
+      "body": "Vacation mode or closed inbox means you will not receive new matches.",
+      "cta": "Update settings"
+    },
+    "unlock": {
+      "title": "Unlock (P0)",
+      "empty": "No open unlock sessions.",
+      "leadPending": "Complete unlock to release contact",
+      "sla": "SLA deadline: {deadline}",
+      "viewAll": "All unlocks",
+      "status": {
+        "opened": "Opened",
+        "payment_pending": "Payment pending"
+      }
+    },
+    "opportunities": {
+      "title": "Opportunities",
+      "empty": "No open opportunities yet.",
+      "open": "Awaiting your offer",
+      "offered": "Offer sent",
+      "emergency": "Emergency",
+      "viewAll": "All opportunities"
+    },
+    "qa": {
+      "title": "Q&A waiting",
+      "empty": "No customer questions waiting."
+    },
+    "jobs": {
+      "title": "Active jobs",
+      "empty": "No unlocked jobs yet.",
+      "openChat": "Open chat"
+    },
+    "reliability": {
+      "title": "Unlock reliability (30 days)",
+      "body": "Declined: {declined} · Timed out: {timedOut}"
+    },
+    "matchReasons": {
+      "label": "Why you matched",
+      "category_fit": "Category fit",
+      "city_fit": "Same city",
+      "active_accepting": "Accepting requests",
+      "verified": "Verified",
+      "emergency_priority": "Emergency priority",
+      "newcomer_exploration": "Newcomer exploration",
+      "expanded_area": "Expanded area",
+      "high_rating": "High rating ({rating}★)"
     }
   }
 }

@@ -9,6 +9,7 @@ import {
   listClarifications,
 } from "@/domains/offer/queries";
 import { OfferComposer } from "@/components/business/offer-composer";
+import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
 import { Link } from "@/lib/i18n/routing";
 
 type PageProps = { params: Promise<{ assignmentId: string }> };
@@ -55,6 +56,7 @@ export default async function BusinessOpportunityDetailPage({ params }: PageProp
             {t("area")}: {detail.locationText}
           </p>
         ) : null}
+        <WhyMatchedReasons reasons={detail.reasons} />
         <p className="text-xs text-muted-foreground">{t("noAcceptRequired")}</p>
       </header>
 
