@@ -40,3 +40,29 @@ export function isMatchingV2Enabled(): boolean {
 export function isOffersV2Enabled(): boolean {
   return envFlag("OFFERS_V2");
 }
+
+/**
+ * Sprint 5 — Unlock sessions, SLA, contact-release grants.
+ * When false: selection stays pending_unlock with no session/grant.
+ * Grant without a payment event only when UNLOCK_DEV_BYPASS is on (never for prod).
+ */
+export function isUnlockV2Enabled(): boolean {
+  return envFlag("UNLOCK_V2");
+}
+
+/**
+ * Dev-only: allow unlock success/grant without payment event.
+ * Must remain off in production configuration.
+ */
+export function isUnlockDevBypassEnabled(): boolean {
+  // Never allow grant-without-payment in any production config.
+  if (process.env.DALILY_ENV === "production") return false;
+  if (process.env.VERCEL_ENV === "production") return false;
+  if (
+    process.env.NODE_ENV === "production" &&
+    process.env.VERCEL_ENV !== "preview"
+  ) {
+    return false;
+  }
+  return envFlag("UNLOCK_DEV_BYPASS");
+}

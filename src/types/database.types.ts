@@ -1361,6 +1361,114 @@ export type Database = {
         };
         Relationships: [];
       };
+      unlock_sessions: {
+        Row: {
+          id: string;
+          selection_id: string;
+          service_request_id: string;
+          provider_id: string;
+          offer_id: string | null;
+          status: string;
+          fee_amount: number;
+          fee_currency: string;
+          sla_deadline: string;
+          fallback_applied: boolean;
+          idempotency_key: string;
+          payment_stub_ref: string | null;
+          opened_at: string;
+          updated_at: string;
+          closed_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          selection_id: string;
+          service_request_id: string;
+          provider_id: string;
+          offer_id?: string | null;
+          status?: string;
+          fee_amount: number;
+          fee_currency?: string;
+          sla_deadline: string;
+          fallback_applied?: boolean;
+          idempotency_key: string;
+          payment_stub_ref?: string | null;
+          opened_at?: string;
+          updated_at?: string;
+          closed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          selection_id?: string;
+          service_request_id?: string;
+          provider_id?: string;
+          offer_id?: string | null;
+          status?: string;
+          fee_amount?: number;
+          fee_currency?: string;
+          sla_deadline?: string;
+          fallback_applied?: boolean;
+          idempotency_key?: string;
+          payment_stub_ref?: string | null;
+          opened_at?: string;
+          updated_at?: string;
+          closed_at?: string | null;
+        };
+        Relationships: [];
+      };
+      contact_release_grants: {
+        Row: {
+          id: string;
+          unlock_session_id: string;
+          service_request_id: string;
+          provider_id: string;
+          customer_id: string;
+          scope: Json;
+          granted_at: string;
+        };
+        Insert: {
+          id?: string;
+          unlock_session_id: string;
+          service_request_id: string;
+          provider_id: string;
+          customer_id: string;
+          scope?: Json;
+          granted_at?: string;
+        };
+        Update: {
+          id?: string;
+          unlock_session_id?: string;
+          service_request_id?: string;
+          provider_id?: string;
+          customer_id?: string;
+          scope?: Json;
+          granted_at?: string;
+        };
+        Relationships: [];
+      };
+      unlock_reliability_signals: {
+        Row: {
+          id: string;
+          unlock_session_id: string;
+          provider_id: string;
+          signal_type: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          unlock_session_id: string;
+          provider_id: string;
+          signal_type: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          unlock_session_id?: string;
+          provider_id?: string;
+          signal_type?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       service_request_images: {
         Row: {
           id: string;
