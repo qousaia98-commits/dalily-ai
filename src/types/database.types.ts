@@ -1477,30 +1477,33 @@ export type Database = {
       contact_release_grants: {
         Row: {
           id: string;
-          unlock_session_id: string;
+          unlock_session_id: string | null;
           service_request_id: string;
           provider_id: string;
           customer_id: string;
           scope: Json;
           granted_at: string;
+          source: string;
         };
         Insert: {
           id?: string;
-          unlock_session_id: string;
+          unlock_session_id?: string | null;
           service_request_id: string;
           provider_id: string;
           customer_id: string;
           scope?: Json;
           granted_at?: string;
+          source?: string;
         };
         Update: {
           id?: string;
-          unlock_session_id?: string;
+          unlock_session_id?: string | null;
           service_request_id?: string;
           provider_id?: string;
           customer_id?: string;
           scope?: Json;
           granted_at?: string;
+          source?: string;
         };
         Relationships: [];
       };
@@ -1578,6 +1581,7 @@ export type Database = {
           deleted_at: string | null;
           closed_at: string | null;
           metadata: Json;
+          thread_kind: string;
         };
         Insert: {
           id?: string;
@@ -1595,6 +1599,7 @@ export type Database = {
           deleted_at?: string | null;
           closed_at?: string | null;
           metadata?: Json;
+          thread_kind?: string;
         };
         Update: {
           id?: string;
@@ -1612,6 +1617,7 @@ export type Database = {
           deleted_at?: string | null;
           closed_at?: string | null;
           metadata?: Json;
+          thread_kind?: string;
         };
         Relationships: [];
       };

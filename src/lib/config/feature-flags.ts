@@ -77,3 +77,12 @@ export function isUnlockDevBypassEnabled(): boolean {
 export function isUnlockPaymentsV2Enabled(): boolean {
   return envFlag("UNLOCK_PAYMENTS_V2");
 }
+
+/**
+ * Sprint 7 — Full chat only with contact_release_grants (scope includes chat).
+ * When false: legacy status-based canChat() unchanged.
+ * Q&A (offer_clarifications) stays pre-unlock either way.
+ */
+export function isChatAuthV2Enabled(): boolean {
+  return envFlag("CHAT_AUTH_V2");
+}
