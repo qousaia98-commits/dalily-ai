@@ -26,7 +26,20 @@
 
 **Non-compressible integrity chain:** `S1 → S4 → S5 → S6 → S7`
 
-## Sprint 2 scope (complete — gate)
+## Sprint 3 scope (complete — gate)
+
+Matching Engine:
+
+- Flag `MATCHING_V2` (default off)
+- Eligibility → scarce pool → reason codes → expand-on-failure
+- No subscription influence; directory ranking not used for assignment
+- Notify assigned providers via existing notification delivery
+
+See [`sprint-3-notes.md`](./sprint-3-notes.md).
+
+**Do not implement Sprint 4 until explicit approval.**
+
+## Sprint 2 scope (complete)
 
 Customer Intent Flow:
 
@@ -35,8 +48,6 @@ Customer Intent Flow:
 - Additive DB for urgency/category/city + nullable provider on v2 rows
 
 See [`sprint-2-notes.md`](./sprint-2-notes.md).
-
-**Do not implement Sprint 3 until explicit approval.**
 
 ## Sprint 1 scope (complete)
 

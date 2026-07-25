@@ -41,7 +41,7 @@ src/domains/
 | customer | `src/lib/customer` | Facade re-export |
 | provider | `src/lib/providers`, `src/lib/business` | Facade re-export |
 | marketplace | `src/lib/service-requests` | Facade + LEGACY workflow note |
-| matching | `src/lib/search/smart-match` (partial) | Skeleton (rewrite in Sprint 3) |
+| matching | `src/domains/matching` (+ salvage ideas from smart-match) | Active (Sprint 3, flag `MATCHING_V2`) |
 | offer | quotes via service-requests/actions | Skeleton (Sprint 4) |
 | unlock | *(missing)* | Skeleton only |
 | payment | `src/lib/payment` | Facade re-export |

@@ -1,6 +1,6 @@
 # Sprint 2 Notes — Customer Request Flow
 
-**Status:** COMPLETE — awaiting approval before Sprint 3  
+**Status:** COMPLETE — awaiting approval before Sprint 4  
 **Feature flag:** `CUSTOMER_INTENT_FLOW_V2` (default **off**)
 
 ## Goal

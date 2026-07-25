@@ -26,8 +26,13 @@ Use before local work and before declaring a sprint done.
 | `PAYMENT_RECEIVER` / `ACCOUNT` / `IBAN` / `SWIFT` / `BANK_NAME` | Required for real paid upgrades in prod; empty fails closed locally |
 | `RESEND_API_KEY` / `EMAIL_FROM` | Optional receipt email |
 
-| `CUSTOMER_INTENT_FLOW_V2` | Sprint 2 intent intake (default off) |
+## Dalily 2.0 migration flags (default off)
+
+| Variable | Notes |
+| --- | --- |
 | `MARKETPLACE_DOMAIN_V2` | Sprint 1 Marketplace read-model (default off) |
+| `CUSTOMER_INTENT_FLOW_V2` | Sprint 2 intent intake (default off) |
+| `MATCHING_V2` | Sprint 3 Matching engine (default off) |
 
 ## Product flags already in repo
 
