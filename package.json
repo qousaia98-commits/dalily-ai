@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "verify:foundation": "node scripts/verify-foundation.mjs",
     "seed:search": "node scripts/seed-search-providers.mjs",
     "verify:search": "node scripts/verify-search.mjs",
     "verify:search:db": "node scripts/verify-search-integration.mjs",
