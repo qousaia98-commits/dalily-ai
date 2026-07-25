@@ -1,6 +1,6 @@
 # Sprint 8 Notes — Provider Dashboard Migration
 
-**Status:** COMPLETE — awaiting approval before Sprint 9  
+**Status:** COMPLETE — approved; Admin Migration = Sprint 9  
 **Feature flag:** `PROVIDER_DASHBOARD_V2` (default **off**)
 
 ## Goal

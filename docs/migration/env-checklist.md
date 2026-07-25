@@ -43,6 +43,7 @@ Use before local work and before declaring a sprint done.
 | `CRON_SECRET` | Optional bearer for `/api/cron/unlock-sla` |
 | `CHAT_AUTH_V2` | Sprint 7 grant-gated full chat + hide public directory phone (default off) |
 | `PROVIDER_DASHBOARD_V2` | Sprint 8 unlock-first provider home + why-matched (default off) |
+| `ADMIN_MIGRATION_V2` | Sprint 9 cell policies, unlock ops, inspection, audited comps (default off) |
 
 ## Product flags already in repo
 

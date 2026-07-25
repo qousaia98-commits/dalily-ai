@@ -12,6 +12,7 @@ npm run verify:unlock
 npm run verify:payments
 npm run verify:chat
 npm run verify:provider-dashboard
+npm run verify:admin
 npm run lint
 npm run typecheck
 npm run build
@@ -22,6 +23,12 @@ Optional existing scripts (legacy search — still valid while directory exists)
 ```bash
 npm run verify:search
 ```
+
+## Sprint 9 admin notes
+
+- Flag off ⇒ legacy writable subscription admin.
+- Flag on ⇒ Unlock ops + Cells + Inspect; subscription writes frozen; matching honors cell freeze.
+- Comp unlock always audited with reason (`admin_action_logs`).
 
 ## Sprint 8 provider dashboard notes
 

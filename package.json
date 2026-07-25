@@ -17,6 +17,7 @@
     "verify:payments": "node scripts/verify-payments-invariants.mjs",
     "verify:chat": "node scripts/verify-chat-invariants.mjs",
     "verify:provider-dashboard": "node scripts/verify-provider-dashboard-invariants.mjs",
+    "verify:admin": "node scripts/verify-admin-invariants.mjs",
     "validate:sprint6": "node scripts/validate-sprint6-unlock-payments.mjs",
     "seed:search": "node scripts/seed-search-providers.mjs",
     "verify:search": "node scripts/verify-search.mjs",

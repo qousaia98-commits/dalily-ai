@@ -26,7 +26,20 @@
 
 **Non-compressible integrity chain:** `S1 → S4 → S5 → S6 → S7`
 
-## Sprint 8 scope (complete — gate)
+## Sprint 9 scope (complete — gate)
+
+Admin Migration:
+
+- Flag `ADMIN_MIGRATION_V2` (default off)
+- Cell policies (freeze / limited / concierge) + matching honor freeze
+- Unlock ops queue, inspection, audited comps
+- Subscription admin read-only
+
+See [`sprint-9-notes.md`](./sprint-9-notes.md).
+
+**Do not implement Sprint 10 until explicit approval.**
+
+## Sprint 8 scope (complete)
 
 Provider Dashboard Migration:
 
@@ -36,8 +49,6 @@ Provider Dashboard Migration:
 - Mobile P0 notification priority documented
 
 See [`sprint-8-notes.md`](./sprint-8-notes.md).
-
-**Do not implement Sprint 9 until explicit approval.**
 
 ## Sprint 7 scope (complete)
 

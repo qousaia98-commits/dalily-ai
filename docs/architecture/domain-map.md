@@ -49,7 +49,7 @@ src/domains/
 | chat | `src/domains/chat` + `src/lib/chat`, `src/lib/messaging` | Active (Sprint 7, flag `CHAT_AUTH_V2`) |
 | review | `src/lib/reviews` | Facade re-export |
 | verification | `src/lib/verification` | Facade re-export |
-| admin | `src/lib/admin` | Facade re-export |
+| admin | `src/domains/admin` + `src/lib/admin` | Active (Sprint 9, flag `ADMIN_MIGRATION_V2`) |
 | ai | vision/voice/diagnosis/search problem-detection | Facade barrel |
 | analytics | admin analytics + learning scores | Skeleton / partial facade |
 | media | `src/lib/media`, `src/lib/storage` | Facade re-export |
