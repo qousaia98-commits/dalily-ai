@@ -1,13 +1,14 @@
 /**
- * SAD Provider domain facade (Sprint 0).
- * @see docs/architecture/sad-boundaries.md
+ * SAD Provider domain — profile + Sprint 8 dashboard aggregate.
  */
 
 export const PROVIDER_DOMAIN = {
   service: "provider",
-  owns: ["business_profile", "service_areas", "capabilities", "pause_state"],
-  impl: ["src/lib/providers", "src/lib/business"],
-  status: "facade",
+  owns: ["business_profile", "service_areas", "capabilities", "pause_state", "dashboard_home"],
+  impl: ["src/domains/provider", "src/lib/providers", "src/lib/business"],
+  status: "active",
+  sprint: 8,
+  featureFlag: "PROVIDER_DASHBOARD_V2",
 } as const;
 
 export {
@@ -15,3 +16,11 @@ export {
   getApprovalReadiness,
   type ApprovalReadiness,
 } from "@/lib/providers/approval-readiness";
+
+export {
+  getProviderDashboardHome,
+  type ProviderDashboardHome,
+  type ProviderDashboardQaItem,
+  type ProviderDashboardActiveJob,
+  type ProviderDashboardReliability,
+} from "@/domains/provider/dashboard";

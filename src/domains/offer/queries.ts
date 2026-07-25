@@ -19,6 +19,8 @@ export type ProviderOpportunity = {
   cityId: string | null;
   hasOffer: boolean;
   offerId: string | null;
+  /** Matching explainability — never includes subscription codes */
+  reasons: import("@/domains/matching/reasons").MatchReason[];
 };
 
 /**
@@ -35,7 +37,7 @@ export async function listProviderOpportunities(
   const supabase = await createClient();
   const { data: assignments, error: assignError } = await supabase
     .from("match_assignments")
-    .select("id, service_request_id, rank_in_pool, source, assigned_at")
+    .select("id, service_request_id, rank_in_pool, source, assigned_at, reason_codes")
     .eq("provider_id", providerId)
     .order("assigned_at", { ascending: false })
     .limit(50);
@@ -83,6 +85,9 @@ export async function listProviderOpportunities(
       cityId: (req.city_id as string) || null,
       hasOffer: Boolean(offer),
       offerId: offer ? (offer.id as string) : null,
+      reasons: Array.isArray(a.reason_codes)
+        ? (a.reason_codes as import("@/domains/matching/reasons").MatchReason[])
+        : [],
     });
   }
   return result;
@@ -99,13 +104,14 @@ export async function getOpportunityDetail(input: {
   urgency: string | null;
   locationText: string | null;
   existingOfferId: string | null;
+  reasons: import("@/domains/matching/reasons").MatchReason[];
 } | null> {
   if (!isOffersV2Enabled()) return null;
   const supabase = await createClient();
 
   const { data: assignment } = await supabase
     .from("match_assignments")
-    .select("id, service_request_id, provider_id")
+    .select("id, service_request_id, provider_id, reason_codes")
     .eq("id", input.assignmentId)
     .eq("provider_id", input.providerId)
     .maybeSingle();
@@ -135,6 +141,9 @@ export async function getOpportunityDetail(input: {
     urgency: (request.urgency as string) || null,
     locationText: (request.location_text as string) || null,
     existingOfferId: offer ? (offer.id as string) : null,
+    reasons: Array.isArray(assignment.reason_codes)
+      ? (assignment.reason_codes as import("@/domains/matching/reasons").MatchReason[])
+      : [],
   };
 }
 
