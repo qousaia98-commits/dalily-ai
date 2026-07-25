@@ -2779,7 +2779,10 @@
       "content": "المحتوى",
       "broadcasts": "البث",
       "health": "صحة النظام",
-      "audit": "سجل التدقيق"
+      "audit": "سجل التدقيق",
+      "unlockOps": "عمليات الفتح",
+      "cells": "الخلايا",
+      "inspect": "فحص"
     },
     "learning": {
       "eyebrow": "داخلي · Learning AI",
@@ -3179,7 +3182,8 @@
         "failed": "فشل",
         "cancelled": "ملغى",
         "rejected": "مرفوض"
-      }
+      },
+      "readOnlyBanner": "أدوات الاشتراك للقراءة فقط. عمليات اليوم تعتمد على فتح العملاء والخلايا. الإزالة في Sprint 10."
     },
     "controlCenter": {
       "hero": {
@@ -3579,6 +3583,60 @@
           "body": "تحليلات البحث حسب المدينة والمشكلات الرائجة."
         }
       }
+    },
+    "unlockOps": {
+      "title": "عمليات الفتح",
+      "subtitle": "طابور رسوم الفتح وجلسات المهلة والتعويضات المدققة.",
+      "allPayments": "كل المدفوعات",
+      "pendingPayments": "رسوم فتح معلّقة",
+      "noPendingPayments": "لا رسوم معلّقة.",
+      "openSessions": "جلسات فتح مفتوحة",
+      "noOpenSessions": "لا جلسات مفتوحة.",
+      "timedOut": "انتهاء مهلة حديث",
+      "noTimedOut": "لا مهلات حديثة.",
+      "approve": "اعتماد الدفع",
+      "reject": "رفض",
+      "paymentDetail": "تفاصيل الدفع",
+      "inspectRequest": "فحص الطلب",
+      "compReason": "سبب التعويض (مطلوب)",
+      "compReasonPlaceholder": "لماذا يُعفى من الدفع؟",
+      "compUnlock": "تعويض فتح (مدقّق)"
+    },
+    "cells": {
+      "title": "سياسات الخلايا",
+      "subtitle": "تجميد أو تقييد خلايا المدينة × الفئة. الخلايا المجمّدة تتخطى المطابقة.",
+      "upsertTitle": "تعيين سياسة",
+      "city": "المدينة",
+      "category": "الفئة",
+      "select": "اختر…",
+      "frozen": "مجمّد",
+      "limited": "توفر محدود",
+      "concierge": "كونسيرج",
+      "reason": "سبب التدقيق",
+      "note": "ملاحظة داخلية",
+      "save": "حفظ السياسة",
+      "listTitle": "السياسات النشطة",
+      "empty": "لا تجاوزات بعد."
+    },
+    "inspect": {
+      "title": "فحص السوق",
+      "subtitle": "عرض للقراءة فقط للمطابقة والعروض والفتح. بدون بيانات تواصل.",
+      "requestIdPlaceholder": "معرّف الطلب",
+      "load": "تحميل",
+      "notFound": "الطلب غير موجود.",
+      "cellFrozen": "الخلية مجمّدة",
+      "cellLimited": "توفر محدود",
+      "cellConcierge": "كونسيرج",
+      "noCellPolicy": "لا تجاوز للخلية",
+      "pool": "مجموعة المطابقة",
+      "noPool": "لا مجموعة",
+      "offers": "العروض",
+      "noOffers": "لا عروض",
+      "unlock": "الاختيار والفتح",
+      "noSelection": "لا اختيار",
+      "noUnlock": "لا جلسة فتح",
+      "grantYes": "منح فتح التواصل: نعم",
+      "grantNo": "منح فتح التواصل: لا"
     }
   },
   "auth": {

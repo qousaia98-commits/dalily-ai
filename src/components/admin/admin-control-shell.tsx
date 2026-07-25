@@ -9,17 +9,19 @@ import type { AdminNavBadgeCounts } from "@/lib/admin/badge-ack";
 export function AdminControlShell({
   badges,
   showAdminOnly,
+  marketplaceOps = false,
   children,
 }: {
   badges: AdminNavBadgeCounts;
   showAdminOnly: boolean;
+  marketplaceOps?: boolean;
   children: ReactNode;
 }) {
   return (
     <AdminBadgesProvider initialBadges={badges}>
       <div className="contents">
         <AdminBadgeRealtime />
-        <AdminSidebar showAdminOnly={showAdminOnly} />
+        <AdminSidebar showAdminOnly={showAdminOnly} marketplaceOps={marketplaceOps} />
         <main className="min-w-0 flex-1">{children}</main>
       </div>
     </AdminBadgesProvider>

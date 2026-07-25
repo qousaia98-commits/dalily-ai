@@ -35,9 +35,15 @@ type AdminSubscriptionsPanelProps = {
     paymentStatus: string;
     createdAt: string;
   }[];
+  /** Sprint 9 — hide write controls when ADMIN_MIGRATION_V2 */
+  readOnly?: boolean;
 };
 
-export function AdminSubscriptionsPanel({ subscriptions, payments }: AdminSubscriptionsPanelProps) {
+export function AdminSubscriptionsPanel({
+  subscriptions,
+  payments,
+  readOnly = false,
+}: AdminSubscriptionsPanelProps) {
   const t = useTranslations("admin.subscriptions");
   const locale = useLocale();
   const router = useRouter();
@@ -52,6 +58,12 @@ export function AdminSubscriptionsPanel({ subscriptions, payments }: AdminSubscr
 
   return (
     <div className="space-y-8">
+      {readOnly ? (
+        <p className="rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
+          {t("readOnlyBanner")}
+        </p>
+      ) : null}
+
       <section className="space-y-4">
         <h2 className="text-lg font-semibold">{t("paymentsTitle")}</h2>
         {payments.length === 0 ? (
@@ -70,9 +82,15 @@ export function AdminSubscriptionsPanel({ subscriptions, payments }: AdminSubscr
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="secondary">{t(`paymentStatus.${payment.paymentStatus}`)}</Badge>
-                  {payment.paymentStatus === "pending" || payment.paymentStatus === "pending_review" ? (
+                  {!readOnly &&
+                  (payment.paymentStatus === "pending" ||
+                    payment.paymentStatus === "pending_review") ? (
                     <>
-                      <Button size="sm" disabled={pending} onClick={() => run(() => approvePaymentAction(payment.id))}>
+                      <Button
+                        size="sm"
+                        disabled={pending}
+                        onClick={() => run(() => approvePaymentAction(payment.id))}
+                      >
                         {pending ? <Loader2 className="size-4 animate-spin" /> : <CheckCircle2 className="size-4" />}
                         {t("approve")}
                       </Button>
@@ -105,7 +123,9 @@ export function AdminSubscriptionsPanel({ subscriptions, payments }: AdminSubscr
             <Card key={sub.id}>
               <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0">
                 <div>
-                  <CardTitle className="text-base">{getLocalizedField(sub.providerName, locale)}</CardTitle>
+                  <CardTitle className="text-base">
+                    {getLocalizedField(sub.providerName, locale)}
+                  </CardTitle>
                   <p className="text-sm text-muted-foreground">
                     {t(`plans.${sub.planSlug}`)} · {t(`status.${sub.status}`)}
                   </p>
@@ -116,40 +136,42 @@ export function AdminSubscriptionsPanel({ subscriptions, payments }: AdminSubscr
                   </span>
                 ) : null}
               </CardHeader>
-              <CardContent className="flex flex-wrap gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={pending}
-                  onClick={() => run(() => changePlanAdminAction(sub.providerId, "pro"))}
-                >
-                  {t("setPro")}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={pending}
-                  onClick={() => run(() => changePlanAdminAction(sub.providerId, "premium"))}
-                >
-                  {t("setPremium")}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={pending}
-                  onClick={() => run(() => extendSubscriptionAction(sub.providerId, 30))}
-                >
-                  {t("extend30")}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  disabled={pending}
-                  onClick={() => run(() => cancelSubscriptionAdminAction(sub.providerId))}
-                >
-                  {t("cancel")}
-                </Button>
-              </CardContent>
+              {!readOnly ? (
+                <CardContent className="flex flex-wrap gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={pending}
+                    onClick={() => run(() => changePlanAdminAction(sub.providerId, "pro"))}
+                  >
+                    {t("setPro")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={pending}
+                    onClick={() => run(() => changePlanAdminAction(sub.providerId, "premium"))}
+                  >
+                    {t("setPremium")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={pending}
+                    onClick={() => run(() => extendSubscriptionAction(sub.providerId, 30))}
+                  >
+                    {t("extend30")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    disabled={pending}
+                    onClick={() => run(() => cancelSubscriptionAdminAction(sub.providerId))}
+                  >
+                    {t("cancel")}
+                  </Button>
+                </CardContent>
+              ) : null}
             </Card>
           ))
         )}

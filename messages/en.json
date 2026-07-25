@@ -3105,7 +3105,10 @@
       "content": "Content",
       "broadcasts": "Broadcasts",
       "health": "System health",
-      "audit": "Audit log"
+      "audit": "Audit log",
+      "unlockOps": "Unlock ops",
+      "cells": "Cells",
+      "inspect": "Inspect"
     },
     "learning": {
       "eyebrow": "Internal · Learning AI",
@@ -3523,7 +3526,8 @@
         "failed": "Failed",
         "cancelled": "Cancelled",
         "rejected": "Rejected"
-      }
+      },
+      "readOnlyBanner": "Subscription tools are read-only. Day-2 ops use Unlock ops and Cells. Removal in Sprint 10."
     },
     "controlCenter": {
       "hero": {
@@ -3905,6 +3909,60 @@
           "body": "Search analytics by city and trending problems."
         }
       }
+    },
+    "unlockOps": {
+      "title": "Unlock operations",
+      "subtitle": "Unlock fee queue, open SLA sessions, and audited comps. Never bypass payment without a reason.",
+      "allPayments": "All payments",
+      "pendingPayments": "Pending unlock fees",
+      "noPendingPayments": "No pending unlock fees.",
+      "openSessions": "Open unlock sessions",
+      "noOpenSessions": "No open sessions.",
+      "timedOut": "Recent timeouts",
+      "noTimedOut": "No recent timeouts.",
+      "approve": "Approve payment",
+      "reject": "Reject",
+      "paymentDetail": "Payment detail",
+      "inspectRequest": "Inspect request",
+      "compReason": "Comp reason (required)",
+      "compReasonPlaceholder": "Why is payment waived?",
+      "compUnlock": "Comp unlock (audited)"
+    },
+    "cells": {
+      "title": "Cell policies",
+      "subtitle": "Freeze or limit city × category cells. Frozen cells skip matching.",
+      "upsertTitle": "Set policy",
+      "city": "City",
+      "category": "Category",
+      "select": "Select…",
+      "frozen": "Frozen",
+      "limited": "Limited availability",
+      "concierge": "Concierge",
+      "reason": "Audit reason",
+      "note": "Internal note",
+      "save": "Save policy",
+      "listTitle": "Active policies",
+      "empty": "No cell overrides yet."
+    },
+    "inspect": {
+      "title": "Marketplace inspect",
+      "subtitle": "Read-only match / offer / unlock view. No contact PII.",
+      "requestIdPlaceholder": "Service request UUID",
+      "load": "Load",
+      "notFound": "Request not found.",
+      "cellFrozen": "Cell frozen",
+      "cellLimited": "Limited availability",
+      "cellConcierge": "Concierge",
+      "noCellPolicy": "No cell override",
+      "pool": "Match pool",
+      "noPool": "No pool",
+      "offers": "Offers",
+      "noOffers": "No offers",
+      "unlock": "Selection & unlock",
+      "noSelection": "No selection",
+      "noUnlock": "No unlock session",
+      "grantYes": "Contact release grant: yes",
+      "grantNo": "Contact release grant: no"
     }
   },
   "auth": {

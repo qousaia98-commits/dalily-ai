@@ -21,17 +21,22 @@ import {
   BarChart3,
   FolderOpen,
   MessageCircle,
+  KeyRound,
+  MapPinned,
+  ScanSearch,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useAdminBadges } from "@/components/admin/admin-badges-provider";
 import type { AdminBadgeChannel } from "@/lib/admin/badge-ack";
 
 type AdminSidebarProps = {
   showAdminOnly?: boolean;
+  /** Sprint 9 — economy/unlock ops nav when ADMIN_MIGRATION_V2 */
+  marketplaceOps?: boolean;
 };
 
 const sharedNav = [
@@ -79,13 +84,43 @@ const adminOnlyNav = [
   { href: "/admin/categories", icon: Tags, key: "categories" },
 ] as const;
 
-export function AdminSidebar({ showAdminOnly = true }: AdminSidebarProps) {
+export function AdminSidebar({
+  showAdminOnly = true,
+  marketplaceOps = false,
+}: AdminSidebarProps) {
   const t = useTranslations("admin.nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { badges } = useAdminBadges();
 
-  const navItems = showAdminOnly ? [...sharedNav, ...adminOnlyNav] : [...sharedNav];
+  const navItems = useMemo(() => {
+    type Item = {
+      href: string;
+      icon: typeof LayoutDashboard;
+      key: string;
+      exact?: boolean;
+      badgeKey?: AdminBadgeChannel;
+    };
+    const shared: Item[] = [...sharedNav];
+    if (marketplaceOps) {
+      shared.splice(1, 0, {
+        href: "/admin/inspect",
+        icon: ScanSearch,
+        key: "inspect",
+      });
+    }
+    if (!showAdminOnly) return shared;
+
+    const adminOnly: Item[] = [...adminOnlyNav];
+    if (marketplaceOps) {
+      adminOnly.unshift(
+        { href: "/admin/unlock-ops", icon: KeyRound, key: "unlockOps" },
+        { href: "/admin/cells", icon: MapPinned, key: "cells" },
+      );
+      // Rename subscriptions emphasis via key already "subscriptions" — UI shows read-only
+    }
+    return [...shared, ...adminOnly];
+  }, [showAdminOnly, marketplaceOps]);
 
   const NavContent = () => (
     <nav className="flex flex-col gap-1" aria-label={t("menu")}>

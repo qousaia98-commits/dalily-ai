@@ -7,6 +7,7 @@ import { AdminControlShell } from "@/components/admin/admin-control-shell";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileBottomNavHost } from "@/components/layout/mobile-bottom-nav";
 import { MobileBottomNavSpacer } from "@/components/layout/mobile-bottom-nav-spacer";
+import { isAdminMigrationV2Enabled } from "@/lib/config/feature-flags";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
@@ -24,7 +25,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="flex min-h-screen flex-col">
         <AppHeader />
         <div className="mx-auto flex w-full max-w-7xl flex-1 gap-8 px-4 py-8 sm:px-6">
-          <AdminControlShell badges={badges} showAdminOnly={isFullAdmin}>
+          <AdminControlShell
+            badges={badges}
+            showAdminOnly={isFullAdmin}
+            marketplaceOps={isAdminMigrationV2Enabled()}
+          >
             {children}
           </AdminControlShell>
         </div>

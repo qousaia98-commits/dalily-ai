@@ -5,6 +5,7 @@ import { AdminSubscriptionsPanel } from "@/components/admin/admin-subscriptions-
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { isAdminMigrationV2Enabled } from "@/lib/config/feature-flags";
 
 type PageProps = {
   searchParams: Promise<{
@@ -91,7 +92,11 @@ export default async function AdminSubscriptionsPage({ searchParams }: PageProps
         <Button type="submit">{t("filters.apply")}</Button>
       </form>
 
-      <AdminSubscriptionsPanel subscriptions={subscriptions.items} payments={payments.items} />
+      <AdminSubscriptionsPanel
+        subscriptions={subscriptions.items}
+        payments={payments.items}
+        readOnly={isAdminMigrationV2Enabled()}
+      />
       <AdminPagination
         page={subscriptions.page}
         pageSize={subscriptions.pageSize}
