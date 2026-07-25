@@ -363,7 +363,11 @@
       "loading": "Loading your request…",
       "trustNotBroadcast": "Your request is not sent to everyone — only relevant businesses.",
       "emptyTitle": "No offers yet",
-      "emptyBody": "Matching and offers expand in the next migration steps. Your request is saved.",
+      "emptyBody": "Offers arrive when assigned businesses respond. Your request is saved.",
+      "matchedTitle": "{count} matching businesses notified",
+      "matchedBody": "They can send offers soon. You stay in control of who gets your contact details.",
+      "undersupplyTitle": "Looking for more matches",
+      "undersupplyBody": "We widened the search where needed. You’ll see offers when eligible businesses respond.",
       "requestLabel": "Your request",
       "emergencyBadge": "Marked as emergency",
       "myRequests": "My requests",
@@ -1206,6 +1210,10 @@
       "title": "New message",
       "body": "You have a new message.",
       "attachmentBody": "You received a new attachment."
+    },
+    "matchAssignment": {
+      "title": "New matching request",
+      "body": "A customer request matches your business. Open requests to respond with an offer."
     },
     "bookingCreated": {
       "title": "New booking request",

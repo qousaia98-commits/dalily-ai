@@ -2,6 +2,8 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { afterLegacyMarketplaceWrite } from "@/domains/marketplace/repository";
 import { syncMarketplaceRequestProjection } from "@/domains/marketplace/projection";
+import { runMatchingForRequest } from "@/domains/matching/engine";
+import { isMatchingV2Enabled } from "@/lib/config/feature-flags";
 import type { PublishIntentInput } from "@/domains/customer/intent-types";
 import {
   ALLOWED_IMAGE_TYPES,
@@ -19,7 +21,7 @@ export type PublishIntentResult =
 
 /**
  * Marketplace-native publish (lifecycle_version = 2, no provider yet).
- * Matching assignment is Sprint 3 — this only creates the published request.
+ * When MATCHING_V2 is on, runs scarce assignment after insert (best-effort).
  */
 export async function publishIntentRequest(input: {
   customerId: string;
@@ -110,6 +112,15 @@ export async function publishIntentRequest(input: {
     lifecycleVersion: 2,
     phase: "matching",
   });
+
+  // Matching must not block publish; undersupply remains an honest waiting-room state.
+  if (isMatchingV2Enabled()) {
+    try {
+      await runMatchingForRequest(request.id);
+    } catch {
+      // best-effort — pool/assignments can be retried via expandMatchPool later
+    }
+  }
 
   revalidatePath("/account/requests");
   revalidatePath(`/request/${request.id}/waiting`);

@@ -1,15 +1,18 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/routing";
-import { Loader2, Inbox } from "lucide-react";
+import { Loader2, Inbox, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
+import type { MatchPoolSummary } from "@/domains/matching/queries";
 
 export async function WaitingRoom({
   request,
   state,
+  matchSummary = null,
 }: {
   request: ServiceRequestDetail | null;
   state: "loading" | "ready" | "empty" | "error";
+  matchSummary?: MatchPoolSummary | null;
 }) {
   const t = await getTranslations("intentFlow.waiting");
 
@@ -34,7 +37,12 @@ export async function WaitingRoom({
     );
   }
 
-  // Sprint 2: offers/matching not live yet — empty is the honest default state.
+  const assignedCount = matchSummary?.assignedCount ?? 0;
+  const matchingRan = Boolean(matchSummary);
+  const insufficient =
+    matchingRan &&
+    (assignedCount === 0 || matchSummary?.status === "insufficient_supply");
+
   return (
     <div className="mx-auto max-w-lg space-y-6 py-10">
       <div className="space-y-2 text-center">
@@ -46,11 +54,25 @@ export async function WaitingRoom({
         {t("trustNotBroadcast")}
       </div>
 
-      <div className="rounded-2xl border border-dashed border-border px-5 py-10 text-center">
-        <Inbox className="mx-auto mb-3 size-8 text-muted-foreground" aria-hidden />
-        <p className="font-medium">{t("emptyTitle")}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{t("emptyBody")}</p>
-      </div>
+      {assignedCount > 0 ? (
+        <div className="rounded-2xl border border-border px-5 py-8 text-center">
+          <Bell className="mx-auto mb-3 size-8 text-muted-foreground" aria-hidden />
+          <p className="font-medium">
+            {t("matchedTitle", { count: assignedCount })}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">{t("matchedBody")}</p>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-border px-5 py-10 text-center">
+          <Inbox className="mx-auto mb-3 size-8 text-muted-foreground" aria-hidden />
+          <p className="font-medium">
+            {insufficient ? t("undersupplyTitle") : t("emptyTitle")}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {insufficient ? t("undersupplyBody") : t("emptyBody")}
+          </p>
+        </div>
+      )}
 
       <div className="rounded-xl border border-border/60 px-4 py-3 text-sm">
         <p className="font-medium text-foreground">{t("requestLabel")}</p>
