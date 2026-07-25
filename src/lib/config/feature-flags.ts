@@ -17,3 +17,12 @@ function envFlag(name: string): boolean {
 export function isMarketplaceDomainV2Enabled(): boolean {
   return envFlag("MARKETPLACE_DOMAIN_V2");
 }
+
+/**
+ * Sprint 2 — Customer intent flow (intake → publish → waiting room).
+ * When false: marketing home keeps directory SearchHero; /request routes redirect home.
+ * When true: intent-first entry; no provider browse inside the new flow.
+ */
+export function isCustomerIntentFlowV2Enabled(): boolean {
+  return envFlag("CUSTOMER_INTENT_FLOW_V2");
+}
