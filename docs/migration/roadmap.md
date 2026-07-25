@@ -37,7 +37,11 @@ Admin Migration:
 
 See [`sprint-9-notes.md`](./sprint-9-notes.md).
 
-**Do not implement Sprint 10 until explicit approval.**
+## Sprint 10A (complete — LOW risk only)
+
+See [`sprint-10a-notes.md`](./sprint-10a-notes.md). Favorites stub, gallery alias, dead receipt action, empty mock, unused avatar package.
+
+**Do not implement Sprint 10 Phase B+ until explicit approval.**
 
 ## Sprint 8 scope (complete)
 

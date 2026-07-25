@@ -16,11 +16,17 @@ Each listed path must contain a `LEGACY.md` marker file.
 | `src/lib/smart-map/` | Directory map UX | Remove from customer core |
 | `src/lib/service-requests/` (accept→chat machine) | Wrong contact economics | Rewrite Marketplace lifecycle |
 | `src/lib/booking/` (heavy scheduling) | Heavier than PSD job checkpoints | Shrink / demote |
-| `src/lib/mock/` | Risk of fake liquidity patterns | Avoid in prod paths |
 | `src/app/[locale]/(public)/search/` | Directory UI | Replace as primary (Sprint 2/10) |
 | `src/app/[locale]/(public)/providers/` | Public browse profiles | Delete browse path |
-| `src/app/[locale]/(public)/favorites/` | Browse stub | Delete product path |
 | `src/app/[locale]/(business)/business/subscription/` | Subscription monetization UI | Delete path |
+
+## Removed in Sprint 10A (LOW risk only)
+
+| Path | Notes |
+| --- | --- |
+| `src/lib/mock/` | Empty stub; no imports |
+| `src/app/[locale]/(public)/favorites/` | Orphan product stub |
+| `src/app/[locale]/(business)/business/gallery/` | Redirect-only alias → `/business/media` |
 | `src/components/search/` | Directory + long diagnosis UX | Rewrite/salvage intake widgets |
 | `src/components/business/subscription-*` | Subscription UI | Delete |
 
