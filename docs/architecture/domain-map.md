@@ -42,7 +42,7 @@ src/domains/
 | provider | `src/lib/providers`, `src/lib/business` | Facade re-export |
 | marketplace | `src/lib/service-requests` | Facade + LEGACY workflow note |
 | matching | `src/domains/matching` (+ salvage ideas from smart-match) | Active (Sprint 3, flag `MATCHING_V2`) |
-| offer | quotes via service-requests/actions | Skeleton (Sprint 4) |
+| offer | `src/domains/offer` (quotes dual-run legacy) | Active (Sprint 4, flag `OFFERS_V2`) |
 | unlock | *(missing)* | Skeleton only |
 | payment | `src/lib/payment` | Facade re-export |
 | notification | `src/lib/notifications`, business notification inbox | Facade re-export |

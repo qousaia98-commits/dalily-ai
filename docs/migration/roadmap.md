@@ -26,28 +26,25 @@
 
 **Non-compressible integrity chain:** `S1 → S4 → S5 → S6 → S7`
 
-## Sprint 3 scope (complete — gate)
+## Sprint 4 scope (complete — gate)
 
-Matching Engine:
+Offer System:
 
-- Flag `MATCHING_V2` (default off)
-- Eligibility → scarce pool → reason codes → expand-on-failure
-- No subscription influence; directory ranking not used for assignment
-- Notify assigned providers via existing notification delivery
+- Flag `OFFERS_V2` (default off)
+- Offers from match assignments; customer compare ≤3; select without PII/chat
+- Legacy quotes disabled for marketplace-native rows when flag on
 
-See [`sprint-3-notes.md`](./sprint-3-notes.md).
+See [`sprint-4-notes.md`](./sprint-4-notes.md).
 
-**Do not implement Sprint 4 until explicit approval.**
+**Do not implement Sprint 5 until explicit approval.**
+
+## Sprint 3 scope (complete)
+
+Matching Engine — see [`sprint-3-notes.md`](./sprint-3-notes.md).
 
 ## Sprint 2 scope (complete)
 
-Customer Intent Flow:
-
-- Flag `CUSTOMER_INTENT_FLOW_V2` (default off)
-- Intent hero + intake + publish + waiting room
-- Additive DB for urgency/category/city + nullable provider on v2 rows
-
-See [`sprint-2-notes.md`](./sprint-2-notes.md).
+Customer Intent Flow — see [`sprint-2-notes.md`](./sprint-2-notes.md).
 
 ## Sprint 1 scope (complete)
 

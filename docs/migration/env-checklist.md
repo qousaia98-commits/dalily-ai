@@ -33,6 +33,7 @@ Use before local work and before declaring a sprint done.
 | `MARKETPLACE_DOMAIN_V2` | Sprint 1 Marketplace read-model (default off) |
 | `CUSTOMER_INTENT_FLOW_V2` | Sprint 2 intent intake (default off) |
 | `MATCHING_V2` | Sprint 3 Matching engine (default off) |
+| `OFFERS_V2` | Sprint 4 Offer system (default off) |
 
 ## Product flags already in repo
 

@@ -1,6 +1,6 @@
 # Sprint 3 Notes — Matching Engine
 
-**Status:** COMPLETE — awaiting approval before Sprint 4  
+**Status:** COMPLETE — awaiting approval before Sprint 5  
 **Feature flag:** `MATCHING_V2` (default **off**)
 
 ## Goal
