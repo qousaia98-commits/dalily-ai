@@ -16,6 +16,7 @@ import {
   CalendarClock,
   Clock3,
   Sparkles,
+  KeyRound,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
@@ -47,6 +48,8 @@ type BusinessSidebarProps = {
   badges?: { messages?: number; requests?: number; verification?: number };
   /** Sprint 4 — match-assignment opportunities when OFFERS_V2 is on. */
   showOpportunities?: boolean;
+  /** Sprint 5 — unlock sessions when UNLOCK_V2 is on. */
+  showUnlock?: boolean;
 };
 
 export function BusinessSidebar({
@@ -54,19 +57,37 @@ export function BusinessSidebar({
   businessName,
   badges = {},
   showOpportunities = false,
+  showUnlock = false,
 }: BusinessSidebarProps) {
   const t = useTranslations("business.nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = useMemo(() => {
-    if (!showOpportunities) return [...baseNavItems];
-    return [
-      baseNavItems[0],
-      { href: "/business/opportunities", icon: Sparkles, key: "opportunities" as const },
-      ...baseNavItems.slice(1),
-    ];
-  }, [showOpportunities]);
+    const items: Array<{
+      href: string;
+      icon: typeof LayoutDashboard;
+      key: string;
+      exact?: boolean;
+      badgeKey?: "requests" | "messages" | "verification";
+    }> = [...baseNavItems];
+    if (showOpportunities) {
+      items.splice(1, 0, {
+        href: "/business/opportunities",
+        icon: Sparkles,
+        key: "opportunities",
+      });
+    }
+    if (showUnlock) {
+      const insertAt = showOpportunities ? 2 : 1;
+      items.splice(insertAt, 0, {
+        href: "/business/unlock",
+        icon: KeyRound,
+        key: "unlock",
+      });
+    }
+    return items;
+  }, [showOpportunities, showUnlock]);
 
   const NavContent = () => (
     <nav className="flex flex-col gap-1" aria-label={t("title")}>

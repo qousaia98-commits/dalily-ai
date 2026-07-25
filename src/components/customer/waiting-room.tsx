@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
 import type { MatchPoolSummary } from "@/domains/matching/queries";
 import type { MarketplaceOfferView, OfferClarificationView } from "@/domains/offer/types";
+import type { ReleasedContact, UnlockSessionView } from "@/domains/unlock/types";
 import { CustomerOfferBoard } from "@/components/customer/customer-offer-board";
+import { CustomerUnlockStatus } from "@/components/customer/customer-unlock-status";
 
 export async function WaitingRoom({
   request,
@@ -14,6 +16,8 @@ export async function WaitingRoom({
   offers = [],
   selectionOfferId = null,
   clarificationsByOffer = {},
+  unlockSession = null,
+  releasedContact = null,
 }: {
   request: ServiceRequestDetail | null;
   state: "loading" | "ready" | "empty" | "error";
@@ -21,6 +25,8 @@ export async function WaitingRoom({
   offers?: MarketplaceOfferView[];
   selectionOfferId?: string | null;
   clarificationsByOffer?: Record<string, OfferClarificationView[]>;
+  unlockSession?: UnlockSessionView | null;
+  releasedContact?: ReleasedContact | null;
 }) {
   const t = await getTranslations("intentFlow.waiting");
 
@@ -63,6 +69,8 @@ export async function WaitingRoom({
         {t("trustNotBroadcast")}
       </div>
 
+      <CustomerUnlockStatus session={unlockSession} contact={releasedContact} />
+
       {hasOffers ? (
         <CustomerOfferBoard
           offers={offers}
@@ -77,7 +85,7 @@ export async function WaitingRoom({
           </p>
           <p className="mt-1 text-sm text-muted-foreground">{t("matchedBody")}</p>
         </div>
-      ) : (
+      ) : !unlockSession && !releasedContact ? (
         <div className="rounded-2xl border border-dashed border-border px-5 py-10 text-center">
           <Inbox className="mx-auto mb-3 size-8 text-muted-foreground" aria-hidden />
           <p className="font-medium">
@@ -87,7 +95,7 @@ export async function WaitingRoom({
             {insufficient ? t("undersupplyBody") : t("emptyBody")}
           </p>
         </div>
-      )}
+      ) : null}
 
       <div className="rounded-xl border border-border/60 px-4 py-3 text-sm">
         <p className="font-medium text-foreground">{t("requestLabel")}</p>

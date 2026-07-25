@@ -481,6 +481,61 @@
       "use_offers": "Use the offers flow for this request."
     }
   },
+  "unlockFlow": {
+    "customer": {
+      "pendingTitle": "Unlock in progress",
+      "pendingBody": "The selected business must complete unlock before contact details are shared.",
+      "sla": "Decision deadline: {deadline}",
+      "noContactYet": "Phone, WhatsApp, address, and chat stay hidden until unlock succeeds.",
+      "unlockedTitle": "Contact unlocked",
+      "unlockedBody": "You can contact this business. Chat authorization expands in a later sprint.",
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
+      "noPhoneOnFile": "No phone on file — unlock grant is recorded for later chat release."
+    },
+    "provider": {
+      "listTitle": "Unlock leads",
+      "listSubtitle": "Selected offers waiting for unlock. Contact stays locked until you complete this step.",
+      "empty": "No unlock sessions yet.",
+      "noProvider": "Create your business profile first.",
+      "title": "Unlock this lead",
+      "fee": "Unlock fee: {amount} {currency}",
+      "sla": "SLA deadline: {deadline}",
+      "noContactUntilPay": "Customer contact is not released until unlock succeeds.",
+      "devConfirm": "Confirm unlock (dev bypass)",
+      "awaitAdminOrSprint6": "Payment capture arrives in Sprint 6. An admin can manually confirm unlock for now.",
+      "decline": "Decline lead",
+      "succeeded": "Unlock succeeded — customer contact was released.",
+      "back": "All unlocks",
+      "devBypassHint": "UNLOCK_DEV_BYPASS is on — grants without payment are allowed locally only.",
+      "status": {
+        "opened": "Opened",
+        "payment_pending": "Payment pending",
+        "succeeded": "Succeeded",
+        "declined": "Declined",
+        "timed_out": "Timed out"
+      }
+    },
+    "status": {
+      "opened": "Opened",
+      "payment_pending": "Payment pending",
+      "succeeded": "Succeeded",
+      "declined": "Declined",
+      "timed_out": "Timed out"
+    },
+    "errors": {
+      "failed": "Something went wrong.",
+      "feature_disabled": "Unlock is not enabled.",
+      "login_required": "Please sign in.",
+      "forbidden": "Not allowed.",
+      "bypass_forbidden": "Dev bypass is disabled.",
+      "session_not_found": "Unlock session not found.",
+      "invalid_status": "This unlock is no longer actionable.",
+      "grant_failed": "Could not create contact grant.",
+      "request_not_found": "Request not found.",
+      "payment_integration_pending": "Payment capture is not wired yet (Sprint 6)."
+    }
+  },
   "search": {
     "title": "Search results",
     "subtitle": "Find trusted service providers across Syria",
@@ -1309,6 +1364,22 @@
       "title": "New matching request",
       "body": "A customer request matches your business. Open requests to respond with an offer."
     },
+    "unlockOpened": {
+      "title": "Lead unlock pending",
+      "body": "A customer selected your offer. Complete unlock within the SLA to release contact."
+    },
+    "unlockGranted": {
+      "title": "Contact unlocked",
+      "body": "The business completed unlock. You can now see contact details."
+    },
+    "unlockFallback": {
+      "title": "Next business selected",
+      "body": "The previous business declined or timed out. We moved you to the next offer."
+    },
+    "unlockFallbackExhausted": {
+      "title": "No unlock yet",
+      "body": "No further offers were available after timeout or decline. Check your waiting room."
+    },
     "bookingCreated": {
       "title": "New booking request",
       "body": "A customer requested an appointment."
@@ -1464,6 +1535,7 @@
       "messages": "Messages",
       "requests": "Requests",
       "opportunities": "Opportunities",
+      "unlock": "Unlock",
       "settings": "Settings",
       "bookings": "Bookings",
       "calendar": "Calendar",

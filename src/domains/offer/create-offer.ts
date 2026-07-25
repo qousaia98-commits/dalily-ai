@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isOffersV2Enabled } from "@/lib/config/feature-flags";
+import { isOffersV2Enabled, isUnlockV2Enabled } from "@/lib/config/feature-flags";
 import { computeOfferQualityFlags } from "@/domains/offer/quality";
 import type { CreateOfferInput, MarketplaceOfferView } from "@/domains/offer/types";
 import { syncMarketplaceRequestProjection } from "@/domains/marketplace/projection";
+import { openUnlockSessionForSelection } from "@/domains/unlock/session";
 
 export type CreateOfferResult =
   | { ok: true; offerId: string; qualityFlags: string[] }
@@ -199,7 +200,7 @@ export async function getOfferForProvider(input: {
 
 /**
  * Customer selects one offer. Creates marketplace_selections; no PII, no chat, no provider_id bind.
- * Unlock payment is Sprint 5 (status stays pending_unlock).
+ * When UNLOCK_V2 is on, opens unlock session + SLA (grant still requires success path).
  */
 export async function selectOffer(input: {
   customerId: string;
@@ -277,6 +278,14 @@ export async function selectOffer(input: {
     selectionId: selection.id,
     phase: "unlock_pending",
   });
+
+  if (isUnlockV2Enabled()) {
+    try {
+      await openUnlockSessionForSelection({ selectionId: selection.id });
+    } catch {
+      // Selection must remain valid even if session open fails; can be retried.
+    }
+  }
 
   return { ok: true, selectionId: selection.id, serviceRequestId: request.id };
 }

@@ -3,6 +3,7 @@ import {
   isCustomerIntentFlowV2Enabled,
   isMatchingV2Enabled,
   isOffersV2Enabled,
+  isUnlockV2Enabled,
 } from "@/lib/config/feature-flags";
 import { getAuthUser } from "@/lib/auth/session";
 import { getRequestDetail } from "@/lib/service-requests/queries";
@@ -12,6 +13,10 @@ import {
   getActiveSelectionForRequest,
   listClarifications,
 } from "@/domains/offer";
+import {
+  getUnlockSessionForSelection,
+  getReleasedContactForCustomer,
+} from "@/domains/unlock";
 import { WaitingRoom } from "@/components/customer/waiting-room";
 
 export default async function RequestWaitingPage({
@@ -56,8 +61,23 @@ export default async function RequestWaitingPage({
     );
   }
 
+  const unlockEnabled = isUnlockV2Enabled();
+  const unlockSession =
+    unlockEnabled && selection?.id
+      ? await getUnlockSessionForSelection(selection.id)
+      : null;
+  const releasedContact = unlockEnabled
+    ? await getReleasedContactForCustomer({
+        customerId: authUser.id,
+        serviceRequestId: requestId,
+      })
+    : null;
+
   const state =
-    offers.length > 0 || (matchSummary && matchSummary.assignedCount > 0)
+    offers.length > 0 ||
+    (matchSummary && matchSummary.assignedCount > 0) ||
+    unlockSession ||
+    releasedContact
       ? "ready"
       : "empty";
 
@@ -70,6 +90,8 @@ export default async function RequestWaitingPage({
         offers={offers}
         selectionOfferId={selection?.offerId ?? null}
         clarificationsByOffer={clarificationsByOffer}
+        unlockSession={unlockSession}
+        releasedContact={releasedContact}
       />
     </main>
   );
