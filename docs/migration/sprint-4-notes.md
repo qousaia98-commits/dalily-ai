@@ -20,6 +20,15 @@ Competing offers from **match assignments** before customer select; legacy quote
 9. **Quality flags** — soft nudges (`thin_pitch`, `missing_eta`, …); do not block submit.
 10. **Provider surface** — `/business/opportunities` (flag-gated nav); Waiting Room remains Sprint-3 compatible and gains offer board when offers exist.
 11. **Selection ≠ Unlock** — status `pending_unlock` is a stub for Sprint 5; customer copy states contact not released.
+12. **Opportunity RLS hydrate** — `listProviderOpportunities` / `getOpportunityDetail` confirm `match_assignments` under the user session, then hydrate `service_requests` via admin. Legacy `service_requests_provider_select` required `provider_id`, which is null on v2; additive policy also allows assigned providers.
+
+## Hotfix (Sprint 4 testing)
+
+**Symptom:** Customer publishes; `/business/opportunities` empty for assigned providers.
+
+**Break point:** Matching created pools/assignments correctly. Opportunities query then loaded `service_requests` with the user client; RLS hid v2 rows (`provider_id` null) → empty list.
+
+**Fix:** Admin hydrate after assignment ownership check + additive RLS migration `20260725195000_sprint4_fix_provider_opportunity_rls.sql`.
 
 ## Files
 

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import {
   OFFER_CLARIFICATION_MAX,
@@ -20,23 +21,32 @@ export type ProviderOpportunity = {
   offerId: string | null;
 };
 
+/**
+ * List open opportunities for a provider from match_assignments.
+ *
+ * Hydrates request rows via admin after assignment ownership is confirmed under
+ * the user session — legacy RLS only allowed sr.provider_id, which is null on v2.
+ */
 export async function listProviderOpportunities(
   providerId: string,
 ): Promise<ProviderOpportunity[]> {
   if (!isOffersV2Enabled()) return [];
 
   const supabase = await createClient();
-  const { data: assignments } = await supabase
+  const { data: assignments, error: assignError } = await supabase
     .from("match_assignments")
     .select("id, service_request_id, rank_in_pool, source, assigned_at")
     .eq("provider_id", providerId)
     .order("assigned_at", { ascending: false })
     .limit(50);
 
-  if (!assignments?.length) return [];
+  if (assignError || !assignments?.length) return [];
 
   const requestIds = assignments.map((a) => a.service_request_id as string);
-  const { data: requests } = await supabase
+
+  // Admin hydrate: assigned provider is authorized via match_assignments RLS above.
+  const admin = createAdminClient();
+  const { data: requests } = await admin
     .from("service_requests")
     .select("id, title, intent_text, description, urgency, city_id, lifecycle_version, selection_id")
     .in("id", requestIds)
@@ -101,7 +111,8 @@ export async function getOpportunityDetail(input: {
     .maybeSingle();
   if (!assignment) return null;
 
-  const { data: request } = await supabase
+  const admin = createAdminClient();
+  const { data: request } = await admin
     .from("service_requests")
     .select("id, title, intent_text, description, urgency, location_text, lifecycle_version, selection_id")
     .eq("id", assignment.service_request_id)
