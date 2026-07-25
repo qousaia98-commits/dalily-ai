@@ -16,6 +16,7 @@ import { revalidateSubscriptionSurfaces } from "@/lib/subscription/revalidate";
 import { subscriptionService } from "@/lib/subscription/subscription.service";
 import type { PlanSlug } from "@/lib/subscription/types";
 import { createClient } from "@/lib/supabase/server";
+import { isUnlockPaymentsV2Enabled } from "@/lib/config/feature-flags";
 
 export type PaymentInstructionsData = {
   paymentId: string;
@@ -130,6 +131,10 @@ export async function upgradeSubscriptionAction(
   planSlug: PlanSlug,
   billingCycle: "monthly" | "yearly" = "monthly",
 ): Promise<SubscriptionActionState> {
+  if (isUnlockPaymentsV2Enabled()) {
+    return { success: false, error: "subscription_upgrades_frozen" };
+  }
+
   const authUser = await requireAuthUser();
   const provider = await requireOwnedProvider(authUser.id);
 
@@ -340,6 +345,10 @@ export async function cancelSubscriptionAction(): Promise<SubscriptionActionStat
 }
 
 export async function renewSubscriptionAction(): Promise<SubscriptionActionState> {
+  if (isUnlockPaymentsV2Enabled()) {
+    return { success: false, error: "subscription_upgrades_frozen" };
+  }
+
   const authUser = await requireAuthUser();
   const provider = await requireOwnedProvider(authUser.id);
 

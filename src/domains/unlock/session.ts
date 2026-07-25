@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import {
   isUnlockDevBypassEnabled,
+  isUnlockPaymentsV2Enabled,
   isUnlockV2Enabled,
 } from "@/lib/config/feature-flags";
 import { deliverMarketplaceNotification } from "@/lib/notifications/deliver";
@@ -163,17 +164,30 @@ export async function listProviderUnlockSessions(
 
 /**
  * Fail-closed success path.
- * Grant only if UNLOCK_DEV_BYPASS or explicit audited confirm (admin/manual stub).
+ * Grant only if:
+ * - UNLOCK_DEV_BYPASS (dev), or
+ * - audited admin manual_confirm when UNLOCK_PAYMENTS_V2 is off, or
+ * - payment_capture after verified paid unlock_fee payment (Sprint 6).
  */
 export async function completeUnlockSuccess(input: {
   sessionId: string;
   actorUserId: string;
-  mode: "dev_bypass" | "manual_confirm";
+  mode: "dev_bypass" | "manual_confirm" | "payment_capture";
+  paymentId?: string;
 }): Promise<{ ok: true; grantId: string } | { ok: false; error: string }> {
   if (!isUnlockV2Enabled()) return { ok: false, error: "feature_disabled" };
 
   if (input.mode === "dev_bypass" && !isUnlockDevBypassEnabled()) {
     return { ok: false, error: "bypass_forbidden" };
+  }
+
+  if (input.mode === "manual_confirm" && isUnlockPaymentsV2Enabled()) {
+    return { ok: false, error: "payment_required" };
+  }
+
+  if (input.mode === "payment_capture") {
+    if (!isUnlockPaymentsV2Enabled()) return { ok: false, error: "payments_disabled" };
+    if (!input.paymentId) return { ok: false, error: "payment_required" };
   }
 
   const admin = createAdminClient();
@@ -194,6 +208,23 @@ export async function completeUnlockSuccess(input: {
   }
   if (!["opened", "payment_pending"].includes(session.status as string)) {
     return { ok: false, error: "invalid_status" };
+  }
+
+  if (input.mode === "payment_capture" && input.paymentId) {
+    const { data: payment } = await admin
+      .from("payments")
+      .select("id, purpose, payment_status, unlock_session_id, provider_id")
+      .eq("id", input.paymentId)
+      .maybeSingle();
+    if (
+      !payment ||
+      payment.purpose !== "unlock_fee" ||
+      payment.payment_status !== "paid" ||
+      payment.unlock_session_id !== session.id ||
+      payment.provider_id !== session.provider_id
+    ) {
+      return { ok: false, error: "payment_not_confirmed" };
+    }
   }
 
   const { data: request } = await admin
@@ -230,14 +261,19 @@ export async function completeUnlockSuccess(input: {
     return { ok: false, error: "grant_failed" };
   }
 
+  const stubRef =
+    input.mode === "dev_bypass"
+      ? `dev_bypass:${input.actorUserId}`
+      : input.mode === "manual_confirm"
+        ? `manual_confirm:${input.actorUserId}`
+        : `payment_capture:${input.paymentId}`;
+
   await admin
     .from("unlock_sessions")
     .update({
       status: "succeeded",
-      payment_stub_ref:
-        input.mode === "dev_bypass"
-          ? `dev_bypass:${input.actorUserId}`
-          : `manual_confirm:${input.actorUserId}`,
+      payment_stub_ref: stubRef,
+      payment_id: input.paymentId ?? session.payment_id ?? null,
       updated_at: now,
       closed_at: now,
     })

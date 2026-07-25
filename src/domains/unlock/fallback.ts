@@ -176,6 +176,17 @@ export async function processUnlockSlaTimeouts(limit = 50): Promise<{
   let fallbacks = 0;
 
   for (const row of due ?? []) {
+    // Grace: do not timeout while unlock fee receipt awaits admin review
+    const { data: reviewing } = await admin
+      .from("payments")
+      .select("id")
+      .eq("unlock_session_id", row.id)
+      .eq("purpose", "unlock_fee")
+      .eq("payment_status", "pending_review")
+      .limit(1)
+      .maybeSingle();
+    if (reviewing) continue;
+
     const { data: updated } = await admin
       .from("unlock_sessions")
       .update({ status: "timed_out", updated_at: now, closed_at: now })

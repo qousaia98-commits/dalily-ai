@@ -6,6 +6,7 @@ import { getOwnedProvider } from "@/lib/providers/database";
 import { isBusinessUser, isAdminUser } from "@/lib/auth/roles";
 import {
   isUnlockDevBypassEnabled,
+  isUnlockPaymentsV2Enabled,
   isUnlockV2Enabled,
 } from "@/lib/config/feature-flags";
 import {
@@ -13,11 +14,18 @@ import {
   declineUnlockSession,
   getUnlockSessionById,
 } from "@/domains/unlock/session";
+import {
+  cancelUnlockFeePayment,
+  createUnlockFeePayment,
+  getActiveUnlockFeePayment,
+  type UnlockFeePaymentView,
+} from "@/domains/payment/unlock-fee";
 
 export type UnlockActionState = {
   success: boolean;
   error?: string;
   grantId?: string;
+  payment?: UnlockFeePaymentView;
 };
 
 export async function confirmUnlockDevBypassAction(
@@ -49,13 +57,15 @@ export async function confirmUnlockDevBypassAction(
 }
 
 /**
- * Temporary audited manual confirm (Sprint 5 bridge until Sprint 6 charge).
- * Admin/moderator only — creates grant fail-closed without subscription activation.
+ * Sprint 5 bridge — disabled when UNLOCK_PAYMENTS_V2 is on (use admin payment approve).
  */
 export async function adminConfirmUnlockAction(
   sessionId: string,
 ): Promise<UnlockActionState> {
   if (!isUnlockV2Enabled()) return { success: false, error: "feature_disabled" };
+  if (isUnlockPaymentsV2Enabled()) {
+    return { success: false, error: "payment_required" };
+  }
   const authUser = await getAuthUser();
   if (!authUser) return { success: false, error: "login_required" };
   if (!isAdminUser(authUser.roles)) return { success: false, error: "forbidden" };
@@ -73,6 +83,54 @@ export async function adminConfirmUnlockAction(
   revalidatePath(`/business/unlock/${sessionId}`);
   revalidatePath(`/request/${session.serviceRequestId}/waiting`);
   return { success: true, grantId: result.grantId };
+}
+
+export async function startUnlockFeePaymentAction(
+  sessionId: string,
+): Promise<UnlockActionState> {
+  if (!isUnlockV2Enabled()) return { success: false, error: "feature_disabled" };
+  if (!isUnlockPaymentsV2Enabled()) return { success: false, error: "payments_disabled" };
+
+  const authUser = await getAuthUser();
+  if (!authUser) return { success: false, error: "login_required" };
+  const provider = await getOwnedProvider(authUser.id);
+  if (!provider) return { success: false, error: "forbidden" };
+
+  const result = await createUnlockFeePayment({
+    unlockSessionId: sessionId,
+    providerId: provider.id,
+  });
+  if (!result.ok) return { success: false, error: result.error };
+
+  revalidatePath(`/business/unlock/${sessionId}`);
+  return { success: true, payment: result.payment };
+}
+
+export async function cancelUnlockFeePaymentAction(
+  paymentId: string,
+  sessionId: string,
+): Promise<UnlockActionState> {
+  if (!isUnlockPaymentsV2Enabled()) return { success: false, error: "payments_disabled" };
+  const authUser = await getAuthUser();
+  if (!authUser) return { success: false, error: "login_required" };
+  const provider = await getOwnedProvider(authUser.id);
+  if (!provider) return { success: false, error: "forbidden" };
+
+  const result = await cancelUnlockFeePayment({
+    paymentId,
+    providerId: provider.id,
+  });
+  if (!result.ok) return { success: false, error: result.error };
+
+  revalidatePath(`/business/unlock/${sessionId}`);
+  return { success: true };
+}
+
+export async function getUnlockFeePaymentAction(
+  sessionId: string,
+): Promise<UnlockFeePaymentView | null> {
+  if (!isUnlockPaymentsV2Enabled()) return null;
+  return getActiveUnlockFeePayment(sessionId);
 }
 
 export async function declineUnlockAction(
@@ -98,7 +156,6 @@ export async function declineUnlockAction(
 export async function providerMarkPaymentPendingAction(
   sessionId: string,
 ): Promise<UnlockActionState> {
-  // Session already opens in payment_pending; this is an explicit ack UI no-op success.
   if (!isUnlockV2Enabled()) return { success: false, error: "feature_disabled" };
   const authUser = await getAuthUser();
   if (!authUser || !isBusinessUser(authUser.roles)) {

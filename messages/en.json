@@ -504,6 +504,14 @@
       "noContactUntilPay": "Customer contact is not released until unlock succeeds.",
       "devConfirm": "Confirm unlock (dev bypass)",
       "awaitAdminOrSprint6": "Payment capture arrives in Sprint 6. An admin can manually confirm unlock for now.",
+      "startPayment": "Start unlock payment",
+      "paymentInstructions": "Transfer the unlock fee using this reference",
+      "payAmount": "Amount due: {amount} {currency}",
+      "receiver": "Receiver",
+      "account": "Account",
+      "uploadReceipt": "Upload transfer receipt",
+      "cancelPayment": "Cancel payment",
+      "awaitingReview": "Receipt submitted — waiting for admin confirmation. Contact stays locked until then.",
       "decline": "Decline lead",
       "succeeded": "Unlock succeeded — customer contact was released.",
       "back": "All unlocks",
@@ -533,7 +541,22 @@
       "invalid_status": "This unlock is no longer actionable.",
       "grant_failed": "Could not create contact grant.",
       "request_not_found": "Request not found.",
-      "payment_integration_pending": "Payment capture is not wired yet (Sprint 6)."
+      "payment_integration_pending": "Payment capture is not wired yet (Sprint 6).",
+      "payments_disabled": "Unlock payments are not enabled.",
+      "payment_not_configured": "Payment bank details are not configured.",
+      "payment_create_failed": "Could not create unlock payment.",
+      "payment_not_found": "Payment not found.",
+      "payment_required": "Unlock requires a confirmed payment.",
+      "payment_not_confirmed": "Payment is not confirmed.",
+      "payment_verify_failed": "Payment could not be verified.",
+      "payment_update_failed": "Could not update payment.",
+      "not_unlock_fee": "Not an unlock fee payment.",
+      "session_required": "Unlock session required.",
+      "receipt_failed": "Receipt upload failed.",
+      "selection_not_found": "Selection not found.",
+      "selection_not_pending": "Selection is not pending unlock.",
+      "provider_required": "Provider required.",
+      "session_failed": "Could not open unlock session."
     }
   },
   "search": {
@@ -2459,7 +2482,12 @@
         "notApproved": "Plans unlock after your business is approved.",
         "paymentPending": "You already have a payment under review.",
         "paymentNotConfigured": "Paid upgrades are temporarily unavailable. Please try again later or contact support.",
+        "upgradesFrozen": "New subscription upgrades are frozen while Unlock Fee payments roll out.",
         "downgradeFailed": "Could not switch to Starter. Please try again."
+      },
+      "freezeBanner": {
+        "title": "Subscription upgrades paused",
+        "body": "Dalily 2.0 monetization is moving to Unlock Fees after customer select. Existing plans stay active; new PRO/PREMIUM checkouts are disabled."
       },
       "lowerPlanHint": "Included in your higher plan",
       "paymentPendingHint": "Finish your pending payment first",
@@ -3156,7 +3184,8 @@
       "plans": {
         "free": "Starter",
         "pro": "PRO",
-        "premium": "PREMIUM"
+        "premium": "PREMIUM",
+        "unlock_fee": "Unlock fee"
       },
       "status": {
         "pending": "Awaiting transfer",

@@ -504,6 +504,14 @@
       "noContactUntilPay": "بيانات الزبون لا تُفتح إلا بعد نجاح الفتح.",
       "devConfirm": "تأكيد الفتح (تجاوز تطوير)",
       "awaitAdminOrSprint6": "تحصيل الدفع يأتي في Sprint 6. يمكن للمشرف تأكيد الفتح يدوياً الآن.",
+      "startPayment": "ابدأ دفع رسوم الفتح",
+      "paymentInstructions": "حوّل رسوم الفتح باستخدام هذا المرجع",
+      "payAmount": "المبلغ المستحق: {amount} {currency}",
+      "receiver": "المستلم",
+      "account": "الحساب",
+      "uploadReceipt": "ارفع إيصال التحويل",
+      "cancelPayment": "إلغاء الدفع",
+      "awaitingReview": "تم إرسال الإيصال — بانتظار تأكيد المشرف. بيانات التواصل تبقى مقفلة حتى ذلك الحين.",
       "decline": "رفض العميل",
       "succeeded": "نجح الفتح — تم إتاحة بيانات الزبون.",
       "back": "كل جلسات الفتح",
@@ -533,7 +541,22 @@
       "invalid_status": "هذه الجلسة لم تعد قابلة للتنفيذ.",
       "grant_failed": "تعذر إنشاء منح التواصل.",
       "request_not_found": "الطلب غير موجود.",
-      "payment_integration_pending": "تحصيل الدفع غير موصول بعد (Sprint 6)."
+      "payment_integration_pending": "تحصيل الدفع غير موصول بعد (Sprint 6).",
+      "payments_disabled": "مدفوعات الفتح غير مفعّلة.",
+      "payment_not_configured": "بيانات التحويل البنكي غير مهيأة.",
+      "payment_create_failed": "تعذر إنشاء دفعة الفتح.",
+      "payment_not_found": "الدفعة غير موجودة.",
+      "payment_required": "الفتح يتطلب دفعة مؤكدة.",
+      "payment_not_confirmed": "الدفع غير مؤكد.",
+      "payment_verify_failed": "تعذر التحقق من الدفع.",
+      "payment_update_failed": "تعذر تحديث الدفعة.",
+      "not_unlock_fee": "ليست دفعة رسوم فتح.",
+      "session_required": "جلسة الفتح مطلوبة.",
+      "receipt_failed": "فشل رفع الإيصال.",
+      "selection_not_found": "الاختيار غير موجود.",
+      "selection_not_pending": "الاختيار ليس بانتظار الفتح.",
+      "provider_required": "مزود الخدمة مطلوب.",
+      "session_failed": "تعذر فتح جلسة الفتح."
     }
   },
   "search": {
@@ -2111,7 +2134,12 @@
         "notApproved": "تُفتح الخطط بعد اعتماد نشاطك.",
         "paymentPending": "لديك بالفعل دفعة قيد المراجعة.",
         "paymentNotConfigured": "الترقيات المدفوعة غير متاحة مؤقتاً. جرّب لاحقاً أو تواصل مع الدعم.",
-        "downgradeFailed": "ما قدرنا نرجع لـ Starter. جرّب مرة تانية."
+        "downgradeFailed": "ما قدرنا نرجع لـ Starter. جرّب مرة تانية.",
+        "upgradesFrozen": "ترقيات الاشتراك موقوفة أثناء طرح رسوم فتح التواصل."
+      },
+      "freezeBanner": {
+        "title": "ترقيات الاشتراك متوقفة",
+        "body": "تحقيق الدخل في Dalily 2.0 ينتقل إلى رسوم الفتح بعد اختيار الزبون. الخطط الحالية تبقى فعّالة؛ شراء PRO/PREMIUM الجديد معطّل."
       },
       "lowerPlanHint": "مضمّنة في خطتك الأعلى",
       "paymentPendingHint": "كمّل الدفع المعلّق أولاً",
@@ -2812,7 +2840,8 @@
       "plans": {
         "free": "Starter",
         "pro": "PRO",
-        "premium": "PREMIUM"
+        "premium": "PREMIUM",
+        "unlock_fee": "رسوم الفتح"
       },
       "status": {
         "pending": "بانتظار الحوالة",

@@ -10,6 +10,7 @@ import { SubscriptionHero } from "@/components/business/subscription-hero";
 import { SubscriptionFaq } from "@/components/business/subscription-faq";
 import { SubscriptionTrust } from "@/components/business/subscription-trust";
 import type { PlanSlug } from "@/lib/subscription/types";
+import { isUnlockPaymentsV2Enabled } from "@/lib/config/feature-flags";
 
 export default async function BusinessSubscriptionPage() {
   const t = await getTranslations("business.subscription");
@@ -52,6 +53,7 @@ export default async function BusinessSubscriptionPage() {
         pendingPayment={pendingPayment}
         payments={payments}
         showFaq={false}
+        upgradesFrozen={isUnlockPaymentsV2Enabled()}
       />
 
       <SubscriptionFaq />

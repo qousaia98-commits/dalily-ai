@@ -42,6 +42,8 @@ type BusinessSubscriptionPanelProps = {
   onStarterContinue?: () => void;
   /** When false, FAQ is rendered by the parent page (server). */
   showFaq?: boolean;
+  /** Sprint 6 — freeze new subscription upgrades when unlock payments are on. */
+  upgradesFrozen?: boolean;
 };
 
 export function BusinessSubscriptionPanel({
@@ -53,6 +55,7 @@ export function BusinessSubscriptionPanel({
   mode = "upgrade",
   onStarterContinue,
   showFaq = true,
+  upgradesFrozen = false,
 }: BusinessSubscriptionPanelProps) {
   const t = useTranslations("business.subscription");
   const locale = useLocale();
@@ -96,6 +99,11 @@ export function BusinessSubscriptionPanel({
       return;
     }
 
+    if (upgradesFrozen) {
+      setError(t("errors.upgradesFrozen"));
+      return;
+    }
+
     // Do NOT open payment immediately — show upgrade summary first.
     setSummaryPlan(planId);
   }
@@ -127,7 +135,9 @@ export function BusinessSubscriptionPanel({
               ? t("errors.paymentPending")
               : result.error === "payment_not_configured"
                 ? t("errors.paymentNotConfigured")
-                : t("errors.upgradeFailed"),
+                : result.error === "subscription_upgrades_frozen"
+                  ? t("errors.upgradesFrozen")
+                  : t("errors.upgradeFailed"),
         );
         return;
       }
@@ -230,6 +240,12 @@ export function BusinessSubscriptionPanel({
 
   return (
     <div className="w-full max-w-full space-y-10 overflow-x-hidden sm:space-y-12">
+      {upgradesFrozen ? (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-4 text-sm">
+          <p className="font-semibold text-foreground">{t("freezeBanner.title")}</p>
+          <p className="mt-1 text-muted-foreground">{t("freezeBanner.body")}</p>
+        </div>
+      ) : null}
       {mode === "upgrade" ? (
         <div className="flex flex-col items-center gap-3 rounded-3xl border border-[#E8ECF2] bg-white/80 px-5 py-5 text-center shadow-[0_10px_30px_-20px_rgba(11,21,38,0.2)] sm:flex-row sm:justify-between sm:text-start">
           <div className="space-y-1.5">
@@ -253,9 +269,11 @@ export function BusinessSubscriptionPanel({
           </div>
           {currentPlanSlug !== "free" && status === "active" ? (
             <div className="flex flex-wrap justify-center gap-2">
-              <Button size="sm" variant="outline" disabled={pending} onClick={() => run(renewSubscriptionAction)}>
-                {t("renew")}
-              </Button>
+              {!upgradesFrozen ? (
+                <Button size="sm" variant="outline" disabled={pending} onClick={() => run(renewSubscriptionAction)}>
+                  {t("renew")}
+                </Button>
+              ) : null}
               <Button size="sm" variant="ghost" disabled={pending} onClick={() => run(downgradeSubscriptionAction)}>
                 {t("downgrade")}
               </Button>

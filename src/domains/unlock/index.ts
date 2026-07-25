@@ -45,6 +45,7 @@ export {
 
 export {
   stubUnlockPaymentPort,
+  unlockPaymentPort,
   completeUnlockFromPaymentCapture,
   type UnlockPaymentCaptureEvent,
   type UnlockPaymentPort,

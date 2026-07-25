@@ -334,8 +334,16 @@ export async function listPaymentsForAdmin(params: {
         ownerEmail: provider?.email ?? null,
         phone: provider?.phone ?? null,
         subscriptionId: row.subscription_id,
-        planSlug: (plan?.slug ?? "pro") as string,
-        planName: (plan?.name as LocalizedJson) ?? { en: "PRO", ar: "PRO" },
+        planSlug:
+          (row as { purpose?: string }).purpose === "unlock_fee"
+            ? "unlock_fee"
+            : ((plan?.slug ?? "pro") as string),
+        planName:
+          (row as { purpose?: string }).purpose === "unlock_fee"
+            ? ({ en: "Unlock fee", ar: "رسوم الفتح" } as LocalizedJson)
+            : ((plan?.name as LocalizedJson) ?? { en: "PRO", ar: "PRO" }),
+        purpose: (row as { purpose?: string }).purpose ?? "subscription",
+        unlockSessionId: (row as { unlock_session_id?: string | null }).unlock_session_id ?? null,
         paymentProvider: row.payment_provider,
         paymentStatus: row.payment_status,
         paymentReference: row.payment_reference,
@@ -409,7 +417,11 @@ export async function getPaymentDetailForAdmin(paymentId: string) {
 
   let planSlug = "pro";
   let planName: LocalizedJson = { en: "PRO", ar: "PRO" };
-  if (row.subscription_id) {
+  const purpose = (row as { purpose?: string }).purpose ?? "subscription";
+  if (purpose === "unlock_fee") {
+    planSlug = "unlock_fee";
+    planName = { en: "Unlock fee", ar: "رسوم الفتح" };
+  } else if (row.subscription_id) {
     const { data: sub } = await admin
       .from("subscriptions")
       .select("plan_id")
@@ -443,6 +455,8 @@ export async function getPaymentDetailForAdmin(paymentId: string) {
     phone: provider?.phone ?? null,
     planSlug,
     planName,
+    purpose,
+    unlockSessionId: (row as { unlock_session_id?: string | null }).unlock_session_id ?? null,
     amount: Number(row.amount),
     currency: row.currency,
     paymentReference: row.payment_reference,

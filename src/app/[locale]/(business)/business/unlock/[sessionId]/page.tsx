@@ -1,8 +1,9 @@
 import { notFound, redirect } from "next/navigation";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
-import { isUnlockDevBypassEnabled, isUnlockV2Enabled } from "@/lib/config/feature-flags";
+import { isUnlockDevBypassEnabled, isUnlockPaymentsV2Enabled, isUnlockV2Enabled } from "@/lib/config/feature-flags";
 import { getUnlockSessionById } from "@/domains/unlock/session";
+import { getActiveUnlockFeePayment } from "@/domains/payment/unlock-fee";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ProviderUnlockPanel } from "@/components/business/provider-unlock-panel";
 import { Link } from "@/lib/i18n/routing";
@@ -21,6 +22,11 @@ export default async function BusinessUnlockDetailPage({ params }: PageProps) {
 
   const session = await getUnlockSessionById(sessionId);
   if (!session || session.providerId !== provider.id) notFound();
+
+  const paymentsEnabled = isUnlockPaymentsV2Enabled();
+  const initialPayment = paymentsEnabled
+    ? await getActiveUnlockFeePayment(sessionId)
+    : null;
 
   const admin = createAdminClient();
   const { data: request } = await admin
@@ -44,6 +50,8 @@ export default async function BusinessUnlockDetailPage({ params }: PageProps) {
         session={session}
         requestTitle={title}
         allowDevBypass={isUnlockDevBypassEnabled()}
+        paymentsEnabled={paymentsEnabled}
+        initialPayment={initialPayment}
       />
     </div>
   );
