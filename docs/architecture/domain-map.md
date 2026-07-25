@@ -44,7 +44,7 @@ src/domains/
 | matching | `src/domains/matching` (+ salvage ideas from smart-match) | Active (Sprint 3, flag `MATCHING_V2`) |
 | offer | `src/domains/offer` (quotes dual-run legacy) | Active (Sprint 4, flag `OFFERS_V2`) |
 | unlock | `src/domains/unlock` | Active (Sprint 5, flag `UNLOCK_V2`) |
-| payment | `src/lib/payment` | Facade re-export |
+| payment | `src/domains/payment` + `src/lib/payment` | Active (Sprint 6, flag `UNLOCK_PAYMENTS_V2`) |
 | notification | `src/lib/notifications`, business notification inbox | Facade re-export |
 | chat | `src/lib/chat`, `src/lib/messaging` | Facade re-export |
 | review | `src/lib/reviews` | Facade re-export |

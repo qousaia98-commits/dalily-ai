@@ -1,6 +1,6 @@
 # Sprint 5 Notes — Unlock Service
 
-**Status:** COMPLETE — awaiting approval before Sprint 6  
+**Status:** COMPLETE — approved; Payment = Sprint 6  
 **Feature flag:** `UNLOCK_V2` (default **off**)  
 **Dev-only grant bypass:** `UNLOCK_DEV_BYPASS` (forced **off** in production configs)
 

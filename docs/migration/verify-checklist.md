@@ -9,6 +9,7 @@ npm run verify:foundation
 npm run verify:matching
 npm run verify:offers
 npm run verify:unlock
+npm run verify:payments
 npm run lint
 npm run typecheck
 npm run build
@@ -20,12 +21,12 @@ Optional existing scripts (legacy search — still valid while directory exists)
 npm run verify:search
 ```
 
-## Sprint 5 unlock notes
+## Sprint 6 payment notes
 
-- Flag off ⇒ no sessions/grants; select remains `pending_unlock` only.
-- Contact PII only via `getReleasedContactForCustomer` after grant.
-- SLA worker: `/api/cron/unlock-sla` (protect with `CRON_SECRET` when set).
-- Real unlock fee charge is Sprint 6 — do not treat `UNLOCK_DEV_BYPASS` as prod path.
+- Flag off ⇒ Sprint 5 unlock paths only (no fee capture).
+- Grant only after admin approve of `purpose=unlock_fee` or verified webhook `payment.succeeded`.
+- Webhook retries: UNIQUE(`provider`,`external_event_id`).
+- Subscription upgrades frozen when `UNLOCK_PAYMENTS_V2` is on.
 
 ## Manual smoke (Sprint 0 — behavior unchanged)
 

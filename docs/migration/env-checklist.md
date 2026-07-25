@@ -37,6 +37,9 @@ Use before local work and before declaring a sprint done.
 | `UNLOCK_V2` | Sprint 5 Unlock sessions + grants (default off) |
 | `UNLOCK_DEV_BYPASS` | Dev-only grant without payment — **never** in production |
 | `UNLOCK_FEE_AMOUNT` / `UNLOCK_FEE_CURRENCY` / `UNLOCK_SLA_HOURS` | Fee/SLA snapshot defaults (5000 SYP / 24h) |
+| `UNLOCK_PAYMENTS_V2` | Sprint 6 Unlock fee capture + subscription upgrade freeze (default off) |
+| `PAYMENT_WEBHOOK_SECRET` | Required in production for `/api/webhooks/payments/*` |
+| `PAYMENT_WEBHOOK_ALLOW_INSECURE` | Local-only when secret unset |
 | `CRON_SECRET` | Optional bearer for `/api/cron/unlock-sla` |
 
 ## Product flags already in repo

@@ -26,18 +26,22 @@
 
 **Non-compressible integrity chain:** `S1 → S4 → S5 → S6 → S7`
 
-## Sprint 5 scope (complete — gate)
+## Sprint 6 scope (complete — gate)
 
-Unlock Service:
+Payment Integration (Unlock Fee):
 
-- Flag `UNLOCK_V2` (default off); `UNLOCK_DEV_BYPASS` never in production
-- Session + SLA on select; grant on success; timeout/decline fallback once
-- Contact gate: no phone/PII without `contact_release_grants`
-- Payment charge = Sprint 6
+- Flag `UNLOCK_PAYMENTS_V2` (default off)
+- `unlock_fee` payments linked to unlock sessions; grant only after verified capture
+- Admin distinguish unlock vs subscription; subscription upgrades frozen when flag on
+- Webhook ledger + manual admin rail
 
-See [`sprint-5-notes.md`](./sprint-5-notes.md).
+See [`sprint-6-notes.md`](./sprint-6-notes.md).
 
-**Do not implement Sprint 6 until explicit approval.**
+**Do not implement Sprint 7 until explicit approval.**
+
+## Sprint 5 scope (complete)
+
+Unlock Service — see [`sprint-5-notes.md`](./sprint-5-notes.md).
 
 ## Sprint 4 scope (complete)
 

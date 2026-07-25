@@ -14,6 +14,7 @@
     "verify:matching": "node scripts/verify-matching-invariants.mjs",
     "verify:offers": "node scripts/verify-offers-invariants.mjs",
     "verify:unlock": "node scripts/verify-unlock-invariants.mjs",
+    "verify:payments": "node scripts/verify-payments-invariants.mjs",
     "seed:search": "node scripts/seed-search-providers.mjs",
     "verify:search": "node scripts/verify-search.mjs",
     "verify:search:db": "node scripts/verify-search-integration.mjs",
