@@ -26,7 +26,20 @@
 
 **Non-compressible integrity chain:** `S1 → S4 → S5 → S6 → S7`
 
-## Sprint 7 scope (complete — gate)
+## Sprint 8 scope (complete — gate)
+
+Provider Dashboard Migration:
+
+- Flag `PROVIDER_DASHBOARD_V2` (default off)
+- Unlock-first home action stack; opportunities + why-matched
+- Pause/emergency honesty wired to matching; subscription de-emphasized
+- Mobile P0 notification priority documented
+
+See [`sprint-8-notes.md`](./sprint-8-notes.md).
+
+**Do not implement Sprint 9 until explicit approval.**
+
+## Sprint 7 scope (complete)
 
 Chat Authorization Migration:
 
@@ -37,8 +50,6 @@ Chat Authorization Migration:
 - Q&A remains `offer_clarifications` (pre-unlock)
 
 See [`sprint-7-notes.md`](./sprint-7-notes.md).
-
-**Do not implement Sprint 8 until explicit approval.**
 
 ## Sprint 6 scope (complete)
 

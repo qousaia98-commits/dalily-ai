@@ -42,6 +42,7 @@ Use before local work and before declaring a sprint done.
 | `PAYMENT_WEBHOOK_ALLOW_INSECURE` | Local-only when secret unset |
 | `CRON_SECRET` | Optional bearer for `/api/cron/unlock-sla` |
 | `CHAT_AUTH_V2` | Sprint 7 grant-gated full chat + hide public directory phone (default off) |
+| `PROVIDER_DASHBOARD_V2` | Sprint 8 unlock-first provider home + why-matched (default off) |
 
 ## Product flags already in repo
 

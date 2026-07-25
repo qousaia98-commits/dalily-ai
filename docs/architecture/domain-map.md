@@ -39,7 +39,7 @@ src/domains/
 | --- | --- | --- |
 | auth | `src/lib/auth` | Facade re-export |
 | customer | `src/lib/customer` | Facade re-export |
-| provider | `src/lib/providers`, `src/lib/business` | Facade re-export |
+| provider | `src/domains/provider` + `src/lib/providers`, `src/lib/business` | Active (Sprint 8, flag `PROVIDER_DASHBOARD_V2`) |
 | marketplace | `src/lib/service-requests` | Facade + LEGACY workflow note |
 | matching | `src/domains/matching` (+ salvage ideas from smart-match) | Active (Sprint 3, flag `MATCHING_V2`) |
 | offer | `src/domains/offer` (quotes dual-run legacy) | Active (Sprint 4, flag `OFFERS_V2`) |

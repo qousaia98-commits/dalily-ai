@@ -11,6 +11,7 @@ npm run verify:offers
 npm run verify:unlock
 npm run verify:payments
 npm run verify:chat
+npm run verify:provider-dashboard
 npm run lint
 npm run typecheck
 npm run build
@@ -21,6 +22,13 @@ Optional existing scripts (legacy search — still valid while directory exists)
 ```bash
 npm run verify:search
 ```
+
+## Sprint 8 provider dashboard notes
+
+- Flag off ⇒ legacy Provider Success home.
+- Flag on ⇒ Unlock SLA P0 → opportunities (why-matched) → Q&A → active jobs.
+- Matching respects `vacation_mode`, `accepting_requests`, and `handles_emergency`.
+- Subscription not required for opportunities; nav de-emphasizes upgrade CTA.
 
 ## Sprint 7 chat notes
 

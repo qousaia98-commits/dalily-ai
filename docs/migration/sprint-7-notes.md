@@ -1,6 +1,6 @@
 # Sprint 7 Notes — Chat Authorization Migration
 
-**Status:** COMPLETE — awaiting approval before Sprint 8  
+**Status:** COMPLETE — approved; Provider Dashboard = Sprint 8  
 **Feature flag:** `CHAT_AUTH_V2` (default **off**)
 
 ## Goal
