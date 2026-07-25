@@ -70,7 +70,9 @@ export async function getMarketplaceStats(): Promise<MarketplaceStats> {
     const byProvider = new Map<string, number>();
     const byCustomer = new Map<string, number>();
     for (const r of rows) {
-      byProvider.set(r.provider_id, (byProvider.get(r.provider_id) ?? 0) + 1);
+      if (r.provider_id) {
+        byProvider.set(r.provider_id, (byProvider.get(r.provider_id) ?? 0) + 1);
+      }
       byCustomer.set(r.customer_id, (byCustomer.get(r.customer_id) ?? 0) + 1);
     }
 

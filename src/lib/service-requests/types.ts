@@ -29,7 +29,8 @@ export type ServiceReviewRow = {
 export type ServiceRequestRow = {
   id: string;
   customer_id: string;
-  provider_id: string;
+  /** Null for marketplace-native intent requests (lifecycle_version >= 2) until matching. */
+  provider_id: string | null;
   title: string;
   description: string;
   preferred_date: string | null;
@@ -58,6 +59,13 @@ export type ServiceRequestRow = {
   lifecycle_version?: number;
   /** Sprint 1 additive — selection placeholder FK (null until Sprint 4/5). */
   selection_id?: string | null;
+  /** Sprint 2 additive */
+  category_id?: string | null;
+  urgency?: "emergency" | "normal" | null;
+  city_id?: string | null;
+  intent_text?: string | null;
+  category_confirmed?: boolean;
+  published_at?: string | null;
 };
 
 export type ServiceRequestDetail = ServiceRequestRow & {

@@ -8,14 +8,29 @@ import type { JobCheckpointId } from "@/domains/marketplace/lifecycle";
  */
 export function mapLegacyStatusToLifecyclePhase(
   status: ServiceRequestStatus,
+  opts?: { lifecycleVersion?: number; providerId?: string | null },
 ): MarketplaceLifecyclePhase {
+  const version = opts?.lifecycleVersion ?? 1;
+  const unassigned = version >= 2 && !opts?.providerId;
+
+  if (unassigned) {
+    switch (status) {
+      case "pending":
+        return "matching";
+      case "cancelled":
+        return "cancelled";
+      case "rejected":
+        return "rejected";
+      default:
+        break;
+    }
+  }
+
   switch (status) {
     case "pending":
       // Legacy: already routed to a single provider (directory RFQ). Closest v2 phase: offering wait.
       return "offering";
     case "accepted":
-      // Provider accepted — legacy opens chat; v2 would still be pre-select/unlock. Mapped as unlocked* for projection honesty of current product.
-      // *Contact economics still legacy until Sprint 7; phase documents intent trajectory.
       return "unlocked";
     case "quoted":
       return "offering";

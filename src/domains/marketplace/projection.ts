@@ -12,8 +12,12 @@ export function buildMarketplaceMetaFromLegacy(input: {
   status: ServiceRequestStatus;
   lifecycleVersion?: number | null;
   selectionId?: string | null;
+  providerId?: string | null;
 }): MarketplaceRequestMeta {
-  const phase = mapLegacyStatusToLifecyclePhase(input.status);
+  const phase = mapLegacyStatusToLifecyclePhase(input.status, {
+    lifecycleVersion: input.lifecycleVersion ?? 1,
+    providerId: input.providerId,
+  });
   return {
     phase,
     lifecycleVersion: input.lifecycleVersion ?? 1,

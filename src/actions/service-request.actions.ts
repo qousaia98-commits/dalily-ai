@@ -442,6 +442,7 @@ async function decideQuote(
     .maybeSingle();
 
   if (!request) return { success: false, error: "not_found" };
+  if (!request.provider_id) return { success: false, error: "invalid_status" };
   if (!canDecideQuote(request.status as ServiceRequestStatus)) {
     return { success: false, error: "invalid_status" };
   }
@@ -557,6 +558,7 @@ export async function completeServiceAction(requestId: string): Promise<ServiceR
     .maybeSingle();
 
   if (!request) return { success: false, error: "not_found" };
+  if (!request.provider_id) return { success: false, error: "invalid_status" };
   if (!canCompleteService(request.status as ServiceRequestStatus)) {
     return { success: false, error: "invalid_status" };
   }
@@ -613,6 +615,7 @@ export async function confirmCompletionAction(
     .maybeSingle();
 
   if (!request) return { success: false, error: "not_found" };
+  if (!request.provider_id) return { success: false, error: "invalid_status" };
   if (!canConfirmCompletion(request.status as ServiceRequestStatus)) {
     return { success: false, error: "invalid_status" };
   }
@@ -699,6 +702,7 @@ export async function reportProblemAction(
     .maybeSingle();
 
   if (!request) return { success: false, error: "not_found" };
+  if (!request.provider_id) return { success: false, error: "invalid_status" };
   if (!canConfirmCompletion(request.status as ServiceRequestStatus)) {
     return { success: false, error: "invalid_status" };
   }
@@ -771,6 +775,7 @@ export async function submitReviewAction(
     .maybeSingle();
 
   if (!request) return { success: false, error: "not_found" };
+  if (!request.provider_id) return { success: false, error: "invalid_status" };
   if (!canReview(request.status as ServiceRequestStatus)) {
     return { success: false, error: "invalid_status" };
   }

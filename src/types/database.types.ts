@@ -990,7 +990,7 @@ export type Database = {
         Row: {
           id: string;
           customer_id: string;
-          provider_id: string;
+          provider_id: string | null;
           title: string;
           description: string;
           preferred_date: string | null;
@@ -1017,11 +1017,17 @@ export type Database = {
           updated_at: string;
           lifecycle_version: number;
           selection_id: string | null;
+          category_id: string | null;
+          urgency: string | null;
+          city_id: string | null;
+          intent_text: string | null;
+          category_confirmed: boolean;
+          published_at: string | null;
         };
         Insert: {
           id?: string;
           customer_id: string;
-          provider_id: string;
+          provider_id?: string | null;
           title: string;
           description: string;
           preferred_date?: string | null;
@@ -1048,11 +1054,17 @@ export type Database = {
           updated_at?: string;
           lifecycle_version?: number;
           selection_id?: string | null;
+          category_id?: string | null;
+          urgency?: string | null;
+          city_id?: string | null;
+          intent_text?: string | null;
+          category_confirmed?: boolean;
+          published_at?: string | null;
         };
         Update: {
           id?: string;
           customer_id?: string;
-          provider_id?: string;
+          provider_id?: string | null;
           title?: string;
           description?: string;
           preferred_date?: string | null;
@@ -1079,6 +1091,12 @@ export type Database = {
           updated_at?: string;
           lifecycle_version?: number;
           selection_id?: string | null;
+          category_id?: string | null;
+          urgency?: string | null;
+          city_id?: string | null;
+          intent_text?: string | null;
+          category_confirmed?: boolean;
+          published_at?: string | null;
         };
         Relationships: [];
       };

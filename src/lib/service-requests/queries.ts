@@ -21,7 +21,7 @@ function mapRequest(row: Record<string, unknown>): ServiceRequestRow {
   return {
     id: row.id as string,
     customer_id: row.customer_id as string,
-    provider_id: row.provider_id as string,
+    provider_id: (row.provider_id as string | null) ?? null,
     title: row.title as string,
     description: row.description as string,
     preferred_date: (row.preferred_date as string | null) ?? null,
@@ -51,6 +51,13 @@ function mapRequest(row: Record<string, unknown>): ServiceRequestRow {
     lifecycle_version:
       row.lifecycle_version != null ? Number(row.lifecycle_version) : undefined,
     selection_id: (row.selection_id as string | null | undefined) ?? undefined,
+    category_id: (row.category_id as string | null | undefined) ?? undefined,
+    urgency: (row.urgency as "emergency" | "normal" | null | undefined) ?? undefined,
+    city_id: (row.city_id as string | null | undefined) ?? undefined,
+    intent_text: (row.intent_text as string | null | undefined) ?? undefined,
+    category_confirmed:
+      row.category_confirmed != null ? Boolean(row.category_confirmed) : undefined,
+    published_at: (row.published_at as string | null | undefined) ?? undefined,
   };
 }
 
@@ -171,20 +178,39 @@ async function hydrateDetails(
   const supabase = await createClient();
   const requestIds = rows.map((r) => r.id as string);
   const customerIds = [...new Set(rows.map((r) => r.customer_id as string))];
-  const providerIds = [...new Set(rows.map((r) => r.provider_id as string))];
+  const providerIds = [
+    ...new Set(
+      rows
+        .map((r) => r.provider_id as string | null)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
 
-  const [{ data: profiles }, { data: providers }, imagesByRequest, quotesByRequest, { data: conversations }, { data: reviews }] =
+  const [profilesRes, providersRes, imagesByRequest, quotesByRequest, conversationsRes, reviewsRes] =
     await Promise.all([
-      supabase.from("profiles").select("user_id, display_name").in("user_id", customerIds),
-      supabase.from("providers").select("id, name").in("id", providerIds),
+      customerIds.length
+        ? supabase.from("profiles").select("user_id, display_name").in("user_id", customerIds)
+        : Promise.resolve({ data: [] as { user_id: string; display_name: string }[] }),
+      providerIds.length
+        ? supabase.from("providers").select("id, name").in("id", providerIds)
+        : Promise.resolve({ data: [] as { id: string; name: unknown }[] }),
       loadRequestImages(requestIds),
       loadLatestQuotes(requestIds),
-      supabase
-        .from("conversations")
-        .select("id, service_request_id")
-        .in("service_request_id", requestIds),
-      supabase.from("service_reviews").select("*").in("service_request_id", requestIds),
+      requestIds.length
+        ? supabase
+            .from("conversations")
+            .select("id, service_request_id")
+            .in("service_request_id", requestIds)
+        : Promise.resolve({ data: [] as { id: string; service_request_id: string }[] }),
+      requestIds.length
+        ? supabase.from("service_reviews").select("*").in("service_request_id", requestIds)
+        : Promise.resolve({ data: [] as Record<string, unknown>[] }),
     ]);
+
+  const profiles = profilesRes.data;
+  const providers = providersRes.data;
+  const conversations = conversationsRes.data;
+  const reviews = reviewsRes.data;
 
   const profileMap = new Map(
     (profiles ?? []).map((p) => [p.user_id, p.display_name as string]),
@@ -202,16 +228,17 @@ async function hydrateDetails(
     (conversations ?? []).map((c) => [c.service_request_id as string, c.id as string]),
   );
   const reviewMap = new Map<string, ServiceReviewRow>();
-  for (const r of reviews ?? []) {
-    reviewMap.set(r.service_request_id, {
-      id: r.id,
-      service_request_id: r.service_request_id,
-      provider_id: r.provider_id,
-      customer_id: r.customer_id,
-      rating: r.rating,
-      comment: r.comment,
-      recommend: r.recommend,
-      created_at: r.created_at,
+  for (const r of (reviews ?? []) as Array<Record<string, unknown>>) {
+    const serviceRequestId = r.service_request_id as string;
+    reviewMap.set(serviceRequestId, {
+      id: r.id as string,
+      service_request_id: serviceRequestId,
+      provider_id: r.provider_id as string,
+      customer_id: r.customer_id as string,
+      rating: r.rating as number,
+      comment: (r.comment as string | null) ?? null,
+      recommend: (r.recommend as boolean | null) ?? null,
+      created_at: r.created_at as string,
     });
   }
 
@@ -237,7 +264,9 @@ async function hydrateDetails(
       return {
         ...mapped,
         customerName: profileMap.get(mapped.customer_id) ?? "Customer",
-        providerName: providerMap.get(mapped.provider_id) ?? "Business",
+        providerName: mapped.provider_id
+          ? (providerMap.get(mapped.provider_id) ?? "Business")
+          : "—",
         imagePaths: paths,
         imageUrls,
         quote: quotesByRequest.get(mapped.id) ?? null,

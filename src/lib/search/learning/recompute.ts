@@ -63,7 +63,15 @@ export async function recomputeCustomerPreferences(
 
     if (!requests || requests.length === 0) return;
 
-    const providerIds = [...new Set(requests.map((r) => r.provider_id))];
+    const providerIds = [
+      ...new Set(
+        requests
+          .map((r) => r.provider_id)
+          .filter((id): id is string => Boolean(id)),
+      ),
+    ];
+    if (providerIds.length === 0) return;
+
     const { data: providers } = await admin
       .from("providers")
       .select("id, rating_avg, response_time_hours")
@@ -79,6 +87,7 @@ export async function recomputeCustomerPreferences(
     let n = 0;
 
     for (const req of requests) {
+      if (!req.provider_id) continue;
       const p = providerById.get(req.provider_id);
       if (!p) continue;
       n += 1;

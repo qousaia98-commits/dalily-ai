@@ -24,6 +24,7 @@ export function attachMarketplaceReadModel(
     status: detail.status,
     lifecycleVersion: detail.lifecycle_version,
     selectionId: detail.selection_id,
+    providerId: detail.provider_id,
   });
 
   // Fire-and-forget projection sync (does not block UX).
