@@ -361,9 +361,14 @@ export async function getProviderRequestSettings(
       auto_reject_message: null,
       vacation_mode: false,
       estimated_response_hours: 24,
+      handles_emergency: true,
     };
   }
-  return data as ProviderRequestSettings;
+  return {
+    ...(data as ProviderRequestSettings),
+    handles_emergency:
+      (data as { handles_emergency?: boolean | null }).handles_emergency ?? true,
+  };
 }
 
 export async function getUnreadNotificationCount(userId: string): Promise<number> {

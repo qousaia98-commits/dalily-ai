@@ -1875,6 +1875,7 @@ export type Database = {
           auto_reject_message: string | null;
           vacation_mode: boolean;
           estimated_response_hours: number;
+          handles_emergency: boolean;
           updated_at: string;
           created_at: string;
         };
@@ -1885,6 +1886,7 @@ export type Database = {
           auto_reject_message?: string | null;
           vacation_mode?: boolean;
           estimated_response_hours?: number;
+          handles_emergency?: boolean;
           updated_at?: string;
           created_at?: string;
         };
@@ -1895,6 +1897,7 @@ export type Database = {
           auto_reject_message?: string | null;
           vacation_mode?: boolean;
           estimated_response_hours?: number;
+          handles_emergency?: boolean;
           updated_at?: string;
           created_at?: string;
         };

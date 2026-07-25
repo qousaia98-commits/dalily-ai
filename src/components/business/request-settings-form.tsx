@@ -54,6 +54,21 @@ export function RequestSettingsForm({ settings }: { settings: ProviderRequestSet
         />
       </div>
 
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <Label htmlFor="handlesEmergency">{t("handlesEmergency")}</Label>
+          <p className="text-xs text-muted-foreground">{t("handlesEmergencyHint")}</p>
+        </div>
+        <input
+          id="handlesEmergency"
+          name="handlesEmergency"
+          type="checkbox"
+          defaultChecked={settings.handles_emergency !== false}
+          value="true"
+          className="size-5 rounded border"
+        />
+      </div>
+
       <div className="space-y-1.5">
         <Label htmlFor="maxPendingRequests">{t("maxPending")}</Label>
         <Input

@@ -915,6 +915,9 @@ export async function saveProviderRequestSettingsAction(
     autoRejectMessage: formData.get("autoRejectMessage") ?? "",
     vacationMode: formData.get("vacationMode") === "on" || formData.get("vacationMode") === "true",
     estimatedResponseHours: formData.get("estimatedResponseHours"),
+    handlesEmergency:
+      formData.get("handlesEmergency") === "on" ||
+      formData.get("handlesEmergency") === "true",
   });
   if (!parsed.success) return validationError(parsed.error);
 
@@ -926,6 +929,7 @@ export async function saveProviderRequestSettingsAction(
     auto_reject_message: parsed.data.autoRejectMessage?.trim() || null,
     vacation_mode: parsed.data.vacationMode,
     estimated_response_hours: parsed.data.estimatedResponseHours,
+    handles_emergency: parsed.data.handlesEmergency,
   });
 
   if (error) return { success: false, error: "settings_failed" };

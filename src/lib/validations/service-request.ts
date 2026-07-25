@@ -56,4 +56,5 @@ export const providerRequestSettingsSchema = z.object({
   autoRejectMessage: z.string().trim().max(500).optional().or(z.literal("")),
   vacationMode: z.boolean(),
   estimatedResponseHours: z.coerce.number().int().min(1).max(168),
+  handlesEmergency: z.boolean().default(true),
 });

@@ -46,7 +46,7 @@ export async function findEligibleProviderCandidates(input: {
   const providerIds = providers.map((p) => p.id as string);
   const { data: settingsRows } = await admin
     .from("provider_request_settings")
-    .select("provider_id, accepting_requests, vacation_mode")
+    .select("provider_id, accepting_requests, vacation_mode, handles_emergency")
     .in("provider_id", providerIds);
 
   const settingsMap = new Map(
@@ -55,6 +55,10 @@ export async function findEligibleProviderCandidates(input: {
       {
         accepting: Boolean(s.accepting_requests),
         vacation: Boolean(s.vacation_mode),
+        handlesEmergency:
+          s.handles_emergency === undefined || s.handles_emergency === null
+            ? true
+            : Boolean(s.handles_emergency),
       },
     ]),
   );
@@ -67,7 +71,10 @@ export async function findEligibleProviderCandidates(input: {
     // Missing settings row → treat as accepting (legacy default on create).
     const accepting = settings ? settings.accepting : true;
     const vacation = settings ? settings.vacation : false;
+    const handlesEmergency = settings ? settings.handlesEmergency : true;
     if (!accepting || vacation) continue;
+    // Sprint 8 — emergency honesty: exclude providers who opt out of emergency work.
+    if (input.urgency === "emergency" && !handlesEmergency) continue;
 
     const reasons: MatchReason[] = [
       { code: "category_fit" },

@@ -91,6 +91,8 @@ export type ProviderRequestSettings = {
   auto_reject_message: string | null;
   vacation_mode: boolean;
   estimated_response_hours: number;
+  /** Sprint 8 — emergency matching honesty (default true). */
+  handles_emergency: boolean;
 };
 
 export type MarketplaceNotification = {

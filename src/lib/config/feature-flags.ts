@@ -86,3 +86,11 @@ export function isUnlockPaymentsV2Enabled(): boolean {
 export function isChatAuthV2Enabled(): boolean {
   return envFlag("CHAT_AUTH_V2");
 }
+
+/**
+ * Sprint 8 — Provider dashboard: Unlock-first action stack, opportunities feed,
+ * why-matched, offer-primary nav. When false: legacy Provider Success home.
+ */
+export function isProviderDashboardV2Enabled(): boolean {
+  return envFlag("PROVIDER_DASHBOARD_V2");
+}
