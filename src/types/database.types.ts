@@ -1160,6 +1160,78 @@ export type Database = {
         };
         Relationships: [];
       };
+      match_pools: {
+        Row: {
+          id: string;
+          service_request_id: string;
+          cell_key: string;
+          status: string;
+          expand_count: number;
+          initial_candidate_count: number;
+          assigned_count: number;
+          policy_snapshot: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          service_request_id: string;
+          cell_key: string;
+          status?: string;
+          expand_count?: number;
+          initial_candidate_count?: number;
+          assigned_count?: number;
+          policy_snapshot?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          service_request_id?: string;
+          cell_key?: string;
+          status?: string;
+          expand_count?: number;
+          initial_candidate_count?: number;
+          assigned_count?: number;
+          policy_snapshot?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      match_assignments: {
+        Row: {
+          id: string;
+          pool_id: string;
+          service_request_id: string;
+          provider_id: string;
+          reason_codes: Json;
+          rank_in_pool: number;
+          source: string;
+          assigned_at: string;
+        };
+        Insert: {
+          id?: string;
+          pool_id: string;
+          service_request_id: string;
+          provider_id: string;
+          reason_codes?: Json;
+          rank_in_pool?: number;
+          source?: string;
+          assigned_at?: string;
+        };
+        Update: {
+          id?: string;
+          pool_id?: string;
+          service_request_id?: string;
+          provider_id?: string;
+          reason_codes?: Json;
+          rank_in_pool?: number;
+          source?: string;
+          assigned_at?: string;
+        };
+        Relationships: [];
+      };
       service_request_images: {
         Row: {
           id: string;

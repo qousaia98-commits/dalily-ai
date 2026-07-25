@@ -11,8 +11,6 @@ function envFlag(name: string): boolean {
 
 /**
  * Sprint 1 — Marketplace domain read-model / projections.
- * When false: identical legacy behavior (no marketplace metadata attached).
- * When true: reads enrich via Marketplace anti-corruption layer; writes still legacy.
  */
 export function isMarketplaceDomainV2Enabled(): boolean {
   return envFlag("MARKETPLACE_DOMAIN_V2");
@@ -20,9 +18,16 @@ export function isMarketplaceDomainV2Enabled(): boolean {
 
 /**
  * Sprint 2 — Customer intent flow (intake → publish → waiting room).
- * When false: marketing home keeps directory SearchHero; /request routes redirect home.
- * When true: intent-first entry; no provider browse inside the new flow.
  */
 export function isCustomerIntentFlowV2Enabled(): boolean {
   return envFlag("CUSTOMER_INTENT_FLOW_V2");
+}
+
+/**
+ * Sprint 3 — Matching engine (scarce pool + reason codes).
+ * When false: publish does not create match_assignments.
+ * Never reads subscription tier for eligibility/rank.
+ */
+export function isMatchingV2Enabled(): boolean {
+  return envFlag("MATCHING_V2");
 }
