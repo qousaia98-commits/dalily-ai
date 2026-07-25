@@ -26,21 +26,19 @@
 
 **Non-compressible integrity chain:** `S1 → S4 → S5 → S6 → S7`
 
-## Sprint 0 scope (this gate)
+## Sprint 1 scope (complete — gate)
 
-Prepare repo **without product behavior change**:
+Marketplace Domain strangler:
 
-- Repository cleanup / documentation
-- Folder restructuring (domain facades)
-- Architecture boundaries
-- Coding standards
-- Linting / typecheck / CI
-- Testing/verify baseline docs + script
-- Environment validation docs
-- Legacy marking
-- `schema.sql` marked non-source-of-truth
+- Feature flag `MARKETPLACE_DOMAIN_V2` (default off)
+- Lifecycle types + legacy anti-corruption map
+- Additive DB: lifecycle columns, selections placeholder, projections
+- Read enrichment + write projection touch when flag on
+- No Sprint 2 customer intent flow yet
 
-**Do not implement Sprint 1 until explicit approval.**
+See [`sprint-1-notes.md`](./sprint-1-notes.md).
+
+**Do not implement Sprint 2 until explicit approval.**
 
 ## Feature flags (future sprints)
 

@@ -26,6 +26,8 @@ Use before local work and before declaring a sprint done.
 | `PAYMENT_RECEIVER` / `ACCOUNT` / `IBAN` / `SWIFT` / `BANK_NAME` | Required for real paid upgrades in prod; empty fails closed locally |
 | `RESEND_API_KEY` / `EMAIL_FROM` | Optional receipt email |
 
+| `MARKETPLACE_DOMAIN_V2` | Sprint 1 Marketplace read-model (default off) |
+
 ## Product flags already in repo
 
 | Variable | Notes |
