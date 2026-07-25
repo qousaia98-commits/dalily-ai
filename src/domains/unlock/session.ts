@@ -201,10 +201,21 @@ export async function completeUnlockSuccess(input: {
   if (session.status === "succeeded") {
     const { data: grant } = await admin
       .from("contact_release_grants")
-      .select("id")
+      .select("id, customer_id, provider_id, service_request_id")
       .eq("unlock_session_id", session.id)
       .maybeSingle();
-    if (grant) return { ok: true, grantId: grant.id as string };
+    if (grant) {
+      const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
+      if (isChatAuthV2Enabled()) {
+        const { ensureFullChatSessionForGrant } = await import("@/domains/chat/session");
+        await ensureFullChatSessionForGrant({
+          serviceRequestId: grant.service_request_id as string,
+          providerId: grant.provider_id as string,
+          customerId: grant.customer_id as string,
+        });
+      }
+      return { ok: true, grantId: grant.id as string };
+    }
   }
   if (!["opened", "payment_pending"].includes(session.status as string)) {
     return { ok: false, error: "invalid_status" };
@@ -256,7 +267,18 @@ export async function completeUnlockSuccess(input: {
         .select("id")
         .eq("unlock_session_id", session.id)
         .maybeSingle();
-      if (existingGrant) return { ok: true, grantId: existingGrant.id as string };
+      if (existingGrant) {
+        const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
+        if (isChatAuthV2Enabled()) {
+          const { ensureFullChatSessionForGrant } = await import("@/domains/chat/session");
+          await ensureFullChatSessionForGrant({
+            serviceRequestId: session.service_request_id as string,
+            providerId: session.provider_id as string,
+            customerId: request.customer_id as string,
+          });
+        }
+        return { ok: true, grantId: existingGrant.id as string };
+      }
     }
     return { ok: false, error: "grant_failed" };
   }
@@ -284,7 +306,7 @@ export async function completeUnlockSuccess(input: {
     .update({ status: "unlocked", updated_at: now })
     .eq("id", session.selection_id);
 
-  // Do NOT set service_requests.provider_id or open chat (Sprint 7 consumes grant).
+  // Do NOT set service_requests.provider_id here — Chat Authorization (Sprint 7) opens session.
   void syncMarketplaceRequestProjection({
     serviceRequestId: session.service_request_id as string,
     legacyStatus: (request.status as "pending") ?? "pending",
@@ -292,6 +314,16 @@ export async function completeUnlockSuccess(input: {
     selectionId: session.selection_id as string,
     phase: "unlocked",
   });
+
+  const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
+  if (isChatAuthV2Enabled()) {
+    const { ensureFullChatSessionForGrant } = await import("@/domains/chat/session");
+    await ensureFullChatSessionForGrant({
+      serviceRequestId: session.service_request_id as string,
+      providerId: session.provider_id as string,
+      customerId: request.customer_id as string,
+    });
+  }
 
   await deliverMarketplaceNotification({
     userId: request.customer_id as string,

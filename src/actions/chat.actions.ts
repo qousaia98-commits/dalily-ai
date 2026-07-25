@@ -24,6 +24,31 @@ function revalidateConversation(conversationId: string) {
 }
 
 async function assertParticipant(conversationId: string, userId: string) {
+  const { assertChatParticipants } = await import("@/domains/chat/authz");
+  const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
+
+  if (isChatAuthV2Enabled()) {
+    const gate = await assertChatParticipants({ conversationId, userId });
+    if (!gate.ok) {
+      return {
+        ok: false as const,
+        error: gate.error,
+        conv: null,
+        providerRow: null,
+      };
+    }
+    return {
+      ok: true as const,
+      conv: {
+        id: conversationId,
+        provider_id: gate.providerId,
+        customer_id: gate.customerId,
+        service_request_id: gate.serviceRequestId,
+      },
+      providerRow: { owner_id: gate.providerOwnerId },
+    };
+  }
+
   const supabase = await createClient();
   const { data: conv } = await supabase
     .from("conversations")
