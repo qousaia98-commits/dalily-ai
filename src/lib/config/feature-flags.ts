@@ -94,3 +94,11 @@ export function isChatAuthV2Enabled(): boolean {
 export function isProviderDashboardV2Enabled(): boolean {
   return envFlag("PROVIDER_DASHBOARD_V2");
 }
+
+/**
+ * Sprint 9 — Admin economy/unlock/trust ops (cell policies, unlock queue, inspection, audited comps).
+ * When false: legacy admin surfaces unchanged (subscription writes stay available).
+ */
+export function isAdminMigrationV2Enabled(): boolean {
+  return envFlag("ADMIN_MIGRATION_V2");
+}

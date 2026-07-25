@@ -1435,6 +1435,7 @@ export type Database = {
           opened_at: string;
           updated_at: string;
           closed_at: string | null;
+          admin_comp_reason: string | null;
         };
         Insert: {
           id?: string;
@@ -1453,6 +1454,7 @@ export type Database = {
           opened_at?: string;
           updated_at?: string;
           closed_at?: string | null;
+          admin_comp_reason?: string | null;
         };
         Update: {
           id?: string;
@@ -1471,6 +1473,46 @@ export type Database = {
           opened_at?: string;
           updated_at?: string;
           closed_at?: string | null;
+          admin_comp_reason?: string | null;
+        };
+        Relationships: [];
+      };
+      cell_policies: {
+        Row: {
+          cell_key: string;
+          city_id: string | null;
+          category_id: string | null;
+          frozen: boolean;
+          limited_availability: boolean;
+          concierge: boolean;
+          note: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          cell_key: string;
+          city_id?: string | null;
+          category_id?: string | null;
+          frozen?: boolean;
+          limited_availability?: boolean;
+          concierge?: boolean;
+          note?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          cell_key?: string;
+          city_id?: string | null;
+          category_id?: string | null;
+          frozen?: boolean;
+          limited_availability?: boolean;
+          concierge?: boolean;
+          note?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
         };
         Relationships: [];
       };
