@@ -172,7 +172,7 @@ export async function listProviderUnlockSessions(
 export async function completeUnlockSuccess(input: {
   sessionId: string;
   actorUserId: string;
-  mode: "dev_bypass" | "manual_confirm" | "payment_capture";
+  mode: "dev_bypass" | "manual_confirm" | "payment_capture" | "admin_comp";
   paymentId?: string;
 }): Promise<{ ok: true; grantId: string } | { ok: false; error: string }> {
   if (!isUnlockV2Enabled()) return { ok: false, error: "feature_disabled" };
@@ -183,6 +183,11 @@ export async function completeUnlockSuccess(input: {
 
   if (input.mode === "manual_confirm" && isUnlockPaymentsV2Enabled()) {
     return { ok: false, error: "payment_required" };
+  }
+
+  if (input.mode === "admin_comp") {
+    const { isAdminMigrationV2Enabled } = await import("@/lib/config/feature-flags");
+    if (!isAdminMigrationV2Enabled()) return { ok: false, error: "feature_disabled" };
   }
 
   if (input.mode === "payment_capture") {
@@ -288,7 +293,9 @@ export async function completeUnlockSuccess(input: {
       ? `dev_bypass:${input.actorUserId}`
       : input.mode === "manual_confirm"
         ? `manual_confirm:${input.actorUserId}`
-        : `payment_capture:${input.paymentId}`;
+        : input.mode === "admin_comp"
+          ? `admin_comp:${input.actorUserId}`
+          : `payment_capture:${input.paymentId}`;
 
   await admin
     .from("unlock_sessions")

@@ -89,6 +89,28 @@ export async function runMatchingForRequest(requestId: string): Promise<MatchRun
 
   const urgency = request.urgency === "emergency" ? "emergency" : "normal";
   const cellKey = `${request.city_id}:${request.category_id}`;
+
+  // Sprint 9 — cell freeze / limited availability (when ADMIN_MIGRATION_V2 on)
+  const { isAdminMigrationV2Enabled } = await import("@/lib/config/feature-flags");
+  let limitedMax: number | null = null;
+  if (isAdminMigrationV2Enabled()) {
+    const { getCellPolicy } = await import("@/domains/admin/cell-policies");
+    const policy = await getCellPolicy(cellKey);
+    if (policy?.frozen) {
+      return {
+        ok: true,
+        skipped: true,
+        reason: "cell_frozen",
+        assignedCount: 0,
+        expandCount: 0,
+        status: "cell_frozen",
+      };
+    }
+    if (policy?.limitedAvailability) {
+      limitedMax = Math.min(MATCHING_POLICY.initialMaxAssignments, 3);
+    }
+  }
+
   const candidates = await findEligibleProviderCandidates({
     categoryId: request.category_id,
     cityId: request.city_id,
@@ -98,7 +120,7 @@ export async function runMatchingForRequest(requestId: string): Promise<MatchRun
 
   const selected = selectAssignmentsFromCandidates(candidates, {
     urgency,
-    max: MATCHING_POLICY.initialMaxAssignments,
+    max: limitedMax ?? MATCHING_POLICY.initialMaxAssignments,
     source: "initial",
   });
 
@@ -183,6 +205,23 @@ export async function expandMatchPool(requestId: string): Promise<MatchRunResult
   }
 
   const admin = createAdminClient();
+  const cellKey = `${request.city_id}:${request.category_id}`;
+  const { isAdminMigrationV2Enabled } = await import("@/lib/config/feature-flags");
+  if (isAdminMigrationV2Enabled()) {
+    const { getCellPolicy } = await import("@/domains/admin/cell-policies");
+    const policy = await getCellPolicy(cellKey);
+    if (policy?.frozen) {
+      return {
+        ok: true,
+        skipped: true,
+        reason: "cell_frozen",
+        assignedCount: 0,
+        expandCount: 0,
+        status: "cell_frozen",
+      };
+    }
+  }
+
   const { data: pool } = await admin
     .from("match_pools")
     .select("id, expand_count, assigned_count, status")
