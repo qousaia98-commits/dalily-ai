@@ -10,7 +10,7 @@ export const ROLES = {
 export const PROTECTED_ROUTES = {
   business: ["/business"],
   admin: ["/admin"],
-  auth: ["/dashboard", "/favorites", "/reviews", "/settings"],
+  auth: ["/dashboard", "/reviews", "/settings"],
 } as const;
 
 export const AUTH_ROUTES = ["/login", "/register", "/register/business"] as const;

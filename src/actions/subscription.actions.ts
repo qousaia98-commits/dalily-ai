@@ -310,14 +310,6 @@ export async function confirmPaymentReceiptUploadAction(
   return { success: true, message: "pending_review" };
 }
 
-/**
- * @deprecated File bodies must not go through Server Actions.
- * Use preparePaymentReceiptUploadAction + confirmPaymentReceiptUploadAction.
- */
-export async function submitPaymentReceiptAction(): Promise<SubscriptionActionState> {
-  return { success: false, error: "use_direct_upload" };
-}
-
 export async function downgradeSubscriptionAction(): Promise<SubscriptionActionState> {
   const authUser = await requireAuthUser();
   const provider = await requireOwnedProvider(authUser.id);
