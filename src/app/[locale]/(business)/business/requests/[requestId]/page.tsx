@@ -10,6 +10,9 @@ import {
 } from "@/actions/service-request.actions";
 import { PendingRequestActions } from "@/components/business/pending-request-actions";
 import { isOffersV2Enabled } from "@/lib/config/feature-flags";
+import { canAccessFullChat } from "@/domains/chat/authz";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { isChatAuthV2Enabled } from "@/lib/config/feature-flags";
 
 type PageProps = { params: Promise<{ requestId: string }> };
 
@@ -26,6 +29,25 @@ export default async function BusinessRequestDetailPage({ params }: PageProps) {
   const marketplaceNative =
     isOffersV2Enabled() && (request.lifecycle_version ?? 1) >= 2;
 
+  let requestForPanel = request;
+  if (isChatAuthV2Enabled() && !request.conversationId) {
+    const admin = createAdminClient();
+    const { data: conv } = await admin
+      .from("conversations")
+      .select("id")
+      .eq("service_request_id", requestId)
+      .maybeSingle();
+    if (conv?.id) {
+      requestForPanel = { ...request, conversationId: conv.id as string };
+    }
+  }
+
+  const chatAuthorized = await canAccessFullChat({
+    serviceRequestId: requestForPanel.id,
+    status: requestForPanel.status,
+    lifecycleVersion: requestForPanel.lifecycle_version ?? 1,
+  });
+
   return (
     <div className="mx-auto w-full max-w-4xl space-y-4 overflow-x-hidden animate-fade-in px-1">
       <p className="sr-only">{t("title")}</p>
@@ -37,11 +59,12 @@ export default async function BusinessRequestDetailPage({ params }: PageProps) {
         />
       ) : null}
       <RequestWorkflowPanel
-        request={request}
+        request={requestForPanel}
         viewer="business"
         userId={authUser.id}
         providerId={provider.id}
         legacyQuotesEnabled={!marketplaceNative}
+        chatAuthorized={chatAuthorized}
       />
     </div>
   );

@@ -18,6 +18,7 @@ export async function WaitingRoom({
   clarificationsByOffer = {},
   unlockSession = null,
   releasedContact = null,
+  conversationId = null,
 }: {
   request: ServiceRequestDetail | null;
   state: "loading" | "ready" | "empty" | "error";
@@ -27,6 +28,7 @@ export async function WaitingRoom({
   clarificationsByOffer?: Record<string, OfferClarificationView[]>;
   unlockSession?: UnlockSessionView | null;
   releasedContact?: ReleasedContact | null;
+  conversationId?: string | null;
 }) {
   const t = await getTranslations("intentFlow.waiting");
 
@@ -69,7 +71,11 @@ export async function WaitingRoom({
         {t("trustNotBroadcast")}
       </div>
 
-      <CustomerUnlockStatus session={unlockSession} contact={releasedContact} />
+      <CustomerUnlockStatus
+        session={unlockSession}
+        contact={releasedContact}
+        conversationId={conversationId}
+      />
 
       {hasOffers ? (
         <CustomerOfferBoard

@@ -49,6 +49,11 @@ type Props = {
    * and block chat entry from this panel.
    */
   legacyQuotesEnabled?: boolean;
+  /**
+   * Sprint 7 — server-computed full-chat authorization (grant-gated when CHAT_AUTH_V2).
+   * When omitted, falls back to legacy status canChat().
+   */
+  chatAuthorized?: boolean;
 };
 
 export function RequestWorkflowPanel({
@@ -57,6 +62,7 @@ export function RequestWorkflowPanel({
   userId,
   providerId,
   legacyQuotesEnabled = true,
+  chatAuthorized,
 }: Props) {
   const t = useTranslations("marketplace");
   const router = useRouter();
@@ -65,6 +71,10 @@ export function RequestWorkflowPanel({
   const [successKey, setSuccessKey] = useState<string | null>(null);
   const [showCompleteConfirm, setShowCompleteConfirm] = useState(false);
   const [showDispute, setShowDispute] = useState(false);
+
+  const canOpenChat =
+    Boolean(request.conversationId) &&
+    (chatAuthorized ?? canChat(request.status));
 
   useMarketplaceRealtime({
     userId,
@@ -312,7 +322,7 @@ export function RequestWorkflowPanel({
             </p>
           ) : null}
 
-          {legacyQuotesEnabled && request.conversationId && canChat(request.status) ? (
+          {canOpenChat ? (
             <Button
               variant="outline"
               className="min-h-11 w-full rounded-2xl"

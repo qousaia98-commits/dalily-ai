@@ -1,13 +1,18 @@
 import { getTranslations } from "next-intl/server";
+import { Link } from "@/lib/i18n/routing";
 import type { UnlockSessionView } from "@/domains/unlock/types";
 import type { ReleasedContact } from "@/domains/unlock/types";
+import { Button } from "@/components/ui/button";
 
 export async function CustomerUnlockStatus({
   session,
   contact,
+  conversationId = null,
 }: {
   session: UnlockSessionView | null;
   contact: ReleasedContact | null;
+  /** Sprint 7 — grant-gated full chat session id when available */
+  conversationId?: string | null;
 }) {
   const t = await getTranslations("unlockFlow.customer");
 
@@ -41,6 +46,11 @@ export async function CustomerUnlockStatus({
         ) : null}
         {!contact.phone && !contact.whatsapp ? (
           <p className="text-muted-foreground">{t("noPhoneOnFile")}</p>
+        ) : null}
+        {conversationId ? (
+          <Button asChild className="mt-2 w-full sm:w-auto">
+            <Link href={`/messages/${conversationId}`}>{t("openChat")}</Link>
+          </Button>
         ) : null}
       </div>
     );

@@ -4,6 +4,7 @@ import {
   isMatchingV2Enabled,
   isOffersV2Enabled,
   isUnlockV2Enabled,
+  isChatAuthV2Enabled,
 } from "@/lib/config/feature-flags";
 import { getAuthUser } from "@/lib/auth/session";
 import { getRequestDetail } from "@/lib/service-requests/queries";
@@ -17,6 +18,7 @@ import {
   getUnlockSessionForSelection,
   getReleasedContactForCustomer,
 } from "@/domains/unlock";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { WaitingRoom } from "@/components/customer/waiting-room";
 
 export default async function RequestWaitingPage({
@@ -73,6 +75,17 @@ export default async function RequestWaitingPage({
       })
     : null;
 
+  let conversationId: string | null = request.conversationId ?? null;
+  if (isChatAuthV2Enabled() && releasedContact && !conversationId) {
+    const admin = createAdminClient();
+    const { data: conv } = await admin
+      .from("conversations")
+      .select("id")
+      .eq("service_request_id", requestId)
+      .maybeSingle();
+    conversationId = (conv?.id as string) ?? null;
+  }
+
   const state =
     offers.length > 0 ||
     (matchSummary && matchSummary.assignedCount > 0) ||
@@ -92,6 +105,7 @@ export default async function RequestWaitingPage({
         clarificationsByOffer={clarificationsByOffer}
         unlockSession={unlockSession}
         releasedContact={releasedContact}
+        conversationId={conversationId}
       />
     </main>
   );

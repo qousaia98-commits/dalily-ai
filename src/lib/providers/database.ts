@@ -258,6 +258,10 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
 
   const planMap = await getActivePlanSlugsByProviderIds([provider.id]);
 
+  // Sprint 7 — hide public directory phone/WhatsApp when CHAT_AUTH_V2 (contact only via grant).
+  const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
+  const hidePublicContact = isChatAuthV2Enabled();
+
   return {
     id: provider.id,
     slug: provider.slug,
@@ -279,8 +283,8 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     memberSince: provider.created_at,
     coverImage: cover ? getStoragePublicUrl(cover.path) : DEFAULT_COVER,
     avatarImage: avatar ? getStoragePublicUrl(avatar.path) : DEFAULT_AVATAR,
-    phone: provider.phone,
-    whatsapp: provider.whatsapp,
+    phone: hidePublicContact ? null : provider.phone,
+    whatsapp: hidePublicContact ? null : provider.whatsapp,
     responseTimeHours: provider.response_time_hours,
     services: activeServices,
     gallery,

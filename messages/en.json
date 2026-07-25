@@ -488,10 +488,11 @@
       "sla": "Decision deadline: {deadline}",
       "noContactYet": "Phone, WhatsApp, address, and chat stay hidden until unlock succeeds.",
       "unlockedTitle": "Contact unlocked",
-      "unlockedBody": "You can contact this business. Chat authorization expands in a later sprint.",
+      "unlockedBody": "You can contact this business and open full chat. Phone and chat stay locked until unlock succeeds.",
       "phone": "Phone",
       "whatsapp": "WhatsApp",
-      "noPhoneOnFile": "No phone on file — unlock grant is recorded for later chat release."
+      "noPhoneOnFile": "No phone on file — you can still use chat when the session is ready.",
+      "openChat": "Open chat"
     },
     "provider": {
       "listTitle": "Unlock leads",
@@ -1156,7 +1157,7 @@
     "pinnedSummary": "Pinned request",
     "viewRequest": "View full request",
     "photoAlt": "Photo for request {title}",
-    "chatLocked": "Chat unlocks after the business accepts your request.",
+    "chatLocked": "Chat unlocks after contact release (unlock grant).",
     "timeline": {
       "label": "Request timeline",
       "currentHint": "Current step",

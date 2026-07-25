@@ -14,7 +14,7 @@ import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bri
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { canChat } from "@/lib/service-requests/status-machine";
+import { canAccessFullChat } from "@/domains/chat/authz";
 import {
   formatMessageTime,
   isValidMessageTimestamp,
@@ -44,7 +44,13 @@ export async function ConversationThread({
   const isOfficial = conversation.kind === "dalily" || conversation.official;
   const profileHref = `${messagesPath}/dalily/about`;
 
-  const chatOpen = request ? canChat(request.status) : conversation.kind === "customer";
+  const chatOpen = request
+    ? await canAccessFullChat({
+        serviceRequestId: request.id,
+        status: request.status,
+        lifecycleVersion: request.lifecycle_version ?? 1,
+      })
+    : Boolean(conversation.kind === "dalily" || conversation.official || conversation.kind === "customer");
 
   return (
     <div className="flex min-h-[28rem] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
