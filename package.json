@@ -15,6 +15,7 @@
     "verify:offers": "node scripts/verify-offers-invariants.mjs",
     "verify:unlock": "node scripts/verify-unlock-invariants.mjs",
     "verify:payments": "node scripts/verify-payments-invariants.mjs",
+    "validate:sprint6": "node scripts/validate-sprint6-unlock-payments.mjs",
     "seed:search": "node scripts/seed-search-providers.mjs",
     "verify:search": "node scripts/verify-search.mjs",
     "verify:search:db": "node scripts/verify-search-integration.mjs",
