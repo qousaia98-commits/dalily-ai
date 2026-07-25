@@ -1,4 +1,5 @@
 import type { ServiceRequestStatus } from "@/lib/service-requests/status-machine";
+import type { MarketplaceRequestMeta } from "@/domains/marketplace/types";
 
 export type QuoteRow = {
   id: string;
@@ -53,6 +54,10 @@ export type ServiceRequestRow = {
   currency: string | null;
   created_at: string;
   updated_at: string;
+  /** Sprint 1 additive — present when DB migration applied; default treated as 1. */
+  lifecycle_version?: number;
+  /** Sprint 1 additive — selection placeholder FK (null until Sprint 4/5). */
+  selection_id?: string | null;
 };
 
 export type ServiceRequestDetail = ServiceRequestRow & {
@@ -64,6 +69,11 @@ export type ServiceRequestDetail = ServiceRequestRow & {
   quote: QuoteRow | null;
   review: ServiceReviewRow | null;
   conversationId: string | null;
+  /**
+   * Present only when MARKETPLACE_DOMAIN_V2=true.
+   * Flag off: omitted — identical legacy shape.
+   */
+  marketplace?: MarketplaceRequestMeta;
 };
 
 export type ProviderRequestSettings = {

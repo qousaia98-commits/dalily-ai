@@ -15,6 +15,7 @@ import type {
   ServiceRequestRow,
   ServiceReviewRow,
 } from "@/lib/service-requests/types";
+import { attachMarketplaceReadModels } from "@/domains/marketplace/repository";
 
 function mapRequest(row: Record<string, unknown>): ServiceRequestRow {
   return {
@@ -47,6 +48,9 @@ function mapRequest(row: Record<string, unknown>): ServiceRequestRow {
     currency: (row.currency as string | null) ?? "SYP",
     created_at: row.created_at as string,
     updated_at: row.updated_at as string,
+    lifecycle_version:
+      row.lifecycle_version != null ? Number(row.lifecycle_version) : undefined,
+    selection_id: (row.selection_id as string | null | undefined) ?? undefined,
   };
 }
 
@@ -223,23 +227,25 @@ async function hydrateDetails(
     });
   }
 
-  return rows.map((row) => {
-    const mapped = mapRequest(row);
-    const paths = imagesByRequest.get(mapped.id) ?? [];
-    const imageUrls = paths
-      .map((path) => signedByPath.get(path))
-      .filter((url): url is string => Boolean(url));
-    return {
-      ...mapped,
-      customerName: profileMap.get(mapped.customer_id) ?? "Customer",
-      providerName: providerMap.get(mapped.provider_id) ?? "Business",
-      imagePaths: paths,
-      imageUrls,
-      quote: quotesByRequest.get(mapped.id) ?? null,
-      review: reviewMap.get(mapped.id) ?? null,
-      conversationId: convMap.get(mapped.id) ?? null,
-    };
-  });
+  return attachMarketplaceReadModels(
+    rows.map((row) => {
+      const mapped = mapRequest(row);
+      const paths = imagesByRequest.get(mapped.id) ?? [];
+      const imageUrls = paths
+        .map((path) => signedByPath.get(path))
+        .filter((url): url is string => Boolean(url));
+      return {
+        ...mapped,
+        customerName: profileMap.get(mapped.customer_id) ?? "Customer",
+        providerName: providerMap.get(mapped.provider_id) ?? "Business",
+        imagePaths: paths,
+        imageUrls,
+        quote: quotesByRequest.get(mapped.id) ?? null,
+        review: reviewMap.get(mapped.id) ?? null,
+        conversationId: convMap.get(mapped.id) ?? null,
+      };
+    }),
+  );
 }
 
 export const countPendingRequestsForOwner = cache(async function countPendingRequestsForOwner(

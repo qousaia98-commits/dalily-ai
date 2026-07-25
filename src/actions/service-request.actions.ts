@@ -33,6 +33,7 @@ import {
   reviewSchema,
 } from "@/lib/validations/service-request";
 import { logLearningEvent, scheduleLearningUpdate } from "@/lib/search/learning";
+import { afterLegacyMarketplaceWrite } from "@/domains/marketplace/repository";
 
 export type ServiceRequestActionState = {
   success: boolean;
@@ -59,6 +60,15 @@ function revalidateMessaging() {
   revalidatePath("/admin/marketplace");
   revalidatePath("/", "layout");
   revalidatePath("/business", "layout");
+}
+
+/** Thin Sprint 1 adapter: legacy write path + optional Marketplace projection sync (flag-gated). */
+function revalidateAfterMarketplaceWrite(
+  requestId: string,
+  legacyStatus: ServiceRequestStatus,
+) {
+  revalidateMessaging();
+  void afterLegacyMarketplaceWrite(requestId, legacyStatus);
 }
 
 async function getConversationIdForRequest(requestId: string): Promise<string | null> {
@@ -223,7 +233,7 @@ export async function createServiceRequestAction(
     });
   }
 
-  revalidateMessaging();
+  revalidateAfterMarketplaceWrite(request.id, "pending");
   void logLearningEvent({
     eventType: "request_sent",
     providerId: provider.id,
@@ -276,7 +286,7 @@ export async function acceptServiceRequestAction(
     return { success: false, error: "accept_failed" };
   }
 
-  revalidateMessaging();
+  revalidateAfterMarketplaceWrite(requestId, "accepted");
   void logLearningEvent({
     eventType: "request_accepted",
     providerId: provider.id,
@@ -306,7 +316,7 @@ export async function rejectServiceRequestAction(
     return { success: false, error: "reject_failed" };
   }
 
-  revalidateMessaging();
+  revalidateAfterMarketplaceWrite(requestId, "rejected");
   void logLearningEvent({
     eventType: "request_declined",
     providerId: provider.id,
@@ -398,7 +408,7 @@ export async function sendQuoteAction(
     params: { title: request.title, price: parsed.data.price, currency: parsed.data.currency },
   });
 
-  revalidateMessaging();
+  revalidateAfterMarketplaceWrite(request.id, "quoted");
   return { success: true, message: "quote_sent", requestId: request.id, conversationId: conversationId ?? undefined };
 }
 
@@ -528,7 +538,7 @@ async function decideQuote(
     });
   }
 
-  revalidateMessaging();
+  revalidateAfterMarketplaceWrite(requestId, nextStatus);
   return { success: true, message: decision, conversationId: conversationId ?? undefined };
 }
 
@@ -584,7 +594,7 @@ export async function completeServiceAction(requestId: string): Promise<ServiceR
     params: { title: request.title },
   });
 
-  revalidateMessaging();
+  revalidateAfterMarketplaceWrite(requestId, "completed_by_business");
   return { success: true, message: "completed_by_business", conversationId: conversationId ?? undefined };
 }
 
@@ -652,7 +662,7 @@ export async function confirmCompletionAction(
     });
   }
 
-  revalidateMessaging();
+  revalidateAfterMarketplaceWrite(requestId, "completed");
   void logLearningEvent({
     eventType: "request_completed",
     providerId: request.provider_id,
@@ -732,7 +742,7 @@ export async function reportProblemAction(
     });
   }
 
-  revalidateMessaging();
+  revalidateAfterMarketplaceWrite(request.id, "disputed");
   return { success: true, message: "disputed", conversationId: conversationId ?? undefined };
 }
 
@@ -838,7 +848,7 @@ export async function submitReviewAction(
     });
   }
 
-  revalidateMessaging();
+  revalidateAfterMarketplaceWrite(request.id, "reviewed");
   void logLearningEvent({
     eventType: "review_submitted",
     providerId: request.provider_id,
