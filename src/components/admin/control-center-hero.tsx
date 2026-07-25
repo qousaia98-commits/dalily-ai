@@ -1,8 +1,21 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { ControlCenterOverview } from "@/lib/admin/control-center";
+import { requireAdminUser } from "@/lib/auth/session";
+import { buildPersonalizedGreeting } from "@/lib/greetings";
+import type { Locale } from "@/lib/i18n/config";
 
 export async function ControlCenterHero({ overview }: { overview: ControlCenterOverview }) {
   const t = await getTranslations("admin.controlCenter.hero");
+  const locale = (await getLocale()) as Locale;
+  const authUser = await requireAdminUser();
+  const greeting = buildPersonalizedGreeting({
+    roles: authUser.roles,
+    displayName: authUser.displayName,
+    email: authUser.email,
+    locale,
+    userId: authUser.id,
+  });
+
   const attention =
     overview.pendingBusinesses +
     overview.pendingPayments +
@@ -19,9 +32,13 @@ export async function ControlCenterHero({ overview }: { overview: ControlCenterO
         <p className="text-xs font-bold tracking-[0.18em] text-[var(--dalily-gold)] uppercase">
           {t("eyebrow")}
         </p>
-        <h1 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl">{t("title")}</h1>
+        <h1 className="text-balance text-3xl font-bold tracking-tight sm:text-4xl">
+          {greeting.title}
+        </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">
-          {attention > 0 ? t("subtitleAttention", { count: attention }) : t("subtitleClear")}
+          {attention > 0
+            ? t("subtitleAttention", { count: attention })
+            : greeting.subtitle}
         </p>
         <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {[

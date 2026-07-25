@@ -345,7 +345,10 @@
     "pageSubtitle": "Usually under a minute — then we notify matching businesses.",
     "hero": {
       "placeholder": "What do you need?",
-      "cta": "Continue"
+      "cta": "Continue",
+      "hint": "Describe the problem in your words",
+      "overlayTitle": "✨ What do you need today?",
+      "overlaySubtitle": "Describe the problem in your words and I’ll find the right specialist."
     },
     "back": "Back",
     "continue": "Continue",
@@ -362,17 +365,56 @@
       "s3": "Locked out of apartment",
       "s4": "Need an electrician today"
     },
+    "clarify": {
+      "electrical": {
+        "scope": "Is the issue in one room or the whole home?",
+        "safety": "Any sparks or burning smell?"
+      },
+      "plumbing": {
+        "where": "Where is the leak or fault roughly?",
+        "ongoing": "Is water still leaking now?"
+      },
+      "hvac": {
+        "symptom": "Does the AC run but without cooling?",
+        "age": "How long has this been happening?"
+      },
+      "carpentry": {
+        "item": "What needs repair (door, cabinet, wood)?",
+        "urgency": "Does it stop you from securing the home?"
+      },
+      "painting": {
+        "indoor": "Indoor or outdoor painting?",
+        "size": "One room or more?"
+      },
+      "locksmith": {
+        "lockedOut": "Are you locked out right now?",
+        "break": "Is the lock broken or is the key lost?"
+      }
+    },
     "steps": {
       "intent": {
         "label": "Describe the problem",
         "placeholder": "Write a short description of what you need…",
         "continue": "Continue"
       },
+      "confirm": {
+        "badge": "Smart suggestion",
+        "title": "I think you need a {category}.",
+        "subtitle": "Is that correct?",
+        "yes": "Yes, that’s right",
+        "no": "No, correct it"
+      },
       "category": {
         "title": "Confirm the category",
         "subtitle": "We suggested a match — change it if needed.",
         "suggested": "Suggested: {category}",
         "change": "Category"
+      },
+      "clarify": {
+        "title": "Quick questions",
+        "subtitle": "Category-specific questions — you can skip.",
+        "placeholder": "Optional…",
+        "skip": "Skip"
       },
       "photos": {
         "title": "Add photos (optional)",
@@ -397,8 +439,18 @@
       "publish": {
         "title": "Publish your request",
         "subtitle": "Matching businesses can send offers. You choose later.",
+        "reviewTitle": "Review your request",
+        "reviewSubtitle": "Check the details before publishing — you can edit.",
+        "edit": "Edit",
         "loginRequired": "Sign in to publish — your number stays private until you choose.",
-        "cta": "Publish request"
+        "cta": "Publish request",
+        "fields": {
+          "category": "Category",
+          "problem": "Problem",
+          "location": "Location",
+          "urgency": "Priority",
+          "photos": "Photos"
+        }
       }
     },
     "waiting": {
@@ -4028,6 +4080,9 @@
       "subtitle": "Welcome back to Dalily",
       "email": "Email",
       "password": "Password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "forgotPassword": "Forgot your password?",
       "submit": "Log in",
       "noAccount": "Don't have an account?",
       "register": "Sign up",
@@ -4040,6 +4095,35 @@
         "auth_callback_failed": "We could not confirm your email link. Please try again or request a new one.",
         "rate_limited": "Too many attempts. Please wait a few minutes and try again.",
         "unknown": "Something went wrong. Please try again"
+      }
+    },
+    "forgotPassword": {
+      "title": "Reset password",
+      "subtitle": "Enter your email and we’ll send a reset link.",
+      "email": "Email",
+      "submit": "Send reset link",
+      "sent": "If an account exists, you’ll receive an email shortly. Check your inbox.",
+      "backToLogin": "Back to log in",
+      "errors": {
+        "validation_error": "Please enter a valid email",
+        "unknown": "Something went wrong. Please try again."
+      }
+    },
+    "resetPassword": {
+      "title": "New password",
+      "subtitle": "Choose a strong password for your account.",
+      "password": "New password",
+      "confirmPassword": "Confirm password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "submit": "Save password",
+      "success": "Password updated. You can log in now.",
+      "toLogin": "Log in",
+      "errors": {
+        "validation_error": "Password must be at least 6 characters",
+        "password_mismatch": "Passwords do not match",
+        "session_required": "Open the reset link from your email first",
+        "unknown": "Something went wrong. Please try again."
       }
     },
     "register": {

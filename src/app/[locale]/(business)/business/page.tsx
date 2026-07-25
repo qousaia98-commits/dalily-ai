@@ -31,6 +31,7 @@ import { OnboardingDashboardCard } from "@/components/business/onboarding/onboar
 import { ProviderDashboardHomeView } from "@/components/business/provider-dashboard-home";
 import { getProviderDashboardHome } from "@/domains/provider/dashboard";
 import { isProviderDashboardV2Enabled } from "@/lib/config/feature-flags";
+import { buildPersonalizedGreeting } from "@/lib/greetings";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -73,9 +74,20 @@ export default async function BusinessDashboardPage() {
 
   if (isProviderDashboardV2Enabled()) {
     const marketplaceHome = await getProviderDashboardHome(provider.id);
+    const greeting = buildPersonalizedGreeting({
+      roles: authUser.roles,
+      displayName: authUser.displayName ?? businessName,
+      email: authUser.email,
+      locale,
+      userId: authUser.id,
+    });
     return (
       <div className="w-full max-w-full space-y-6 overflow-x-hidden animate-fade-in">
         <VerificationDashboardAlert provider={provider} verification={verification} />
+        <header className="space-y-1.5">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{greeting.title}</h1>
+          <p className="text-sm text-muted-foreground">{greeting.subtitle}</p>
+        </header>
         <ProviderDashboardHomeView data={marketplaceHome} businessName={businessName} />
       </div>
     );

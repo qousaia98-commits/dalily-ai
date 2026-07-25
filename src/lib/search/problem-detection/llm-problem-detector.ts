@@ -7,7 +7,11 @@ import { detectCitySlug, stripCityTokens } from "@/lib/search/problem-detection/
 /** Closed set the model is allowed to answer with — never trust free text back. */
 const PROBLEM_GLOSSARY: Record<ProblemId, string> = {
   water_leak: "water leak or plumbing issue (pipe, sink, faucet, toilet)",
-  power_outage: "electrical issue or power outage (no electricity, faulty wiring, broken light/lamp)",
+  power_outage: "electrical issue or power outage (no electricity, faulty wiring)",
+  light_not_working: "light bulb, lamp, or switch not working — needs electrician",
+  faucet_broken: "broken faucet/tap (حنفية خربانة) — plumbing",
+  door_wont_close: "door won't close or carpentry/woodwork repair (نجار)",
+  painting_need: "painting walls or rooms (دهان)",
   ac_not_cooling: "air conditioning / HVAC not cooling or not working",
   locked_out: "locked out of home or car, lost key, broken lock — needs a locksmith",
   appliance_leak: "home appliance broken or leaking (washing machine, dishwasher, fridge, dryer)",

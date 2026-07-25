@@ -13,7 +13,13 @@ export const PROTECTED_ROUTES = {
   auth: ["/dashboard", "/reviews", "/settings"],
 } as const;
 
-export const AUTH_ROUTES = ["/login", "/register", "/register/business"] as const;
+export const AUTH_ROUTES = [
+  "/login",
+  "/register",
+  "/register/business",
+  "/forgot-password",
+  "/reset-password",
+] as const;
 
 export function hasRole(roles: AppRole[], required: AppRole): boolean {
   return roles.includes(required);

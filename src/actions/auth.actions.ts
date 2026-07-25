@@ -9,6 +9,8 @@ import {
   loginSchema,
   registerSchema,
   registerBusinessSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
 } from "@/lib/validations/auth";
 import { generateProviderSlug, mapAuthErrorCode } from "@/lib/auth/utils";
 import { resolveLocalizedField } from "@/lib/business/resolve-localized-fields";
@@ -676,6 +678,60 @@ export async function registerBusinessAction(
   logRegisterStep("redirect → /business/welcome", true, { locale: parsed.data.locale });
   redirect({ href: "/business/welcome", locale: parsed.data.locale as "ar" | "en" });
   return { success: true };
+}
+
+export async function requestPasswordResetAction(
+  _prevState: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const parsed = forgotPasswordSchema.safeParse({
+    email: formData.get("email"),
+  });
+  if (!parsed.success) {
+    return { success: false, error: "validation_error" };
+  }
+
+  const locale = (await getLocale()) as Locale;
+  const supabase = await createClient();
+  const redirectTo = buildAuthCallbackUrl("/reset-password", locale);
+
+  // Always return success to avoid email enumeration.
+  await supabase.auth.resetPasswordForEmail(parsed.data.email, { redirectTo });
+  return { success: true, message: "reset_email_sent" };
+}
+
+export async function updatePasswordAction(
+  _prevState: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const parsed = resetPasswordSchema.safeParse({
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
+  });
+  if (!parsed.success) {
+    const mismatch = parsed.error.issues.some((i) => i.message === "password_mismatch");
+    return {
+      success: false,
+      error: mismatch ? "password_mismatch" : "validation_error",
+    };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { success: false, error: "session_required" };
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: parsed.data.password,
+  });
+  if (error) {
+    return { success: false, error: mapAuthErrorCode(error.message) };
+  }
+
+  return { success: true, message: "password_updated" };
 }
 
 export async function logoutAction(): Promise<void> {
