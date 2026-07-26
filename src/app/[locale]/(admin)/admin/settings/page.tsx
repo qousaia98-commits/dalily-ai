@@ -37,6 +37,12 @@ export default async function AdminSettingsPage() {
       description: t("links.subscriptionsDesc"),
       icon: CreditCard,
     },
+    {
+      href: "/admin/monetization",
+      title: t("links.monetization"),
+      description: t("links.monetizationDesc"),
+      icon: CreditCard,
+    },
   ];
 
   return (

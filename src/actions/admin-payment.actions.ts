@@ -69,6 +69,32 @@ export async function approvePaymentAction(paymentId: string): Promise<AdminPaym
         revalidateOrderSurfaces(serviceRequestId);
         return { success: true };
       }
+
+      if (payment?.purpose === "business_subscription") {
+        const { activateBusinessSubscriptionFromPayment } = await import(
+          "@/lib/payment/business-subscription"
+        );
+        const activated = await activateBusinessSubscriptionFromPayment({
+          paymentId,
+          actorUserId: authUser.id,
+          source: "admin_approval",
+        });
+        if (!activated.ok) return { success: false, error: activated.error };
+        await logAdminAudit({
+          actorId: authUser.id,
+          action: "payment_approved",
+          entityType: "payment",
+          entityId: paymentId,
+          metadata: {
+            purpose: "business_subscription",
+            renewed: activated.renewed,
+          },
+        });
+        revalidatePath("/admin/payments");
+        revalidatePath("/business/monetization");
+        revalidatePath("/business/payments/history");
+        return { success: true };
+      }
     }
 
     const result = await subscriptionService.activateAfterPayment(paymentId, authUser.id);
@@ -140,6 +166,42 @@ export async function rejectPaymentAction(
         }
         revalidatePath("/admin/payments");
         revalidateOrderSurfaces(serviceRequestId);
+        return { success: true };
+      }
+
+      if (payment?.purpose === "business_subscription") {
+        const { transitionPaymentStatus } = await import(
+          "@/lib/payment/orchestration"
+        );
+        const rejected = await transitionPaymentStatus({
+          paymentId,
+          toStatus: "rejected",
+          actorUserId: authUser.id,
+          source: "admin",
+          note: note.data || "admin_rejected",
+        });
+        if (!rejected.ok) return { success: false, error: rejected.error };
+        await admin
+          .from("payments")
+          .update({
+            rejected_at: new Date().toISOString(),
+            rejected_by: authUser.id,
+            admin_note: note.data || null,
+          })
+          .eq("id", paymentId);
+        await logAdminAudit({
+          actorId: authUser.id,
+          action: "payment_rejected",
+          entityType: "payment",
+          entityId: paymentId,
+          metadata: {
+            purpose: "business_subscription",
+            note: note.data || null,
+          },
+        });
+        revalidatePath("/admin/payments");
+        revalidatePath("/business/monetization");
+        revalidatePath("/business/payments/history");
         return { success: true };
       }
     }

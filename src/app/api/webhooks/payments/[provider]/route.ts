@@ -11,7 +11,8 @@ type RouteContext = { params: Promise<{ provider: string }> };
  *    or: x-dalily-webhook-secret: $PAYMENT_WEBHOOK_SECRET
  *
  * Body: { eventId, type, paymentId?, paymentReference?, actorId? }
- * Types: payment.succeeded | payment.failed | payment.cancelled
+ * Types (canonical or dotted): payment_succeeded | payment.succeeded |
+ *   payment_failed | subscription_renewed | subscription_cancelled | …
  */
 export async function POST(request: Request, context: RouteContext) {
   const { provider } = await context.params;

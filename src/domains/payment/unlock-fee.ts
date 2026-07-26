@@ -25,6 +25,11 @@ export type UnlockFeePaymentView = {
   swift?: string;
   bankName?: string;
   hasReceipt: boolean;
+  /** stripe | manual | … */
+  paymentProvider: string;
+  /** Stripe PaymentIntent client_secret for Elements */
+  clientSecret?: string | null;
+  publishableKey?: string | null;
 };
 
 export async function getActiveUnlockFeePayment(
@@ -45,6 +50,32 @@ export async function getActiveUnlockFeePayment(
 
   if (!data) return null;
   const config = getPaymentConfig();
+  const paymentProvider = String(
+    (data as { payment_provider?: string }).payment_provider ?? config.provider,
+  );
+
+  let clientSecret: string | null = null;
+  let publishableKey: string | null = null;
+  if (
+    paymentProvider === "stripe" &&
+    data.payment_status === "pending" &&
+    (data as { stripe_payment_intent_id?: string | null }).stripe_payment_intent_id
+  ) {
+    try {
+      const { getStripe, getStripePublishableKey } = await import(
+        "@/lib/payment/stripe/client"
+      );
+      const piId = String(
+        (data as { stripe_payment_intent_id?: string }).stripe_payment_intent_id,
+      );
+      const intent = await getStripe().paymentIntents.retrieve(piId);
+      clientSecret = intent.client_secret;
+      publishableKey = getStripePublishableKey() || null;
+    } catch {
+      clientSecret = null;
+    }
+  }
+
   return {
     paymentId: data.id as string,
     unlockSessionId,
@@ -57,6 +88,9 @@ export async function getActiveUnlockFeePayment(
     swift: config.swift || undefined,
     bankName: config.bankName || undefined,
     hasReceipt: Boolean(data.receipt_path),
+    paymentProvider,
+    clientSecret,
+    publishableKey,
   };
 }
 
@@ -79,15 +113,31 @@ export async function createUnlockFeePayment(input: {
   }
 
   const admin = createAdminClient();
-  const { data: session } = await admin
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: sessionRaw } = await (admin as any)
     .from("unlock_sessions")
-    .select("id, provider_id, status, fee_amount, fee_currency, payment_id")
+    .select(
+      "id, provider_id, status, fee_amount, fee_currency, payment_id, service_request_id, ai_price_usd, ai_score, pricing_history_id",
+    )
     .eq("id", input.unlockSessionId)
     .eq("provider_id", input.providerId)
     .maybeSingle();
 
+  const session = sessionRaw as {
+    id: string;
+    provider_id: string;
+    status: string;
+    fee_amount: number | string | null;
+    fee_currency: string | null;
+    payment_id: string | null;
+    service_request_id: string | null;
+    ai_price_usd: number | string | null;
+    ai_score: number | string | null;
+    pricing_history_id: string | null;
+  } | null;
+
   if (!session) return { ok: false, error: "session_not_found" };
-  if (!["opened", "payment_pending"].includes(session.status as string)) {
+  if (!["opened", "payment_pending"].includes(session.status)) {
     return { ok: false, error: "invalid_status" };
   }
 
@@ -135,8 +185,57 @@ export async function createUnlockFeePayment(input: {
     .eq("id", input.unlockSessionId)
     .in("status", ["opened", "payment_pending"]);
 
+  try {
+    const { recordLeadUnlockPayment } = await import(
+      "@/lib/payment/lead-payments"
+    );
+    const { snapshotPaymentStatus } = await import(
+      "@/lib/payment/status-snapshots"
+    );
+    await recordLeadUnlockPayment({
+      paymentId: created.paymentId,
+      unlockSessionId: input.unlockSessionId,
+      serviceRequestId: session.service_request_id
+        ? String(session.service_request_id)
+        : null,
+      providerId: input.providerId,
+      aiPriceUsd:
+        session.ai_price_usd != null
+          ? Number(session.ai_price_usd)
+          : Number(session.fee_amount),
+      aiScore: session.ai_score != null ? Number(session.ai_score) : null,
+      pricingHistoryId: session.pricing_history_id
+        ? String(session.pricing_history_id)
+        : null,
+      currency: (session.fee_currency as string) || "USD",
+      paymentReference: created.instructions?.reference ?? reference,
+    });
+    await snapshotPaymentStatus({
+      paymentId: created.paymentId,
+      fromStatus: null,
+      toStatus: "pending",
+      source: "system",
+      note: "unlock_fee_created",
+    });
+  } catch {
+    // soft
+  }
+
   const view = await getActiveUnlockFeePayment(input.unlockSessionId);
   if (!view) return { ok: false, error: "payment_create_failed" };
+  // Attach freshly created Stripe client secret when present (avoid extra retrieve race)
+  if (created.clientSecret) {
+    return {
+      ok: true,
+      payment: {
+        ...view,
+        clientSecret: created.clientSecret,
+        publishableKey: created.publishableKey ?? view.publishableKey,
+        paymentProvider: "stripe",
+      },
+      reused: false,
+    };
+  }
   return { ok: true, payment: view, reused: false };
 }
 
@@ -161,15 +260,37 @@ export async function cancelUnlockFeePayment(input: {
     return { ok: false, error: "invalid_status" };
   }
 
+  try {
+    const { resolvePaymentProvider } = await import(
+      "@/lib/payment/payment.service"
+    );
+    await resolvePaymentProvider().cancelPayment(payment.id as string);
+  } catch {
+    // continue with local cancel
+  }
+
   const { data: updated } = await admin
     .from("payments")
-    .update({ payment_status: "cancelled" })
+    .update({
+      payment_status: "cancelled",
+      cancelled_at: new Date().toISOString(),
+    } as never)
     .eq("id", payment.id)
     .eq("payment_status", "pending")
     .select("id")
     .maybeSingle();
 
-  if (!updated) return { ok: false, error: "invalid_status" };
+  if (!updated) {
+    // Stripe provider may have already set cancelled
+    const { data: again } = await admin
+      .from("payments")
+      .select("id, payment_status")
+      .eq("id", payment.id)
+      .maybeSingle();
+    if (again?.payment_status !== "cancelled") {
+      return { ok: false, error: "invalid_status" };
+    }
+  }
 
   await logPaymentEvent({
     paymentId: payment.id as string,

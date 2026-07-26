@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { useRouter } from "@/lib/i18n/routing";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +12,7 @@ import {
   declineUnlockAction,
   startUnlockFeePaymentAction,
 } from "@/actions/unlock.actions";
+import { unlockLeadAction } from "@/actions/monetization.actions";
 import type { UnlockSessionView } from "@/domains/unlock/types";
 import type { UnlockFeePaymentView } from "@/domains/payment/unlock-fee";
 import {
@@ -28,6 +30,7 @@ import { PaymentFlowStepper, type PaymentFlowStep } from "@/components/payment/p
 import { PaymentDetailsCard } from "@/components/payment/payment-details-card";
 import { PaymentAlert } from "@/components/payment/payment-alert";
 import { ReceiptUploadCard } from "@/components/payment/receipt-upload-card";
+import { StripeLeadCheckout } from "@/components/payment/stripe-lead-checkout";
 
 /**
  * Premium unlock-fee payment UX — same unlock + receipt upload APIs.
@@ -38,12 +41,22 @@ export function ProviderUnlockPanel({
   allowDevBypass,
   paymentsEnabled,
   initialPayment = null,
+  monetizationEnabled = false,
+  includedRemaining = 0,
+  pricingQuote = null,
 }: {
   session: UnlockSessionView;
   requestTitle: string;
   allowDevBypass: boolean;
   paymentsEnabled: boolean;
   initialPayment?: UnlockFeePaymentView | null;
+  monetizationEnabled?: boolean;
+  includedRemaining?: number;
+  pricingQuote?: {
+    estimatedProjectValueUsd: number | null;
+    estimatedDurationHours: number | null;
+    potentialRevenueUsd: number | null;
+  } | null;
 }) {
   const t = useTranslations("unlockFlow");
   const tUx = useTranslations("paymentExperience");
@@ -71,15 +84,18 @@ export function ProviderUnlockPanel({
   };
 
   const open = session.status === "opened" || session.status === "payment_pending";
+  const isStripePay =
+    Boolean(payment?.clientSecret) && payment?.paymentProvider === "stripe";
   const awaitingReview =
     justSubmitted ||
     payment?.status === "pending_review" ||
-    Boolean(payment?.hasReceipt);
-  const canUpload =
+    Boolean(payment?.hasReceipt && !isStripePay) ||
+    payment?.status === "paid";
+  const canPay =
     Boolean(payment) &&
     payment?.status === "pending" &&
-    !payment.hasReceipt &&
-    !justSubmitted;
+    !justSubmitted &&
+    (isStripePay || !payment?.hasReceipt);
 
   const steps: PaymentFlowStep[] = useMemo(() => {
     if (session.status === "succeeded") {
@@ -187,18 +203,75 @@ export function ProviderUnlockPanel({
         <div className="space-y-5">
           {!payment ? (
             <section className="space-y-3 rounded-3xl border border-border bg-card p-5 shadow-sm">
-              <p className="text-sm text-muted-foreground">
-                {t("provider.fee", {
-                  amount: session.feeAmount,
-                  currency: session.feeCurrency,
-                })}
-              </p>
+              {monetizationEnabled && session.aiPriceUsd != null ? (
+                <div className="space-y-2 text-sm">
+                  <p className="text-lg font-semibold">
+                    {t("provider.unlockPrice", {
+                      amount: session.aiPriceUsd,
+                      currency: session.feeCurrency || "USD",
+                    })}
+                  </p>
+                  {session.pricingExplanationEn || session.pricingExplanationAr ? (
+                    <p className="text-muted-foreground">
+                      {t("provider.aiExplanation")}:{" "}
+                      {session.pricingExplanationEn ?? session.pricingExplanationAr}
+                    </p>
+                  ) : null}
+                  {pricingQuote?.estimatedProjectValueUsd != null ? (
+                    <p className="text-muted-foreground">
+                      {t("provider.estValue", {
+                        amount: pricingQuote.estimatedProjectValueUsd,
+                      })}
+                    </p>
+                  ) : null}
+                  {pricingQuote?.estimatedDurationHours != null ? (
+                    <p className="text-muted-foreground">
+                      {t("provider.estDuration", {
+                        hours: pricingQuote.estimatedDurationHours,
+                      })}
+                    </p>
+                  ) : null}
+                  {pricingQuote?.potentialRevenueUsd != null ? (
+                    <p className="text-muted-foreground">
+                      {t("provider.potentialRevenue", {
+                        amount: pricingQuote.potentialRevenueUsd,
+                      })}
+                    </p>
+                  ) : null}
+                  {includedRemaining > 0 ? (
+                    <p className="font-medium text-emerald-700 dark:text-emerald-400">
+                      {t("provider.includedLeft", { count: includedRemaining })}
+                    </p>
+                  ) : null}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  {t("provider.fee", {
+                    amount: session.feeAmount,
+                    currency: session.feeCurrency,
+                  })}
+                </p>
+              )}
               <Button
                 className="h-12 w-full rounded-2xl bg-[var(--dalily-gold)] font-bold text-[var(--dalily-navy)] hover:bg-[var(--dalily-gold-light)]"
                 disabled={pending}
-                onClick={() => run(() => startUnlockFeePaymentAction(session.id))}
+                onClick={() =>
+                  run(async () => {
+                    if (monetizationEnabled) {
+                      const result = await unlockLeadAction(session.id);
+                      return {
+                        success: result.success,
+                        error: result.error,
+                        payment: result.payment,
+                      };
+                    }
+                    return startUnlockFeePaymentAction(session.id);
+                  })
+                }
               >
-                {tUx("startPayment")}
+                {monetizationEnabled && includedRemaining > 0
+                  ? t("provider.unlockIncluded")
+                  : t("provider.unlockRequest")}
               </Button>
             </section>
           ) : awaitingReview ? (
@@ -214,7 +287,46 @@ export function ProviderUnlockPanel({
                 <p className="text-sm font-medium">{tUx("successNotify")}</p>
               </div>
             </section>
-          ) : canUpload ? (
+          ) : canPay && payment && isStripePay && payment.clientSecret ? (
+            <section className="space-y-4 rounded-3xl border border-border bg-card p-5">
+              <StripeLeadCheckout
+                clientSecret={payment.clientSecret}
+                publishableKey={
+                  payment.publishableKey ||
+                  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
+                  ""
+                }
+                amount={payment.amount}
+                currency={payment.currency}
+                onPaid={() => {
+                  setJustSubmitted(true);
+                  toast.success(tUx("successTitle"));
+                  router.refresh();
+                }}
+                onError={setUploadError}
+              />
+              <Button
+                variant="outline"
+                className="h-11 w-full rounded-2xl"
+                disabled={pending}
+                onClick={() =>
+                  run(async () => {
+                    const result = await cancelUnlockFeePaymentAction(
+                      payment.paymentId,
+                      session.id,
+                    );
+                    if (result.success) {
+                      setPayment(null);
+                      setJustSubmitted(false);
+                    }
+                    return result;
+                  })
+                }
+              >
+                {tUx("cancel")}
+              </Button>
+            </section>
+          ) : canPay && payment ? (
             <>
               <PaymentDetailsCard
                 details={{

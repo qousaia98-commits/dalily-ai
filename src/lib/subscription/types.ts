@@ -75,6 +75,7 @@ export type InvoiceRow = {
 
 export type CreatePaymentResult = {
   paymentId: string;
+  /** Manual bank-transfer instructions (manual / shamcash providers). */
   instructions?: {
     receiver: string;
     account: string;
@@ -84,6 +85,14 @@ export type CreatePaymentResult = {
     currency: string;
     reference: string;
   };
+  /** Stripe PaymentIntent client secret (lead unlocks). */
+  clientSecret?: string;
+  /** Stripe Checkout URL (Business subscription). */
+  checkoutUrl?: string;
+  stripePaymentIntentId?: string;
+  stripeCheckoutSessionId?: string;
+  /** Optional publishable key hint for the client. */
+  publishableKey?: string;
 };
 
 export type VerifyPaymentResult = {

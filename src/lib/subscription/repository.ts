@@ -334,14 +334,22 @@ export async function listPaymentsForAdmin(params: {
         ownerEmail: provider?.email ?? null,
         phone: provider?.phone ?? null,
         subscriptionId: row.subscription_id,
-        planSlug:
-          (row as { purpose?: string }).purpose === "unlock_fee"
-            ? "unlock_fee"
-            : ((plan?.slug ?? "pro") as string),
-        planName:
-          (row as { purpose?: string }).purpose === "unlock_fee"
-            ? ({ en: "Unlock fee", ar: "رسوم الفتح" } as LocalizedJson)
-            : ((plan?.name as LocalizedJson) ?? { en: "PRO", ar: "PRO" }),
+        planSlug: (() => {
+          const purpose = (row as { purpose?: string }).purpose;
+          if (purpose === "unlock_fee" || purpose === "lead_unlock") return "unlock_fee";
+          if (purpose === "business_subscription") return "business";
+          return (plan?.slug ?? "pro") as string;
+        })(),
+        planName: (() => {
+          const purpose = (row as { purpose?: string }).purpose;
+          if (purpose === "unlock_fee" || purpose === "lead_unlock") {
+            return { en: "Lead unlock", ar: "فتح العميل" } as LocalizedJson;
+          }
+          if (purpose === "business_subscription") {
+            return { en: "Business plan", ar: "خطة الأعمال" } as LocalizedJson;
+          }
+          return (plan?.name as LocalizedJson) ?? { en: "PRO", ar: "PRO" };
+        })(),
         purpose: (row as { purpose?: string }).purpose ?? "subscription",
         unlockSessionId: (row as { unlock_session_id?: string | null }).unlock_session_id ?? null,
         paymentProvider: row.payment_provider,

@@ -4,6 +4,7 @@ import {
   isUnlockDevBypassEnabled,
   isUnlockPaymentsV2Enabled,
   isUnlockV2Enabled,
+  isProviderMonetizationEnabled,
 } from "@/lib/config/feature-flags";
 import { deliverMarketplaceNotification } from "@/lib/notifications/deliver";
 import { syncMarketplaceRequestProjection } from "@/domains/marketplace/projection";
@@ -28,6 +29,12 @@ function mapSession(row: Record<string, unknown>): UnlockSessionView {
     fallbackApplied: Boolean(row.fallback_applied),
     openedAt: row.opened_at as string,
     closedAt: (row.closed_at as string) ?? null,
+    unlockMethod: (row.unlock_method as string) ?? null,
+    aiPriceUsd:
+      row.ai_price_usd != null ? Number(row.ai_price_usd) : null,
+    aiScore: row.ai_score != null ? Number(row.ai_score) : null,
+    pricingExplanationEn: (row.pricing_explanation_en as string) ?? null,
+    pricingExplanationAr: (row.pricing_explanation_ar as string) ?? null,
   };
 }
 
@@ -64,7 +71,37 @@ export async function openUnlockSessionForSelection(input: {
   }
   if (!selection.provider_id) return { ok: false, error: "provider_required" };
 
-  const fee = getUnlockFeeSnapshot();
+  let fee = getUnlockFeeSnapshot();
+  let pricingExtras: Record<string, unknown> = {
+    unlock_method: "legacy",
+  };
+
+  if (isProviderMonetizationEnabled()) {
+    try {
+      const { quoteAndPersistLeadPrice } = await import(
+        "@/lib/monetization/quote"
+      );
+      const quote = await quoteAndPersistLeadPrice({
+        serviceRequestId: String(selection.service_request_id),
+        providerId: String(selection.provider_id),
+      });
+      fee = {
+        amount: quote.finalPriceUsd,
+        currency: quote.currency || "USD",
+      };
+      pricingExtras = {
+        unlock_method: "pay_per_lead",
+        ai_price_usd: quote.finalPriceUsd,
+        ai_score: quote.aiScore,
+        pricing_explanation_en: quote.explanationEn,
+        pricing_explanation_ar: quote.explanationAr,
+        pricing_history_id: quote.pricingHistoryId,
+      };
+    } catch {
+      // keep legacy fee snapshot
+    }
+  }
+
   const slaHours = getUnlockSlaHours();
   const slaDeadline = new Date(Date.now() + slaHours * 60 * 60 * 1000).toISOString();
   const now = new Date().toISOString();
@@ -85,6 +122,7 @@ export async function openUnlockSessionForSelection(input: {
       payment_stub_ref: null,
       opened_at: now,
       updated_at: now,
+      ...pricingExtras,
     })
     .select("*")
     .single();
@@ -116,6 +154,19 @@ export async function openUnlockSessionForSelection(input: {
       href: `/business/unlock/${session.id}`,
       requestId: selection.service_request_id as string,
     });
+  }
+
+  const historyId = pricingExtras.pricing_history_id;
+  if (typeof historyId === "string" && historyId) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (admin as any)
+        .from("lead_pricing_history")
+        .update({ unlock_session_id: session.id })
+        .eq("id", historyId);
+    } catch {
+      // soft
+    }
   }
 
   return { ok: true, session: mapSession(session as Record<string, unknown>) };
@@ -172,7 +223,7 @@ export async function listProviderUnlockSessions(
 export async function completeUnlockSuccess(input: {
   sessionId: string;
   actorUserId: string;
-  mode: "dev_bypass" | "manual_confirm" | "payment_capture" | "admin_comp";
+  mode: "dev_bypass" | "manual_confirm" | "payment_capture" | "admin_comp" | "included_unlock";
   paymentId?: string;
 }): Promise<{ ok: true; grantId: string } | { ok: false; error: string }> {
   if (!isUnlockV2Enabled()) return { ok: false, error: "feature_disabled" };
@@ -183,6 +234,10 @@ export async function completeUnlockSuccess(input: {
 
   if (input.mode === "manual_confirm" && isUnlockPaymentsV2Enabled()) {
     return { ok: false, error: "payment_required" };
+  }
+
+  if (input.mode === "included_unlock" && !isProviderMonetizationEnabled()) {
+    return { ok: false, error: "feature_disabled" };
   }
 
   if (input.mode === "admin_comp") {

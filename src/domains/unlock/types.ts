@@ -1,5 +1,6 @@
 /**
  * Unlock policy constants (Sprint 5). Fee capture is Sprint 6.
+ * Sprint 6 Phase 1 may override fee via AI lead pricing when PROVIDER_MONETIZATION is on.
  */
 
 export function getUnlockFeeSnapshot(): { amount: number; currency: string } {
@@ -47,6 +48,15 @@ export type UnlockSessionView = {
   fallbackApplied: boolean;
   openedAt: string;
   closedAt: string | null;
+  /** Sprint 6 Phase 1 */
+  unlockMethod?: string | null;
+  aiPriceUsd?: number | null;
+  aiScore?: number | null;
+  pricingExplanationEn?: string | null;
+  pricingExplanationAr?: string | null;
+  estimatedProjectValueUsd?: number | null;
+  estimatedDurationHours?: number | null;
+  potentialRevenueUsd?: number | null;
 };
 
 export type ContactReleaseGrantView = {

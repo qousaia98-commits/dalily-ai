@@ -22,6 +22,8 @@ import {
   Siren,
   FolderKanban,
   RefreshCw,
+  RotateCcw,
+  LineChart,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -95,6 +97,20 @@ function buildGroups(opts: {
       icon: Banknote,
       key: "payments",
       badgeKey: "payments",
+      adminOnly: true,
+    },
+    {
+      id: "refunds",
+      href: "/admin/refunds",
+      icon: RotateCcw,
+      key: "refunds",
+      adminOnly: true,
+    },
+    {
+      id: "finance",
+      href: "/admin/finance",
+      icon: LineChart,
+      key: "finance",
       adminOnly: true,
     },
     {

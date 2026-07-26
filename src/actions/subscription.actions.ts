@@ -202,12 +202,18 @@ export async function preparePaymentReceiptUploadAction(
   const validated = validateReceiptMeta(metaParsed.data);
   if (!validated.ok) return { success: false, error: validated.error };
 
-  const history = await getPaymentHistory(provider.id);
-  const payment = history.find((p) => p.id === idParsed.data);
-  if (!payment || payment.paymentStatus !== "pending") {
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const adminLookup = createAdminClient();
+  const { data: paymentRow } = await adminLookup
+    .from("payments")
+    .select("id, payment_status, receipt_path")
+    .eq("id", idParsed.data)
+    .eq("provider_id", provider.id)
+    .maybeSingle();
+  if (!paymentRow || paymentRow.payment_status !== "pending") {
     return { success: false, error: "payment_not_submittable" };
   }
-  if (payment.receiptPath) {
+  if (paymentRow.receipt_path) {
     return { success: false, error: "duplicate_receipt" };
   }
 
@@ -271,18 +277,23 @@ export async function confirmPaymentReceiptUploadAction(
     return { success: false, error: "invalid_payment" };
   }
 
-  const history = await getPaymentHistory(provider.id);
-  const payment = history.find((p) => p.id === idParsed.data);
-  if (!payment || payment.paymentStatus !== "pending") {
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const adminLookup = createAdminClient();
+  const { data: paymentRow } = await adminLookup
+    .from("payments")
+    .select("id, payment_status, receipt_path")
+    .eq("id", idParsed.data)
+    .eq("provider_id", provider.id)
+    .maybeSingle();
+  if (!paymentRow || paymentRow.payment_status !== "pending") {
     return { success: false, error: "payment_not_submittable" };
   }
-  if (payment.receiptPath) {
+  if (paymentRow.receipt_path) {
     return { success: false, error: "duplicate_receipt" };
   }
 
   // Owner has no SELECT on receipts — verify object exists via admin client.
-  const { createAdminClient } = await import("@/lib/supabase/admin");
-  const admin = createAdminClient();
+  const admin = adminLookup;
   const { data: signed } = await admin.storage
     .from(PAYMENT_RECEIPTS_BUCKET)
     .createSignedUrl(metaParsed.data.path, 60);

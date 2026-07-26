@@ -22,7 +22,7 @@ export type ImageKind = "avatar" | "cover" | "gallery";
 export type ProblemPriority = "emergency" | "high" | "normal" | "low";
 export type ProviderVerificationStatus = "pending" | "approved" | "rejected";
 export type SubscriptionStatus = "trial" | "active" | "pending_payment" | "expired" | "cancelled";
-export type PaymentProviderType = "manual" | "shamcash" | "future";
+export type PaymentProviderType = "manual" | "shamcash" | "future" | "stripe";
 export type PaymentStatus =
   | "pending"
   | "pending_review"
@@ -44,6 +44,9 @@ export type AuditAction =
   | "user_activated"
   | "payment_approved"
   | "payment_rejected"
+  | "refund_approved"
+  | "refund_rejected"
+  | "dispute_evidence_uploaded"
   | "subscription_extended"
   | "subscription_cancelled"
   | "subscription_plan_changed"

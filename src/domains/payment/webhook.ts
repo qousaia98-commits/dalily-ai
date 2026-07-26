@@ -1,13 +1,15 @@
 /**
- * Payment webhook ingestion (Sprint 6).
- * All confirmation must come from verified server-side events — never the client.
+ * Payment webhook ingestion (Sprint 6 Phase 2).
+ * Providers report canonical events; business outcomes live in event-handler.
  */
 
 import { createAdminClient } from "@/lib/supabase/admin";
-import { captureUnlockFeePayment } from "@/domains/payment/capture";
-import { markUnlockFeePaymentFailed } from "@/domains/payment/unlock-fee";
 import { recordVerifiedPaymentEvent } from "@/domains/payment/webhook-ledger";
 import { isUnlockPaymentsV2Enabled } from "@/lib/config/feature-flags";
+import {
+  applyCanonicalPaymentEvent,
+  normalizePaymentEventType,
+} from "@/lib/payment/event-handler";
 
 export type WebhookIngestResult =
   | { ok: true; duplicate: boolean; paymentId?: string; grantId?: string }
@@ -16,14 +18,12 @@ export type WebhookIngestResult =
 function verifyWebhookSecret(request: Request): boolean {
   const secret = process.env.PAYMENT_WEBHOOK_SECRET;
   if (!secret) {
-    // Fail closed when secret unset in production-like envs
     if (
       process.env.DALILY_ENV === "production" ||
       process.env.VERCEL_ENV === "production"
     ) {
       return false;
     }
-    // Local/dev: allow only when explicitly opted in
     return process.env.PAYMENT_WEBHOOK_ALLOW_INSECURE === "true";
   }
   const auth = request.headers.get("authorization") ?? "";
@@ -33,7 +33,7 @@ function verifyWebhookSecret(request: Request): boolean {
 
 /**
  * Process a provider webhook body.
- * Supported event types: payment.succeeded | payment.failed | payment.cancelled
+ * Accepts canonical (payment_succeeded) and legacy dotted (payment.succeeded) types.
  */
 export async function ingestPaymentWebhook(input: {
   request: Request;
@@ -54,9 +54,14 @@ export async function ingestPaymentWebhook(input: {
   }
 
   const eventId = (input.body.eventId ?? "").trim();
-  const type = (input.body.type ?? "").trim();
-  if (!eventId || !type) {
+  const typeRaw = (input.body.type ?? "").trim();
+  if (!eventId || !typeRaw) {
     return { ok: false, error: "invalid_payload", status: 400 };
+  }
+
+  const canonical = normalizePaymentEventType(typeRaw);
+  if (!canonical) {
+    return { ok: false, error: "unhandled_event_type", status: 400 };
   }
 
   const admin = createAdminClient();
@@ -74,7 +79,7 @@ export async function ingestPaymentWebhook(input: {
   const ledger = await recordVerifiedPaymentEvent({
     provider: input.provider,
     externalEventId: eventId,
-    eventType: type,
+    eventType: canonical,
     paymentId,
     payload: input.body as Record<string, unknown>,
   });
@@ -87,94 +92,43 @@ export async function ingestPaymentWebhook(input: {
     await recordVerifiedPaymentEvent({
       provider: input.provider,
       externalEventId: eventId,
-      eventType: type,
+      eventType: canonical,
       forceStatus: "ignored",
       errorMessage: "payment_not_resolved",
     });
     return { ok: false, error: "payment_not_found", status: 404 };
   }
 
-  const { data: payment } = await admin
-    .from("payments")
-    .select("id, purpose, payment_status")
-    .eq("id", paymentId)
-    .maybeSingle();
+  const actorId = input.body.actorId?.trim() || "webhook";
+  const applied = await applyCanonicalPaymentEvent({
+    paymentId,
+    eventType: canonical,
+    actorId,
+    externalEventId: eventId,
+    source: "webhook",
+  });
 
-  if (!payment) {
-    return { ok: false, error: "payment_not_found", status: 404 };
-  }
-
-  // Subscription webhooks: acknowledge but do not auto-activate (admin rail remains)
-  if (payment.purpose !== "unlock_fee") {
+  if (!applied.ok) {
     await recordVerifiedPaymentEvent({
       provider: input.provider,
       externalEventId: eventId,
-      eventType: type,
+      eventType: canonical,
+      paymentId,
+      forceStatus: "failed",
+      errorMessage: applied.error,
+    });
+    return { ok: false, error: applied.error, status: applied.status ?? 409 };
+  }
+
+  // Legacy subscription payments: acknowledge without auto-activate
+  if (applied.handled === "legacy") {
+    await recordVerifiedPaymentEvent({
+      provider: input.provider,
+      externalEventId: eventId,
+      eventType: canonical,
       paymentId,
       forceStatus: "ignored",
-      errorMessage: "subscription_requires_admin_rail",
-    });
-    return { ok: true, duplicate: false, paymentId };
-  }
-
-  const actorId = input.body.actorId?.trim() || "webhook";
-
-  if (type === "payment.succeeded") {
-    const captured = await captureUnlockFeePayment({
-      paymentId,
-      actorId,
-      source: "webhook",
-      externalEventId: eventId,
-    });
-    if (!captured.ok) {
-      await recordVerifiedPaymentEvent({
-        provider: input.provider,
-        externalEventId: eventId,
-        eventType: type,
-        paymentId,
-        forceStatus: "failed",
-        errorMessage: captured.error,
-      });
-      return { ok: false, error: captured.error, status: 409 };
-    }
-    return {
-      ok: true,
-      duplicate: captured.alreadyCaptured,
-      paymentId: captured.paymentId,
-      grantId: captured.grantId,
-    };
-  }
-
-  if (type === "payment.failed") {
-    await markUnlockFeePaymentFailed({
-      paymentId,
-      actorId,
-      note: "webhook:payment.failed",
-    });
-    await recordVerifiedPaymentEvent({
-      provider: input.provider,
-      externalEventId: eventId,
-      eventType: type,
-      paymentId,
-      forceStatus: "processed",
-    });
-    return { ok: true, duplicate: false, paymentId };
-  }
-
-  if (type === "payment.cancelled") {
-    if (payment.payment_status === "pending") {
-      await admin
-        .from("payments")
-        .update({ payment_status: "cancelled" })
-        .eq("id", paymentId)
-        .eq("payment_status", "pending");
-    }
-    await recordVerifiedPaymentEvent({
-      provider: input.provider,
-      externalEventId: eventId,
-      eventType: type,
-      paymentId,
-      forceStatus: "processed",
+      errorMessage: "legacy_subscription_requires_admin_rail",
     });
     return { ok: true, duplicate: false, paymentId };
   }
@@ -182,10 +136,15 @@ export async function ingestPaymentWebhook(input: {
   await recordVerifiedPaymentEvent({
     provider: input.provider,
     externalEventId: eventId,
-    eventType: type,
+    eventType: canonical,
     paymentId,
-    forceStatus: "ignored",
-    errorMessage: "unhandled_event_type",
+    forceStatus: "processed",
   });
-  return { ok: true, duplicate: false, paymentId };
+
+  return {
+    ok: true,
+    duplicate: applied.duplicate,
+    paymentId: applied.paymentId,
+    grantId: applied.grantId,
+  };
 }

@@ -306,6 +306,18 @@ export class SubscriptionService {
 
     await createInvoiceForPayment(paymentId, payment.provider_id, Number(payment.amount), payment.currency);
 
+    try {
+      const { ensureFinancialDocumentAfterPayment } = await import(
+        "@/lib/financial-documents"
+      );
+      await ensureFinancialDocumentAfterPayment({
+        paymentId,
+        actorUserId: actorId ?? null,
+      });
+    } catch {
+      // soft
+    }
+
     const owner = await getProviderOwnerEmailContext(payment.provider_id);
     if (owner?.email && (planSlug === "pro" || planSlug === "premium")) {
       await sendPlanActivatedEmail({

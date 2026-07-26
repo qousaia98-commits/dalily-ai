@@ -64,6 +64,57 @@
     "prefsSaved": "تم حفظ التفضيلات",
     "prefsError": "تعذر حفظ التفضيلات"
   },
+  "monetization": {
+    "dashboard": {
+      "badge": "تحقيق الدخل من العملاء",
+      "title": "الخطط والفتحات",
+      "subtitle": "ادفع فقط عند فتح طلب — بدون عمولة.",
+      "currentPlan": "الخطة الحالية",
+      "planFree": "مجاني — دفع لكل عميل",
+      "planBusiness": "أعمال",
+      "premiumBadge": "شارة مميزة",
+      "includedUnlocks": "فتحات مشمولة",
+      "unlocksRemaining": "يتبقى {remaining} من {total}",
+      "payPerLead": "تسعير الذكاء لكل عميل",
+      "usedThisMonth": "استُخدم {count} هذا الشهر",
+      "monthSpend": "إنفاق الفتح هذا الشهر",
+      "unlockedTotal": "إجمالي العملاء المفتوحين",
+      "upgradeTitle": "الترقية إلى أعمال",
+      "upgradeBody": "{price} USD/شهر يشمل {unlocks} فتحات. بعد نفادها تعود لتسعير الدفع لكل عميل.",
+      "benefitBadge": "شارة مميزة",
+      "benefitSearch": "ظهور أعلى في البحث",
+      "benefitAnalytics": "تحليلات الأعمال",
+      "benefitMarketing": "عروض تسويقية",
+      "benefitAi": "رؤى ذكاء للأعمال",
+      "upgradeCta": "ترقية — {price} USD/شهر",
+      "upgradeSuccess": "تم تفعيل خطة الأعمال",
+      "upgradeError": "تعذر الترقية",
+      "businessActiveHint": "لديك {unlocks} فتحات مشمولة كل شهر. الفتحات الإضافية بأسعار الذكاء ({min}–{max} USD). لا يُرحَّل الرصيد غير المستخدم.",
+      "viewUnlocks": "عرض جلسات الفتح",
+      "upgradePaymentStarted": "تم إنشاء الدفع — حوّل وارفع الإيصال",
+      "upgradePaymentTitle": "ادفع لخطة الأعمال",
+      "upgradePaymentSubtitle": "أكمل التحويل ثم ارفع الإيصال. تُفعَّل الخطة بعد التحقق.",
+      "viewHistory": "سجل المدفوعات"
+    },
+    "admin": {
+      "title": "إعدادات تحقيق الدخل",
+      "subtitle": "ضبط خطة الأعمال وحدود أسعار فتح الطلبات.",
+      "businessPrice": "سعر الأعمال (USD/شهر)",
+      "includedUnlocks": "فتحات مشمولة / شهر",
+      "minLead": "أدنى سعر فتح (USD)",
+      "maxLead": "أقصى سعر فتح (USD)",
+      "baseLead": "السعر الأساسي (USD)",
+      "emergencyMul": "مضاعف الطوارئ",
+      "urgencyMul": "مضاعف الاستعجال",
+      "multiMul": "مضاعف متعدد الخدمات",
+      "complexityMul": "مضاعف التعقيد",
+      "distanceMul": "مضاعف المسافة / كم",
+      "demandMul": "مضاعف الطلب",
+      "save": "حفظ الإعدادات",
+      "saved": "تم الحفظ",
+      "saveError": "تعذر الحفظ"
+    }
+  },
   "assistant": {
     "customer": {
       "badge": "مساعد دليلي",
@@ -632,7 +683,9 @@
         "searches": "تحليلات البحث",
         "searchesDesc": "ما يبحث عنه الناس",
         "subscriptions": "الاشتراكات",
-        "subscriptionsDesc": "الخطط ونظرة على الفوترة"
+        "subscriptionsDesc": "الخطط ونظرة على الفوترة",
+        "monetization": "تحقيق الدخل من العملاء",
+        "monetizationDesc": "خطة الأعمال وأسعار الفتح والمضاعفات"
       }
     }
   },
@@ -1227,6 +1280,14 @@
       "succeeded": "نجح الفتح — تم إتاحة بيانات الزبون.",
       "back": "كل جلسات الفتح",
       "devBypassHint": "UNLOCK_DEV_BYPASS مفعّل — المنح بدون دفع مسموح محلياً فقط.",
+      "unlockPrice": "سعر فتح الطلب: {amount} {currency}",
+      "aiExplanation": "سبب هذا السعر",
+      "estValue": "القيمة التقديرية للمشروع: {amount} USD",
+      "estDuration": "المدة المتوقعة: ~{hours} ساعة",
+      "potentialRevenue": "إيراد محتمل: ~{amount} USD",
+      "includedLeft": "يتبقى {count} فتحات مشمولة في خطة الأعمال هذا الشهر",
+      "unlockIncluded": "فتح باستخدام الرصيد المشمول",
+      "unlockRequest": "فتح الطلب",
       "status": {
         "opened": "مفتوحة",
         "payment_pending": "بانتظار الدفع",
@@ -2185,7 +2246,9 @@
         "subscription": "الاشتراك والخطة",
         "subscriptionDesc": "إدارة خطتك وخيارات الترقية",
         "history": "سجل المدفوعات",
-        "historyDesc": "حالة الدفع والإيصالات"
+        "historyDesc": "الاشتراكات وفتح العملاء والإيصالات",
+        "monetization": "الخطط والفتحات",
+        "monetizationDesc": "خطة الأعمال والفتحات المشمولة"
       }
     },
     "dashboard": {
@@ -3687,6 +3750,8 @@
       "unlockOps": "طلبات الفتح",
       "cells": "الخلايا",
       "inspect": "فحص",
+      "refunds": "الاستردادات",
+      "finance": "المالية",
       "settings": "الإعدادات",
       "groups": {
         "people": "إدارة المستخدمين",
@@ -3797,6 +3862,15 @@
         "reject_failed": "ما قدرنا نرفض الدفع.",
         "validation_error": "ملاحظة غير صالحة.",
         "unknown": "صار خطأ."
+      },
+      "stats": {
+        "total": "إجمالي المدفوعات",
+        "pendingReview": "قيد المراجعة",
+        "paidUsd": "المدفوع (USD)",
+        "currentMonth": "هذا الشهر (USD)",
+        "previousMonth": "الشهر السابق (USD)",
+        "leadUnlocks": "فتحات عملاء مدفوعة",
+        "businessSubs": "اشتراكات أعمال مدفوعة"
       }
     },
     "dashboard": {
@@ -4690,6 +4764,210 @@
       "noUnlock": "لا جلسة فتح",
       "grantYes": "منح فتح التواصل: نعم",
       "grantNo": "منح فتح التواصل: لا"
+    },
+    "stripeWebhooks": {
+      "eyebrow": "Stripe",
+      "pageTitle": "Webhooks Stripe",
+      "pageSubtitle": "أحداث Stripe الموثّقة وإعادة المحاولة.",
+      "backToPayments": "العودة للمدفوعات",
+      "title": "سجل Webhooks",
+      "subtitle": "سجل غير قابل للتكرار لأحداث Stripe.",
+      "empty": "لا أحداث Stripe بعد.",
+      "retry": "إعادة",
+      "retrySuccess": "تمت إعادة المعالجة",
+      "retryError": "فشلت إعادة المحاولة"
+    },
+    "financialDocuments": {
+      "eyebrow": "المالية",
+      "pageTitle": "المستندات المالية",
+      "pageSubtitle": "الفواتير والإيصالات وإعدادات الشركة واكتشاف المستندات الناقصة.",
+      "backToPayments": "العودة للمدفوعات",
+      "companySettings": "إعدادات فوترة الشركة",
+      "searchPlaceholder": "بحث في المستندات…",
+      "loadError": "تعذر التحميل",
+      "downloadError": "فشل التنزيل",
+      "download": "تنزيل",
+      "regenerate": "إعادة توليد",
+      "regenSuccess": "تمت إعادة توليد PDF",
+      "regenError": "فشلت إعادة التوليد",
+      "generate": "توليد",
+      "generateSuccess": "تم توليد المستند",
+      "generateError": "فشل التوليد",
+      "missingTitle": "مدفوعات ناجحة بلا مستند",
+      "stats": {
+        "total": "المستندات",
+        "invoices": "الفواتير",
+        "receipts": "الإيصالات",
+        "missing": "ناقصة"
+      }
+    },
+    "companyBilling": {
+      "companyName": "اسم الشركة",
+      "companyAddress": "العنوان",
+      "country": "البلد",
+      "vatNumber": "الرقم الضريبي (VAT)",
+      "taxId": "الرقم الضريبي",
+      "supportEmail": "بريد الدعم",
+      "website": "الموقع",
+      "phone": "الهاتف",
+      "currency": "العملة",
+      "taxRate": "نسبة الضريبة الافتراضية",
+      "invoiceFooter": "تذييل الفاتورة",
+      "legalNotice": "ملاحظة قانونية",
+      "save": "حفظ الإعدادات",
+      "saved": "تم الحفظ",
+      "saveError": "تعذر الحفظ"
+    },
+    "refunds": {
+      "eyebrow": "المالية",
+      "pageTitle": "الاستردادات والنزاعات",
+      "pageSubtitle": "مراجعة طلبات الاسترداد واعتماد استردادات Stripe وتتبع نزاعات الدفع.",
+      "backToPayments": "العودة للمدفوعات",
+      "toDocuments": "المستندات المالية",
+      "searchPlaceholder": "بحث بالدفع أو المرجع أو Stripe…",
+      "loadError": "تعذر التحميل",
+      "refundsTitle": "طلبات الاسترداد",
+      "disputesTitle": "نزاعات الدفع",
+      "emptyRefunds": "لا طلبات استرداد.",
+      "emptyDisputes": "لا نزاعات.",
+      "approve": "اعتماد",
+      "reject": "رفض",
+      "approveSuccess": "تم اعتماد الاسترداد",
+      "approveError": "تعذر الاعتماد",
+      "rejectSuccess": "تم رفض الاسترداد",
+      "rejectError": "تعذر الرفض",
+      "rejectPrompt": "سبب الرفض (اختياري)",
+      "remaining": "المتبقي بعد الاسترداد",
+      "uploadEvidence": "إضافة ملاحظة أدلة",
+      "evidencePlaceholder": "ملخص الأدلة لـ Stripe…",
+      "evidenceSuccess": "تم تسجيل الأدلة",
+      "evidenceError": "تعذر حفظ الأدلة",
+      "filters": {
+        "statusAll": "كل الحالات"
+      },
+      "stats": {
+        "total": "الإجمالي",
+        "requested": "بانتظار المراجعة",
+        "succeeded": "ناجح",
+        "failed": "فشل",
+        "refundedUsd": "مسترد (USD)"
+      },
+      "status": {
+        "requested": "مطلوب",
+        "pending": "معلق",
+        "approved": "معتمد",
+        "rejected": "مرفوض",
+        "processing": "قيد المعالجة",
+        "succeeded": "ناجح",
+        "failed": "فشل",
+        "cancelled": "ملغى"
+      },
+      "type": {
+        "full": "كامل",
+        "partial": "جزئي",
+        "manual": "يدوي",
+        "automatic": "تلقائي"
+      },
+      "disputeStatus": {
+        "opened": "مفتوح",
+        "evidence_requested": "مطلوب أدلة",
+        "evidence_submitted": "تم تقديم الأدلة",
+        "under_review": "قيد المراجعة",
+        "won": "فوز",
+        "lost": "خسارة",
+        "closed": "مغلق"
+      }
+    },
+    "finance": {
+      "eyebrow": "المالية",
+      "pageTitle": "تحليلات الإيرادات والمالية",
+      "pageSubtitle": "رؤى فورية حول الإيرادات والاشتراكات وفتح العملاء والاستردادات والنمو — قراءة فقط على بيانات الدفع الحالية.",
+      "loadError": "تعذر تحميل البيانات المالية",
+      "refreshed": "تم تحديث لوحة التحكم",
+      "refresh": "تحديث",
+      "computedAt": "آخر تحديث {at} · {cache}",
+      "fromCache": "مخزّن",
+      "live": "مباشر",
+      "exportError": "فشل التصدير",
+      "exportSuccess": "تم تنزيل التصدير",
+      "exportCsv": "تصدير CSV",
+      "exportPdf": "تصدير PDF",
+      "revenueTitle": "الإيرادات",
+      "subscriptionsTitle": "الاشتراكات",
+      "leadsTitle": "مدفوعات العملاء",
+      "refundsTitle": "الاستردادات والنزاعات",
+      "chartsTitle": "الاتجاهات",
+      "providersTitle": "أفضل المزودين",
+      "reportsTitle": "التقارير",
+      "reportsSubtitle": "أنشئ تقارير دورية وصدّر CSV أو PDF. التصدير يُسجَّل في التدقيق.",
+      "emptyChart": "لا بيانات في هذه الفترة بعد.",
+      "byCategory": "حسب الفئة",
+      "byCountry": "حسب البلد",
+      "byCity": "حسب المدينة",
+      "topReasons": "أبرز أسباب الاسترداد",
+      "recentTransactions": "أحدث المعاملات",
+      "recentRefunds": "أحدث الاستردادات",
+      "recentSubscriptions": "أحدث الاشتراكات",
+      "viewAllPayments": "كل المدفوعات",
+      "viewAllRefunds": "كل الاستردادات",
+      "businessFreeRatio": "أعمال {business} · مجاني {free}",
+      "links": {
+        "payments": "المدفوعات",
+        "refunds": "الاستردادات",
+        "documents": "المستندات"
+      },
+      "periods": {
+        "daily": "يومي",
+        "weekly": "أسبوعي",
+        "monthly": "شهري",
+        "quarterly": "ربع سنوي",
+        "yearly": "سنوي"
+      },
+      "charts": {
+        "dailyRevenue": "الإيراد اليومي (30 يوم)",
+        "monthlyRevenue": "الإيراد الشهري (12 شهر)",
+        "subscriptionGrowth": "خطط الأعمال النشطة",
+        "leadRevenue": "إيراد العملاء (30 يوم)",
+        "refundTrend": "حجم الاسترداد (30 يوم)",
+        "mrrTrend": "اتجاه MRR",
+        "arrTrend": "اتجاه ARR"
+      },
+      "table": {
+        "provider": "المزود",
+        "plan": "الخطة",
+        "revenue": "الإيراد",
+        "unlocks": "الفتحات",
+        "ltv": "القيمة مدى الحياة"
+      },
+      "kpis": {
+        "today": "اليوم",
+        "thisWeek": "هذا الأسبوع",
+        "thisMonth": "هذا الشهر",
+        "thisYear": "هذه السنة",
+        "lifetime": "إيراد مدى الحياة",
+        "mrr": "MRR",
+        "arr": "ARR",
+        "arpp": "ARPP",
+        "activeBusiness": "أعمال نشطة",
+        "freeProviders": "مزودون مجانيون",
+        "newSubscriptions": "جديد (30 يوم)",
+        "renewals": "تجديدات (30 يوم)",
+        "expiringSoon": "تنتهي (7 أيام)",
+        "cancelled": "ملغاة",
+        "conversionRate": "مجاني → أعمال",
+        "churnRate": "معدل التسرب",
+        "unlockedLeads": "عملاء مفتوحون",
+        "avgLeadPrice": "متوسط سعر العميل",
+        "leadRevenue": "إيراد العملاء",
+        "refundCount": "عدد الاستردادات",
+        "refundVolume": "حجم الاسترداد",
+        "refundRate": "معدل الاسترداد",
+        "partialVsFull": "جزئي / كامل",
+        "openDisputes": "نزاعات مفتوحة",
+        "wonDisputes": "فوز",
+        "lostDisputes": "خسارة",
+        "avgResolution": "متوسط الحل"
+      }
     }
   },
   "auth": {
@@ -5441,6 +5719,141 @@
       "operational_score": "درجة التشغيل {score}%",
       "response_band": "احتمال الرد {pct}%",
       "emergency_exposure": "أولوية بث الطوارئ"
+    }
+  },
+  "paymentHistory": {
+    "title": "سجل المدفوعات",
+    "subtitle": "الاشتراكات وفتح العملاء والإيصالات — مع بحث حسب الشهر والحالة.",
+    "empty": "لا مدفوعات تطابق عوامل التصفية.",
+    "loadError": "تعذر تحميل المدفوعات",
+    "downloadError": "تعذر تنزيل الإيصال",
+    "downloadReceipt": "تنزيل الإيصال",
+    "searchPlaceholder": "بحث بالمرجع…",
+    "resultCount": "{count} دفعة",
+    "filters": {
+      "all": "كل الفترات",
+      "currentMonth": "هذا الشهر",
+      "previousMonth": "الشهر السابق",
+      "purpose": "النوع",
+      "purposeAll": "كل الأنواع",
+      "status": "الحالة",
+      "statusAll": "كل الحالات"
+    },
+    "purpose": {
+      "leadUnlock": "فتح عميل",
+      "business": "اشتراك أعمال",
+      "subscription": "اشتراك الخطة"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "pending_review": "قيد المراجعة",
+      "paid": "مدفوع",
+      "failed": "فشل",
+      "cancelled": "ملغى",
+      "rejected": "مرفوض",
+      "expired": "منتهٍ"
+    },
+    "refund": {
+      "pending": "استرداد بانتظار المراجعة",
+      "refunded": "تم استرداد {amount} {currency}"
+    }
+  },
+  "stripeCheckout": {
+    "leadAmount": "ادفع {amount} {currency}",
+    "payCta": "ادفع بأمان",
+    "processing": "جارٍ المعالجة…",
+    "errorTitle": "فشل الدفع",
+    "errorGeneric": "تعذر إكمال الدفع",
+    "secureHint": "بطاقة، Apple Pay و Google Pay عند التوفر. عبر Stripe."
+  },
+  "stripeBilling": {
+    "renewal": "يتجدد {date}",
+    "cancelScheduled": "إلغاء مجدول",
+    "managePayment": "تحديث طريقة الدفع",
+    "cancelRenewal": "إلغاء التجديد التلقائي",
+    "cancelSuccess": "تم إلغاء التجديد التلقائي",
+    "cancelError": "تعذر إلغاء التجديد",
+    "portalError": "تعذر فتح بوابة الفوترة",
+    "viewInvoices": "فواتير Stripe",
+    "invoicesError": "تعذر تحميل الفواتير",
+    "openInvoice": "فتح",
+    "resumeCheckout": "متابعة دفع Stripe"
+  },
+  "financialDocuments": {
+    "title": "الفواتير والإيصالات",
+    "subtitle": "حمّل ملفات PDF احترافية للاشتراكات وفتح العملاء.",
+    "empty": "لا مستندات بعد.",
+    "loadError": "تعذر تحميل المستندات",
+    "downloadError": "تعذر تنزيل PDF",
+    "downloadPdf": "تنزيل PDF",
+    "searchPlaceholder": "بحث برقم المستند…",
+    "filters": {
+      "type": "النوع",
+      "allTypes": "كل الأنواع"
+    },
+    "types": {
+      "invoice": "فاتورة أعمال",
+      "leadReceipt": "إيصال فتح عميل",
+      "manualReceipt": "إيصال دفع يدوي",
+      "creditNote": "إشعار دائن"
+    }
+  },
+  "refunds": {
+    "title": "الاستردادات والنزاعات",
+    "subtitle": "اطلب استردادًا للمراجعة. فقط المسؤولون يعتمدون ويعالجون الاستردادات.",
+    "requestTitle": "طلب استرداد",
+    "requestHint": "لا يمكنك استرداد دفعة بنفسك — يجب اعتماد المسؤول.",
+    "historyTitle": "سجل الاستردادات",
+    "disputesTitle": "النزاعات",
+    "empty": "لا طلبات استرداد بعد.",
+    "emptyDisputes": "لا نزاعات دفع.",
+    "noPaidPayments": "لا مدفوعات قابلة للاسترداد",
+    "amountPlaceholder": "مبلغ جزئي (اتركه فارغًا للمتبقي بالكامل)",
+    "reasonPlaceholder": "سبب الاسترداد…",
+    "submitRequest": "إرسال طلب الاسترداد",
+    "requestSuccess": "تم إرسال طلب الاسترداد",
+    "requestInvalid": "أدخل سببًا ومبلغًا صالحين",
+    "downloadCreditNote": "تنزيل إشعار دائن",
+    "downloadError": "فشل التنزيل",
+    "remaining": "المتبقي بعد هذا الاسترداد",
+    "alreadyRefunded": "مسترد سابقًا",
+    "type": {
+      "full": "كامل",
+      "partial": "جزئي",
+      "manual": "يدوي",
+      "automatic": "تلقائي"
+    },
+    "status": {
+      "requested": "مطلوب",
+      "pending": "معلق",
+      "approved": "معتمد",
+      "rejected": "مرفوض",
+      "processing": "قيد المعالجة",
+      "succeeded": "ناجح",
+      "failed": "فشل",
+      "cancelled": "ملغى"
+    },
+    "disputeStatus": {
+      "opened": "مفتوح",
+      "evidence_requested": "مطلوب أدلة",
+      "evidence_submitted": "تم تقديم الأدلة",
+      "under_review": "قيد المراجعة",
+      "won": "فوز",
+      "lost": "خسارة",
+      "closed": "مغلق"
+    },
+    "errors": {
+      "generic": "تعذر إرسال طلب الاسترداد",
+      "feature_disabled": "الاستردادات غير مفعّلة",
+      "login_required": "يرجى تسجيل الدخول",
+      "forbidden": "غير مسموح",
+      "invalid_input": "إدخال غير صالح",
+      "payment_not_found": "الدفع غير موجود",
+      "payment_not_paid": "الدفع غير مدفوع",
+      "nothing_to_refund": "لا يتبقى ما يُسترد",
+      "amount_exceeds_remaining": "المبلغ يتجاوز الرصيد المتبقي",
+      "refund_already_open": "يوجد طلب استرداد مفتوح",
+      "create_failed": "تعذر إنشاء الطلب"
     }
   }
 }

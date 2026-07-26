@@ -64,6 +64,57 @@
     "prefsSaved": "Preferences saved",
     "prefsError": "Could not save preferences"
   },
+  "monetization": {
+    "dashboard": {
+      "badge": "Lead monetization",
+      "title": "Plans & unlocks",
+      "subtitle": "Pay only when you unlock a request — no commission.",
+      "currentPlan": "Current plan",
+      "planFree": "Free — Pay per Lead",
+      "planBusiness": "Business",
+      "premiumBadge": "Premium badge",
+      "includedUnlocks": "Included unlocks",
+      "unlocksRemaining": "{remaining} of {total} left",
+      "payPerLead": "AI pay-per-lead pricing",
+      "usedThisMonth": "{count} used this month",
+      "monthSpend": "Unlock spend this month",
+      "unlockedTotal": "Total unlocked leads",
+      "upgradeTitle": "Upgrade to Business",
+      "upgradeBody": "{price} USD/month includes {unlocks} unlocks. After that you return to Pay per Lead.",
+      "benefitBadge": "Premium badge",
+      "benefitSearch": "Higher search visibility",
+      "benefitAnalytics": "Business analytics",
+      "benefitMarketing": "Marketing promotions",
+      "benefitAi": "AI business insights",
+      "upgradeCta": "Upgrade — {price} USD/mo",
+      "upgradeSuccess": "Business plan activated",
+      "upgradeError": "Could not upgrade",
+      "upgradePaymentStarted": "Payment created — transfer and upload your receipt",
+      "upgradePaymentTitle": "Pay for Business",
+      "upgradePaymentSubtitle": "Complete the transfer, then upload your receipt. Your plan activates after verification.",
+      "businessActiveHint": "You have {unlocks} included unlocks each month. Extra unlocks use AI pricing ({min}–{max} USD). Unused unlocks do not carry over.",
+      "viewUnlocks": "View unlock leads",
+      "viewHistory": "Payment history"
+    },
+    "admin": {
+      "title": "Lead monetization settings",
+      "subtitle": "Configure Business plan and AI unlock price bounds.",
+      "businessPrice": "Business price (USD/mo)",
+      "includedUnlocks": "Included unlocks / month",
+      "minLead": "Min lead price (USD)",
+      "maxLead": "Max lead price (USD)",
+      "baseLead": "Base lead price (USD)",
+      "emergencyMul": "Emergency multiplier",
+      "urgencyMul": "Urgency multiplier",
+      "multiMul": "Multi-service multiplier",
+      "complexityMul": "Complexity multiplier",
+      "distanceMul": "Distance multiplier / km",
+      "demandMul": "Demand multiplier",
+      "save": "Save settings",
+      "saved": "Settings saved",
+      "saveError": "Could not save"
+    }
+  },
   "assistant": {
     "customer": {
       "badge": "Dalily Assistant",
@@ -632,7 +683,9 @@
         "searches": "Search analytics",
         "searchesDesc": "What people look for",
         "subscriptions": "Subscriptions",
-        "subscriptionsDesc": "Plans and billing overview"
+        "subscriptionsDesc": "Plans and billing overview",
+        "monetization": "Lead monetization",
+        "monetizationDesc": "Business plan, unlock prices, multipliers"
       }
     }
   },
@@ -1227,6 +1280,14 @@
       "succeeded": "Unlock succeeded — customer contact was released.",
       "back": "All unlocks",
       "devBypassHint": "UNLOCK_DEV_BYPASS is on — grants without payment are allowed locally only.",
+      "unlockPrice": "Unlock price: {amount} {currency}",
+      "aiExplanation": "Why this price",
+      "estValue": "Estimated project value: {amount} USD",
+      "estDuration": "Expected duration: ~{hours}h",
+      "potentialRevenue": "Potential revenue: ~{amount} USD",
+      "includedLeft": "{count} included Business unlocks remaining this month",
+      "unlockIncluded": "Unlock with included credit",
+      "unlockRequest": "Unlock request",
       "status": {
         "opened": "Opened",
         "payment_pending": "Payment pending",
@@ -2556,7 +2617,9 @@
         "subscription": "Subscription & plan",
         "subscriptionDesc": "Manage your plan and upgrades",
         "history": "Payment history",
-        "historyDesc": "Payment status and receipts"
+        "historyDesc": "Subscriptions, lead unlocks, and receipts",
+        "monetization": "Plans & unlocks",
+        "monetizationDesc": "Business plan and included unlocks"
       }
     },
     "dashboard": {
@@ -4032,6 +4095,8 @@
       "unlockOps": "Unlock requests",
       "cells": "Cells",
       "inspect": "Inspect",
+      "refunds": "Refunds",
+      "finance": "Finance",
       "settings": "Settings",
       "groups": {
         "people": "People",
@@ -4088,6 +4153,15 @@
       "hasReceipt": "Receipt",
       "noReceipt": "No receipt",
       "searchPlaceholder": "Search by business, owner, reference, email or phone…",
+      "stats": {
+        "total": "Total payments",
+        "pendingReview": "Pending review",
+        "paidUsd": "Paid (USD)",
+        "currentMonth": "This month (USD)",
+        "previousMonth": "Previous month (USD)",
+        "leadUnlocks": "Lead unlocks paid",
+        "businessSubs": "Business subscriptions paid"
+      },
       "tabs": {
         "pendingReview": "🟡 Pending Review",
         "approved": "🟢 Approved",
@@ -5035,6 +5109,210 @@
       "noUnlock": "No unlock session",
       "grantYes": "Contact release grant: yes",
       "grantNo": "Contact release grant: no"
+    },
+    "stripeWebhooks": {
+      "eyebrow": "Stripe",
+      "pageTitle": "Stripe webhooks",
+      "pageSubtitle": "Verified Stripe events and retry failed processing.",
+      "backToPayments": "Back to payments",
+      "title": "Webhook history",
+      "subtitle": "Idempotent ledger for Stripe events.",
+      "empty": "No Stripe webhook events yet.",
+      "retry": "Retry",
+      "retrySuccess": "Reprocessed",
+      "retryError": "Retry failed"
+    },
+    "financialDocuments": {
+      "eyebrow": "Finance",
+      "pageTitle": "Financial documents",
+      "pageSubtitle": "Invoices, receipts, company billing settings, and missing-document detection.",
+      "backToPayments": "Back to payments",
+      "companySettings": "Company billing settings",
+      "searchPlaceholder": "Search documents…",
+      "loadError": "Could not load",
+      "downloadError": "Download failed",
+      "download": "Download",
+      "regenerate": "Regenerate",
+      "regenSuccess": "PDF regenerated",
+      "regenError": "Regeneration failed",
+      "generate": "Generate",
+      "generateSuccess": "Document generated",
+      "generateError": "Generation failed",
+      "missingTitle": "Paid payments without documents",
+      "stats": {
+        "total": "Documents",
+        "invoices": "Invoices",
+        "receipts": "Receipts",
+        "missing": "Missing"
+      }
+    },
+    "companyBilling": {
+      "companyName": "Company name",
+      "companyAddress": "Address",
+      "country": "Country",
+      "vatNumber": "VAT number",
+      "taxId": "Tax ID",
+      "supportEmail": "Support email",
+      "website": "Website",
+      "phone": "Phone",
+      "currency": "Currency",
+      "taxRate": "Default tax rate (e.g. 0.0)",
+      "invoiceFooter": "Invoice footer",
+      "legalNotice": "Legal notice",
+      "save": "Save settings",
+      "saved": "Settings saved",
+      "saveError": "Could not save"
+    },
+    "refunds": {
+      "eyebrow": "Finance",
+      "pageTitle": "Refunds & disputes",
+      "pageSubtitle": "Review refund requests, approve Stripe refunds, and track payment disputes.",
+      "backToPayments": "Back to payments",
+      "toDocuments": "Financial documents",
+      "searchPlaceholder": "Search by payment, reference, Stripe ID…",
+      "loadError": "Could not load",
+      "refundsTitle": "Refund requests",
+      "disputesTitle": "Payment disputes",
+      "emptyRefunds": "No refund requests.",
+      "emptyDisputes": "No disputes.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approveSuccess": "Refund approved",
+      "approveError": "Could not approve",
+      "rejectSuccess": "Refund rejected",
+      "rejectError": "Could not reject",
+      "rejectPrompt": "Rejection reason (optional)",
+      "remaining": "Remaining after refund",
+      "uploadEvidence": "Add evidence note",
+      "evidencePlaceholder": "Evidence summary for Stripe…",
+      "evidenceSuccess": "Evidence recorded",
+      "evidenceError": "Could not save evidence",
+      "filters": {
+        "statusAll": "All statuses"
+      },
+      "stats": {
+        "total": "Total",
+        "requested": "Pending review",
+        "succeeded": "Succeeded",
+        "failed": "Failed",
+        "refundedUsd": "Refunded (USD)"
+      },
+      "status": {
+        "requested": "Requested",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "processing": "Processing",
+        "succeeded": "Succeeded",
+        "failed": "Failed",
+        "cancelled": "Cancelled"
+      },
+      "type": {
+        "full": "Full",
+        "partial": "Partial",
+        "manual": "Manual",
+        "automatic": "Automatic"
+      },
+      "disputeStatus": {
+        "opened": "Opened",
+        "evidence_requested": "Evidence requested",
+        "evidence_submitted": "Evidence submitted",
+        "under_review": "Under review",
+        "won": "Won",
+        "lost": "Lost",
+        "closed": "Closed"
+      }
+    },
+    "finance": {
+      "eyebrow": "Finance",
+      "pageTitle": "Revenue & finance analytics",
+      "pageSubtitle": "Real-time insights into revenue, subscriptions, lead unlocks, refunds, and growth — read-only over existing payment data.",
+      "loadError": "Could not load finance data",
+      "refreshed": "Dashboard refreshed",
+      "refresh": "Refresh",
+      "computedAt": "Updated {at} · {cache}",
+      "fromCache": "cached",
+      "live": "live",
+      "exportError": "Export failed",
+      "exportSuccess": "Export downloaded",
+      "exportCsv": "Export CSV",
+      "exportPdf": "Export PDF",
+      "revenueTitle": "Revenue",
+      "subscriptionsTitle": "Subscriptions",
+      "leadsTitle": "Lead payments",
+      "refundsTitle": "Refunds & disputes",
+      "chartsTitle": "Trends",
+      "providersTitle": "Top providers",
+      "reportsTitle": "Reports",
+      "reportsSubtitle": "Generate period reports and export CSV or PDF. Exports are audited.",
+      "emptyChart": "No data in this range yet.",
+      "byCategory": "By category",
+      "byCountry": "By country",
+      "byCity": "By city",
+      "topReasons": "Top refund reasons",
+      "recentTransactions": "Recent transactions",
+      "recentRefunds": "Recent refunds",
+      "recentSubscriptions": "Recent subscriptions",
+      "viewAllPayments": "All payments",
+      "viewAllRefunds": "All refunds",
+      "businessFreeRatio": "Business {business} · Free {free}",
+      "links": {
+        "payments": "Payments",
+        "refunds": "Refunds",
+        "documents": "Documents"
+      },
+      "periods": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "quarterly": "Quarterly",
+        "yearly": "Yearly"
+      },
+      "charts": {
+        "dailyRevenue": "Daily revenue (30d)",
+        "monthlyRevenue": "Monthly revenue (12m)",
+        "subscriptionGrowth": "Active Business plans",
+        "leadRevenue": "Lead revenue (30d)",
+        "refundTrend": "Refund volume (30d)",
+        "mrrTrend": "MRR trend",
+        "arrTrend": "ARR trend"
+      },
+      "table": {
+        "provider": "Provider",
+        "plan": "Plan",
+        "revenue": "Revenue",
+        "unlocks": "Unlocks",
+        "ltv": "Lifetime value"
+      },
+      "kpis": {
+        "today": "Today",
+        "thisWeek": "This week",
+        "thisMonth": "This month",
+        "thisYear": "This year",
+        "lifetime": "Lifetime revenue",
+        "mrr": "MRR",
+        "arr": "ARR",
+        "arpp": "ARPP",
+        "activeBusiness": "Active Business",
+        "freeProviders": "Free providers",
+        "newSubscriptions": "New (30d)",
+        "renewals": "Renewals (30d)",
+        "expiringSoon": "Expiring (7d)",
+        "cancelled": "Cancelled",
+        "conversionRate": "Free → Business",
+        "churnRate": "Churn rate",
+        "unlockedLeads": "Unlocked leads",
+        "avgLeadPrice": "Avg lead price",
+        "leadRevenue": "Lead revenue",
+        "refundCount": "Refund count",
+        "refundVolume": "Refund volume",
+        "refundRate": "Refund rate",
+        "partialVsFull": "Partial / full",
+        "openDisputes": "Open disputes",
+        "wonDisputes": "Won",
+        "lostDisputes": "Lost",
+        "avgResolution": "Avg resolution"
+      }
     }
   },
   "auth": {
@@ -5441,6 +5719,141 @@
       "operational_score": "Operational score {score}%",
       "response_band": "Response likelihood {pct}%",
       "emergency_exposure": "Emergency broadcast priority"
+    }
+  },
+  "paymentHistory": {
+    "title": "Payment history",
+    "subtitle": "Subscriptions, lead unlocks, and receipts — searchable by month and status.",
+    "empty": "No payments match your filters.",
+    "loadError": "Could not load payments",
+    "downloadError": "Could not download receipt",
+    "downloadReceipt": "Download receipt",
+    "searchPlaceholder": "Search by reference…",
+    "resultCount": "{count} payment(s)",
+    "filters": {
+      "all": "All time",
+      "currentMonth": "This month",
+      "previousMonth": "Previous month",
+      "purpose": "Purpose",
+      "purposeAll": "All types",
+      "status": "Status",
+      "statusAll": "All statuses"
+    },
+    "purpose": {
+      "leadUnlock": "Lead unlock",
+      "business": "Business subscription",
+      "subscription": "Plan subscription"
+    },
+    "status": {
+      "pending": "Pending",
+      "pending_review": "Pending review",
+      "paid": "Paid",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "expired": "Expired"
+    },
+    "refund": {
+      "pending": "Refund pending review",
+      "refunded": "Refunded {amount} {currency}"
+    }
+  },
+  "stripeCheckout": {
+    "leadAmount": "Pay {amount} {currency}",
+    "payCta": "Pay securely",
+    "processing": "Processing…",
+    "errorTitle": "Payment failed",
+    "errorGeneric": "Could not complete payment",
+    "secureHint": "Card, Apple Pay and Google Pay when available. Powered by Stripe."
+  },
+  "stripeBilling": {
+    "renewal": "Renews {date}",
+    "cancelScheduled": "Cancellation scheduled",
+    "managePayment": "Update payment method",
+    "cancelRenewal": "Cancel auto-renewal",
+    "cancelSuccess": "Auto-renewal cancelled",
+    "cancelError": "Could not cancel renewal",
+    "portalError": "Could not open billing portal",
+    "viewInvoices": "Stripe invoices",
+    "invoicesError": "Could not load invoices",
+    "openInvoice": "Open",
+    "resumeCheckout": "Resume Stripe checkout"
+  },
+  "financialDocuments": {
+    "title": "Invoices & receipts",
+    "subtitle": "Download professional PDFs for subscriptions and lead unlocks.",
+    "empty": "No documents yet.",
+    "loadError": "Could not load documents",
+    "downloadError": "Could not download PDF",
+    "downloadPdf": "Download PDF",
+    "searchPlaceholder": "Search by document number…",
+    "filters": {
+      "type": "Type",
+      "allTypes": "All types"
+    },
+    "types": {
+      "invoice": "Business invoice",
+      "leadReceipt": "Lead unlock receipt",
+      "manualReceipt": "Manual payment receipt",
+      "creditNote": "Credit note"
+    }
+  },
+  "refunds": {
+    "title": "Refunds & disputes",
+    "subtitle": "Request a refund for review. Only admins can approve and process refunds.",
+    "requestTitle": "Request a refund",
+    "requestHint": "You cannot refund a payment yourself — an admin must approve.",
+    "historyTitle": "Refund history",
+    "disputesTitle": "Disputes",
+    "empty": "No refund requests yet.",
+    "emptyDisputes": "No payment disputes.",
+    "noPaidPayments": "No refundable paid payments",
+    "amountPlaceholder": "Partial amount (leave empty for full remaining)",
+    "reasonPlaceholder": "Reason for refund…",
+    "submitRequest": "Submit refund request",
+    "requestSuccess": "Refund request submitted",
+    "requestInvalid": "Enter a valid reason and amount",
+    "downloadCreditNote": "Download credit note",
+    "downloadError": "Download failed",
+    "remaining": "Remaining after this refund",
+    "alreadyRefunded": "already refunded",
+    "type": {
+      "full": "Full",
+      "partial": "Partial",
+      "manual": "Manual",
+      "automatic": "Automatic"
+    },
+    "status": {
+      "requested": "Requested",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "processing": "Processing",
+      "succeeded": "Succeeded",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    },
+    "disputeStatus": {
+      "opened": "Opened",
+      "evidence_requested": "Evidence requested",
+      "evidence_submitted": "Evidence submitted",
+      "under_review": "Under review",
+      "won": "Won",
+      "lost": "Lost",
+      "closed": "Closed"
+    },
+    "errors": {
+      "generic": "Could not submit refund request",
+      "feature_disabled": "Refunds are not enabled",
+      "login_required": "Please sign in",
+      "forbidden": "Not allowed",
+      "invalid_input": "Invalid input",
+      "payment_not_found": "Payment not found",
+      "payment_not_paid": "Payment is not paid",
+      "nothing_to_refund": "Nothing left to refund",
+      "amount_exceeds_remaining": "Amount exceeds remaining balance",
+      "refund_already_open": "A refund request is already open",
+      "create_failed": "Could not create request"
     }
   }
 }

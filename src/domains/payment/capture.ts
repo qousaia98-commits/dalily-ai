@@ -159,6 +159,18 @@ export async function captureUnlockFeePayment(input: {
     payment.currency as string,
   );
 
+  try {
+    const { ensureFinancialDocumentAfterPayment } = await import(
+      "@/lib/financial-documents"
+    );
+    await ensureFinancialDocumentAfterPayment({
+      paymentId: payment.id as string,
+      actorUserId: input.actorId,
+    });
+  } catch {
+    // soft — never block unlock grant
+  }
+
   const grant = await completeUnlockSuccess({
     sessionId: payment.unlock_session_id as string,
     actorUserId: input.actorId,
@@ -177,6 +189,26 @@ export async function captureUnlockFeePayment(input: {
       errorMessage: grant.error,
     });
     return { ok: false, error: grant.error };
+  }
+
+  try {
+    const { markLeadUnlockGranted } = await import(
+      "@/lib/payment/lead-payments"
+    );
+    const { snapshotPaymentStatus } = await import(
+      "@/lib/payment/status-snapshots"
+    );
+    await markLeadUnlockGranted({ paymentId: payment.id as string });
+    await snapshotPaymentStatus({
+      paymentId: payment.id as string,
+      fromStatus: "pending_review",
+      toStatus: "paid",
+      actorUserId: input.actorId,
+      source: input.source === "webhook" ? "webhook" : "admin",
+      note: `grant:${grant.grantId}`,
+    });
+  } catch {
+    // soft
   }
 
   await logPaymentEvent({
