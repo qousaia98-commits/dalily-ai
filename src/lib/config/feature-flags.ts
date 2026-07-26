@@ -271,3 +271,75 @@ export function isMultiServiceProjectsEnabled(): boolean {
 export function isRecurringServicesEnabled(): boolean {
   return envFlag("RECURRING_SERVICES") || envFlag("RECURRING_SERVICES_V1");
 }
+
+/**
+ * Sprint 5 Phase 1 — Real-Time Chat:
+ * scoped conversations, reply/edit/pin, search, presence UI, learning events.
+ * Complements CHAT_AUTH_V2 (authorization gate).
+ */
+export function isRealtimeChatEnabled(): boolean {
+  return envFlag("REALTIME_CHAT") || envFlag("REALTIME_CHAT_V1");
+}
+
+/**
+ * Sprint 5 Phase 2 — File Sharing & Media Collaboration:
+ * multi-upload, previews, project galleries, AI media queue, storage quotas.
+ */
+export function isFileMediaSharingEnabled(): boolean {
+  return (
+    envFlag("FILE_MEDIA_SHARING") ||
+    envFlag("FILE_MEDIA_SHARING_V1") ||
+    envFlag("MEDIA_COLLAB")
+  );
+}
+
+/**
+ * Sprint 5 Phase 3 — AI Communication Assistant:
+ * summaries, smart replies, translation, extraction, action items.
+ * AI never auto-sends messages.
+ */
+export function isAiChatAssistantEnabled(): boolean {
+  return (
+    envFlag("AI_CHAT_ASSISTANT") ||
+    envFlag("AI_CHAT_ASSISTANT_V1") ||
+    envFlag("CHAT_AI_V1")
+  );
+}
+
+/**
+ * Sprint 5 Phase 4 — Voice Messages & Smart Voice Assistant:
+ * record/send voice notes, STT, translate/summarize transcripts (no live calls).
+ */
+export function isChatVoiceMessagingEnabled(): boolean {
+  return (
+    envFlag("CHAT_VOICE_MESSAGING") ||
+    envFlag("CHAT_VOICE_MESSAGING_V1") ||
+    envFlag("VOICE_CHAT_V1")
+  );
+}
+
+/**
+ * Sprint 5 Phase 5 — Collaboration Workspace:
+ * shared tasks, checklists, approvals, activity feed, AI project assistant.
+ * AI never mutates project data automatically.
+ */
+export function isCollaborationWorkspaceEnabled(): boolean {
+  return (
+    envFlag("COLLABORATION_WORKSPACE") ||
+    envFlag("COLLABORATION_WORKSPACE_V1") ||
+    envFlag("PROJECT_WORKSPACE_V1")
+  );
+}
+
+/**
+ * Sprint 5 Phase 6 — Smart Notification Center:
+ * unified inbox, priority, grouping, channels, preferences, AI digests.
+ * AI may suggest priority only — never mutates business data.
+ */
+export function isSmartNotificationCenterEnabled(): boolean {
+  return (
+    envFlag("SMART_NOTIFICATION_CENTER") ||
+    envFlag("SMART_NOTIFICATION_CENTER_V1") ||
+    envFlag("NOTIFICATION_CENTER_V1")
+  );
+}

@@ -10,7 +10,14 @@ import { OfficialDalilyAvatar } from "@/components/messaging/official-dalily-ava
 import { OfficialMessageCard } from "@/components/messaging/official-message-card";
 import { ReadReceiptIcon } from "@/components/messaging/read-receipt-icon";
 import { VerifiedBadge } from "@/components/messaging/verified-badge";
+import { MessageBubbleActions } from "@/components/messaging/message-bubble-actions";
+import { requestChatReply } from "@/components/messaging/chat-thread-client-shell";
+import { MessageMediaPreview } from "@/components/messaging/message-media-preview";
+import { AiChatPanel } from "@/components/messaging/ai-chat-panel";
+import { MessageTranslateToggle } from "@/components/messaging/message-translate-toggle";
+import { VoiceTranscriptPanel } from "@/components/messaging/voice-transcript-panel";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
+import { isAiChatAssistantEnabled, isChatVoiceMessagingEnabled } from "@/lib/config/feature-flags";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -43,7 +50,10 @@ export async function ConversationThread({
 }) {
   const t = await getTranslations(namespace);
   const tm = await getTranslations("marketplace");
+  const ta = await getTranslations("messaging.actions");
   const locale = await getLocale();
+  const aiChatEnabled = isAiChatAssistantEnabled();
+  const voiceEnabled = isChatVoiceMessagingEnabled();
   const fallback =
     viewer === "customer"
       ? businessFallbackLabel(locale)
@@ -177,6 +187,13 @@ export async function ConversationThread({
         ) : null}
       </header>
 
+      {conversation.kind === "customer" ? (
+        <AiChatPanel
+          conversationId={conversation.id}
+          enabled={aiChatEnabled}
+        />
+      ) : null}
+
       <div
         className="flex flex-1 flex-col gap-3 overflow-y-auto bg-muted/20 p-4"
         role="log"
@@ -239,9 +256,55 @@ export async function ConversationThread({
                   mine
                     ? "rounded-ee-md bg-[var(--dalily-navy)] text-white"
                     : "rounded-es-md border border-border bg-card text-foreground",
+                  msg.isPinned && "ring-1 ring-[var(--dalily-gold)]/50",
                 )}
               >
+                {msg.replyPreview ? (
+                  <p
+                    className={cn(
+                      "mb-1 border-s-2 ps-2 text-[11px] opacity-80",
+                      mine ? "border-white/50" : "border-muted-foreground/40",
+                    )}
+                  >
+                    {msg.replyPreview}
+                  </p>
+                ) : null}
                 <p className="whitespace-pre-wrap">{body}</p>
+                {!msg.isSystem && msg.bodyText && conversation.kind === "customer" ? (
+                  <MessageTranslateToggle
+                    conversationId={conversation.id}
+                    messageId={msg.id}
+                    originalText={msg.bodyText}
+                    enabled={aiChatEnabled}
+                  />
+                ) : null}
+                {msg.attachments?.length ? (
+                  <MessageMediaPreview
+                    attachments={msg.attachments}
+                    conversationId={conversation.id}
+                    mine={mine}
+                  />
+                ) : null}
+                {msg.messageType === "voice" ||
+                msg.attachments?.some(
+                  (a) => a.kind === "voice" || a.mimeType.startsWith("audio/"),
+                ) ? (
+                  <VoiceTranscriptPanel
+                    conversationId={conversation.id}
+                    messageId={msg.id}
+                    enabled={voiceEnabled}
+                  />
+                ) : null}
+                {msg.editedAt ? (
+                  <p
+                    className={cn(
+                      "mt-0.5 text-[10px]",
+                      mine ? "text-white/50" : "text-muted-foreground",
+                    )}
+                  >
+                    {ta("edited")}
+                  </p>
+                ) : null}
                 {msg.messageType === "location" && msg.locationLat != null && msg.locationLng != null ? (
                   <a
                     href={`https://www.openstreetmap.org/?mlat=${msg.locationLat}&mlon=${msg.locationLng}#map=16/${msg.locationLat}/${msg.locationLng}`}
@@ -268,6 +331,16 @@ export async function ConversationThread({
                       <ReadReceiptIcon status={msg.deliveryStatus ?? (msg.read ? "read" : "sent")} />
                     ) : null}
                   </time>
+                ) : null}
+                {conversation.kind === "customer" && msg.bodyText ? (
+                  <MessageBubbleActions
+                    messageId={msg.id}
+                    conversationId={conversation.id}
+                    bodyText={msg.bodyText}
+                    mine={mine}
+                    isPinned={msg.isPinned}
+                    onReply={(payload) => requestChatReply(payload)}
+                  />
                 ) : null}
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { ChatAttachment, ChatDeliveryStatus, ChatMessage, ChatMessageType } from "@/lib/chat/types";
+import { CHAT_ATTACHMENTS_BUCKET } from "@/lib/chat/attachment-service";
 
 const PAGE_SIZE = 50;
 
@@ -20,6 +21,9 @@ type MessageRow = {
   location_lat?: number | null;
   location_lng?: number | null;
   location_label?: string | null;
+  reply_to_message_id?: string | null;
+  is_pinned?: boolean | null;
+  pinned_at?: string | null;
 };
 
 type AttachmentRow = {
@@ -36,7 +40,11 @@ type AttachmentRow = {
   height?: number | null;
 };
 
-function mapMessage(row: MessageRow, attachments: ChatAttachment[]): ChatMessage {
+function mapMessage(
+  row: MessageRow,
+  attachments: ChatAttachment[],
+  replyPreview?: string | null,
+): ChatMessage {
   return {
     id: row.id,
     conversationId: row.conversation_id,
@@ -55,6 +63,10 @@ function mapMessage(row: MessageRow, attachments: ChatAttachment[]): ChatMessage
     clientId: row.client_id ?? null,
     metadata: (row.metadata as Record<string, unknown>) ?? {},
     attachments,
+    replyToMessageId: row.reply_to_message_id ?? null,
+    replyPreview: replyPreview ?? null,
+    isPinned: Boolean(row.is_pinned),
+    pinnedAt: row.pinned_at ?? null,
   };
 }
 
@@ -66,10 +78,12 @@ export async function listMessages(input: {
   const supabase = await createClient();
   const limit = input.limit ?? PAGE_SIZE;
 
-  let query = supabase
+  let query = (supabase as unknown as {
+    from: (t: string) => ReturnType<typeof supabase.from>;
+  })
     .from("messages")
     .select(
-      "id, conversation_id, sender_id, body_text, created_at, is_system, event_type, message_type, delivery_status, edited_at, deleted_at, client_id, metadata, location_lat, location_lng, location_label",
+      "id, conversation_id, sender_id, body_text, created_at, is_system, event_type, message_type, delivery_status, edited_at, deleted_at, client_id, metadata, location_lat, location_lng, location_label, reply_to_message_id, is_pinned, pinned_at",
     )
     .eq("conversation_id", input.conversationId)
     .is("deleted_at", null)
@@ -80,7 +94,24 @@ export async function listMessages(input: {
     query = query.lt("created_at", input.before);
   }
 
-  const { data, error } = await query;
+  let { data, error } = await query;
+  if (error) {
+    let fallback = supabase
+      .from("messages")
+      .select(
+        "id, conversation_id, sender_id, body_text, created_at, is_system, event_type, message_type, delivery_status, edited_at, deleted_at, client_id, metadata, location_lat, location_lng, location_label",
+      )
+      .eq("conversation_id", input.conversationId)
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+    if (input.before) {
+      fallback = fallback.lt("created_at", input.before);
+    }
+    const fb = await fallback;
+    data = fb.data as typeof data;
+    error = fb.error;
+  }
   if (error || !data) return [];
 
   const rows = data as unknown as MessageRow[];
@@ -106,6 +137,15 @@ export async function listMessages(input: {
   const byMessage = new Map<string, ChatAttachment[]>();
   for (const att of attachmentRows) {
     const list = byMessage.get(att.message_id) ?? [];
+    let signedUrl: string | null = null;
+    try {
+      const { data: signed } = await supabase.storage
+        .from(att.bucket || CHAT_ATTACHMENTS_BUCKET)
+        .createSignedUrl(att.path, 3600);
+      signedUrl = signed?.signedUrl ?? null;
+    } catch {
+      signedUrl = null;
+    }
     list.push({
       id: att.id,
       messageId: att.message_id,
@@ -118,6 +158,7 @@ export async function listMessages(input: {
       bucket: att.bucket,
       width: att.width,
       height: att.height,
+      signedUrl,
     });
     byMessage.set(att.message_id, list);
   }
@@ -131,16 +172,38 @@ export async function searchMessages(input: {
   conversationId?: string | null;
   userId: string;
   query: string;
+  senderId?: string | null;
+  from?: string | null;
+  to?: string | null;
   limit?: number;
 }): Promise<ChatMessage[]> {
   const q = input.query.trim();
   if (q.length < 2) return [];
 
   const supabase = await createClient();
+  try {
+    // Prefer participant-scoped RPC (Sprint 5)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any).rpc("search_chat_messages", {
+      p_user_id: input.userId,
+      p_query: q,
+      p_conversation_id: input.conversationId ?? null,
+      p_sender_id: input.senderId ?? null,
+      p_from: input.from ?? null,
+      p_to: input.to ?? null,
+      p_limit: input.limit ?? 40,
+    });
+    if (!error && data) {
+      return (data as MessageRow[]).map((row) => mapMessage(row, []));
+    }
+  } catch {
+    /* fall through */
+  }
+
   let query = supabase
     .from("messages")
     .select(
-      "id, conversation_id, sender_id, body_text, created_at, is_system, event_type, message_type, delivery_status, edited_at, deleted_at, client_id, metadata, location_lat, location_lng, location_label",
+      "id, conversation_id, sender_id, body_text, created_at, is_system, event_type, message_type, delivery_status, edited_at, deleted_at, client_id, metadata, location_lat, location_lng, location_label, reply_to_message_id, is_pinned, pinned_at",
     )
     .is("deleted_at", null)
     .ilike("body_text", `%${q}%`)
@@ -150,6 +213,9 @@ export async function searchMessages(input: {
   if (input.conversationId) {
     query = query.eq("conversation_id", input.conversationId);
   }
+  if (input.senderId) query = query.eq("sender_id", input.senderId);
+  if (input.from) query = query.gte("created_at", input.from);
+  if (input.to) query = query.lte("created_at", input.to);
 
   const { data, error } = await query;
   if (error || !data) return [];
@@ -165,6 +231,7 @@ export async function insertTextMessage(input: {
   locationLat?: number | null;
   locationLng?: number | null;
   locationLabel?: string | null;
+  replyToMessageId?: string | null;
 }): Promise<{ messageId: string } | { error: string }> {
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -181,12 +248,55 @@ export async function insertTextMessage(input: {
       location_lat: input.locationLat ?? null,
       location_lng: input.locationLng ?? null,
       location_label: input.locationLabel ?? null,
+      reply_to_message_id: input.replyToMessageId ?? null,
     })
     .select("id")
     .maybeSingle();
 
   if (error || !data) return { error: "send_failed" };
   return { messageId: data.id as string };
+}
+
+export async function editMessage(input: {
+  messageId: string;
+  senderId: string;
+  bodyText: string;
+}): Promise<{ success: boolean }> {
+  const text = input.bodyText.trim();
+  if (!text) return { success: false };
+  const supabase = await createClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
+    .from("messages")
+    .update({
+      body_text: text,
+      edited_at: new Date().toISOString(),
+    })
+    .eq("id", input.messageId)
+    .eq("sender_id", input.senderId)
+    .is("deleted_at", null);
+  return { success: !error };
+}
+
+export async function setMessagePinned(input: {
+  messageId: string;
+  conversationId: string;
+  userId: string;
+  pinned: boolean;
+}): Promise<{ success: boolean }> {
+  const supabase = await createClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
+    .from("messages")
+    .update({
+      is_pinned: input.pinned,
+      pinned_at: input.pinned ? new Date().toISOString() : null,
+      pinned_by: input.pinned ? input.userId : null,
+    })
+    .eq("id", input.messageId)
+    .eq("conversation_id", input.conversationId)
+    .is("deleted_at", null);
+  return { success: !error };
 }
 
 export async function softDeleteMessage(input: {

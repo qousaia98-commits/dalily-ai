@@ -3,6 +3,7 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
 import { countUnreadConversations } from "@/lib/business/conversations";
 import { ConversationList } from "@/components/business/conversation-list";
+import { MessagesInboxTools } from "@/components/messaging/messages-inbox-tools";
 import { PlanBadge } from "@/components/shared/plan-badge";
 
 export default async function BusinessMessagesPage() {
@@ -31,6 +32,8 @@ export default async function BusinessMessagesPage() {
         </div>
         <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </header>
+
+      <MessagesInboxTools messagesBasePath="/business/messages" />
 
       <ConversationList
         conversations={conversations}

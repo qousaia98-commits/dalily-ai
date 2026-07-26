@@ -1,9 +1,11 @@
 /**
  * Deliver marketplace notifications without relying on notify_marketplace_user auth.uid().
  * Service-role admin client can insert directly (bypasses RLS).
+ * When SMART_NOTIFICATION_CENTER is on, also mirrors into the unified center.
  */
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isSmartNotificationCenterEnabled } from "@/lib/config/feature-flags";
 
 export type MarketplaceNotifyInput = {
   userId: string;
@@ -49,6 +51,39 @@ export async function deliverMarketplaceNotification(
     if (error) {
       return { userId: input.userId, ok: false, error: error.message };
     }
+
+    if (data?.id && isSmartNotificationCenterEnabled()) {
+      try {
+        const { createSmartNotification, categoryFromMarketplaceType } =
+          await import("@/lib/notifications/center");
+        const title = input.titleKey.split(".").pop() ?? input.type;
+        await createSmartNotification({
+          userId: input.userId,
+          category: categoryFromMarketplaceType(input.type),
+          eventKey: input.type,
+          titleEn: title,
+          titleAr: title,
+          bodyEn: input.bodyKey,
+          bodyAr: input.bodyKey,
+          href: input.href ?? null,
+          actionKey: "open",
+          marketplaceNotificationId: data.id,
+          metadata: {
+            titleKey: input.titleKey,
+            bodyKey: input.bodyKey,
+            bodyParams: input.bodyParams ?? {},
+            conversationId: input.conversationId ?? null,
+            requestId: input.requestId ?? null,
+          },
+          groupKey: input.conversationId
+            ? `msg:${input.conversationId}`
+            : undefined,
+        });
+      } catch {
+        // mirror is best-effort; marketplace row remains source of truth for legacy UI
+      }
+    }
+
     return {
       userId: input.userId,
       ok: true,

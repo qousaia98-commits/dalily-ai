@@ -13,6 +13,14 @@ export type ChatDeliveryStatus = "sent" | "delivered" | "read";
 
 export type ChatConversationStatus = "open" | "closed" | "archived";
 
+export type ChatScope =
+  | "request"
+  | "project"
+  | "package"
+  | "emergency"
+  | "admin"
+  | "support";
+
 export type ChatAttachmentKind = "image" | "document" | "voice" | "video" | "other";
 
 export type ChatAttachment = {
@@ -48,6 +56,10 @@ export type ChatMessage = {
   clientId: string | null;
   metadata: Record<string, unknown>;
   attachments: ChatAttachment[];
+  replyToMessageId: string | null;
+  replyPreview?: string | null;
+  isPinned: boolean;
+  pinnedAt: string | null;
 };
 
 export type ChatParticipant = {
@@ -75,9 +87,13 @@ export type ChatConversation = {
   previewText: string;
   peerPresence?: "online" | "offline" | null;
   peerLastSeenAt?: string | null;
+  chatScope?: ChatScope;
+  projectId?: string | null;
+  packageId?: string | null;
+  adminUserId?: string | null;
 };
 
-/** Future AI plug-ins — interfaces only (Sprint 36 does not implement). */
+/** Future AI plug-ins — Sprint 5 Phase 3 implements these via src/lib/ai/chat. */
 export type ChatAiExtensionPoint =
   | "auto_translation"
   | "conversation_summary"
@@ -85,7 +101,9 @@ export type ChatAiExtensionPoint =
   | "appointment_detection"
   | "price_extraction"
   | "address_extraction"
-  | "sentiment_detection";
+  | "sentiment_detection"
+  | "action_items"
+  | "information_extraction";
 
 export type ChatAiHookContext = {
   conversationId: string;

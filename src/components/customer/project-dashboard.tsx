@@ -11,6 +11,9 @@ import {
 } from "@/actions/project.actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { ProjectMediaGallery } from "@/components/projects/project-media-gallery";
+import { CollaborationWorkspacePanel } from "@/components/projects/collaboration-workspace-panel";
+import { isCollaborationWorkspaceEnabled } from "@/lib/config/feature-flags";
 
 type Props = {
   project: ProjectDashboard;
@@ -230,6 +233,18 @@ export function ProjectDashboardPanel({ project, compact }: Props) {
               </ul>
             )}
           </section>
+
+          <ProjectMediaGallery
+            projectId={project.id}
+            packages={project.packages.map((p) => ({
+              id: p.id,
+              title: isAr ? p.titleAr : p.titleEn,
+            }))}
+          />
+
+          {isCollaborationWorkspaceEnabled() ? (
+            <CollaborationWorkspacePanel projectId={project.id} />
+          ) : null}
 
           <section className="space-y-1">
             <h3 className="text-sm font-semibold">{t("messages")}</h3>

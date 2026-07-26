@@ -19,6 +19,51 @@
       "selectRequired": "Please make a selection"
     }
   },
+  "notificationCenter": {
+    "title": "Notification center",
+    "bellAria": "Open notifications",
+    "close": "Close",
+    "unread": "{count} unread",
+    "empty": "You're all caught up.",
+    "search": "Search notifications…",
+    "markAllRead": "Read all",
+    "seedDemo": "Add sample",
+    "loading": "Loading…",
+    "grouped": "{count} updates · {title}",
+    "tabs": {
+      "inbox": "Inbox",
+      "digest": "AI digest",
+      "prefs": "Preferences"
+    },
+    "digestHint": "Summaries only include notifications you can already see.",
+    "digestEmpty": "No digests yet.",
+    "digestError": "Could not generate digest",
+    "digestReady": "Digest ready",
+    "digestKinds": {
+      "morning": "Morning",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "unread": "Unread"
+    },
+    "prefs": {
+      "channels": "Delivery channels",
+      "inApp": "In-app",
+      "push": "Push",
+      "email": "Email",
+      "categories": "Categories",
+      "chat": "Chat",
+      "bookings": "Bookings",
+      "emergency": "Emergency",
+      "projects": "Projects",
+      "marketplace": "Marketplace",
+      "payments": "Payments",
+      "voice": "Voice messages",
+      "quiet": "Quiet hours",
+      "quietEnabled": "Enable quiet hours"
+    },
+    "prefsSaved": "Preferences saved",
+    "prefsError": "Could not save preferences"
+  },
   "assistant": {
     "customer": {
       "badge": "Dalily Assistant",
@@ -132,6 +177,77 @@
         "completed": "Completed",
         "cancelled": "Cancelled"
       }
+    },
+    "workspace": {
+      "badge": "Collaboration workspace",
+      "title": "Shared project workspace",
+      "subtitle": "Tasks, checklists, approvals and activity in one place.",
+      "loading": "Loading workspace…",
+      "loadError": "Could not load workspace",
+      "tabs": {
+        "overview": "Overview",
+        "tasks": "Tasks",
+        "checklists": "Checklists",
+        "approvals": "Approvals",
+        "activity": "Activity",
+        "ai": "AI assistant"
+      },
+      "progress": {
+        "overall": "Workspace progress",
+        "packages": "Packages {done}/{total}",
+        "tasksOpen": "Open tasks: {count}",
+        "overdue": "Overdue tasks: {count}",
+        "blocked": "Blocked tasks: {count}",
+        "approvals": "Pending approvals: {count}",
+        "delayedPackages": "Delayed packages: {count}"
+      },
+      "taskPlaceholder": "New shared task…",
+      "addTask": "Add task",
+      "taskCreated": "Task created",
+      "taskError": "Could not update task",
+      "tasksEmpty": "No shared tasks yet.",
+      "due": "Due {date}",
+      "taskStatus": {
+        "todo": "To do",
+        "in_progress": "In progress",
+        "blocked": "Blocked",
+        "completed": "Completed"
+      },
+      "checklistCreated": "Checklist added",
+      "checklistError": "Could not update checklist",
+      "checklistsEmpty": "No checklists yet — pick a template above.",
+      "completed": "Completed",
+      "approvalPlaceholder": "Approval title (e.g. Approve quotation)…",
+      "requestApproval": "Request approval",
+      "approvalRequested": "Approval requested",
+      "approvalAccepted": "Approved",
+      "approvalRejected": "Rejected",
+      "approvalError": "Could not update approval",
+      "approvalsEmpty": "No approval requests yet.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approvalKind": {
+        "quotation": "Quotation",
+        "package_completed": "Package completed",
+        "additional_work": "Additional work",
+        "final_completion": "Final completion",
+        "other": "Other"
+      },
+      "approvalStatus": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+      },
+      "activityEmpty": "No workspace activity yet.",
+      "aiDisclaimer": "AI suggests only — it never changes project data automatically.",
+      "aiGenerate": "Summarize project",
+      "aiError": "Could not generate AI summary",
+      "aiNextSteps": "Suggested next steps",
+      "aiRisks": "Risks / blocked work",
+      "aiMissingDocs": "Possibly missing documents",
+      "aiAccept": "Mark useful",
+      "aiAccepted": "Feedback saved"
     }
   },
   "recurring": {
@@ -1749,10 +1865,12 @@
       "send": "Send message",
       "error": "Could not send message. Please try again.",
       "attach": "Attach file",
-      "attachHint": "Images and documents — compressed automatically",
+      "attachHint": "Images, video, PDF, Office, ZIP, audio — drag, paste or browse",
       "removeFile": "Remove",
       "shareLocation": "Share location",
-      "locationShared": "Shared location"
+      "locationShared": "Shared location",
+      "replying": "Replying",
+      "cancelReply": "Cancel"
     },
     "typing": {
       "one": "{name} is typing…",
@@ -1768,12 +1886,143 @@
       "offline": "Offline",
       "lastSeen": "Last seen {time}"
     },
+    "search": {
+      "placeholder": "Search messages…",
+      "cta": "Search"
+    },
+    "inbox": {
+      "markAllRead": "Mark all as read"
+    },
+    "media": {
+      "dropHere": "Drop files to attach",
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "progress": "Uploading {pct}%",
+      "failed": "Upload failed",
+      "cancelled": "Cancelled",
+      "done": "Uploaded",
+      "queued": "Ready to send",
+      "download": "Download",
+      "voice": "Voice message"
+    },
+    "projectMedia": {
+      "title": "Project gallery",
+      "upload": "Upload",
+      "dropHint": "Drag & drop photos, videos or documents here",
+      "all": "All",
+      "allPackages": "All packages",
+      "empty": "No media yet",
+      "uploading": "Uploading…",
+      "categories": {
+        "before": "Before",
+        "progress": "Progress",
+        "completed": "Completed",
+        "documents": "Documents",
+        "invoices": "Invoices",
+        "certificates": "Certificates",
+        "other": "Other"
+      }
+    },
+    "voice": {
+      "record": "Record voice message",
+      "recording": "Recording…",
+      "paused": "Paused",
+      "pause": "Pause",
+      "resume": "Resume",
+      "send": "Send",
+      "cancel": "Cancel",
+      "sending": "Sending voice message…",
+      "noCalls": "Voice notes only — no live calls.",
+      "aiLabel": "AI transcript",
+      "grantConsent": "Allow transcription",
+      "revokeConsent": "Revoke transcription",
+      "consentHint": "Transcription needs your consent. Recordings stay private and are not used for training.",
+      "summary": "Summary",
+      "viewOriginal": "Original",
+      "viewTranslated": "Translated",
+      "deleteTranscript": "Delete transcript",
+      "noTranscript": "No transcript yet for this voice note.",
+      "searchTitle": "Search voice transcripts",
+      "searchPlaceholder": "Search spoken words…",
+      "errors": {
+        "permission_denied": "Microphone permission denied.",
+        "not_supported": "Voice recording is not supported here.",
+        "no_audio": "No audio captured.",
+        "too_large": "Voice note is too large.",
+        "upload_failed": "Upload failed.",
+        "send_failed": "Could not send voice message.",
+        "feature_disabled": "Voice messaging is disabled.",
+        "unknown": "Something went wrong."
+      }
+    },
+    "aiAssistant": {
+      "title": "AI assistant",
+      "aiLabel": "AI-generated",
+      "privacyNote": "AI assists only and never sends messages. Private chat is not used for model training.",
+      "disableAi": "Disable AI",
+      "enableAi": "Enable AI",
+      "disabledHint": "AI assistance is off for your account.",
+      "deleteSummaries": "Delete AI summaries",
+      "summarize": "Summarize",
+      "suggestReplies": "Suggest replies",
+      "extract": "Extract & tasks",
+      "error": "Could not run AI assistant. Try again.",
+      "repliesTitle": "Suggested replies",
+      "extractionsTitle": "Extracted info",
+      "tasksTitle": "Open tasks",
+      "viewOriginal": "Original",
+      "viewTranslated": "Translated",
+      "windows": {
+        "last_10": "Last 10",
+        "today": "Today",
+        "last_7_days": "7 days",
+        "entire": "Entire"
+      },
+      "styles": {
+        "short": "Short",
+        "detailed": "Detailed",
+        "timeline": "Timeline",
+        "action": "Action"
+      },
+      "fields": {
+        "appointment": "Appointment",
+        "address": "Address",
+        "phone": "Phone",
+        "budget": "Budget",
+        "requested_date": "Requested date",
+        "service_type": "Service",
+        "materials": "Materials",
+        "urgency": "Urgency",
+        "other": "Other"
+      },
+      "sentiment": {
+        "positive": "Positive tone",
+        "neutral": "Neutral",
+        "frustrated": "Frustration signals",
+        "urgent": "Urgency signals",
+        "escalation_risk": "Escalation risk"
+      },
+      "priority": {
+        "low": "Low priority",
+        "normal": "Normal priority",
+        "high": "High priority",
+        "critical": "Critical"
+      }
+    },
     "actions": {
       "pin": "Pin",
       "unpin": "Unpin",
       "archive": "Archive",
       "unarchive": "Unarchive",
-      "searchMessages": "Search messages"
+      "searchMessages": "Search messages",
+      "copy": "Copy",
+      "reply": "Reply",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edited": "Edited",
+      "forward": "Forward"
     }
   },
   "marketplace": {
@@ -2015,6 +2264,22 @@
       "title": "New message",
       "body": "You have a new message.",
       "attachmentBody": "You received a new attachment."
+    },
+    "chatReply": {
+      "title": "New reply",
+      "body": "Someone replied to your message."
+    },
+    "chatPinned": {
+      "title": "Message pinned",
+      "body": "A message was pinned in your conversation."
+    },
+    "chatMention": {
+      "title": "You were mentioned",
+      "body": "Someone mentioned you in a chat."
+    },
+    "chatEmergency": {
+      "title": "Emergency chat",
+      "body": "New message in an emergency conversation."
     },
     "offerReceived": {
       "title": "New offer",

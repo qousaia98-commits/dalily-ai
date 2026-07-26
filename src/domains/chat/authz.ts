@@ -51,7 +51,8 @@ export async function canAccessFullChat(input: {
 }
 
 /**
- * Strict participant check for marketplace chats: only customer + selected provider owner.
+ * Strict participant check for marketplace chats: only customer + selected provider owner
+ * (+ admin_user for admin/support scopes, or conversation_participants row).
  */
 export async function assertChatParticipants(input: {
   conversationId: string;
@@ -63,15 +64,31 @@ export async function assertChatParticipants(input: {
       providerId: string;
       customerId: string;
       providerOwnerId: string | null;
+      chatScope: string | null;
+      adminUserId: string | null;
     }
   | { ok: false; error: "not_found" | "forbidden" | "chat_locked" }
 > {
   const supabase = await createClient();
-  const { data: conv } = await supabase
+  // Sprint 5 columns — cast until Database types regenerate.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: convRaw } = await (supabase as any)
     .from("conversations")
-    .select("id, provider_id, customer_id, service_request_id, thread_kind")
+    .select(
+      "id, provider_id, customer_id, service_request_id, thread_kind, chat_scope, admin_user_id",
+    )
     .eq("id", input.conversationId)
     .maybeSingle();
+
+  const conv = convRaw as {
+    id: string;
+    provider_id: string;
+    customer_id: string;
+    service_request_id: string | null;
+    thread_kind: string | null;
+    chat_scope: string | null;
+    admin_user_id: string | null;
+  } | null;
 
   if (!conv) return { ok: false, error: "not_found" };
 
@@ -83,17 +100,40 @@ export async function assertChatParticipants(input: {
 
   const isCustomer = input.userId === conv.customer_id;
   const isProviderOwner = input.userId === providerRow?.owner_id;
-  if (!isCustomer && !isProviderOwner) {
+  const isAdmin = input.userId === conv.admin_user_id;
+
+  let isParticipantRow = false;
+  if (!isCustomer && !isProviderOwner && !isAdmin) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: cp } = await (supabase as any)
+      .from("conversation_participants")
+      .select("user_id")
+      .eq("conversation_id", input.conversationId)
+      .eq("user_id", input.userId)
+      .is("deleted_at", null)
+      .maybeSingle();
+    isParticipantRow = Boolean(cp?.user_id);
+  }
+
+  if (!isCustomer && !isProviderOwner && !isAdmin && !isParticipantRow) {
     return { ok: false, error: "forbidden" };
   }
 
-  if (!conv.service_request_id) {
+  const scope = (conv.chat_scope as string | null) ?? null;
+  const nonRequestScope =
+    scope != null &&
+    scope !== "request" &&
+    ["project", "package", "emergency", "admin", "support"].includes(scope);
+
+  if (!conv.service_request_id || nonRequestScope) {
     return {
       ok: true,
-      serviceRequestId: null,
+      serviceRequestId: (conv.service_request_id as string | null) ?? null,
       providerId: conv.provider_id as string,
       customerId: conv.customer_id as string,
       providerOwnerId: (providerRow?.owner_id as string) ?? null,
+      chatScope: scope,
+      adminUserId: (conv.admin_user_id as string | null) ?? null,
     };
   }
 
@@ -124,5 +164,7 @@ export async function assertChatParticipants(input: {
     providerId: conv.provider_id as string,
     customerId: conv.customer_id as string,
     providerOwnerId: (providerRow?.owner_id as string) ?? null,
+    chatScope: scope,
+    adminUserId: (conv.admin_user_id as string | null) ?? null,
   };
 }

@@ -28,6 +28,7 @@ export function useChatRealtime({
   const router = useRouter();
   const [typingNames, setTypingNames] = useState<string[]>([]);
   const [peerOnline, setPeerOnline] = useState<boolean | null>(null);
+  const [peerLastSeenAt, setPeerLastSeenAt] = useState<string | null>(null);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const refreshRef = useRef(() => {
     router.refresh();
@@ -107,6 +108,18 @@ export function useChatRealtime({
     channels.push(msgChannel);
 
     if (peerUserId) {
+      // Initial presence fetch
+      void (async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data } = await (supabase as any)
+          .from("user_presence")
+          .select("status, last_seen_at")
+          .eq("user_id", peerUserId)
+          .maybeSingle();
+        if (data?.status) setPeerOnline(data.status === "online");
+        if (data?.last_seen_at) setPeerLastSeenAt(String(data.last_seen_at));
+      })();
+
       const presenceChannel = supabase
         .channel(`chat-presence-${peerUserId}`)
         .on(
@@ -118,8 +131,12 @@ export function useChatRealtime({
             filter: `user_id=eq.${peerUserId}`,
           },
           (payload) => {
-            const row = payload.new as { status?: string } | null;
+            const row = payload.new as {
+              status?: string;
+              last_seen_at?: string;
+            } | null;
             if (row?.status) setPeerOnline(row.status === "online");
+            if (row?.last_seen_at) setPeerLastSeenAt(row.last_seen_at);
           },
         )
         .subscribe();
@@ -155,5 +172,5 @@ export function useChatRealtime({
     }, 4000);
   }, [conversationId]);
 
-  return { typingNames, peerOnline, notifyTyping };
+  return { typingNames, peerOnline, peerLastSeenAt, notifyTyping };
 }

@@ -19,6 +19,51 @@
       "selectRequired": "يرجى الاختيار"
     }
   },
+  "notificationCenter": {
+    "title": "مركز الإشعارات",
+    "bellAria": "فتح الإشعارات",
+    "close": "إغلاق",
+    "unread": "{count} غير مقروء",
+    "empty": "لا إشعارات جديدة.",
+    "search": "بحث في الإشعارات…",
+    "markAllRead": "قراءة الكل",
+    "seedDemo": "إضافة مثال",
+    "loading": "جارٍ التحميل…",
+    "grouped": "{count} تحديثات · {title}",
+    "tabs": {
+      "inbox": "الوارد",
+      "digest": "ملخص الذكاء",
+      "prefs": "التفضيلات"
+    },
+    "digestHint": "الملخصات تشمل فقط الإشعارات التي يمكنك رؤيتها.",
+    "digestEmpty": "لا ملخصات بعد.",
+    "digestError": "تعذر إنشاء الملخص",
+    "digestReady": "الملخص جاهز",
+    "digestKinds": {
+      "morning": "صباحي",
+      "daily": "يومي",
+      "weekly": "أسبوعي",
+      "unread": "غير مقروء"
+    },
+    "prefs": {
+      "channels": "قنوات التسليم",
+      "inApp": "داخل التطبيق",
+      "push": "دفع",
+      "email": "بريد",
+      "categories": "الفئات",
+      "chat": "الدردشة",
+      "bookings": "الحجوزات",
+      "emergency": "الطوارئ",
+      "projects": "المشاريع",
+      "marketplace": "السوق",
+      "payments": "المدفوعات",
+      "voice": "الرسائل الصوتية",
+      "quiet": "ساعات الهدوء",
+      "quietEnabled": "تفعيل ساعات الهدوء"
+    },
+    "prefsSaved": "تم حفظ التفضيلات",
+    "prefsError": "تعذر حفظ التفضيلات"
+  },
   "assistant": {
     "customer": {
       "badge": "مساعد دليلي",
@@ -132,6 +177,77 @@
         "completed": "مكتمل",
         "cancelled": "ملغى"
       }
+    },
+    "workspace": {
+      "badge": "مساحة التعاون",
+      "title": "مساحة عمل مشتركة للمشروع",
+      "subtitle": "المهام وقوائم التحقق والموافقات والنشاط في مكان واحد.",
+      "loading": "جارٍ تحميل المساحة…",
+      "loadError": "تعذر تحميل مساحة العمل",
+      "tabs": {
+        "overview": "نظرة عامة",
+        "tasks": "المهام",
+        "checklists": "قوائم التحقق",
+        "approvals": "الموافقات",
+        "activity": "النشاط",
+        "ai": "مساعد الذكاء"
+      },
+      "progress": {
+        "overall": "تقدم مساحة العمل",
+        "packages": "الحزم {done}/{total}",
+        "tasksOpen": "مهام مفتوحة: {count}",
+        "overdue": "مهام متأخرة: {count}",
+        "blocked": "مهام محظورة: {count}",
+        "approvals": "موافقات معلّقة: {count}",
+        "delayedPackages": "حزم متأخرة: {count}"
+      },
+      "taskPlaceholder": "مهمة مشتركة جديدة…",
+      "addTask": "إضافة مهمة",
+      "taskCreated": "تم إنشاء المهمة",
+      "taskError": "تعذر تحديث المهمة",
+      "tasksEmpty": "لا مهام مشتركة بعد.",
+      "due": "الاستحقاق {date}",
+      "taskStatus": {
+        "todo": "للتنفيذ",
+        "in_progress": "جارٍ",
+        "blocked": "محظور",
+        "completed": "مكتمل"
+      },
+      "checklistCreated": "تمت إضافة القائمة",
+      "checklistError": "تعذر تحديث القائمة",
+      "checklistsEmpty": "لا قوائم بعد — اختر قالباً أعلاه.",
+      "completed": "مكتمل",
+      "approvalPlaceholder": "عنوان الموافقة (مثل اعتماد العرض)…",
+      "requestApproval": "طلب موافقة",
+      "approvalRequested": "تم طلب الموافقة",
+      "approvalAccepted": "تمت الموافقة",
+      "approvalRejected": "تم الرفض",
+      "approvalError": "تعذر تحديث الموافقة",
+      "approvalsEmpty": "لا طلبات موافقة بعد.",
+      "approve": "موافقة",
+      "reject": "رفض",
+      "approvalKind": {
+        "quotation": "عرض سعر",
+        "package_completed": "اكتمال الحزمة",
+        "additional_work": "عمل إضافي",
+        "final_completion": "الإكمال النهائي",
+        "other": "أخرى"
+      },
+      "approvalStatus": {
+        "pending": "معلّق",
+        "approved": "موافق عليه",
+        "rejected": "مرفوض",
+        "cancelled": "ملغى"
+      },
+      "activityEmpty": "لا نشاط في المساحة بعد.",
+      "aiDisclaimer": "المساعد يقترح فقط — لا يغيّر بيانات المشروع تلقائياً.",
+      "aiGenerate": "تلخيص المشروع",
+      "aiError": "تعذر إنشاء ملخص الذكاء",
+      "aiNextSteps": "خطوات مقترحة",
+      "aiRisks": "مخاطر / عمل محظور",
+      "aiMissingDocs": "مستندات قد تكون ناقصة",
+      "aiAccept": "مفيد",
+      "aiAccepted": "تم حفظ الملاحظة"
     }
   },
   "recurring": {
@@ -1749,10 +1865,12 @@
       "send": "إرسال رسالة",
       "error": "تعذر إرسال الرسالة. حاول مرة أخرى.",
       "attach": "إرفاق ملف",
-      "attachHint": "صور ومستندات — تُضغط تلقائياً",
+      "attachHint": "صور وفيديو وPDF وأوفيس وZIP وصوت — اسحب أو الصق أو اختر",
       "removeFile": "إزالة",
       "shareLocation": "مشاركة الموقع",
-      "locationShared": "تمت مشاركة الموقع"
+      "locationShared": "تمت مشاركة الموقع",
+      "replying": "رد على",
+      "cancelReply": "إلغاء"
     },
     "typing": {
       "one": "{name} يكتب…",
@@ -1768,12 +1886,143 @@
       "offline": "غير متصل",
       "lastSeen": "آخر ظهور {time}"
     },
+    "search": {
+      "placeholder": "ابحث في الرسائل…",
+      "cta": "بحث"
+    },
+    "inbox": {
+      "markAllRead": "تحديد الكل كمقروء"
+    },
+    "media": {
+      "dropHere": "أسقط الملفات للإرفاق",
+      "retry": "إعادة المحاولة",
+      "cancel": "إلغاء",
+      "progress": "جاري الرفع {pct}%",
+      "failed": "فشل الرفع",
+      "cancelled": "تم الإلغاء",
+      "done": "تم الرفع",
+      "queued": "جاهز للإرسال",
+      "download": "تنزيل",
+      "voice": "رسالة صوتية"
+    },
+    "projectMedia": {
+      "title": "معرض المشروع",
+      "upload": "رفع",
+      "dropHint": "اسحب وأفلت الصور أو الفيديو أو المستندات هنا",
+      "all": "الكل",
+      "allPackages": "كل الباقات",
+      "empty": "لا توجد وسائط بعد",
+      "uploading": "جاري الرفع…",
+      "categories": {
+        "before": "قبل",
+        "progress": "قيد التنفيذ",
+        "completed": "مكتمل",
+        "documents": "مستندات",
+        "invoices": "فواتير",
+        "certificates": "شهادات",
+        "other": "أخرى"
+      }
+    },
+    "voice": {
+      "record": "تسجيل رسالة صوتية",
+      "recording": "جاري التسجيل…",
+      "paused": "متوقف مؤقتاً",
+      "pause": "إيقاف مؤقت",
+      "resume": "متابعة",
+      "send": "إرسال",
+      "cancel": "إلغاء",
+      "sending": "جاري إرسال الرسالة الصوتية…",
+      "noCalls": "رسائل صوتية فقط — بدون مكالمات مباشرة.",
+      "aiLabel": "نص تلقائي",
+      "grantConsent": "السماح بالتفريغ",
+      "revokeConsent": "إلغاء التفريغ",
+      "consentHint": "التفريغ يحتاج موافقتك. التسجيلات خاصة ولا تُستخدم للتدريب.",
+      "summary": "ملخص",
+      "viewOriginal": "الأصل",
+      "viewTranslated": "الترجمة",
+      "deleteTranscript": "حذف النص",
+      "noTranscript": "لا يوجد نص بعد لهذه الرسالة الصوتية.",
+      "searchTitle": "بحث في الرسائل الصوتية",
+      "searchPlaceholder": "ابحث في الكلام…",
+      "errors": {
+        "permission_denied": "تم رفض إذن الميكروفون.",
+        "not_supported": "التسجيل الصوتي غير مدعوم هنا.",
+        "no_audio": "لم يتم التقاط صوت.",
+        "too_large": "الرسالة الصوتية كبيرة جداً.",
+        "upload_failed": "فشل الرفع.",
+        "send_failed": "تعذر إرسال الرسالة الصوتية.",
+        "feature_disabled": "الرسائل الصوتية متوقفة.",
+        "unknown": "حدث خطأ ما."
+      }
+    },
+    "aiAssistant": {
+      "title": "مساعد الذكاء",
+      "aiLabel": "مولَّد بالذكاء",
+      "privacyNote": "المساعد يقترح فقط ولا يرسل رسائل تلقائياً. لا يُستخدم محتوى الدردشة لتدريب النماذج.",
+      "disableAi": "إيقاف الذكاء",
+      "enableAi": "تفعيل الذكاء",
+      "disabledHint": "مساعدة الذكاء متوقفة لحسابك.",
+      "deleteSummaries": "حذف ملخصات الذكاء",
+      "summarize": "تلخيص",
+      "suggestReplies": "اقتراح ردود",
+      "extract": "استخراج ومهام",
+      "error": "تعذر تشغيل المساعد. حاول مجدداً.",
+      "repliesTitle": "ردود مقترحة",
+      "extractionsTitle": "معلومات مستخرجة",
+      "tasksTitle": "مهام مفتوحة",
+      "viewOriginal": "الأصل",
+      "viewTranslated": "الترجمة",
+      "windows": {
+        "last_10": "آخر 10",
+        "today": "اليوم",
+        "last_7_days": "7 أيام",
+        "entire": "الكل"
+      },
+      "styles": {
+        "short": "قصير",
+        "detailed": "مفصّل",
+        "timeline": "خط زمني",
+        "action": "إجراءات"
+      },
+      "fields": {
+        "appointment": "موعد",
+        "address": "عنوان",
+        "phone": "هاتف",
+        "budget": "ميزانية",
+        "requested_date": "تاريخ مطلوب",
+        "service_type": "خدمة",
+        "materials": "مواد",
+        "urgency": "أولوية",
+        "other": "أخرى"
+      },
+      "sentiment": {
+        "positive": "نبرة إيجابية",
+        "neutral": "محايد",
+        "frustrated": "إشارات إحباط",
+        "urgent": "إشارات استعجال",
+        "escalation_risk": "خطر تصعيد"
+      },
+      "priority": {
+        "low": "أولوية منخفضة",
+        "normal": "أولوية عادية",
+        "high": "أولوية عالية",
+        "critical": "حرج"
+      }
+    },
     "actions": {
       "pin": "تثبيت",
       "unpin": "إلغاء التثبيت",
       "archive": "أرشفة",
       "unarchive": "إلغاء الأرشفة",
-      "searchMessages": "بحث في الرسائل"
+      "searchMessages": "بحث في الرسائل",
+      "copy": "نسخ",
+      "reply": "رد",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "edited": "معدّلة",
+      "forward": "إعادة توجيه"
     }
   },
   "footer": {
@@ -4817,6 +5066,22 @@
       "title": "رسالة جديدة",
       "body": "لديك رسالة جديدة.",
       "attachmentBody": "وصلك مرفق جديد."
+    },
+    "chatReply": {
+      "title": "رد جديد",
+      "body": "رد أحدهم على رسالتك."
+    },
+    "chatPinned": {
+      "title": "تم تثبيت رسالة",
+      "body": "تم تثبيت رسالة في محادثتك."
+    },
+    "chatMention": {
+      "title": "تمت الإشارة إليك",
+      "body": "ذكرك أحدهم في محادثة."
+    },
+    "chatEmergency": {
+      "title": "محادثة طوارئ",
+      "body": "رسالة جديدة في محادثة طوارئ."
     },
     "offerReceived": {
       "title": "عرض جديد",

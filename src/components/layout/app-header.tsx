@@ -8,6 +8,8 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { DalilyLogo } from "@/components/brand/dalily-logo";
 import { Button } from "@/components/ui/button";
+import { NotificationCenterBell } from "@/components/notifications/notification-center-bell";
+import { isSmartNotificationCenterEnabled } from "@/lib/config/feature-flags";
 
 type AppHeaderProps = {
   /** When set, replaces personal account name (business dashboard). */
@@ -83,6 +85,9 @@ export async function AppHeader({
         <div className="flex items-center justify-end gap-1 sm:gap-2">
           {authUser ? (
             <>
+              {isSmartNotificationCenterEnabled() ? (
+                <NotificationCenterBell />
+              ) : null}
               {accountLabel ? (
                 <span className="hidden max-w-[16rem] items-center gap-2 truncate text-sm text-muted-foreground lg:inline-flex">
                   <span className="truncate">{accountLabel}</span>
