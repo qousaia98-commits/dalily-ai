@@ -102,3 +102,129 @@ export function isProviderDashboardV2Enabled(): boolean {
 export function isAdminMigrationV2Enabled(): boolean {
   return envFlag("ADMIN_MIGRATION_V2");
 }
+
+/**
+ * AI Engine Phase 1 — knowledge lookup, intent memory, feedback loop.
+ * Also true when Phase 2+ is on.
+ */
+export function isAiEngineV1Enabled(): boolean {
+  return (
+    envFlag("AI_ENGINE_V1") ||
+    envFlag("AI_ENGINE_V2") ||
+    envFlag("AI_ENGINE_V3") ||
+    envFlag("AI_ENGINE_V4") ||
+    envFlag("AI_ENGINE_V5") ||
+    envFlag("AI_ENGINE_V6") ||
+    envFlag("AI_ENGINE_V7") ||
+    envFlag("AI_ENGINE_V8") ||
+    envFlag("AI_ENGINE_V9")
+  );
+}
+
+/**
+ * AI Engine Phase 2 — full intent pipeline, smart questions, urgency/completeness,
+ * AI provider match scores + explanations. Also true when Phase 3+ is on.
+ */
+export function isAiEngineV2Enabled(): boolean {
+  return (
+    envFlag("AI_ENGINE_V2") ||
+    envFlag("AI_ENGINE_V3") ||
+    envFlag("AI_ENGINE_V4") ||
+    envFlag("AI_ENGINE_V5") ||
+    envFlag("AI_ENGINE_V6") ||
+    envFlag("AI_ENGINE_V7") ||
+    envFlag("AI_ENGINE_V8") ||
+    envFlag("AI_ENGINE_V9")
+  );
+}
+
+/**
+ * AI Engine Phase 3 — smart dispatch, capacity, route fit, ETA, response prediction,
+ * marketplace exposure, reputation, continuous prediction learning.
+ * Also true when Phase 4+ is on.
+ */
+export function isAiEngineV3Enabled(): boolean {
+  return (
+    envFlag("AI_ENGINE_V3") ||
+    envFlag("AI_ENGINE_V4") ||
+    envFlag("AI_ENGINE_V5") ||
+    envFlag("AI_ENGINE_V6") ||
+    envFlag("AI_ENGINE_V7") ||
+    envFlag("AI_ENGINE_V8") ||
+    envFlag("AI_ENGINE_V9")
+  );
+}
+
+/**
+ * AI Engine Phase 4 — job intelligence, service knowledge, tools/materials,
+ * duration/price ranges, multi-service detection, provider prep summaries.
+ * Also true when Phase 5+ is on.
+ */
+export function isAiEngineV4Enabled(): boolean {
+  return (
+    envFlag("AI_ENGINE_V4") ||
+    envFlag("AI_ENGINE_V5") ||
+    envFlag("AI_ENGINE_V6") ||
+    envFlag("AI_ENGINE_V7") ||
+    envFlag("AI_ENGINE_V8") ||
+    envFlag("AI_ENGINE_V9")
+  );
+}
+
+/**
+ * AI Engine Phase 5 — Vision Intelligence.
+ * Also true when Phase 6+ is on.
+ */
+export function isAiEngineV5Enabled(): boolean {
+  return (
+    envFlag("AI_ENGINE_V5") ||
+    envFlag("AI_ENGINE_V6") ||
+    envFlag("AI_ENGINE_V7") ||
+    envFlag("AI_ENGINE_V8") ||
+    envFlag("AI_ENGINE_V9")
+  );
+}
+
+/**
+ * AI Engine Phase 6 — Voice Intelligence.
+ * Also true when Phase 7+ is on.
+ */
+export function isAiEngineV6Enabled(): boolean {
+  return (
+    envFlag("AI_ENGINE_V6") ||
+    envFlag("AI_ENGINE_V7") ||
+    envFlag("AI_ENGINE_V8") ||
+    envFlag("AI_ENGINE_V9")
+  );
+}
+
+/**
+ * AI Engine Phase 7 — Personal AI Assistant & continuous intelligence.
+ * Also true when Phase 8+ is on.
+ */
+export function isAiEngineV7Enabled(): boolean {
+  return (
+    envFlag("AI_ENGINE_V7") ||
+    envFlag("AI_ENGINE_V8") ||
+    envFlag("AI_ENGINE_V9")
+  );
+}
+
+/**
+ * AI Engine Phase 8 — Predictive Intelligence & autonomous optimization:
+ * demand/availability forecasts, wait times, demand/supply balancer,
+ * predictive notifications, market insights, admin AI dashboard, calibration.
+ * Also true when Phase 9 is on.
+ */
+export function isAiEngineV8Enabled(): boolean {
+  return envFlag("AI_ENGINE_V8") || envFlag("AI_ENGINE_V9");
+}
+
+/**
+ * AI Engine Phase 9 — Autonomous Actions & Workflow Automation:
+ * workflow engine, confidence policy, customer/provider/admin automations,
+ * audit, learning feedback, admin automation control center.
+ */
+export function isAiEngineV9Enabled(): boolean {
+  return envFlag("AI_ENGINE_V9");
+}

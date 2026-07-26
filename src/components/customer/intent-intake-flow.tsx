@@ -19,6 +19,15 @@ import {
   publishIntentRequestAction,
   suggestIntentCategoryAction,
 } from "@/actions/intent-request.actions";
+import {
+  analyzeIntentVisionAction,
+  confirmIntentVisionAction,
+} from "@/actions/intent-vision.actions";
+import { prepareVisionImage } from "@/lib/vision/client-upload";
+import {
+  IntentVoiceCapture,
+  type IntentVoiceInsight,
+} from "@/components/customer/intent-voice-capture";
 import type { CategorySuggestion, IntentUrgency } from "@/domains/customer/intent-types";
 import { getContextualSuggestionKeys } from "@/lib/intent/contextual-suggestions";
 import { cn } from "@/lib/utils";
@@ -48,16 +57,28 @@ const CLARIFY_BY_SLUG: Record<string, string[]> = {
 
 const HIGH_CONFIDENCE = 0.45;
 
+type VisionInsightState = {
+  analysisId: string | null;
+  summaryEn: string;
+  summaryAr: string;
+  contradiction: boolean;
+  confirmed: boolean | null;
+};
+
 export function IntentIntakeFlow({
   initialIntent = "",
   cities,
   loginHref,
   isAuthenticated,
+  visionEnabled = false,
+  voiceEnabled = false,
 }: {
   initialIntent?: string;
   cities: CityOption[];
   loginHref: string;
   isAuthenticated: boolean;
+  visionEnabled?: boolean;
+  voiceEnabled?: boolean;
 }) {
   const t = useTranslations("intentFlow");
   const locale = useLocale();
@@ -69,13 +90,29 @@ export function IntentIntakeFlow({
   const [suggestion, setSuggestion] = useState<CategorySuggestion | null>(null);
   const [categories, setCategories] = useState<CategoryOption[]>([]);
   const [categoryId, setCategoryId] = useState("");
+  /** First AI suggestion for this intent (feedback loop — not overwritten on manual change). */
+  const [suggestedCategoryId, setSuggestedCategoryId] = useState("");
+  const [suggestedCategorySlug, setSuggestedCategorySlug] = useState("");
+  const [suggestedConfidence, setSuggestedConfidence] = useState<number | null>(null);
   const [photos, setPhotos] = useState<File[]>([]);
+  const [visionInsight, setVisionInsight] = useState<VisionInsightState | null>(null);
+  const [visionPending, setVisionPending] = useState(false);
+  const [visionError, setVisionError] = useState<string | null>(null);
+  const [showVisionCorrection, setShowVisionCorrection] = useState(false);
+  const [visionCorrection, setVisionCorrection] = useState("");
+  const [voiceInsight, setVoiceInsight] = useState<IntentVoiceInsight | null>(null);
   const [cityId, setCityId] = useState(cities[0]?.id ?? "");
   const [locationText, setLocationText] = useState("");
   const [urgency, setUrgency] = useState<IntentUrgency>("normal");
   const [needsUrgencyConfirm, setNeedsUrgencyConfirm] = useState(false);
   const [clarifyNotes, setClarifyNotes] = useState<string[]>([]);
   const [clarifyAnswers, setClarifyAnswers] = useState<Record<number, string>>({});
+  const [aiQuestions, setAiQuestions] = useState<
+    Array<{ id: string; promptKey: string }>
+  >([]);
+  const [suggestedUrgency, setSuggestedUrgency] = useState<string>("");
+  const [suggestedWorkflow, setSuggestedWorkflow] = useState<string>("");
+  const [completenessScore, setCompletenessScore] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   /** Live category from existing suggestIntentCategoryAction (debounced). */
   const [liveCategorySlug, setLiveCategorySlug] = useState<string | null>(null);
@@ -139,6 +176,35 @@ export function IntentIntakeFlow({
     setClarifyAnswers({});
   }
 
+  function applyDecisionQuestions(
+    decision: {
+      questions?: Array<{ id: string; promptKey: string }>;
+      urgency?: string;
+      workflow?: { strategy?: string };
+      completeness?: { score?: number };
+      marketplaceUrgency?: IntentUrgency;
+    } | null,
+    fallbackSlug?: string,
+  ) {
+    if (decision?.questions && decision.questions.length > 0) {
+      setAiQuestions(
+        decision.questions.map((q) => ({ id: q.id, promptKey: q.promptKey })),
+      );
+      setClarifyNotes(decision.questions.map((q) => q.promptKey));
+      setClarifyAnswers({});
+    } else {
+      setAiQuestions([]);
+      loadClarifyForCategory(fallbackSlug);
+    }
+    setSuggestedUrgency(decision?.urgency ?? "");
+    setSuggestedWorkflow(decision?.workflow?.strategy ?? "");
+    setCompletenessScore(decision?.completeness?.score ?? null);
+    if (decision?.marketplaceUrgency === "emergency") {
+      setNeedsUrgencyConfirm(true);
+      setUrgency("emergency");
+    }
+  }
+
   function goSuggest() {
     setError(null);
     const text = intentText.trim();
@@ -162,11 +228,17 @@ export function IntentIntakeFlow({
       setCategories(opts);
       if (result.suggestion) {
         setCategoryId(result.suggestion.categoryId);
+        setSuggestedCategoryId(result.suggestion.categoryId);
+        setSuggestedCategorySlug(result.suggestion.categorySlug);
+        setSuggestedConfidence(result.suggestion.confidence);
         setLiveCategorySlug(result.suggestion.categorySlug);
         const hyp = result.suggestion.hypothesizedUrgency;
         setNeedsUrgencyConfirm(hyp === "emergency");
         setUrgency(hyp === "emergency" ? "emergency" : "normal");
-        loadClarifyForCategory(result.suggestion.categorySlug);
+        applyDecisionQuestions(
+          result.decision ?? null,
+          result.suggestion.categorySlug,
+        );
         if (result.suggestion.confidence >= HIGH_CONFIDENCE) {
           setStep("confirm");
         } else {
@@ -174,9 +246,12 @@ export function IntentIntakeFlow({
         }
       } else if (opts[0]) {
         setCategoryId(opts[0].id);
+        setSuggestedCategoryId("");
+        setSuggestedCategorySlug("");
+        setSuggestedConfidence(null);
         setNeedsUrgencyConfirm(false);
         setUrgency("normal");
-        loadClarifyForCategory(opts[0].slug);
+        applyDecisionQuestions(null, opts[0].slug);
         setStep("category");
       } else {
         setStep("category");
@@ -214,6 +289,55 @@ export function IntentIntakeFlow({
     setStep("location");
   }
 
+  async function runVisionOnPhotos(files: File[]) {
+    if (!visionEnabled || files.length === 0) {
+      setVisionInsight(null);
+      setVisionError(null);
+      return;
+    }
+    setVisionPending(true);
+    setVisionError(null);
+    setShowVisionCorrection(false);
+    setVisionCorrection("");
+    try {
+      const prepared = await prepareVisionImage(files[0]!);
+      if (!prepared.success) {
+        setVisionError(t("steps.photos.failed"));
+        setVisionInsight(null);
+        return;
+      }
+      const fd = new FormData();
+      fd.set("image", prepared.image.file);
+      fd.set("intentText", composedIntent());
+      const slug =
+        categories.find((c) => c.id === categoryId)?.slug ||
+        suggestedCategorySlug ||
+        "";
+      if (slug) fd.set("categorySlug", slug);
+
+      const result = await analyzeIntentVisionAction(fd);
+      if (!result.success) {
+        if (result.error !== "feature_disabled") {
+          setVisionError(t("steps.photos.failed"));
+        }
+        setVisionInsight(null);
+        return;
+      }
+      setVisionInsight({
+        analysisId: result.analysisId,
+        summaryEn: result.summaryEn,
+        summaryAr: result.summaryAr,
+        contradiction: result.contradiction,
+        confirmed: null,
+      });
+    } catch {
+      setVisionError(t("steps.photos.failed"));
+      setVisionInsight(null);
+    } finally {
+      setVisionPending(false);
+    }
+  }
+
   function afterLocation() {
     if (!cityId) {
       setError(resolveError("location_required"));
@@ -247,8 +371,29 @@ export function IntentIntakeFlow({
       fd.set("categoryId", categoryId);
       fd.set("cityId", cityId);
       fd.set("urgency", urgency);
+      if (suggestedCategoryId) fd.set("suggestedCategoryId", suggestedCategoryId);
+      if (suggestedCategorySlug) fd.set("suggestedCategorySlug", suggestedCategorySlug);
+      if (suggestedConfidence != null) {
+        fd.set("suggestedConfidence", String(suggestedConfidence));
+      }
+      if (suggestedUrgency) fd.set("suggestedUrgency", suggestedUrgency);
+      if (suggestedWorkflow) fd.set("suggestedWorkflow", suggestedWorkflow);
       if (locationText.trim()) fd.set("locationText", locationText.trim());
       for (const file of photos) fd.append("photos", file);
+      if (visionInsight?.analysisId) {
+        fd.set("visionAnalysisId", visionInsight.analysisId);
+      }
+      if (voiceInsight?.transcriptId) {
+        fd.set("voiceTranscriptId", voiceInsight.transcriptId);
+      }
+      if (voiceInsight?.audioBlob) {
+        fd.set(
+          "voiceAudio",
+          new File([voiceInsight.audioBlob], "intent-voice.webm", {
+            type: voiceInsight.audioBlob.type || "audio/webm",
+          }),
+        );
+      }
 
       const result = await publishIntentRequestAction(fd);
       if (!result.success || !result.requestId) {
@@ -302,6 +447,19 @@ export function IntentIntakeFlow({
               className="min-h-28 resize-y rounded-2xl text-base focus-visible:ring-[var(--dalily-gold)]"
             />
           </div>
+          <IntentVoiceCapture
+            enabled={voiceEnabled}
+            typedText={intentText}
+            categorySlug={
+              categories.find((c) => c.id === categoryId)?.slug ||
+              suggestedCategorySlug ||
+              undefined
+            }
+            onInsight={setVoiceInsight}
+            onTranscriptApply={(normalized) => {
+              setIntentText(normalized);
+            }}
+          />
           <div className="flex flex-wrap gap-2">
             {suggestions.map((s) => (
               <button
@@ -421,11 +579,16 @@ export function IntentIntakeFlow({
             <h2 className="text-lg font-semibold">{t("steps.clarify.title")}</h2>
             <p className="text-sm text-muted-foreground">{t("steps.clarify.subtitle")}</p>
           </div>
+          {completenessScore != null ? (
+            <p className="text-xs text-muted-foreground">
+              {t("steps.clarify.completeness", { score: completenessScore })}
+            </p>
+          ) : null}
           {clarifyNotes.map((key, index) => (
-            <div key={key} className="space-y-2">
-                  <Label htmlFor={`clarify-${index}`}>
-                    {t(key as "clarify.electrical.scope")}
-                  </Label>
+            <div key={`${aiQuestions[index]?.id ?? key}-${index}`} className="space-y-2">
+              <Label htmlFor={`clarify-${index}`}>
+                {t(key as "clarify.electrical.scope")}
+              </Label>
               <Textarea
                 id={`clarify-${index}`}
                 rows={2}
@@ -478,6 +641,7 @@ export function IntentIntakeFlow({
               onChange={(e) => {
                 const files = Array.from(e.target.files ?? []).slice(0, 5);
                 setPhotos(files);
+                void runVisionOnPhotos(files);
               }}
             />
           </Label>
@@ -486,6 +650,113 @@ export function IntentIntakeFlow({
               {t("steps.photos.count", { count: photos.length })}
             </p>
           )}
+
+          {visionPending && (
+            <p className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="size-4 animate-spin" aria-hidden />
+              {t("steps.photos.analyzing")}
+            </p>
+          )}
+
+          {visionError && (
+            <p className="text-sm text-muted-foreground">{visionError}</p>
+          )}
+
+          {visionInsight && !visionPending && (
+            <div className="space-y-3 rounded-2xl border border-border/70 bg-muted/20 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {t("steps.photos.aiSummary")}
+              </p>
+              <p className="text-sm font-medium">
+                {locale === "ar" ? visionInsight.summaryAr : visionInsight.summaryEn}
+              </p>
+              {visionInsight.contradiction && visionInsight.confirmed == null && (
+                <p className="text-xs text-amber-700 dark:text-amber-400">
+                  {t("steps.photos.clarifyMismatch")}
+                </p>
+              )}
+              {visionInsight.confirmed === true && (
+                <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Check className="size-3.5" aria-hidden />
+                  {t("steps.photos.confirmed")}
+                </p>
+              )}
+              {visionInsight.confirmed == null && !showVisionCorrection && (
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    className="rounded-xl"
+                    onClick={() => {
+                      setVisionInsight((prev) =>
+                        prev ? { ...prev, confirmed: true } : prev,
+                      );
+                      if (visionInsight.analysisId) {
+                        void confirmIntentVisionAction({
+                          analysisId: visionInsight.analysisId,
+                          confirmed: true,
+                        });
+                      }
+                    }}
+                  >
+                    {t("steps.photos.confirm")}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="rounded-xl"
+                    onClick={() => setShowVisionCorrection(true)}
+                  >
+                    <Pencil className="size-3.5 me-1" aria-hidden />
+                    {t("steps.photos.correct")}
+                  </Button>
+                </div>
+              )}
+              {showVisionCorrection && (
+                <div className="space-y-2">
+                  <Textarea
+                    rows={2}
+                    value={visionCorrection}
+                    onChange={(e) => setVisionCorrection(e.target.value)}
+                    placeholder={t("steps.photos.correctionPlaceholder")}
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="rounded-xl"
+                      onClick={() => {
+                        setVisionInsight((prev) =>
+                          prev ? { ...prev, confirmed: false } : prev,
+                        );
+                        setShowVisionCorrection(false);
+                        if (visionInsight.analysisId) {
+                          void confirmIntentVisionAction({
+                            analysisId: visionInsight.analysisId,
+                            confirmed: false,
+                            correction: visionCorrection,
+                          });
+                        }
+                      }}
+                    >
+                      {t("steps.photos.saveCorrection")}
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      className="rounded-xl"
+                      onClick={() => setShowVisionCorrection(false)}
+                    >
+                      {t("steps.photos.cancelCorrection")}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="flex gap-2">
             <Button
               type="button"
@@ -498,7 +769,12 @@ export function IntentIntakeFlow({
             <Button type="button" variant="secondary" className="flex-1 rounded-xl" onClick={afterPhotos}>
               {t("steps.photos.skip")}
             </Button>
-            <Button type="button" className="flex-1 rounded-xl" onClick={afterPhotos}>
+            <Button
+              type="button"
+              className="flex-1 rounded-xl"
+              onClick={afterPhotos}
+              disabled={visionPending}
+            >
               {t("continue")}
             </Button>
           </div>

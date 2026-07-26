@@ -16,4 +16,10 @@ export type PublishIntentInput = {
   cityId: string;
   urgency: IntentUrgency;
   locationText?: string;
+  /** AI suggestion the user saw (for feedback loop). */
+  suggestedCategoryId?: string;
+  suggestedCategorySlug?: string;
+  suggestedConfidence?: number;
+  suggestedUrgency?: "critical" | "high" | "medium" | "low";
+  suggestedWorkflow?: string;
 };

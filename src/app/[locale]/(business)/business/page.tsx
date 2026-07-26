@@ -30,10 +30,14 @@ import { VerificationDashboardAlert } from "@/components/business/verification-d
 import { OnboardingDashboardCard } from "@/components/business/onboarding/onboarding-dashboard-card";
 import { ProviderDashboardHomeView } from "@/components/business/provider-dashboard-home";
 import { getProviderDashboardHome } from "@/domains/provider/dashboard";
-import { isProviderDashboardV2Enabled } from "@/lib/config/feature-flags";
+import { isProviderDashboardV2Enabled, isAiEngineV7Enabled, isAiEngineV8Enabled, isAiEngineV9Enabled } from "@/lib/config/feature-flags";
 import { buildPersonalizedGreeting } from "@/lib/greetings";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
+import { ProviderAssistantPanel } from "@/components/assistant/provider-assistant-panel";
+import { PredictiveNotificationsList } from "@/components/predictive/predictive-widgets";
+import { AutomationSuggestionsList } from "@/components/automation/automation-widgets";
+import type { AutomationSuggestion } from "@/lib/ai/automation/types";
 
 /**
  * Provider home — Sprint 8 unlock-first stack when PROVIDER_DASHBOARD_V2;
@@ -86,9 +90,121 @@ export default async function BusinessDashboardPage() {
       locale,
       userId: authUser.id,
     });
+
+    let providerAssistant = null;
+    let providerPredictive = null;
+    let providerAutomation: AutomationSuggestion[] = [];
+
+    if (isAiEngineV7Enabled()) {
+      const [{ listProviderBookings }, { listProviderOpportunities }, { buildProviderAssistant }] =
+        await Promise.all([
+          import("@/lib/booking/booking-service"),
+          import("@/domains/offer/queries"),
+          import("@/lib/ai/assistant/provider"),
+        ]);
+      const [bookings, opportunities] = await Promise.all([
+        listProviderBookings(provider.id),
+        listProviderOpportunities(provider.id),
+      ]);
+      providerAssistant = await buildProviderAssistant({
+        providerId: provider.id,
+        bookings: bookings.map((b) => ({
+          id: b.id,
+          title: b.serviceName || b.customerNotes || "Job",
+          startsAt: b.startsAt,
+          endsAt: b.endsAt,
+        })),
+        opportunities: opportunities
+          .filter((o) => !o.hasOffer)
+          .map((o) => ({
+            assignmentId: o.assignmentId,
+            title: o.title,
+            urgency: o.urgency,
+          })),
+        missedOpportunities: opportunities.filter((o) => !o.hasOffer).length > 5
+          ? opportunities.filter((o) => !o.hasOffer).length - 5
+          : 0,
+        freeSlotNearby: opportunities.some((o) => !o.hasOffer),
+        preparationNotes: [
+          "Review AI prep on each opportunity before offering.",
+          "Confirm tools and travel buffer for today’s jobs.",
+        ],
+      });
+
+      if (isAiEngineV8Enabled()) {
+        const [
+          { forecastDemand },
+          { forecastProviderAvailability },
+          { buildProviderPredictiveNotifications, persistPredictiveNotifications },
+        ] = await Promise.all([
+          import("@/lib/ai/predictive/demand"),
+          import("@/lib/ai/predictive/availability"),
+          import("@/lib/ai/predictive/notifications"),
+        ]);
+        const [demand, availability] = await Promise.all([
+          forecastDemand({ horizonDays: 3 }),
+          forecastProviderAvailability({
+            providerId: provider.id,
+            horizonDays: 3,
+          }),
+        ]);
+        const tomorrow = availability[1];
+        providerPredictive = await persistPredictiveNotifications(
+          buildProviderPredictiveNotifications({
+            demand,
+            freeHoursTomorrow: tomorrow?.predictedFreeHours ?? null,
+            categoryHints: demand.highlightsEn
+              .slice(0, 2)
+              .map((h) => h.split("—")[1]?.trim().split(":")[0]?.trim())
+              .filter(Boolean) as string[],
+          }),
+          { providerId: provider.id },
+        );
+      }
+
+      if (isAiEngineV9Enabled()) {
+        const { runProviderAutomations } = await import(
+          "@/lib/ai/automation/provider"
+        );
+        const [{ listProviderBookings }, { listProviderOpportunities }, { forecastProviderAvailability }] =
+          await Promise.all([
+            import("@/lib/booking/booking-service"),
+            import("@/domains/offer/queries"),
+            import("@/lib/ai/predictive/availability"),
+          ]);
+        const [bookings, opportunities, availability] = await Promise.all([
+          listProviderBookings(provider.id),
+          listProviderOpportunities(provider.id),
+          forecastProviderAvailability({
+            providerId: provider.id,
+            horizonDays: 1,
+          }),
+        ]);
+        const today = availability[0];
+        const openNearby = opportunities.filter((o) => !o.hasOffer).length;
+        providerAutomation = await runProviderAutomations({
+          providerId: provider.id,
+          userId: authUser.id,
+          freeHoursToday: today?.predictedFreeHours ?? null,
+          bookingsToday: bookings.length,
+          nearbyOpenRequests: openNearby,
+          overloaded: today?.expectedWorkload === "overloaded",
+        });
+      }
+    }
+
     return (
       <div className="w-full max-w-full space-y-6 overflow-x-hidden animate-fade-in">
         <VerificationDashboardAlert provider={provider} verification={verification} />
+        {providerAssistant ? (
+          <ProviderAssistantPanel view={providerAssistant} />
+        ) : null}
+        {providerPredictive?.length ? (
+          <PredictiveNotificationsList items={providerPredictive} />
+        ) : null}
+        {providerAutomation.length > 0 ? (
+          <AutomationSuggestionsList items={providerAutomation} />
+        ) : null}
         <ProviderDashboardHomeView data={marketplaceHome} greeting={greeting} />
       </div>
     );

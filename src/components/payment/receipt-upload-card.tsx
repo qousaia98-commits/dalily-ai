@@ -258,7 +258,7 @@ export function ReceiptUploadCard({
               </div>
             ) : null}
             <div className="flex max-h-40 items-center justify-center overflow-hidden rounded-2xl border border-border/70 bg-muted/30 p-2 shadow-md">
-              {previewUrl ? (
+              {previewUrl && !isPdf ? (
                 // eslint-disable-next-line @next/next/no-img-element -- local object URL preview
                 <img
                   src={previewUrl}

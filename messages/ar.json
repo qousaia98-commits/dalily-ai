@@ -19,6 +19,74 @@
       "selectRequired": "يرجى الاختيار"
     }
   },
+  "assistant": {
+    "customer": {
+      "badge": "مساعد دليلي",
+      "title": "مرشد طلبك",
+      "nextAction": "التالي",
+      "missing": "ما زال ناقصاً",
+      "offerCompare": "مقارنة العروض",
+      "verified": "موثّق",
+      "appointment": "ملخص الموعد",
+      "afterJob": "بعد انتهاء العمل",
+      "askReview": "تقييم قصير يساعد العملاء الآخرين."
+    },
+    "provider": {
+      "badge": "مساعد دليلي",
+      "title": "مرشد يومك",
+      "today": "جدول اليوم",
+      "noToday": "لا أعمال مجدولة اليوم.",
+      "suggestedJobs": "أعمال مقترحة تالية",
+      "prep": "التحضير",
+      "travel": "نصائح التنقل",
+      "customerSummary": "ملخص العميل",
+      "chatSummary": "ملخص المحادثة",
+      "missed": "{count} فرص فائتة مؤخراً"
+    },
+    "suggestions": {
+      "title": "اقتراحات",
+      "accept": "نفّذ",
+      "ignore": "لاحقاً",
+      "reject": "غير مفيد"
+    }
+  },
+  "predictive": {
+    "wait": {
+      "badge": "وقت الانتظار المتوقع",
+      "confidence": "الثقة {pct}%"
+    },
+    "notifications": {
+      "title": "نصائح السوق"
+    }
+  },
+  "automation": {
+    "suggestions": {
+      "title": "أتمتة الذكاء",
+      "mode": "الوضع: {mode}",
+      "why": "السبب"
+    },
+    "feedback": {
+      "accept": "قبول",
+      "reject": "رفض"
+    },
+    "providerSettings": {
+      "title": "أتمتة الذكاء",
+      "subtitle": "سير عمل اختياري — أنت تبقى المتحكم. المدفوعات لا تُنفَّذ تلقائياً أبداً.",
+      "autoAccept": "قبول تلقائي للطلبات عالية الثقة",
+      "autoAcceptHint": "فقط عند ثقة عالية جداً وبموافقتك.",
+      "autoRejectArea": "رفض تلقائي خارج منطقة الخدمة",
+      "autoRejectAreaHint": "رفض الطلبات خارج نطاق تغطيتك بوضوح.",
+      "autoRejectHours": "تنبيه خارج ساعات العمل",
+      "autoRejectHoursHint": "اقتراح رفض الطلبات خارج الدوام.",
+      "routeOpt": "اقتراح تحسين المسار",
+      "routeOptHint": "عند وجود عدة محطات اليوم.",
+      "scheduleGaps": "اقتراح ملء فراغات الجدول",
+      "scheduleGapsHint": "اقتراح أعمال قريبة عند وجود سعة فارغة.",
+      "safetyNote": "لا تُؤتمت أبداً: المدفوعات، التأكيدات القانونية، حذف الحساب، التحقق من الهوية، أو الإيقاف.",
+      "save": "حفظ إعدادات الأتمتة",
+      "saving": "جاري الحفظ…"
+    }
+  },
   "paymentReceiptUpload": {
     "title": "أرفق صورة إيصال التحويل",
     "subtitle": "لن نتمكن من مراجعة عملية الدفع قبل رفع الإيصال.",
@@ -519,11 +587,76 @@
         "break": "هل القفل مكسور أم ضاع المفتاح؟"
       }
     },
+    "smartQuestions": {
+      "common": {
+        "photo": "هل يمكنك إضافة صورة للمشكلة؟",
+        "area": "ما أقرب منطقة أو معلم؟"
+      },
+      "electrical": {
+        "outage": "هل انقطعت الكهرباء؟",
+        "wholeHome": "هل المشكلة في الشقة كلها أم في مكان واحد؟",
+        "fuseChecked": "هل فحصت الفيوز / القاطع؟"
+      },
+      "plumbing": {
+        "leak": "هل يوجد تسرب مياه نشط؟",
+        "where": "ماسورة، مرحاض، مطبخ، أم حمّام؟",
+        "stillRunning": "هل المياه ما زالت تسرب أو تجري الآن؟"
+      },
+      "hvac": {
+        "symptom": "هل المكيف يعمل لكن بدون تبريد؟"
+      },
+      "locksmith": {
+        "lockedOut": "هل أنت مغلوق خارج المنزل الآن؟",
+        "breakOrLost": "هل القفل مكسور أم ضاع المفتاح؟"
+      },
+      "painting": {
+        "indoorOutdoor": "دهان داخلي أم خارجي؟",
+        "size": "تقريباً ما حجم المساحة (غرف أو م²)؟"
+      },
+      "carpentry": {
+        "item": "ما الذي يحتاج إصلاحاً (باب، دولاب، خشب)؟"
+      }
+    },
+    "workflow": {
+      "emergency": "حالة طارئة — نعطي أولوية للمزودين المتاحين القريبين.",
+      "guided": "بعض التفاصيل الإضافية تساعد على مطابقة أفضل.",
+      "collectOffers": "عمل أكبر — يُفضّل جمع عدة عروض.",
+      "directContact": "إصلاح صغير — مطابقة مباشرة مع مزود مناسبة."
+    },
     "steps": {
       "intent": {
         "label": "صف المشكلة",
         "placeholder": "اكتب وصفاً قصيراً لما تحتاجه…",
         "continue": "متابعة"
+      },
+      "voice": {
+        "record": "سجّل رسالة صوتية",
+        "stop": "إيقاف",
+        "cancel": "إلغاء",
+        "recording": "جارٍ التسجيل…",
+        "transcribing": "جارٍ تحويل الصوت إلى نص…",
+        "aiSummary": "فهم الرسالة الصوتية",
+        "category": "الفئة المكتشفة",
+        "urgency": "الاستعجال المكتشف",
+        "language": "اللغة",
+        "unknownCategory": "غير واضحة بعد",
+        "confirm": "صحيح",
+        "editTranscript": "تعديل النص",
+        "saveEdit": "حفظ النص",
+        "cancelEdit": "إلغاء",
+        "confirmed": "شكراً — سنعتمد ذلك للمطابقة.",
+        "clarifyMismatch": "قد لا تتطابق الرسالة الصوتية مع باقي التفاصيل. أكّد أو عدّل.",
+        "errors": {
+          "permission_denied": "يلزم السماح باستخدام الميكروفون.",
+          "not_supported": "التسجيل الصوتي غير مدعوم في هذا المتصفح.",
+          "unknown": "تعذّر بدء التسجيل.",
+          "feature_disabled": "الإدخال الصوتي غير مفعّل.",
+          "no_audio": "لا يوجد تسجيل صوتي.",
+          "file_too_large": "الملف الصوتي كبير جداً.",
+          "invalid_file_type": "صيغة صوت غير مدعومة.",
+          "transcription_failed": "تعذّر التحويل إلى نص. يمكنك الكتابة بدل ذلك.",
+          "no_api_key": "تحويل الصوت غير متاح مؤقتاً."
+        }
       },
       "confirm": {
         "badge": "اقتراح ذكي",
@@ -540,16 +673,27 @@
       },
       "clarify": {
         "title": "أسئلة سريعة",
-        "subtitle": "أسئلة مناسبة لهذه الفئة — يمكنك التخطي.",
+        "subtitle": "فقط التفاصيل الناقصة — يمكنك التخطي.",
         "placeholder": "اختياري…",
-        "skip": "تخطي"
+        "skip": "تخطي",
+        "completeness": "اكتمال الطلب: {score}%"
       },
       "photos": {
         "title": "أضف صوراً (اختياري)",
         "subtitle": "الصور تساعد الأعمال على إرسال عروض أفضل.",
         "add": "إضافة صور",
         "skip": "تخطي",
-        "count": "{count} صورة محددة"
+        "count": "{count} صورة محددة",
+        "analyzing": "جارٍ تحليل صورتك…",
+        "aiSummary": "ملخص ذكي للصورة",
+        "confirm": "صحيح",
+        "correct": "غير دقيق",
+        "correctionPlaceholder": "ماذا يجب أن نرى بدلاً من ذلك؟",
+        "saveCorrection": "حفظ التصحيح",
+        "cancelCorrection": "إلغاء",
+        "confirmed": "شكراً — سنعتمد ذلك للمطابقة.",
+        "clarifyMismatch": "يبدو أن الصورة والوصف مختلفان. أكّد أو صحّح من فضلك.",
+        "failed": "تعذّر تحليل الصورة. يمكنك المتابعة."
       },
       "location": {
         "title": "أين تحتاج المساعدة؟",
@@ -652,7 +796,34 @@
       "templateLabel": "اسم القالب",
       "saveTemplateCta": "حفظ القالب",
       "templateSaved": "تم حفظ القالب.",
-      "clarifications": "أسئلة الزبون"
+      "clarifications": "أسئلة الزبون",
+      "prep": {
+        "badge": "تحضير ذكي",
+        "title": "ملخص التحضير",
+        "duration": "المدة المتوقعة",
+        "complexity": "درجة الصعوبة",
+        "priceRange": "نطاق السوق (تقديري)",
+        "tools": "أدوات متوقعة",
+        "materials": "مواد متوقعة",
+        "relatedTrades": "قد تحتاج حرفاً أخرى",
+        "detectedObjects": "ما ظهر في الصورة",
+        "likelyDamage": "الضرر المحتمل",
+        "estimatedRisk": "تقدير المخاطر",
+        "imageConfidence": "ثقة الصورة",
+        "visionMismatch": "قد لا تتطابق الصورة مع الوصف — أكّد مع العميل."
+      },
+      "voice": {
+        "badge": "صوت العميل",
+        "title": "رسالة صوتية",
+        "transcript": "النص المكتوب",
+        "original": "الصياغة الأصلية",
+        "aiSummary": "ملخص ذكي",
+        "category": "الفئة المكتشفة",
+        "urgency": "الاستعجال المتوقع",
+        "language": "اللغة / اللهجة",
+        "noAudio": "الملف الصوتي غير متاح — النص فقط.",
+        "audioUnsupported": "متصفحك لا يدعم تشغيل هذا الصوت."
+      }
     },
     "fields": {
       "price": "السعر",
@@ -3025,6 +3196,8 @@
       "issues": "البلاغات",
       "reviewModeration": "إشراف التقييمات",
       "analytics": "التحليلات",
+      "aiPredictions": "توقعات الذكاء",
+      "aiAutomation": "أتمتة الذكاء",
       "content": "المحتوى",
       "broadcasts": "البث",
       "health": "حالة النظام",
@@ -3850,7 +4023,8 @@
         "searches": "تحليلات البحث",
         "marketplace": "السوق",
         "learning": "ذكاء التعلم",
-        "ranking": "مفتش الترتيب"
+        "ranking": "مفتش الترتيب",
+        "predictions": "توقعات الذكاء"
       },
       "kpis": {
         "bookingsTotal": "إجمالي الحجوزات",
@@ -3865,6 +4039,53 @@
         "acceptanceRate": "معدل القبول",
         "avgRating": "متوسط التقييم",
         "recClickRate": "نسبة نقر التوصيات"
+      }
+    },
+    "predictive": {
+      "eyebrow": "محرك الذكاء · المرحلة 8",
+      "title": "الذكاء التنبؤي",
+      "subtitle": "توقعات الطلب وتوازن العرض ورؤى السوق ودقة التنبؤ.",
+      "kpis": {
+        "health": "صحة السوق",
+        "accuracy": "دقة التوقعات",
+        "avgResponse": "متوسط الرد",
+        "completion": "اتجاه الإنجاز"
+      },
+      "demandTitle": "أبرز توقعات الطلب",
+      "balanceTitle": "توازن الطلب / العرض",
+      "balanceEmpty": "لا يوجد اختلال مفتوح.",
+      "actions": "موصى به",
+      "topServices": "أكثر الخدمات طلباً",
+      "growing": "الأسرع نمواً",
+      "heatmap": "كثافة الطلب حسب المنطقة",
+      "peakHours": "ساعات الذروة (UTC)",
+      "links": {
+        "analytics": "مركز التحليلات",
+        "marketplace": "السوق",
+        "learning": "ذكاء التعلم"
+      }
+    },
+    "automation": {
+      "eyebrow": "محرك الذكاء · المرحلة 9",
+      "title": "أتمتة الذكاء",
+      "subtitle": "سير العمل المنفَّذ والموافقات المعلّقة والدقة والتعلم من قرارات المستخدم.",
+      "kpis": {
+        "executed": "منفَّذ",
+        "pending": "موافقات معلّقة",
+        "accuracy": "دقة الأتمتة",
+        "acceptance": "نسبة القبول"
+      },
+      "pendingTitle": "موافقات معلّقة",
+      "pendingEmpty": "لا توجد تأكيدات معلّقة.",
+      "successful": "أنجح سير العمل",
+      "noWorkflows": "لا يوجد سير عمل منفَّذ بعد.",
+      "rejected": "اقتراحات مرفوضة",
+      "rejectedHint": "رفض المستخدم اقتراحات الأتمتة خلال آخر 14 يوماً.",
+      "recent": "أتمتة حديثة",
+      "links": {
+        "predictions": "توقعات الذكاء",
+        "learning": "ذكاء التعلم",
+        "analytics": "التحليلات"
       }
     },
     "content": {
@@ -4616,7 +4837,21 @@
       "emergency_priority": "أولوية الطوارئ",
       "newcomer_exploration": "استكشاف للأعمال الجديدة",
       "expanded_area": "نطاق موسّع",
-      "high_rating": "تقييم مرتفع ({rating}★)"
+      "high_rating": "تقييم مرتفع ({rating}★)",
+      "nearby": "يبعد {km} كم",
+      "available": "متاح الآن",
+      "excellent_rating": "تقييم ممتاز ({rating})",
+      "similar_jobs": "أنجز أكثر من {count} مهمة مشابهة",
+      "fast_response": "يرد خلال حوالي {minutes} دقيقة",
+      "high_acceptance": "معدل قبول مرتفع",
+      "match_score": "درجة التطابق {score}%",
+      "nearby_available": "قريب ومتاح اليوم",
+      "route_fit": "يتناسب مع مواعيدك الحالية ({km} كم)",
+      "service_distance": "يناسب خدماتك · يبعد {km} كم",
+      "service_fit": "يناسب خدماتك وسعتك الحالية",
+      "operational_score": "درجة التشغيل {score}%",
+      "response_band": "احتمال الرد {pct}%",
+      "emergency_exposure": "أولوية بث الطوارئ"
     }
   }
 }

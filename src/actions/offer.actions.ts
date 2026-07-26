@@ -80,6 +80,56 @@ export async function selectOfferAction(offerId: string): Promise<OfferActionSta
   const result = await selectOffer({ customerId: authUser.id, offerId });
   if (!result.ok) return { success: false, error: result.error };
 
+  // Phase 2 learning: accepted provider improves future match confidence signals.
+  try {
+    const { isAiEngineV2Enabled } = await import("@/lib/config/feature-flags");
+    if (isAiEngineV2Enabled()) {
+      const { createAdminClient } = await import("@/lib/supabase/admin");
+      const { learnFromProviderDecision } = await import(
+        "@/lib/ai/learning/match-feedback"
+      );
+      const admin = createAdminClient();
+      const { data: offer } = await admin
+        .from("marketplace_offers")
+        .select("provider_id, service_request_id, match_assignment_id")
+        .eq("id", offerId)
+        .maybeSingle();
+      if (offer?.provider_id) {
+        let matchScore: number | null = null;
+        if (offer.match_assignment_id) {
+          const { data: assignment } = await admin
+            .from("match_assignments")
+            .select("ai_match_score")
+            .eq("id", offer.match_assignment_id)
+            .maybeSingle();
+          matchScore =
+            assignment?.ai_match_score == null
+              ? null
+              : Number(assignment.ai_match_score);
+        }
+        void learnFromProviderDecision({
+          kind: "accepted",
+          providerId: offer.provider_id as string,
+          serviceRequestId: offer.service_request_id as string,
+          customerId: authUser.id,
+          matchScore,
+        });
+        const { compareDispatchPrediction } = await import(
+          "@/lib/ai/dispatch/learning"
+        );
+        void compareDispatchPrediction({
+          serviceRequestId: offer.service_request_id as string,
+          providerId: offer.provider_id as string,
+          actualAccepted: true,
+          actualCustomerChose: true,
+          actualRespondedAt: new Date().toISOString(),
+        });
+      }
+    }
+  } catch {
+    // Learning must never break selection.
+  }
+
   revalidateOrderSurfaces(result.serviceRequestId);
   revalidatePath("/business/unlock");
   return { success: true, selectionId: result.selectionId };

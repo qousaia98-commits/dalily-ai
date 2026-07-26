@@ -66,6 +66,9 @@ export default async function AdminAnalyticsPage() {
         <Link href="/admin/ranking" className="rounded-lg border px-3 py-1.5 hover:bg-muted">
           {t("links.ranking")}
         </Link>
+        <Link href="/admin/ai-predictions" className="rounded-lg border px-3 py-1.5 hover:bg-muted">
+          {t("links.predictions")}
+        </Link>
       </div>
     </div>
   );

@@ -46,7 +46,13 @@ export class VoiceRecorder {
     }
 
     try {
-      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
     } catch (error) {
       const name = error instanceof Error ? error.name : "";
       console.error("[voice] getUserMedia failed:", name, error);

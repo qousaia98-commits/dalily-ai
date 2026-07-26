@@ -3,7 +3,14 @@ import { deliverMarketplaceNotificationsBatch } from "@/lib/notifications/delive
 import { findEligibleProviderCandidates } from "@/domains/matching/eligibility";
 import { selectAssignmentsFromCandidates } from "@/domains/matching/rank";
 import { MATCHING_POLICY, type MatchingPolicySnapshot } from "@/domains/matching/policy";
-import { isMatchingV2Enabled } from "@/lib/config/feature-flags";
+import {
+  isAiEngineV2Enabled,
+  isAiEngineV3Enabled,
+  isMatchingV2Enabled,
+} from "@/lib/config/feature-flags";
+import type { RankedAssignment } from "@/domains/matching/rank";
+import type { AiRankedAssignment } from "@/lib/ai/matching/rank-with-ai";
+import type { DispatchRankedAssignment } from "@/lib/ai/dispatch/select";
 
 export type MatchRunResult = {
   ok: boolean;
@@ -23,6 +30,118 @@ function policySnapshot(): MatchingPolicySnapshot {
     newcomerMax: MATCHING_POLICY.newcomerMax,
     subscriptionInfluence: false,
   };
+}
+
+async function resolveCategorySlug(categoryId: string): Promise<string | null> {
+  try {
+    const admin = createAdminClient();
+    const { data } = await admin
+      .from("categories")
+      .select("slug")
+      .eq("id", categoryId)
+      .maybeSingle();
+    return (data?.slug as string | undefined) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function selectForRequest(
+  candidates: Awaited<ReturnType<typeof findEligibleProviderCandidates>>,
+  opts: {
+    urgency: "emergency" | "normal";
+    max: number;
+    source: "initial" | "expand";
+    alreadyAssignedIds?: Set<string>;
+    categoryId: string;
+    serviceRequestId: string;
+    cityId?: string | null;
+    expandArea?: boolean;
+  },
+): Promise<Array<RankedAssignment | AiRankedAssignment | DispatchRankedAssignment>> {
+  const categorySlug = await resolveCategorySlug(opts.categoryId);
+
+  if (isAiEngineV3Enabled()) {
+    const { selectAssignmentsWithSmartDispatch } = await import(
+      "@/lib/ai/dispatch/select"
+    );
+    return selectAssignmentsWithSmartDispatch(candidates, {
+      urgency: opts.urgency,
+      aiUrgency: opts.urgency === "emergency" ? "high" : "medium",
+      max: opts.max,
+      source: opts.source,
+      alreadyAssignedIds: opts.alreadyAssignedIds,
+      categorySlug,
+      serviceRequestId: opts.serviceRequestId,
+      cityId: opts.cityId,
+      expandArea: opts.expandArea,
+    });
+  }
+
+  if (!isAiEngineV2Enabled()) {
+    return selectAssignmentsFromCandidates(candidates, {
+      urgency: opts.urgency,
+      max: opts.max,
+      source: opts.source,
+      alreadyAssignedIds: opts.alreadyAssignedIds,
+    });
+  }
+
+  const { selectAssignmentsWithAiRanking } = await import(
+    "@/lib/ai/matching/rank-with-ai"
+  );
+  return selectAssignmentsWithAiRanking(candidates, {
+    urgency: opts.urgency,
+    aiUrgency: opts.urgency === "emergency" ? "high" : "medium",
+    max: opts.max,
+    source: opts.source,
+    alreadyAssignedIds: opts.alreadyAssignedIds,
+    categorySlug,
+    serviceRequestId: opts.serviceRequestId,
+  });
+}
+
+function assignmentInsertRows(
+  poolId: string,
+  requestId: string,
+  selected: Array<RankedAssignment | AiRankedAssignment | DispatchRankedAssignment>,
+  rankOffset = 0,
+) {
+  return selected.map((a) => {
+    const ai = a as AiRankedAssignment;
+    const dispatch = a as DispatchRankedAssignment;
+    return {
+      pool_id: poolId,
+      service_request_id: requestId,
+      provider_id: a.providerId,
+      reason_codes: a.reasons,
+      rank_in_pool: rankOffset + a.rank,
+      source:
+        a.source === "newcomer"
+          ? "newcomer"
+          : a.source === "expand"
+            ? "expand"
+            : "initial",
+      ai_match_score:
+        typeof ai.aiMatchScore === "number" ? ai.aiMatchScore : null,
+      ai_explanation: ai.aiExplanation ?? [],
+      exposure_mode: dispatch.exposureMode ?? null,
+      response_band: dispatch.responseBand ?? null,
+      response_probability:
+        typeof dispatch.responseProbability === "number"
+          ? dispatch.responseProbability
+          : null,
+      eta_label: dispatch.etaLabel ?? null,
+      operational_score:
+        typeof dispatch.operationalScore === "number"
+          ? dispatch.operationalScore
+          : null,
+      reputation_score:
+        typeof dispatch.reputationScore === "number"
+          ? dispatch.reputationScore
+          : null,
+    };
+  });
 }
 
 async function loadRequestForMatching(requestId: string) {
@@ -118,10 +237,14 @@ export async function runMatchingForRequest(requestId: string): Promise<MatchRun
     expandArea: false,
   });
 
-  const selected = selectAssignmentsFromCandidates(candidates, {
+  const selected = await selectForRequest(candidates, {
     urgency,
     max: limitedMax ?? MATCHING_POLICY.initialMaxAssignments,
     source: "initial",
+    categoryId: request.category_id,
+    serviceRequestId: requestId,
+    cityId: request.city_id,
+    expandArea: false,
   });
 
   const status =
@@ -152,14 +275,7 @@ export async function runMatchingForRequest(requestId: string): Promise<MatchRun
 
   if (selected.length > 0) {
     const { error: assignError } = await admin.from("match_assignments").insert(
-      selected.map((a) => ({
-        pool_id: pool.id,
-        service_request_id: requestId,
-        provider_id: a.providerId,
-        reason_codes: a.reasons,
-        rank_in_pool: a.rank,
-        source: a.source,
-      })),
+      assignmentInsertRows(pool.id, requestId, selected),
     );
     if (assignError) {
       return { ok: false, reason: assignError.message, assignedCount: 0, expandCount: 0, status: "error" };
@@ -248,22 +364,22 @@ export async function expandMatchPool(requestId: string): Promise<MatchRunResult
   });
 
   const room = Math.max(0, MATCHING_POLICY.expandedMaxAssignments - already.size);
-  const selected = selectAssignmentsFromCandidates(candidates, {
+  const selected = await selectForRequest(candidates, {
     urgency,
     max: room,
     source: "expand",
     alreadyAssignedIds: already,
+    categoryId: request.category_id,
+    serviceRequestId: requestId,
+    cityId: request.city_id,
+    expandArea: true,
   });
 
   if (selected.length > 0) {
     await admin.from("match_assignments").insert(
-      selected.map((a) => ({
-        pool_id: pool.id,
-        service_request_id: requestId,
-        provider_id: a.providerId,
-        reason_codes: a.reasons,
-        rank_in_pool: already.size + a.rank,
-        source: a.source === "newcomer" ? "newcomer" : "expand",
+      assignmentInsertRows(pool.id, requestId, selected, already.size).map((row) => ({
+        ...row,
+        source: row.source === "newcomer" ? "newcomer" : "expand",
       })),
     );
     await notifyAssignees(

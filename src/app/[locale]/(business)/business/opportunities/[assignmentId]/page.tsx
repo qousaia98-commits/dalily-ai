@@ -10,17 +10,24 @@ import {
 } from "@/domains/offer/queries";
 import { OfferComposer } from "@/components/business/offer-composer";
 import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
+import { JobPrepSummary } from "@/components/business/job-prep-summary";
+import { VoiceRequestPreview } from "@/components/business/voice-request-preview";
 import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 import { Link } from "@/lib/i18n/routing";
+import { getProviderPrepForRequest } from "@/lib/ai/jobs/service";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { isAiEngineV6Enabled } from "@/lib/config/feature-flags";
 
-type PageProps = { params: Promise<{ assignmentId: string }> };
+type PageProps = {
+  params: Promise<{ assignmentId: string; locale: string }>;
+};
 
 export default async function BusinessOpportunityDetailPage({ params }: PageProps) {
   if (!isOffersV2Enabled()) {
     redirect("/business/requests");
   }
 
-  const { assignmentId } = await params;
+  const { assignmentId, locale } = await params;
   const t = await getTranslations("offerFlow.provider");
   const authUser = await requireAuthUser();
   const provider = await getOwnedProvider(authUser.id);
@@ -32,11 +39,43 @@ export default async function BusinessOpportunityDetailPage({ params }: PageProp
   });
   if (!detail) notFound();
 
-  const [templates, clarifications] = await Promise.all([
+  let categorySlug: string | null = null;
+  try {
+    const admin = createAdminClient();
+    const { data: req } = await admin
+      .from("service_requests")
+      .select("category_id")
+      .eq("id", detail.serviceRequestId)
+      .maybeSingle();
+    if (req?.category_id) {
+      const { data: cat } = await admin
+        .from("categories")
+        .select("slug")
+        .eq("id", req.category_id)
+        .maybeSingle();
+      categorySlug = (cat?.slug as string | undefined) ?? null;
+    }
+  } catch {
+    categorySlug = null;
+  }
+
+  const [templates, clarifications, prep, voicePreview] = await Promise.all([
     listOfferTemplates(provider.id),
     detail.existingOfferId
       ? listClarifications(detail.existingOfferId)
       : Promise.resolve([]),
+    getProviderPrepForRequest({
+      serviceRequestId: detail.serviceRequestId,
+      intentText: detail.intentText,
+      categorySlug,
+      urgency: detail.urgency,
+      locale: locale === "ar" ? "ar" : "en",
+    }),
+    isAiEngineV6Enabled()
+      ? import("@/lib/ai/voice/cache").then(({ getVoiceProviderPreview }) =>
+          getVoiceProviderPreview(detail.serviceRequestId),
+        )
+      : Promise.resolve(null),
   ]);
 
   return (
@@ -58,9 +97,22 @@ export default async function BusinessOpportunityDetailPage({ params }: PageProp
             {t("area")}: {detail.locationText}
           </p>
         ) : null}
-        <WhyMatchedReasons reasons={detail.reasons} />
+        <WhyMatchedReasons
+          reasons={detail.reasons}
+          aiMatchScore={detail.aiMatchScore}
+          aiExplanation={detail.aiExplanation}
+        />
         <p className="text-xs text-muted-foreground">{t("noAcceptRequired")}</p>
       </header>
+
+      {voicePreview ? (
+        <VoiceRequestPreview
+          voice={voicePreview}
+          locale={locale === "ar" ? "ar" : "en"}
+        />
+      ) : null}
+
+      {prep ? <JobPrepSummary prep={prep} /> : null}
 
       <OfferComposer
         matchAssignmentId={detail.assignmentId}

@@ -6,6 +6,10 @@ import { getActiveCities } from "@/lib/geo/cities";
 import { getLocalizedText } from "@/types/domain.types";
 import { IntentIntakeFlow } from "@/components/customer/intent-intake-flow";
 import type { Locale } from "@/lib/i18n/config";
+import {
+  isAiEngineV5Enabled,
+  isAiEngineV6Enabled,
+} from "@/lib/config/feature-flags";
 
 export default async function NewIntentRequestPage({
   params,
@@ -47,6 +51,8 @@ export default async function NewIntentRequestPage({
         cities={cityOptions}
         loginHref={loginHref}
         isAuthenticated={Boolean(authUser)}
+        visionEnabled={isAiEngineV5Enabled()}
+        voiceEnabled={isAiEngineV6Enabled()}
       />
     </main>
   );

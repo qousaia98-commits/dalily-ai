@@ -24,6 +24,6 @@ export type {
   PublishIntentInput,
 } from "@/domains/customer/intent-types";
 
-export { suggestCategoryFromIntent } from "@/domains/customer/suggest-category";
+export { suggestCategoryFromIntent, suggestIntentIntelligence } from "@/domains/customer/suggest-category";
 export { publishIntentRequest } from "@/domains/customer/publish-intent";
 export { isCustomerIntentFlowV2Enabled } from "@/lib/config/feature-flags";

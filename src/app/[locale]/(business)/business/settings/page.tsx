@@ -3,6 +3,9 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { getProviderRequestSettings } from "@/lib/service-requests/queries";
 import { RequestSettingsForm } from "@/components/business/request-settings-form";
+import { isAiEngineV9Enabled } from "@/lib/config/feature-flags";
+import { getProviderAutomationSettings } from "@/lib/ai/automation/provider";
+import { ProviderAutomationSettingsForm } from "@/components/automation/provider-automation-settings-form";
 
 export default async function BusinessSettingsPage() {
   const t = await getTranslations("business.requestSettings");
@@ -18,6 +21,9 @@ export default async function BusinessSettingsPage() {
   }
 
   const settings = await getProviderRequestSettings(provider.id);
+  const automationSettings = isAiEngineV9Enabled()
+    ? await getProviderAutomationSettings(provider.id)
+    : null;
 
   return (
     <div className="mx-auto w-full max-w-lg space-y-6 animate-fade-in">
@@ -29,6 +35,9 @@ export default async function BusinessSettingsPage() {
         <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </header>
       <RequestSettingsForm settings={settings} />
+      {automationSettings ? (
+        <ProviderAutomationSettingsForm settings={automationSettings} />
+      ) : null}
     </div>
   );
 }

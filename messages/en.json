@@ -19,6 +19,74 @@
       "selectRequired": "Please make a selection"
     }
   },
+  "assistant": {
+    "customer": {
+      "badge": "Dalily Assistant",
+      "title": "Your job guide",
+      "nextAction": "Next",
+      "missing": "Still missing",
+      "offerCompare": "Offer comparison",
+      "verified": "Verified",
+      "appointment": "Appointment briefing",
+      "afterJob": "After the job",
+      "askReview": "A short review helps other customers."
+    },
+    "provider": {
+      "badge": "Dalily Assistant",
+      "title": "Your day coach",
+      "today": "Today’s schedule",
+      "noToday": "No jobs scheduled today.",
+      "suggestedJobs": "Suggested next jobs",
+      "prep": "Preparation",
+      "travel": "Travel tips",
+      "customerSummary": "Customer summary",
+      "chatSummary": "Conversation summary",
+      "missed": "{count} missed opportunities recently"
+    },
+    "suggestions": {
+      "title": "Suggestions",
+      "accept": "Do it",
+      "ignore": "Later",
+      "reject": "Not useful"
+    }
+  },
+  "predictive": {
+    "wait": {
+      "badge": "Expected wait",
+      "confidence": "Confidence {pct}%"
+    },
+    "notifications": {
+      "title": "Marketplace tips"
+    }
+  },
+  "automation": {
+    "suggestions": {
+      "title": "AI automations",
+      "mode": "Mode: {mode}",
+      "why": "Why"
+    },
+    "feedback": {
+      "accept": "Accept",
+      "reject": "Reject"
+    },
+    "providerSettings": {
+      "title": "AI automation",
+      "subtitle": "Optional workflows — you stay in control. Payments are never automated.",
+      "autoAccept": "Auto-accept high-confidence jobs",
+      "autoAcceptHint": "Only when confidence is very high and you opt in.",
+      "autoRejectArea": "Auto-reject outside service area",
+      "autoRejectAreaHint": "Decline jobs clearly outside your coverage.",
+      "autoRejectHours": "Flag jobs outside working hours",
+      "autoRejectHoursHint": "Suggest declining after-hours requests.",
+      "routeOpt": "Suggest route optimization",
+      "routeOptHint": "When you have multiple stops today.",
+      "scheduleGaps": "Suggest filling schedule gaps",
+      "scheduleGapsHint": "Recommend nearby work when you have free capacity.",
+      "safetyNote": "Never automated: payments, legal confirmations, account deletion, identity checks, or suspensions.",
+      "save": "Save automation settings",
+      "saving": "Saving…"
+    }
+  },
   "paymentReceiptUpload": {
     "title": "Attach a transfer receipt",
     "subtitle": "We cannot review your payment before the receipt is uploaded.",
@@ -519,11 +587,76 @@
         "break": "Is the lock broken or is the key lost?"
       }
     },
+    "smartQuestions": {
+      "common": {
+        "photo": "Can you add a photo of the issue?",
+        "area": "Which area or landmark is closest?"
+      },
+      "electrical": {
+        "outage": "Is this a power outage?",
+        "wholeHome": "Is it the entire apartment or one spot?",
+        "fuseChecked": "Have you already checked the fuse / breaker?"
+      },
+      "plumbing": {
+        "leak": "Is there an active leak?",
+        "where": "Pipe, toilet, kitchen, or bathroom?",
+        "stillRunning": "Is water still running or leaking now?"
+      },
+      "hvac": {
+        "symptom": "Does the AC run but without cooling?"
+      },
+      "locksmith": {
+        "lockedOut": "Are you locked out right now?",
+        "breakOrLost": "Is the lock broken or is the key lost?"
+      },
+      "painting": {
+        "indoorOutdoor": "Indoor or outdoor painting?",
+        "size": "About how large is the area (rooms or m²)?"
+      },
+      "carpentry": {
+        "item": "What needs repair (door, cabinet, wood)?"
+      }
+    },
+    "workflow": {
+      "emergency": "Emergency — prioritize available providers nearby.",
+      "guided": "A few details will help match the right business.",
+      "collectOffers": "Larger job — collecting multiple offers is recommended.",
+      "directContact": "Small repair — a direct provider match should work well."
+    },
     "steps": {
       "intent": {
         "label": "Describe the problem",
         "placeholder": "Write a short description of what you need…",
         "continue": "Continue"
+      },
+      "voice": {
+        "record": "Record voice message",
+        "stop": "Stop",
+        "cancel": "Cancel",
+        "recording": "Recording…",
+        "transcribing": "Transcribing your message…",
+        "aiSummary": "Voice understanding",
+        "category": "Detected category",
+        "urgency": "Detected urgency",
+        "language": "Language",
+        "unknownCategory": "Not sure yet",
+        "confirm": "Looks right",
+        "editTranscript": "Edit transcript",
+        "saveEdit": "Save transcript",
+        "cancelEdit": "Cancel",
+        "confirmed": "Thanks — we’ll use this for matching.",
+        "clarifyMismatch": "Voice and other details may not match. Please confirm or edit.",
+        "errors": {
+          "permission_denied": "Microphone permission is required.",
+          "not_supported": "Voice recording is not supported in this browser.",
+          "unknown": "Could not start recording.",
+          "feature_disabled": "Voice input is not enabled.",
+          "no_audio": "No audio recorded.",
+          "file_too_large": "Audio is too large.",
+          "invalid_file_type": "Unsupported audio format.",
+          "transcription_failed": "We couldn’t transcribe this. You can type instead.",
+          "no_api_key": "Voice transcription is temporarily unavailable."
+        }
       },
       "confirm": {
         "badge": "Smart suggestion",
@@ -540,16 +673,27 @@
       },
       "clarify": {
         "title": "Quick questions",
-        "subtitle": "Category-specific questions — you can skip.",
+        "subtitle": "Only the details still missing — you can skip.",
         "placeholder": "Optional…",
-        "skip": "Skip"
+        "skip": "Skip",
+        "completeness": "Request completeness: {score}%"
       },
       "photos": {
         "title": "Add photos (optional)",
         "subtitle": "Photos help businesses send better offers.",
         "add": "Add photos",
         "skip": "Skip",
-        "count": "{count} photo(s) selected"
+        "count": "{count} photo(s) selected",
+        "analyzing": "Analyzing your photo…",
+        "aiSummary": "AI photo summary",
+        "confirm": "Looks right",
+        "correct": "Not quite",
+        "correctionPlaceholder": "What should we see instead?",
+        "saveCorrection": "Save correction",
+        "cancelCorrection": "Cancel",
+        "confirmed": "Thanks — we’ll use this for matching.",
+        "clarifyMismatch": "Your photo and description seem different. Please confirm or correct.",
+        "failed": "We couldn’t analyze this photo. You can continue anyway."
       },
       "location": {
         "title": "Where do you need help?",
@@ -652,7 +796,34 @@
       "templateLabel": "Template name",
       "saveTemplateCta": "Save template",
       "templateSaved": "Template saved.",
-      "clarifications": "Customer questions"
+      "clarifications": "Customer questions",
+      "prep": {
+        "badge": "AI job prep",
+        "title": "Preparation summary",
+        "duration": "Likely duration",
+        "complexity": "Estimated complexity",
+        "priceRange": "Market range (estimate)",
+        "tools": "Likely tools",
+        "materials": "Likely materials",
+        "relatedTrades": "Other trades may be needed",
+        "detectedObjects": "Detected in photo",
+        "likelyDamage": "Likely damage",
+        "estimatedRisk": "Estimated risk",
+        "imageConfidence": "Image confidence",
+        "visionMismatch": "Photo and description may not match — confirm with the customer."
+      },
+      "voice": {
+        "badge": "Customer voice",
+        "title": "Voice message",
+        "transcript": "Transcript",
+        "original": "Original wording",
+        "aiSummary": "AI summary",
+        "category": "Detected category",
+        "urgency": "Estimated urgency",
+        "language": "Language / dialect",
+        "noAudio": "Audio file not available — transcript only.",
+        "audioUnsupported": "Your browser cannot play this audio."
+      }
     },
     "fields": {
       "price": "Price",
@@ -3354,6 +3525,8 @@
       "issues": "Reports",
       "reviewModeration": "Review moderation",
       "analytics": "Analytics",
+      "aiPredictions": "AI Predictions",
+      "aiAutomation": "AI Automation",
       "content": "Content",
       "broadcasts": "Broadcasts",
       "health": "System status",
@@ -4179,7 +4352,8 @@
         "searches": "Search analytics",
         "marketplace": "Marketplace",
         "learning": "Learning AI",
-        "ranking": "Ranking inspector"
+        "ranking": "Ranking inspector",
+        "predictions": "AI Predictions"
       },
       "kpis": {
         "bookingsTotal": "Bookings total",
@@ -4194,6 +4368,53 @@
         "acceptanceRate": "Acceptance rate",
         "avgRating": "Average rating",
         "recClickRate": "Recommendation CTR"
+      }
+    },
+    "predictive": {
+      "eyebrow": "AI Engine · Phase 8",
+      "title": "Predictive intelligence",
+      "subtitle": "Demand forecasts, supply balance, market insights, and prediction accuracy.",
+      "kpis": {
+        "health": "Marketplace health",
+        "accuracy": "Forecast accuracy",
+        "avgResponse": "Avg response",
+        "completion": "Completion trend"
+      },
+      "demandTitle": "Demand forecast highlights",
+      "balanceTitle": "Demand / supply balance",
+      "balanceEmpty": "No open imbalance detected.",
+      "actions": "Recommended",
+      "topServices": "Most requested services",
+      "growing": "Fastest growing",
+      "heatmap": "Regional demand intensity",
+      "peakHours": "Peak hours (UTC)",
+      "links": {
+        "analytics": "Analytics center",
+        "marketplace": "Marketplace",
+        "learning": "Learning AI"
+      }
+    },
+    "automation": {
+      "eyebrow": "AI Engine · Phase 9",
+      "title": "AI Automation",
+      "subtitle": "Executed workflows, pending approvals, accuracy, and learning from user decisions.",
+      "kpis": {
+        "executed": "Executed",
+        "pending": "Pending approvals",
+        "accuracy": "Automation accuracy",
+        "acceptance": "Acceptance rate"
+      },
+      "pendingTitle": "Pending approvals",
+      "pendingEmpty": "No pending confirmations.",
+      "successful": "Most successful workflows",
+      "noWorkflows": "No executed workflows yet.",
+      "rejected": "Rejected suggestions",
+      "rejectedHint": "User declined automation suggestions in the last 14 days.",
+      "recent": "Recent automations",
+      "links": {
+        "predictions": "AI Predictions",
+        "learning": "Learning AI",
+        "analytics": "Analytics"
       }
     },
     "content": {
@@ -4616,7 +4837,21 @@
       "emergency_priority": "Emergency priority",
       "newcomer_exploration": "Newcomer exploration",
       "expanded_area": "Expanded area",
-      "high_rating": "High rating ({rating}★)"
+      "high_rating": "High rating ({rating}★)",
+      "nearby": "{km} km away",
+      "available": "Available now",
+      "excellent_rating": "Excellent rating ({rating})",
+      "similar_jobs": "Completed {count}+ similar jobs",
+      "fast_response": "Responds within {minutes} minutes on average",
+      "high_acceptance": "High acceptance rate",
+      "match_score": "Match score {score}%",
+      "nearby_available": "Nearby and available today",
+      "route_fit": "Fits between your existing appointments ({km} km)",
+      "service_distance": "Matches your services · {km} km away",
+      "service_fit": "Matches your services and capacity",
+      "operational_score": "Operational score {score}%",
+      "response_band": "Response likelihood {pct}%",
+      "emergency_exposure": "Emergency broadcast priority"
     }
   }
 }

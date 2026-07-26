@@ -21,6 +21,9 @@ import {
 import { createAdminClient } from "@/lib/supabase/admin";
 import { WaitingRoom } from "@/components/customer/waiting-room";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
+import { isAiEngineV7Enabled, isAiEngineV8Enabled, isAiEngineV9Enabled } from "@/lib/config/feature-flags";
+import type { WaitTimeEstimate, PredictiveNotification } from "@/lib/ai/predictive/types";
+import type { AutomationSuggestion } from "@/lib/ai/automation/types";
 
 export default async function RequestWaitingPage({
   params,
@@ -95,6 +98,110 @@ export default async function RequestWaitingPage({
       ? "ready"
       : "empty";
 
+  let assistant = null;
+  let waitEstimate: WaitTimeEstimate | null = null;
+  let predictiveNotes: PredictiveNotification[] = [];
+  let automationSuggestions: AutomationSuggestion[] = [];
+
+  if (isAiEngineV7Enabled()) {
+    const { buildCustomerAssistant } = await import("@/lib/ai/assistant/customer");
+    assistant = await buildCustomerAssistant({
+      serviceRequestId: request.id,
+      customerId: authUser.id,
+      intentText: request.intent_text || request.description || request.title,
+      urgency: request.urgency,
+      locationText: request.location_text,
+      hasPhoto: (request.imagePaths?.length ?? 0) > 0,
+      hasLocation: Boolean(request.city_id || request.location_text),
+      offers,
+      selectionOfferId: selection?.offerId ?? null,
+      hasUnlock: Boolean(unlockSession || releasedContact),
+      conversationId,
+      isCompleted: ["completed", "confirmed", "reviewed"].includes(request.status),
+      hoursSinceActivity: request.updated_at
+        ? (Date.now() - new Date(request.updated_at).getTime()) / 3_600_000
+        : null,
+    });
+  }
+
+  if (isAiEngineV8Enabled()) {
+    const catSlug =
+      assistant?.context.confirmedFacts.categorySlug ??
+      null;
+    let resolvedSlug = catSlug;
+    if (!resolvedSlug && request.category_id) {
+      const admin = createAdminClient();
+      const { data: cat } = await admin
+        .from("categories")
+        .select("slug")
+        .eq("id", request.category_id)
+        .maybeSingle();
+      resolvedSlug = (cat?.slug as string) ?? "electrical";
+    }
+    resolvedSlug = resolvedSlug || "electrical";
+
+    const [
+      { estimateWaitTime },
+      { forecastDemand },
+      { detectMarketplaceBalances },
+      { buildCustomerPredictiveNotifications, persistPredictiveNotifications },
+    ] = await Promise.all([
+      import("@/lib/ai/predictive/wait-time"),
+      import("@/lib/ai/predictive/demand"),
+      import("@/lib/ai/predictive/balancer"),
+      import("@/lib/ai/predictive/notifications"),
+    ]);
+
+    waitEstimate = await estimateWaitTime({
+      categorySlug: resolvedSlug,
+      cityId: request.city_id,
+    });
+
+    const [demand, balances] = await Promise.all([
+      forecastDemand({ horizonDays: 3, categories: [resolvedSlug] }),
+      detectMarketplaceBalances(),
+    ]);
+    predictiveNotes = await persistPredictiveNotifications(
+      buildCustomerPredictiveNotifications({
+        demand,
+        balances,
+        categorySlug: resolvedSlug,
+      }),
+      { userId: authUser.id },
+    );
+  }
+
+  if (isAiEngineV9Enabled()) {
+    const { runCustomerAutomations } = await import(
+      "@/lib/ai/automation/customer"
+    );
+    let categorySlug: string | null = null;
+    if (request.category_id) {
+      const admin = createAdminClient();
+      const { data: cat } = await admin
+        .from("categories")
+        .select("slug")
+        .eq("id", request.category_id)
+        .maybeSingle();
+      categorySlug = (cat?.slug as string) ?? null;
+    }
+    automationSuggestions = await runCustomerAutomations({
+      userId: authUser.id,
+      serviceRequestId: request.id,
+      hasPhoto: (request.imagePaths?.length ?? 0) > 0,
+      hasAddress: Boolean(request.city_id || request.location_text),
+      hoursSinceActivity: request.updated_at
+        ? (Date.now() - new Date(request.updated_at).getTime()) / 3_600_000
+        : null,
+      status: request.status,
+      isCompleted: ["completed", "confirmed", "reviewed"].includes(
+        request.status,
+      ),
+      hasReview: Boolean(request.review),
+      categorySlug,
+    });
+  }
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-6 sm:px-6">
       <MarketplaceRealtimeBridge userId={authUser.id} requestId={requestId} />
@@ -108,6 +215,10 @@ export default async function RequestWaitingPage({
         unlockSession={unlockSession}
         releasedContact={releasedContact}
         conversationId={conversationId}
+        assistant={assistant}
+        waitEstimate={waitEstimate}
+        predictiveNotifications={predictiveNotes}
+        automationSuggestions={automationSuggestions}
       />
     </main>
   );

@@ -17,6 +17,8 @@ import {
   Megaphone,
   Tags,
   ChevronDown,
+  Brain,
+  Bot,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -141,6 +143,20 @@ function buildGroups(opts: {
       href: "/admin/analytics",
       icon: BarChart3,
       key: "analytics",
+    },
+    {
+      id: "ai-predictions",
+      href: "/admin/ai-predictions",
+      icon: Brain,
+      key: "aiPredictions",
+      adminOnly: true,
+    },
+    {
+      id: "ai-automation",
+      href: "/admin/ai-automation",
+      icon: Bot,
+      key: "aiAutomation",
+      adminOnly: true,
     },
     {
       id: "marketplace",

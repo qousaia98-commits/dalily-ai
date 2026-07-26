@@ -21,6 +21,15 @@ export type ProviderOpportunity = {
   offerId: string | null;
   /** Matching explainability — never includes subscription codes */
   reasons: import("@/domains/matching/reasons").MatchReason[];
+  aiMatchScore: number | null;
+  aiExplanation: Array<{
+    code: string;
+    params?: Record<string, string | number>;
+    labelEn?: string;
+  }>;
+  etaLabel: string | null;
+  operationalScore: number | null;
+  responseBand: string | null;
 };
 
 /**
@@ -37,7 +46,9 @@ export async function listProviderOpportunities(
   const supabase = await createClient();
   const { data: assignments, error: assignError } = await supabase
     .from("match_assignments")
-    .select("id, service_request_id, rank_in_pool, source, assigned_at, reason_codes")
+    .select(
+      "id, service_request_id, rank_in_pool, source, assigned_at, reason_codes, ai_match_score, ai_explanation, eta_label, operational_score, response_band",
+    )
     .eq("provider_id", providerId)
     .order("assigned_at", { ascending: false })
     .limit(50);
@@ -88,6 +99,15 @@ export async function listProviderOpportunities(
       reasons: Array.isArray(a.reason_codes)
         ? (a.reason_codes as import("@/domains/matching/reasons").MatchReason[])
         : [],
+      aiMatchScore:
+        a.ai_match_score == null ? null : Number(a.ai_match_score),
+      aiExplanation: Array.isArray(a.ai_explanation)
+        ? (a.ai_explanation as ProviderOpportunity["aiExplanation"])
+        : [],
+      etaLabel: (a.eta_label as string | null) ?? null,
+      operationalScore:
+        a.operational_score == null ? null : Number(a.operational_score),
+      responseBand: (a.response_band as string | null) ?? null,
     });
   }
   return result;
@@ -105,13 +125,17 @@ export async function getOpportunityDetail(input: {
   locationText: string | null;
   existingOfferId: string | null;
   reasons: import("@/domains/matching/reasons").MatchReason[];
+  aiMatchScore: number | null;
+  aiExplanation: ProviderOpportunity["aiExplanation"];
 } | null> {
   if (!isOffersV2Enabled()) return null;
   const supabase = await createClient();
 
   const { data: assignment } = await supabase
     .from("match_assignments")
-    .select("id, service_request_id, provider_id, reason_codes")
+    .select(
+      "id, service_request_id, provider_id, reason_codes, ai_match_score, ai_explanation",
+    )
     .eq("id", input.assignmentId)
     .eq("provider_id", input.providerId)
     .maybeSingle();
@@ -143,6 +167,13 @@ export async function getOpportunityDetail(input: {
     existingOfferId: offer ? (offer.id as string) : null,
     reasons: Array.isArray(assignment.reason_codes)
       ? (assignment.reason_codes as import("@/domains/matching/reasons").MatchReason[])
+      : [],
+    aiMatchScore:
+      assignment.ai_match_score == null
+        ? null
+        : Number(assignment.ai_match_score),
+    aiExplanation: Array.isArray(assignment.ai_explanation)
+      ? (assignment.ai_explanation as ProviderOpportunity["aiExplanation"])
       : [],
   };
 }

@@ -8,6 +8,18 @@ import type { MarketplaceOfferView, OfferClarificationView } from "@/domains/off
 import type { ReleasedContact, UnlockSessionView } from "@/domains/unlock/types";
 import { CustomerOfferBoard } from "@/components/customer/customer-offer-board";
 import { CustomerUnlockStatus } from "@/components/customer/customer-unlock-status";
+import { CustomerAssistantPanel } from "@/components/assistant/customer-assistant-panel";
+import type { CustomerAssistantView } from "@/lib/ai/assistant/types";
+import {
+  WaitTimeCard,
+  PredictiveNotificationsList,
+} from "@/components/predictive/predictive-widgets";
+import type {
+  WaitTimeEstimate,
+  PredictiveNotification,
+} from "@/lib/ai/predictive/types";
+import { AutomationSuggestionsList } from "@/components/automation/automation-widgets";
+import type { AutomationSuggestion } from "@/lib/ai/automation/types";
 
 export async function WaitingRoom({
   request,
@@ -19,6 +31,10 @@ export async function WaitingRoom({
   unlockSession = null,
   releasedContact = null,
   conversationId = null,
+  assistant = null,
+  waitEstimate = null,
+  predictiveNotifications = [],
+  automationSuggestions = [],
 }: {
   request: ServiceRequestDetail | null;
   state: "loading" | "ready" | "empty" | "error";
@@ -29,6 +45,10 @@ export async function WaitingRoom({
   unlockSession?: UnlockSessionView | null;
   releasedContact?: ReleasedContact | null;
   conversationId?: string | null;
+  assistant?: CustomerAssistantView | null;
+  waitEstimate?: WaitTimeEstimate | null;
+  predictiveNotifications?: PredictiveNotification[];
+  automationSuggestions?: AutomationSuggestion[];
 }) {
   const t = await getTranslations("intentFlow.waiting");
 
@@ -70,6 +90,21 @@ export async function WaitingRoom({
       <div className="rounded-2xl border border-border/70 bg-muted/20 px-4 py-3 text-sm text-muted-foreground">
         {t("trustNotBroadcast")}
       </div>
+
+      {assistant ? (
+        <CustomerAssistantPanel
+          view={assistant}
+          serviceRequestId={request.id}
+        />
+      ) : null}
+
+      {waitEstimate ? <WaitTimeCard estimate={waitEstimate} /> : null}
+      {predictiveNotifications.length > 0 ? (
+        <PredictiveNotificationsList items={predictiveNotifications} />
+      ) : null}
+      {automationSuggestions.length > 0 ? (
+        <AutomationSuggestionsList items={automationSuggestions} />
+      ) : null}
 
       <CustomerUnlockStatus
         session={unlockSession}

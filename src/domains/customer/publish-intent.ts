@@ -3,7 +3,13 @@ import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
 import { afterLegacyMarketplaceWrite } from "@/domains/marketplace/repository";
 import { syncMarketplaceRequestProjection } from "@/domains/marketplace/projection";
 import { runMatchingForRequest } from "@/domains/matching/engine";
-import { isMatchingV2Enabled } from "@/lib/config/feature-flags";
+import {
+  isAiEngineV1Enabled,
+  isAiEngineV4Enabled,
+  isAiEngineV5Enabled,
+  isAiEngineV6Enabled,
+  isMatchingV2Enabled,
+} from "@/lib/config/feature-flags";
 import type { PublishIntentInput } from "@/domains/customer/intent-types";
 import {
   ALLOWED_IMAGE_TYPES,
@@ -14,6 +20,15 @@ import {
   SERVICE_REQUEST_MEDIA_BUCKET,
 } from "@/lib/service-requests/constants";
 import { buildServiceRequestMediaPath } from "@/lib/service-requests/storage";
+import { recordIntentMemory } from "@/lib/ai/memory/record";
+import { applyKnowledgeFeedback } from "@/lib/ai/knowledge/feedback";
+import {
+  learnFromUrgencyCorrection,
+  learnFromWorkflowOverride,
+} from "@/lib/ai/learning/match-feedback";
+import { urgencyToMarketplace } from "@/lib/ai/urgency/detect";
+import type { AiUrgencyLevel } from "@/lib/ai/decision/types";
+import { getLocalizedText } from "@/types/domain.types";
 
 export type PublishIntentResult =
   | { ok: true; requestId: string }
@@ -27,6 +42,9 @@ export async function publishIntentRequest(input: {
   customerId: string;
   data: PublishIntentInput;
   photos?: File[];
+  visionAnalysisId?: string | null;
+  voiceTranscriptId?: string | null;
+  voiceAudio?: File | null;
 }): Promise<PublishIntentResult> {
   const intentText = input.data.intentText.trim();
   if (intentText.length < 8) return { ok: false, error: "intent_too_short" };
@@ -40,7 +58,7 @@ export async function publishIntentRequest(input: {
 
   const { data: category } = await supabase
     .from("categories")
-    .select("id, name, is_active")
+    .select("id, name, slug, is_active")
     .eq("id", input.data.categoryId)
     .eq("is_active", true)
     .maybeSingle();
@@ -132,6 +150,133 @@ export async function publishIntentRequest(input: {
   }
 
   revalidateOrderSurfaces(request.id);
+
+  if (isAiEngineV1Enabled()) {
+    const finalSlug = category.slug as string;
+    const suggestedId = input.data.suggestedCategoryId?.trim() || null;
+    const suggestedSlug =
+      input.data.suggestedCategorySlug?.trim() || suggestedId || null;
+    const wasCorrected = Boolean(
+      suggestedId && suggestedId !== input.data.categoryId,
+    );
+
+    void recordIntentMemory({
+      serviceRequestId: request.id,
+      customerId: input.customerId,
+      originalText: intentText,
+      detectedCategorySlug: suggestedSlug,
+      confidence: input.data.suggestedConfidence ?? null,
+      questionsAsked: [],
+      finalCategorySlug: finalSlug,
+      finalCategoryId: input.data.categoryId,
+      source: wasCorrected ? "user" : "hybrid",
+      wasCorrected,
+      metadata: {
+        categoryLabelEn: getLocalizedText(category.name, "en"),
+        categoryLabelAr: getLocalizedText(category.name, "ar"),
+      },
+    });
+
+    void applyKnowledgeFeedback({
+      text: intentText,
+      kind: wasCorrected ? "correct" : "confirm",
+      suggestedCategorySlug: suggestedSlug ?? finalSlug,
+      finalCategorySlug: finalSlug,
+      customerId: input.customerId,
+      serviceRequestId: request.id,
+    });
+
+    const suggestedUrgency = input.data.suggestedUrgency as
+      | AiUrgencyLevel
+      | undefined;
+    if (suggestedUrgency) {
+      const finalLevel: AiUrgencyLevel =
+        input.data.urgency === "emergency"
+          ? suggestedUrgency === "critical"
+            ? "critical"
+            : "high"
+          : suggestedUrgency === "low"
+            ? "low"
+            : "medium";
+      // If user marketplace urgency disagrees with AI mapping, record correction.
+      if (urgencyToMarketplace(suggestedUrgency) !== input.data.urgency) {
+        void learnFromUrgencyCorrection({
+          suggested: suggestedUrgency,
+          final: finalLevel,
+          serviceRequestId: request.id,
+          customerId: input.customerId,
+        });
+      }
+    }
+
+    if (input.data.suggestedWorkflow) {
+      const finalWorkflow =
+        input.data.urgency === "emergency"
+          ? "emergency_dispatch"
+          : "collect_offers";
+      void learnFromWorkflowOverride({
+        suggested: input.data.suggestedWorkflow,
+        final: finalWorkflow,
+        serviceRequestId: request.id,
+      });
+    }
+  }
+
+  if (isAiEngineV4Enabled()) {
+    void import("@/lib/ai/jobs/service").then(({ analyzeAndStoreJob }) =>
+      analyzeAndStoreJob({
+        text: intentText,
+        serviceRequestId: request.id,
+        categorySlug: category.slug as string,
+        emergency: input.data.urgency === "emergency",
+      }),
+    );
+  }
+
+  if (isAiEngineV5Enabled() && input.visionAnalysisId) {
+    void import("@/lib/ai/vision/cache").then(({ attachVisionAnalysisToRequest }) =>
+      attachVisionAnalysisToRequest({
+        analysisId: input.visionAnalysisId!,
+        serviceRequestId: request.id,
+      }),
+    );
+  }
+
+  if (isAiEngineV6Enabled() && input.voiceTranscriptId) {
+    void (async () => {
+      try {
+        let audioPath: string | null = null;
+        const voiceFile = input.voiceAudio;
+        if (
+          voiceFile &&
+          voiceFile.size > 0 &&
+          voiceFile.size <= 1.5 * 1024 * 1024
+        ) {
+          const path = buildServiceRequestMediaPath(
+            input.customerId,
+            request.id,
+            voiceFile.name || "voice.webm",
+          );
+          const { error: uploadError } = await supabase.storage
+            .from(SERVICE_REQUEST_MEDIA_BUCKET)
+            .upload(path, voiceFile, {
+              contentType: voiceFile.type || "audio/webm",
+              upsert: false,
+            });
+          if (!uploadError) audioPath = path;
+        }
+        const { attachVoiceToRequest } = await import("@/lib/ai/voice/cache");
+        await attachVoiceToRequest({
+          transcriptId: input.voiceTranscriptId!,
+          serviceRequestId: request.id,
+          audioPath,
+          audioBucket: SERVICE_REQUEST_MEDIA_BUCKET,
+        });
+      } catch {
+        // Voice attach is best-effort.
+      }
+    })();
+  }
 
   return { ok: true, requestId: request.id };
 }

@@ -57,7 +57,11 @@ export default async function BusinessOpportunitiesPage() {
                   {op.hasOffer ? t("statusOffered") : t("statusOpen")}
                   {op.urgency === "emergency" ? ` · ${t("emergency")}` : ""}
                 </p>
-                <WhyMatchedReasons reasons={op.reasons} />
+                <WhyMatchedReasons
+                  reasons={op.reasons}
+                  aiMatchScore={op.aiMatchScore}
+                  aiExplanation={op.aiExplanation}
+                />
               </Link>
             </li>
           ))}

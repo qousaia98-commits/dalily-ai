@@ -361,7 +361,11 @@ export async function ProviderDashboardHomeView({
                     {op.hasOffer ? t("opportunities.offered") : t("opportunities.open")}
                     {op.urgency === "emergency" ? ` · ${t("opportunities.emergency")}` : ""}
                   </p>
-                  <WhyMatchedReasons reasons={op.reasons} />
+                  <WhyMatchedReasons
+                    reasons={op.reasons}
+                    aiMatchScore={op.aiMatchScore}
+                    aiExplanation={op.aiExplanation}
+                  />
                 </Link>
               </li>
             ))}

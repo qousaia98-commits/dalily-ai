@@ -328,6 +328,55 @@ export async function completeBookingAction(bookingId: string) {
   const result = await requestCustomerConfirmation(bookingId);
   if (!result.success) return result;
 
+  try {
+    const {
+      isAiEngineV4Enabled,
+      isAiEngineV5Enabled,
+      isAiEngineV6Enabled,
+      isAiEngineV7Enabled,
+    } = await import("@/lib/config/feature-flags");
+    if (isAiEngineV4Enabled()) {
+      const { compareJobAnalysisOutcome } = await import("@/lib/ai/jobs/learning");
+      const durationMinutes = Math.max(
+        1,
+        Math.round(
+          (new Date(booking.endsAt).getTime() - new Date(booking.startsAt).getTime()) /
+            60000,
+        ),
+      );
+      void compareJobAnalysisOutcome({
+        serviceRequestId: booking.serviceRequestId,
+        bookingId: booking.id,
+        actualDurationMinutes: durationMinutes,
+      });
+    }
+    if (isAiEngineV5Enabled() && booking.serviceRequestId) {
+      const { compareVisionAnalysisOutcome } = await import(
+        "@/lib/ai/vision/learning"
+      );
+      void compareVisionAnalysisOutcome({
+        serviceRequestId: booking.serviceRequestId,
+      });
+    }
+    if (isAiEngineV6Enabled() && booking.serviceRequestId) {
+      const { compareVoiceTranscriptOutcome } = await import(
+        "@/lib/ai/voice/learning"
+      );
+      void compareVoiceTranscriptOutcome({
+        serviceRequestId: booking.serviceRequestId,
+      });
+    }
+    if (isAiEngineV7Enabled() && booking.serviceRequestId) {
+      const { buildAfterJobAssist } = await import("@/lib/ai/assistant/after-job");
+      void buildAfterJobAssist({
+        problemSummary: booking.customerNotes || booking.serviceName || "Service job",
+        serviceRequestId: booking.serviceRequestId,
+      });
+    }
+  } catch {
+    // Learning must never break completion.
+  }
+
   await postBookingSystemMessage(
     booking.conversationId,
     authUser.id,
