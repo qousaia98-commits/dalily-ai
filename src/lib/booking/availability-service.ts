@@ -10,11 +10,13 @@ const DEFAULT_SETTINGS = (providerId: string): AvailabilitySettings => ({
   providerId,
   timezone: "Asia/Damascus",
   slotDurations: [30, 60],
-  bufferMinutes: 0,
+  bufferMinutes: 20,
+  travelBufferMinutes: 20,
   minNoticeHours: 2,
   maxDaysAhead: 60,
   emergencyAvailable: false,
   acceptingBookings: true,
+  defaultAppointmentType: "scheduled",
 });
 
 export async function getAvailabilitySettings(
@@ -34,15 +36,24 @@ export async function getAvailabilitySettings(
     (BOOKING_DURATIONS as number[]).includes(d),
   ) as BookingDurationMinutes[];
 
+  const travel =
+    data.travel_buffer_minutes != null
+      ? Number(data.travel_buffer_minutes)
+      : Number(data.buffer_minutes ?? 20);
+
   return {
     providerId,
     timezone: data.timezone ?? "Asia/Damascus",
     slotDurations: durations.length ? durations : [30, 60],
-    bufferMinutes: data.buffer_minutes ?? 0,
+    bufferMinutes: Math.max(Number(data.buffer_minutes ?? 0), travel || 0),
+    travelBufferMinutes: travel || 20,
     minNoticeHours: data.min_notice_hours ?? 2,
     maxDaysAhead: data.max_days_ahead ?? 60,
     emergencyAvailable: Boolean(data.emergency_available),
     acceptingBookings: data.accepting_bookings !== false,
+    defaultAppointmentType:
+      (data.default_appointment_type as AvailabilitySettings["defaultAppointmentType"]) ||
+      "scheduled",
   };
 }
 
@@ -55,11 +66,13 @@ export async function upsertAvailabilitySettings(
     provider_id: settings.providerId,
     timezone: settings.timezone,
     slot_durations: settings.slotDurations,
-    buffer_minutes: settings.bufferMinutes,
+    buffer_minutes: Math.max(settings.bufferMinutes, settings.travelBufferMinutes),
+    travel_buffer_minutes: settings.travelBufferMinutes,
     min_notice_hours: settings.minNoticeHours,
     max_days_ahead: settings.maxDaysAhead,
     emergency_available: settings.emergencyAvailable,
     accepting_bookings: settings.acceptingBookings,
+    default_appointment_type: settings.defaultAppointmentType,
     updated_at: new Date().toISOString(),
   });
   if (error) return { success: false, error: "save_failed" };

@@ -112,6 +112,24 @@ function collectBindings(scope: RealtimeScope): PostgresConfig[] {
         {
           event: "*",
           schema: "public",
+          table: "emergency_dispatches",
+          filter: `service_request_id=eq.${scope.requestId}`,
+        },
+        {
+          event: "*",
+          schema: "public",
+          table: "emergency_timeline_events",
+          filter: `service_request_id=eq.${scope.requestId}`,
+        },
+        {
+          event: "*",
+          schema: "public",
+          table: "emergency_live_locations",
+          filter: `service_request_id=eq.${scope.requestId}`,
+        },
+        {
+          event: "*",
+          schema: "public",
           table: "unlock_sessions",
           filter: `service_request_id=eq.${scope.requestId}`,
         },

@@ -228,3 +228,46 @@ export function isAiEngineV8Enabled(): boolean {
 export function isAiEngineV9Enabled(): boolean {
   return envFlag("AI_ENGINE_V9");
 }
+
+/**
+ * Sprint 4 Phase 1 — Dual Marketplace Experience:
+ * publish-request vs find-provider entry points, AI path recommendation,
+ * smart switching, enhanced provider search.
+ */
+export function isDualMarketplaceEnabled(): boolean {
+  return envFlag("DUAL_MARKETPLACE") || envFlag("DUAL_MARKETPLACE_V1");
+}
+
+/**
+ * Sprint 4 Phase 2 — Smart Booking & AI Scheduling:
+ * live availability suggestions, travel buffer, reminders, day optimize, reschedule UX.
+ */
+export function isSmartBookingEnabled(): boolean {
+  return envFlag("SMART_BOOKING") || envFlag("SMART_BOOKING_V1");
+}
+
+/**
+ * Sprint 4 Phase 3 — Emergency Dispatch & Live Tracking:
+ * bypass waiting, priority dispatch, live ETA/timeline, provider quick actions, admin monitor.
+ */
+export function isEmergencyDispatchEnabled(): boolean {
+  return envFlag("EMERGENCY_DISPATCH") || envFlag("EMERGENCY_DISPATCH_V1");
+}
+
+/**
+ * Sprint 4 Phase 4 — Multi-Service Projects & AI Project Coordination:
+ * detect multi-trade jobs, parent project + packages, AI plan, matching per trade, dashboard.
+ */
+export function isMultiServiceProjectsEnabled(): boolean {
+  return (
+    envFlag("MULTI_SERVICE_PROJECTS") || envFlag("MULTI_SERVICE_PROJECTS_V1")
+  );
+}
+
+/**
+ * Sprint 4 Phase 5 — Recurring Services & Maintenance Plans:
+ * recurring intervals, contracts, auto-scheduling, AI recommendations, reminders.
+ */
+export function isRecurringServicesEnabled(): boolean {
+  return envFlag("RECURRING_SERVICES") || envFlag("RECURRING_SERVICES_V1");
+}

@@ -3,8 +3,7 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import { listProviderOpportunities } from "@/domains/offer/queries";
-import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
-import { Link } from "@/lib/i18n/routing";
+import { OpportunityRequestCard } from "@/components/business/opportunity-request-card";
 import { redirect } from "next/navigation";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
@@ -45,24 +44,7 @@ export default async function BusinessOpportunitiesPage() {
         <ul className="space-y-3">
           {opportunities.map((op) => (
             <li key={op.assignmentId}>
-              <Link
-                href={`/business/opportunities/${op.assignmentId}`}
-                className="block rounded-2xl border border-border bg-card px-4 py-3 transition-colors hover:bg-muted/40"
-              >
-                <p className="font-medium">{op.title}</p>
-                <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                  {op.intentText}
-                </p>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {op.hasOffer ? t("statusOffered") : t("statusOpen")}
-                  {op.urgency === "emergency" ? ` · ${t("emergency")}` : ""}
-                </p>
-                <WhyMatchedReasons
-                  reasons={op.reasons}
-                  aiMatchScore={op.aiMatchScore}
-                  aiExplanation={op.aiExplanation}
-                />
-              </Link>
+              <OpportunityRequestCard opportunity={op} />
             </li>
           ))}
         </ul>

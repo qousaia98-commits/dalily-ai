@@ -12,6 +12,7 @@ import {
 import type { Booking } from "@/lib/booking/types";
 import { OpenRouteButton } from "@/components/providers/open-route-button";
 import { CompletionConfirmationPanel } from "@/components/booking/completion-confirmation-panel";
+import { RescheduleBookingPanel } from "@/components/booking/reschedule-booking-panel";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -141,6 +142,8 @@ export function BookingCard({ booking, viewer }: Props) {
           </Button>
         ) : null}
       </div>
+
+      <RescheduleBookingPanel booking={booking} />
     </article>
   );
 }

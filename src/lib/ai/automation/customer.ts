@@ -194,6 +194,19 @@ export async function runCustomerAutomations(
 
   if (ctx.isCompleted && ctx.categorySlug) {
     const wf = getWorkflow("customer.suggest_followup_maintenance")!;
+    const { isRecurringServicesEnabled } = await import(
+      "@/lib/config/feature-flags"
+    );
+    if (isRecurringServicesEnabled()) {
+      try {
+        const { recommendRecurringFromHistory } = await import(
+          "@/lib/recurring"
+        );
+        await recommendRecurringFromHistory({ customerId: ctx.userId });
+      } catch {
+        /* soft */
+      }
+    }
     const run = await runWorkflow({
       workflow: wf,
       triggerKey: "job_completed",
@@ -210,7 +223,10 @@ export async function runCustomerAutomations(
       dataSources: ["categories.slug", "seasonal_priors"],
       userId: ctx.userId,
       serviceRequestId: ctx.serviceRequestId,
-      payload: { categorySlug: ctx.categorySlug },
+      payload: {
+        categorySlug: ctx.categorySlug,
+        href: "/account/recurring",
+      },
     });
     out.push(
       toSuggestion(run, {

@@ -2356,6 +2356,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      ai_marketplace_path_stats: {
+        Row: {
+          id: string;
+          path: string;
+          recommendation_accepted: number;
+          recommendation_ignored: number;
+          choices: number;
+          updated_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          path: string;
+          recommendation_accepted?: number;
+          recommendation_ignored?: number;
+          choices?: number;
+          updated_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          path?: string;
+          recommendation_accepted?: number;
+          recommendation_ignored?: number;
+          choices?: number;
+          updated_at?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       service_requests: {
         Row: {
           id: string;

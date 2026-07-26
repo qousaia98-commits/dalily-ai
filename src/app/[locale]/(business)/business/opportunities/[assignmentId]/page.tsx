@@ -2,13 +2,14 @@ import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
-import { isOffersV2Enabled } from "@/lib/config/feature-flags";
+import { isOffersV2Enabled, isEmergencyDispatchEnabled } from "@/lib/config/feature-flags";
 import {
   getOpportunityDetail,
   listOfferTemplates,
   listClarifications,
 } from "@/domains/offer/queries";
 import { OfferComposer } from "@/components/business/offer-composer";
+import { EmergencyQuickActions } from "@/components/business/emergency-quick-actions";
 import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
 import { JobPrepSummary } from "@/components/business/job-prep-summary";
 import { VoiceRequestPreview } from "@/components/business/voice-request-preview";
@@ -104,6 +105,14 @@ export default async function BusinessOpportunityDetailPage({ params }: PageProp
         />
         <p className="text-xs text-muted-foreground">{t("noAcceptRequired")}</p>
       </header>
+
+      {isEmergencyDispatchEnabled() && detail.urgency === "emergency" ? (
+        <EmergencyQuickActions
+          serviceRequestId={detail.serviceRequestId}
+          assignmentId={detail.assignmentId}
+          locationText={detail.locationText}
+        />
+      ) : null}
 
       {voicePreview ? (
         <VoiceRequestPreview

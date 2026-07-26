@@ -55,6 +55,10 @@ export function SearchFilters({
   const verified = searchParams.get("verified") ?? "all";
   const nearby = searchParams.get("nearby") ?? "city";
   const sort = searchParams.get("sort") ?? "relevant";
+  const available = searchParams.get("available") ?? "all";
+  const emergency = searchParams.get("emergency") ?? "all";
+  const language = searchParams.get("lang") ?? "all";
+  const price = searchParams.get("price") ?? "all";
 
   return (
     <aside className={cn("space-y-5", className)}>
@@ -154,12 +158,11 @@ export function SearchFilters({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="relevant">{t("sortOptions.relevant")}</SelectItem>
+                <SelectItem value="relevant">{t("sortOptions.best_match")}</SelectItem>
                 <SelectItem value="nearest">{t("sortOptions.nearest")}</SelectItem>
-                <SelectItem value="rating">{t("sortOptions.rating")}</SelectItem>
+                <SelectItem value="rating">{t("sortOptions.highest_rated")}</SelectItem>
+                <SelectItem value="response">{t("sortOptions.response")}</SelectItem>
                 <SelectItem value="newest">{t("sortOptions.newest")}</SelectItem>
-                <SelectItem value="pro">{t("sortOptions.pro")}</SelectItem>
-                <SelectItem value="premium">{t("sortOptions.premium")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -176,6 +179,73 @@ export function SearchFilters({
               <SelectContent>
                 <SelectItem value="all">{t("allProviders")}</SelectItem>
                 <SelectItem value="true">{t("verifiedOnly")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="search-available">{t("availability")}</Label>
+            <Select
+              value={available}
+              onValueChange={(v) => updateParam("available", v === "all" ? null : v)}
+            >
+              <SelectTrigger id="search-available">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("availabilityOptions.all")}</SelectItem>
+                <SelectItem value="today">{t("availabilityOptions.today")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="search-emergency">{t("emergency")}</Label>
+            <Select
+              value={emergency}
+              onValueChange={(v) => updateParam("emergency", v === "all" ? null : v)}
+            >
+              <SelectTrigger id="search-emergency">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("emergencyOptions.all")}</SelectItem>
+                <SelectItem value="true">{t("emergencyOptions.yes")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="search-lang">{t("language")}</Label>
+            <Select
+              value={language}
+              onValueChange={(v) => updateParam("lang", v === "all" ? null : v)}
+            >
+              <SelectTrigger id="search-lang">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("languageOptions.all")}</SelectItem>
+                <SelectItem value="ar">{t("languageOptions.ar")}</SelectItem>
+                <SelectItem value="en">{t("languageOptions.en")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="search-price">{t("priceLevel")}</Label>
+            <Select
+              value={price}
+              onValueChange={(v) => updateParam("price", v === "all" ? null : v)}
+            >
+              <SelectTrigger id="search-price">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("priceOptions.all")}</SelectItem>
+                <SelectItem value="budget">{t("priceOptions.budget")}</SelectItem>
+                <SelectItem value="standard">{t("priceOptions.standard")}</SelectItem>
+                <SelectItem value="premium">{t("priceOptions.premium")}</SelectItem>
               </SelectContent>
             </Select>
           </div>

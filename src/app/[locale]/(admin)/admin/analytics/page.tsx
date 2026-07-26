@@ -69,6 +69,9 @@ export default async function AdminAnalyticsPage() {
         <Link href="/admin/ai-predictions" className="rounded-lg border px-3 py-1.5 hover:bg-muted">
           {t("links.predictions")}
         </Link>
+        <Link href="/admin/emergency" className="rounded-lg border px-3 py-1.5 hover:bg-muted">
+          Emergency
+        </Link>
       </div>
     </div>
   );

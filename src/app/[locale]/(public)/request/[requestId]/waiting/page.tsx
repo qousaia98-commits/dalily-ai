@@ -21,9 +21,19 @@ import {
 import { createAdminClient } from "@/lib/supabase/admin";
 import { WaitingRoom } from "@/components/customer/waiting-room";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
-import { isAiEngineV7Enabled, isAiEngineV8Enabled, isAiEngineV9Enabled } from "@/lib/config/feature-flags";
+import {
+  isAiEngineV7Enabled,
+  isAiEngineV8Enabled,
+  isAiEngineV9Enabled,
+  isEmergencyDispatchEnabled,
+  isMultiServiceProjectsEnabled,
+} from "@/lib/config/feature-flags";
 import type { WaitTimeEstimate, PredictiveNotification } from "@/lib/ai/predictive/types";
 import type { AutomationSuggestion } from "@/lib/ai/automation/types";
+import { EmergencyStatusPanel } from "@/components/customer/emergency-status";
+import type { EmergencyDispatchView } from "@/lib/ai/dispatch/emergency";
+import { ProjectDashboardPanel } from "@/components/customer/project-dashboard";
+import type { ProjectDashboard } from "@/lib/projects";
 
 export default async function RequestWaitingPage({
   params,
@@ -202,9 +212,48 @@ export default async function RequestWaitingPage({
     });
   }
 
+  let emergencyDispatch: EmergencyDispatchView | null = null;
+  if (
+    isEmergencyDispatchEnabled() &&
+    request.urgency === "emergency"
+  ) {
+    const { getEmergencyDispatchView, activateEmergencyDispatch } = await import(
+      "@/lib/ai/dispatch/emergency"
+    );
+    emergencyDispatch = await getEmergencyDispatchView(requestId);
+    if (!emergencyDispatch) {
+      await activateEmergencyDispatch({
+        serviceRequestId: requestId,
+        customerId: authUser.id,
+      });
+      emergencyDispatch = await getEmergencyDispatchView(requestId);
+    }
+  }
+
+  let projectDash: ProjectDashboard | null = null;
+  if (isMultiServiceProjectsEnabled() && request.urgency !== "emergency") {
+    const { getProjectByRootRequest, getProjectDashboard } = await import(
+      "@/lib/projects"
+    );
+    const linked = await getProjectByRootRequest(requestId);
+    if (linked) {
+      projectDash = await getProjectDashboard(linked.id, { refresh: true });
+    }
+  }
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 py-6 sm:px-6">
       <MarketplaceRealtimeBridge userId={authUser.id} requestId={requestId} />
+      {emergencyDispatch ? (
+        <div className="mb-4">
+          <EmergencyStatusPanel dispatch={emergencyDispatch} />
+        </div>
+      ) : null}
+      {projectDash ? (
+        <div className="mb-4">
+          <ProjectDashboardPanel project={projectDash} compact />
+        </div>
+      ) : null}
       <WaitingRoom
         request={request}
         state={state}

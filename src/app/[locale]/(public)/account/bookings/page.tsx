@@ -3,6 +3,8 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { listCustomerBookings } from "@/lib/booking/booking-service";
 import { processCompletionPrompts } from "@/lib/booking/completion-service";
 import { BookingCalendarLazy } from "@/components/booking/booking-calendar-lazy";
+import { isRecurringServicesEnabled } from "@/lib/config/feature-flags";
+import { Link } from "@/lib/i18n/routing";
 
 export default async function AccountBookingsPage() {
   const t = await getTranslations("booking");
@@ -25,6 +27,14 @@ export default async function AccountBookingsPage() {
         </p>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("myBookingsTitle")}</h1>
         <p className="text-sm text-muted-foreground">{t("myBookingsSubtitle")}</p>
+        {isRecurringServicesEnabled() ? (
+          <Link
+            href="/account/recurring"
+            className="inline-block text-sm font-medium text-[var(--dalily-gold)] underline"
+          >
+            Maintenance plans
+          </Link>
+        ) : null}
       </header>
       <BookingCalendarLazy
         bookings={bookings}

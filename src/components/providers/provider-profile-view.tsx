@@ -31,6 +31,7 @@ import { CITY_CENTROIDS } from "@/lib/geo/city-centroids";
 import type { PublicReview, ProviderReviewStats, ReviewSort } from "@/lib/reviews/types";
 import type { TrustBadgeId } from "@/lib/reviews/trust-score";
 import { BookingForm } from "@/components/booking/booking-form";
+import { isSmartBookingEnabled } from "@/lib/config/feature-flags";
 
 type ProviderProfileViewProps = {
   provider: PublicProviderProfile;
@@ -171,6 +172,32 @@ export async function ProviderProfileView({
               <span>{t("memberSince", { date: new Date(provider.memberSince).getFullYear() })}</span>
               <span>{t("healthScore", { score: provider.profileCompleteness })}</span>
             </div>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <ProfileStat
+                label={t("stats.response")}
+                value={
+                  provider.responseTimeHours != null
+                    ? t("respondsIn", { hours: provider.responseTimeHours })
+                    : "—"
+                }
+              />
+              <ProfileStat
+                label={t("stats.completion")}
+                value={t("stats.completionValue", {
+                  score: Math.min(99, Math.round(provider.profileCompleteness)),
+                })}
+              />
+              <ProfileStat
+                label={t("stats.area")}
+                value={cityLabel}
+              />
+              <ProfileStat
+                label={t("stats.availability")}
+                value={
+                  acceptingRequests ? t("stats.open") : t("stats.paused")
+                }
+              />
+            </div>
           </div>
         </div>
 
@@ -262,6 +289,7 @@ export async function ProviderProfileView({
               providerId={provider.id}
               services={bookingServices}
               isLoggedIn={isLoggedIn}
+              smartBookingEnabled={isSmartBookingEnabled()}
             />
 
             <Card>
@@ -332,6 +360,17 @@ export async function ProviderProfileView({
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ProfileStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-border/60 bg-muted/20 px-3 py-2">
+      <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-0.5 truncate text-sm font-medium">{value}</p>
     </div>
   );
 }

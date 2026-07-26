@@ -59,6 +59,152 @@
       "title": "Marketplace tips"
     }
   },
+  "dualMarketplace": {
+    "trustBadge": "Two ways to get help",
+    "heroTitle": "What do you need?",
+    "heroSubtitle": "Publish a request for offers, or find a provider and contact them directly.",
+    "intentLabel": "Describe your need",
+    "intentPlaceholder": "e.g. Broken light switch, or full kitchen renovation…",
+    "aiSuggests": "AI recommendation",
+    "canIgnore": "You can ignore this and choose either path.",
+    "recommended": "Recommended",
+    "publish": {
+      "title": "Publish request",
+      "body": "Receive multiple offers from providers.",
+      "cta": "Publish"
+    },
+    "find": {
+      "title": "Find provider",
+      "body": "Browse providers and contact them directly.",
+      "cta": "Browse"
+    },
+    "switch": {
+      "badge": "Try another way",
+      "toFindTitle": "No suitable offers yet?",
+      "toFindBody": "Contact providers directly from search.",
+      "toFindCta": "Find providers",
+      "toPublishTitle": "No providers nearby?",
+      "toPublishBody": "Publish your request so more providers can respond.",
+      "toPublishCta": "Publish request"
+    },
+    "opportunity": {
+      "budget": "Budget {amount}",
+      "photos": "{count} photo(s)"
+    }
+  },
+  "projects": {
+    "dashboard": {
+      "badge": "Multi-service project",
+      "back": "Back to orders",
+      "progress": "{pct}% complete",
+      "completion": "Overall progress",
+      "estimate": "Estimate {min}–{max} days",
+      "packages": "Work packages",
+      "appointments": "Upcoming appointments",
+      "timeline": "Project timeline",
+      "documents": "Documents & photos",
+      "documentsEmpty": "No documents uploaded yet.",
+      "messages": "Communication",
+      "messagesHint": "Project-wide and package chats stay separated once a provider is assigned.",
+      "openFull": "Open project dashboard",
+      "openPackage": "Package waiting room",
+      "markDone": "Mark done",
+      "reorderSuccess": "Execution order updated",
+      "reorderError": "Could not reorder packages",
+      "statusError": "Could not update package",
+      "packageCompleted": "Package marked completed",
+      "status": {
+        "detected": "Detected",
+        "planning": "Planning",
+        "offers": "Collecting offers",
+        "booked": "Booked",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "packageStatus": {
+        "planned": "Planned",
+        "matching": "Matching",
+        "offers": "Offers",
+        "booked": "Booked",
+        "blocked": "Blocked by dependency",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      }
+    }
+  },
+  "recurring": {
+    "dashboard": {
+      "badge": "Recurring services",
+      "title": "Maintenance plans",
+      "subtitle": "Subscribe once — visits schedule themselves.",
+      "metrics": "Retention ~{retention}% · Completion ~{completion}%",
+      "createTitle": "Create a plan",
+      "titlePlaceholder": "e.g. Garden maintenance",
+      "createCta": "Start plan",
+      "created": "Plan created",
+      "error": "Something went wrong",
+      "aiTitle": "AI recommendations",
+      "accept": "Accept",
+      "reject": "Not now",
+      "accepted": "Plan created from recommendation",
+      "rejected": "Recommendation dismissed",
+      "active": "Active plans",
+      "paused": "Paused plans",
+      "upcoming": "Upcoming visits",
+      "completed": "Completed visits",
+      "renewals": "Upcoming renewals",
+      "history": "History",
+      "pause": "Pause",
+      "resume": "Resume",
+      "cancel": "Cancel",
+      "renew": "Renew",
+      "skip": "Skip visit",
+      "skipped": "Visit skipped",
+      "emptyActive": "No active plans yet.",
+      "emptyPaused": "No paused plans.",
+      "emptyUpcoming": "No upcoming visits.",
+      "emptyCompleted": "No completed visits yet.",
+      "emptyRenewals": "No renewals due.",
+      "emptyHistory": "No cancelled plans.",
+      "interval": {
+        "weekly": "Weekly",
+        "biweekly": "Every 2 weeks",
+        "monthly": "Monthly",
+        "quarterly": "Every 3 months",
+        "semiannual": "Every 6 months",
+        "yearly": "Yearly",
+        "custom": "Custom"
+      }
+    },
+    "reminders": {
+      "upcoming_visit": {
+        "title": "Upcoming maintenance visit",
+        "body": "You have a recurring visit within 24 hours."
+      },
+      "plan_renewal": {
+        "title": "Plan renewal soon",
+        "body": "Your maintenance plan is due for renewal."
+      },
+      "visit_skipped": {
+        "title": "Visit skipped",
+        "body": "A recurring visit was skipped."
+      },
+      "plan_paused": {
+        "title": "Plan paused",
+        "body": "A maintenance plan was paused."
+      },
+      "plan_cancelled": {
+        "title": "Plan cancelled",
+        "body": "A maintenance plan was cancelled."
+      },
+      "maintenance_due": {
+        "title": "Maintenance due",
+        "body": "A recurring visit is overdue — schedule soon."
+      }
+    }
+  },
   "automation": {
     "suggestions": {
       "title": "AI automations",
@@ -743,6 +889,30 @@
       "errorTitle": "Request not found",
       "errorBody": "This waiting room is unavailable or you don’t have access."
     },
+    "emergency": {
+      "badge": "Emergency dispatch",
+      "title": "Help is being dispatched now",
+      "subtitle": "We skipped the normal wait and notified the fastest available providers.",
+      "etaLabel": "Estimated arrival",
+      "etaUpdated": "Updated {time}",
+      "liveLocation": "Provider live location",
+      "locationUpdated": "Location at {time}",
+      "timelineTitle": "Live status",
+      "timelineEmpty": "Waiting for the first dispatch update…",
+      "notified": "{count} providers notified",
+      "status": {
+        "detected": "Emergency detected",
+        "dispatching": "Dispatching",
+        "awaiting_accept": "Awaiting provider",
+        "accepted": "Provider accepted",
+        "on_the_way": "On the way",
+        "arrived": "Arrived",
+        "in_progress": "Work in progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "stopped": "Dispatch closed"
+      }
+    },
     "errors": {
       "unknown": "Something went wrong. Try again.",
       "feature_disabled": "This flow is not enabled.",
@@ -823,6 +993,33 @@
         "language": "Language / dialect",
         "noAudio": "Audio file not available — transcript only.",
         "audioUnsupported": "Your browser cannot play this audio."
+      },
+      "emergencyActions": {
+        "badge": "Emergency",
+        "title": "Quick response",
+        "subtitle": "One tap — customer is waiting.",
+        "accept": "Accept",
+        "decline": "Decline",
+        "busy": "Busy",
+        "onMyWay": "On my way",
+        "navigate": "Navigate",
+        "shareLocation": "Share location",
+        "stopShare": "Stop sharing",
+        "noLocation": "No address available yet",
+        "geoUnsupported": "Location not supported on this device",
+        "locationShared": "Live location shared",
+        "locationError": "Could not share location",
+        "error": "Could not update emergency status",
+        "success": {
+          "accepted": "Emergency accepted",
+          "declined": "Marked declined",
+          "busy": "Marked busy",
+          "on_the_way": "Customer notified — on the way",
+          "arrived": "Marked arrived",
+          "started": "Work started",
+          "completed": "Marked completed",
+          "notified": "Notified"
+        }
       }
     },
     "fields": {
@@ -1369,7 +1566,31 @@
         "premium": "PREMIUM",
         "best_match": "Best match",
         "highest_rated": "Highest rated",
-        "verified": "Verified first"
+        "verified": "Verified first",
+        "response": "Fastest response"
+      },
+      "availability": "Availability",
+      "availabilityOptions": {
+        "all": "Any",
+        "today": "Available today"
+      },
+      "emergency": "Emergency",
+      "emergencyOptions": {
+        "all": "Any",
+        "yes": "Handles emergencies"
+      },
+      "language": "Language",
+      "languageOptions": {
+        "all": "Any",
+        "ar": "Arabic",
+        "en": "English"
+      },
+      "priceLevel": "Price level",
+      "priceOptions": {
+        "all": "Any",
+        "budget": "Budget",
+        "standard": "Standard",
+        "premium": "Premium"
       }
     },
     "recommendationBadges": {
@@ -1413,6 +1634,15 @@
     "planPremium": "PREMIUM",
     "memberSince": "Member since {date}",
     "healthScore": "Health {score}%",
+    "stats": {
+      "response": "Response",
+      "completion": "Completion",
+      "completionValue": "{score}%",
+      "area": "Service area",
+      "availability": "Availability",
+      "open": "Accepting",
+      "paused": "Paused"
+    },
     "healthShort": "Health",
     "featured": "Featured"
   },
@@ -3527,6 +3757,9 @@
       "analytics": "Analytics",
       "aiPredictions": "AI Predictions",
       "aiAutomation": "AI Automation",
+      "emergency": "Emergency",
+      "projects": "Projects",
+      "recurring": "Recurring",
       "content": "Content",
       "broadcasts": "Broadcasts",
       "health": "System status",
@@ -4417,6 +4650,49 @@
         "analytics": "Analytics"
       }
     },
+    "emergency": {
+      "eyebrow": "Sprint 4 · Phase 3",
+      "title": "Emergency monitoring",
+      "subtitle": "Active emergencies, response times, ETA, and dispatch success.",
+      "kpis": {
+        "active": "Active emergencies",
+        "avgResponse": "Avg response",
+        "avgEta": "Avg ETA",
+        "successRate": "Dispatch success"
+      },
+      "activeTitle": "Active emergencies",
+      "activeEmpty": "No active emergency dispatches.",
+      "volumeTitle": "Volume by category",
+      "volumeEmpty": "No emergency volume in the last 7 days.",
+      "noEta": "ETA pending",
+      "openRequest": "Open request"
+    },
+    "projects": {
+      "eyebrow": "Sprint 4 · Phase 4",
+      "title": "Multi-service projects",
+      "subtitle": "Complex renovations split into trade packages with AI coordination.",
+      "kpis": {
+        "active": "Active projects",
+        "completed": "Completed",
+        "avgProgress": "Avg progress"
+      },
+      "listTitle": "Recent projects",
+      "empty": "No multi-service projects yet.",
+      "open": "Open"
+    },
+    "recurring": {
+      "eyebrow": "Sprint 4 · Phase 5",
+      "title": "Recurring & maintenance",
+      "subtitle": "Active plans, upcoming visits, and route optimization hints.",
+      "kpis": {
+        "active": "Active plans",
+        "paused": "Paused",
+        "upcoming": "Upcoming visits"
+      },
+      "optimizeTitle": "Route optimization",
+      "optimizeEmpty": "No grouping opportunities today.",
+      "customerView": "Customer recurring dashboard"
+    },
     "content": {
       "eyebrow": "Content",
       "title": "Content management",
@@ -4642,6 +4918,45 @@
     "duration": "Duration",
     "minutes": "{count} min",
     "pickSlot": "Available times",
+    "appointmentType": "Appointment type",
+    "types": {
+      "immediate": "Immediate",
+      "today": "Today",
+      "scheduled": "Scheduled",
+      "recurring": "Recurring",
+      "emergency": "Emergency",
+      "video": "Video consultation"
+    },
+    "smart": {
+      "recommended": "AI recommended times",
+      "best": "Best",
+      "alt": "Alt",
+      "moreTimes": "More available times",
+      "buffer": "Includes {minutes} min travel buffer"
+    },
+    "reschedule": {
+      "open": "Reschedule",
+      "close": "Hide reschedule",
+      "hint": "Pick a new available slot. The other party will be notified.",
+      "loading": "Loading alternatives…",
+      "empty": "No alternative slots right now.",
+      "confirm": "Confirm new time"
+    },
+    "optimize": {
+      "badge": "AI schedule",
+      "title": "Today's route review",
+      "empty": "No stops today."
+    },
+    "reminders": {
+      "title24h": "Appointment tomorrow",
+      "body24h": "Reminder: you have an appointment in about 24 hours.",
+      "title2h": "Appointment in 2 hours",
+      "body2h": "Your appointment starts soon — please be ready.",
+      "titleOnWay": "Provider on the way",
+      "bodyOnWay": "Your provider is heading to the appointment.",
+      "titleChanged": "Appointment updated",
+      "bodyChanged": "The appointment time was changed. Please review the new slot."
+    },
     "loadingSlots": "Loading slots…",
     "noSlots": "No available slots in the next two weeks.",
     "location": "Location / address",
@@ -4717,6 +5032,8 @@
       "timezone": "Timezone",
       "durations": "Slot durations (minutes, comma-separated)",
       "buffer": "Buffer between appointments (min)",
+      "travelBuffer": "Travel buffer (min)",
+      "defaultType": "Default appointment type",
       "notice": "Minimum notice (hours)",
       "ahead": "Bookable days ahead",
       "accepting": "Accepting new bookings",
@@ -4726,6 +5043,13 @@
       "blockStart": "Starts",
       "blockEnd": "Ends",
       "blockReason": "Reason",
+      "blockKind": "Block type",
+      "kinds": {
+        "vacation": "Vacation",
+        "blocked": "Blocked",
+        "holiday": "Holiday",
+        "manual": "Manual"
+      },
       "blockSubmit": "Block period",
       "noProvider": "Create your business profile first."
     },

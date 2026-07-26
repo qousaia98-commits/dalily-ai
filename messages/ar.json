@@ -59,6 +59,152 @@
       "title": "نصائح السوق"
     }
   },
+  "dualMarketplace": {
+    "trustBadge": "طريقتان للحصول على المساعدة",
+    "heroTitle": "ماذا تحتاج؟",
+    "heroSubtitle": "انشر طلباً لاستلام عروض، أو ابحث عن مزود وتواصل معه مباشرة.",
+    "intentLabel": "صف احتياجك",
+    "intentPlaceholder": "مثال: مفتاح إنارة معطل، أو تجديد مطبخ كامل…",
+    "aiSuggests": "توصية الذكاء",
+    "canIgnore": "يمكنك تجاهل التوصية واختيار أي مسار.",
+    "recommended": "موصى به",
+    "publish": {
+      "title": "نشر طلب",
+      "body": "استلم عدة عروض من المزودين.",
+      "cta": "انشر"
+    },
+    "find": {
+      "title": "ابحث عن مزود",
+      "body": "تصفح المزودين وتواصل معهم مباشرة.",
+      "cta": "تصفح"
+    },
+    "switch": {
+      "badge": "جرّب طريقة أخرى",
+      "toFindTitle": "لا عروض مناسبة بعد؟",
+      "toFindBody": "تواصل مع مزودين مباشرة من البحث.",
+      "toFindCta": "ابحث عن مزودين",
+      "toPublishTitle": "لا مزودين قريبين؟",
+      "toPublishBody": "انشر طلبك ليتمكن المزيد من المزودين من الرد.",
+      "toPublishCta": "انشر طلباً"
+    },
+    "opportunity": {
+      "budget": "الميزانية {amount}",
+      "photos": "{count} صورة"
+    }
+  },
+  "projects": {
+    "dashboard": {
+      "badge": "مشروع متعدد الخدمات",
+      "back": "العودة إلى الطلبات",
+      "progress": "{pct}% مكتمل",
+      "completion": "التقدم الإجمالي",
+      "estimate": "تقدير {min}–{max} أيام",
+      "packages": "حزم العمل",
+      "appointments": "مواعيد قادمة",
+      "timeline": "جدول المشروع",
+      "documents": "المستندات والصور",
+      "documentsEmpty": "لا مستندات مرفوعة بعد.",
+      "messages": "التواصل",
+      "messagesHint": "محادثات المشروع والحزم تبقى منفصلة بعد تعيين مزود.",
+      "openFull": "فتح لوحة المشروع",
+      "openPackage": "غرفة انتظار الحزمة",
+      "markDone": "تم",
+      "reorderSuccess": "تم تحديث ترتيب التنفيذ",
+      "reorderError": "تعذر إعادة الترتيب",
+      "statusError": "تعذر تحديث الحزمة",
+      "packageCompleted": "تم تعليم الحزمة كمكتملة",
+      "status": {
+        "detected": "مكتشف",
+        "planning": "تخطيط",
+        "offers": "جمع العروض",
+        "booked": "محجوز",
+        "in_progress": "جارٍ",
+        "completed": "مكتمل",
+        "cancelled": "ملغى"
+      },
+      "packageStatus": {
+        "planned": "مخطط",
+        "matching": "مطابقة",
+        "offers": "عروض",
+        "booked": "محجوز",
+        "blocked": "موقوف بسبب تبعية",
+        "in_progress": "جارٍ",
+        "completed": "مكتمل",
+        "cancelled": "ملغى"
+      }
+    }
+  },
+  "recurring": {
+    "dashboard": {
+      "badge": "خدمات متكررة",
+      "title": "خطط الصيانة",
+      "subtitle": "اشترك مرة — تُجدول الزيارات تلقائياً.",
+      "metrics": "الاحتفاظ ~{retention}% · الإكمال ~{completion}%",
+      "createTitle": "إنشاء خطة",
+      "titlePlaceholder": "مثال: صيانة حديقة",
+      "createCta": "ابدأ الخطة",
+      "created": "تم إنشاء الخطة",
+      "error": "حدث خطأ",
+      "aiTitle": "توصيات الذكاء",
+      "accept": "قبول",
+      "reject": "ليس الآن",
+      "accepted": "تم إنشاء الخطة من التوصية",
+      "rejected": "تم تجاهل التوصية",
+      "active": "خطط نشطة",
+      "paused": "خطط متوقفة",
+      "upcoming": "زيارات قادمة",
+      "completed": "زيارات مكتملة",
+      "renewals": "تجديدات قادمة",
+      "history": "السجل",
+      "pause": "إيقاف",
+      "resume": "استئناف",
+      "cancel": "إلغاء",
+      "renew": "تجديد",
+      "skip": "تخطي الزيارة",
+      "skipped": "تم تخطي الزيارة",
+      "emptyActive": "لا خطط نشطة بعد.",
+      "emptyPaused": "لا خطط متوقفة.",
+      "emptyUpcoming": "لا زيارات قادمة.",
+      "emptyCompleted": "لا زيارات مكتملة بعد.",
+      "emptyRenewals": "لا تجديدات قريبة.",
+      "emptyHistory": "لا خطط ملغاة.",
+      "interval": {
+        "weekly": "أسبوعي",
+        "biweekly": "كل أسبوعين",
+        "monthly": "شهري",
+        "quarterly": "كل 3 أشهر",
+        "semiannual": "كل 6 أشهر",
+        "yearly": "سنوي",
+        "custom": "مخصص"
+      }
+    },
+    "reminders": {
+      "upcoming_visit": {
+        "title": "زيارة صيانة قادمة",
+        "body": "لديك زيارة متكررة خلال 24 ساعة."
+      },
+      "plan_renewal": {
+        "title": "تجديد الخطة قريباً",
+        "body": "خطة الصيانة بحاجة إلى تجديد."
+      },
+      "visit_skipped": {
+        "title": "تم تخطي زيارة",
+        "body": "تم تخطي زيارة متكررة."
+      },
+      "plan_paused": {
+        "title": "خطة متوقفة",
+        "body": "تم إيقاف خطة صيانة."
+      },
+      "plan_cancelled": {
+        "title": "خطة ملغاة",
+        "body": "تم إلغاء خطة صيانة."
+      },
+      "maintenance_due": {
+        "title": "صيانة مستحقة",
+        "body": "زيارة متكررة متأخرة — جدوِل قريباً."
+      }
+    }
+  },
   "automation": {
     "suggestions": {
       "title": "أتمتة الذكاء",
@@ -743,6 +889,30 @@
       "errorTitle": "الطلب غير موجود",
       "errorBody": "غرفة الانتظار غير متاحة أو ليس لديك صلاحية."
     },
+    "emergency": {
+      "badge": "إرسال طارئ",
+      "title": "يتم إرسال المساعدة الآن",
+      "subtitle": "تخطينا الانتظار العادي وأبلغنا أسرع المزودين المتاحين.",
+      "etaLabel": "الوصول المتوقع",
+      "etaUpdated": "حدّث في {time}",
+      "liveLocation": "موقع المزود المباشر",
+      "locationUpdated": "الموقع في {time}",
+      "timelineTitle": "الحالة المباشرة",
+      "timelineEmpty": "بانتظار أول تحديث للإرسال…",
+      "notified": "تم إبلاغ {count} مزودين",
+      "status": {
+        "detected": "تم اكتشاف حالة طارئة",
+        "dispatching": "جارٍ الإرسال",
+        "awaiting_accept": "بانتظار مزود",
+        "accepted": "قبل المزود",
+        "on_the_way": "في الطريق",
+        "arrived": "وصل",
+        "in_progress": "العمل جارٍ",
+        "completed": "اكتمل",
+        "cancelled": "أُلغي",
+        "stopped": "أُغلق الإرسال"
+      }
+    },
     "errors": {
       "unknown": "حدث خطأ. حاول مرة أخرى.",
       "feature_disabled": "هذه التجربة غير مفعّلة.",
@@ -823,6 +993,33 @@
         "language": "اللغة / اللهجة",
         "noAudio": "الملف الصوتي غير متاح — النص فقط.",
         "audioUnsupported": "متصفحك لا يدعم تشغيل هذا الصوت."
+      },
+      "emergencyActions": {
+        "badge": "طارئ",
+        "title": "رد سريع",
+        "subtitle": "ضغطة واحدة — العميل ينتظر.",
+        "accept": "قبول",
+        "decline": "رفض",
+        "busy": "مشغول",
+        "onMyWay": "في الطريق",
+        "navigate": "التنقل",
+        "shareLocation": "مشاركة الموقع",
+        "stopShare": "إيقاف المشاركة",
+        "noLocation": "لا يوجد عنوان بعد",
+        "geoUnsupported": "الموقع غير مدعوم على هذا الجهاز",
+        "locationShared": "تمت مشاركة الموقع المباشر",
+        "locationError": "تعذرت مشاركة الموقع",
+        "error": "تعذر تحديث حالة الطوارئ",
+        "success": {
+          "accepted": "تم قبول الطارئ",
+          "declined": "تم الرفض",
+          "busy": "تم التعليم كمشغول",
+          "on_the_way": "أُبلغ العميل — في الطريق",
+          "arrived": "تم تسجيل الوصول",
+          "started": "بدأ العمل",
+          "completed": "اكتمل",
+          "notified": "تم الإشعار"
+        }
       }
     },
     "fields": {
@@ -1369,7 +1566,31 @@
         "premium": "PREMIUM",
         "best_match": "الأفضل تطابقاً",
         "highest_rated": "الأعلى تقييماً",
-        "verified": "الموثقون أولاً"
+        "verified": "الموثقون أولاً",
+        "response": "أسرع رد"
+      },
+      "availability": "التوفر",
+      "availabilityOptions": {
+        "all": "الكل",
+        "today": "متاح اليوم"
+      },
+      "emergency": "طوارئ",
+      "emergencyOptions": {
+        "all": "الكل",
+        "yes": "يستقبل الطوارئ"
+      },
+      "language": "اللغة",
+      "languageOptions": {
+        "all": "الكل",
+        "ar": "العربية",
+        "en": "الإنجليزية"
+      },
+      "priceLevel": "مستوى السعر",
+      "priceOptions": {
+        "all": "الكل",
+        "budget": "اقتصادي",
+        "standard": "عادي",
+        "premium": "مميز"
       }
     },
     "recommendationBadges": {
@@ -1414,7 +1635,16 @@
     "memberSince": "عضو منذ {date}",
     "healthScore": "الصحة {score}%",
     "healthShort": "الصحة",
-    "featured": "مميز"
+    "featured": "مميز",
+    "stats": {
+      "response": "الرد",
+      "completion": "الإنجاز",
+      "completionValue": "{score}%",
+      "area": "منطقة الخدمة",
+      "availability": "التوفر",
+      "open": "يستقبل",
+      "paused": "متوقف"
+    }
   },
   "reviews": {
     "sectionTitle": "تقييمات الزبائن",
@@ -3198,6 +3428,9 @@
       "analytics": "التحليلات",
       "aiPredictions": "توقعات الذكاء",
       "aiAutomation": "أتمتة الذكاء",
+      "emergency": "الطوارئ",
+      "projects": "المشاريع",
+      "recurring": "متكرر",
       "content": "المحتوى",
       "broadcasts": "البث",
       "health": "حالة النظام",
@@ -4088,6 +4321,49 @@
         "analytics": "التحليلات"
       }
     },
+    "emergency": {
+      "eyebrow": "Sprint 4 · المرحلة 3",
+      "title": "مراقبة الطوارئ",
+      "subtitle": "الحالات النشطة وأوقات الاستجابة والوصول المتوقع ونجاح الإرسال.",
+      "kpis": {
+        "active": "طوارئ نشطة",
+        "avgResponse": "متوسط الاستجابة",
+        "avgEta": "متوسط الوصول",
+        "successRate": "نجاح الإرسال"
+      },
+      "activeTitle": "طوارئ نشطة",
+      "activeEmpty": "لا توجد إرسالات طارئة نشطة.",
+      "volumeTitle": "الحجم حسب الفئة",
+      "volumeEmpty": "لا حجم طوارئ خلال آخر 7 أيام.",
+      "noEta": "الوصول قيد الانتظار",
+      "openRequest": "فتح الطلب"
+    },
+    "projects": {
+      "eyebrow": "Sprint 4 · المرحلة 4",
+      "title": "مشاريع متعددة الخدمات",
+      "subtitle": "تجديدات معقدة مقسّمة إلى حزم حرف مع تنسيق ذكي.",
+      "kpis": {
+        "active": "مشاريع نشطة",
+        "completed": "مكتملة",
+        "avgProgress": "متوسط التقدم"
+      },
+      "listTitle": "مشاريع حديثة",
+      "empty": "لا توجد مشاريع متعددة الخدمات بعد.",
+      "open": "فتح"
+    },
+    "recurring": {
+      "eyebrow": "Sprint 4 · المرحلة 5",
+      "title": "متكرر والصيانة",
+      "subtitle": "الخطط النشطة والزيارات القادمة واقتراحات تحسين المسارات.",
+      "kpis": {
+        "active": "خطط نشطة",
+        "paused": "متوقفة",
+        "upcoming": "زيارات قادمة"
+      },
+      "optimizeTitle": "تحسين المسارات",
+      "optimizeEmpty": "لا فرص تجميع اليوم.",
+      "customerView": "لوحة التكرار للعميل"
+    },
     "content": {
       "eyebrow": "المحتوى",
       "title": "إدارة المحتوى",
@@ -4642,6 +4918,45 @@
     "duration": "المدة",
     "minutes": "{count} دقيقة",
     "pickSlot": "الأوقات المتاحة",
+    "appointmentType": "نوع الموعد",
+    "types": {
+      "immediate": "فوري",
+      "today": "اليوم",
+      "scheduled": "مجدول",
+      "recurring": "متكرر",
+      "emergency": "طارئ",
+      "video": "استشارة مرئية"
+    },
+    "smart": {
+      "recommended": "أوقات مقترحة بالذكاء",
+      "best": "الأفضل",
+      "alt": "بديل",
+      "moreTimes": "مزيد من الأوقات",
+      "buffer": "يشمل هامش تنقل {minutes} د"
+    },
+    "reschedule": {
+      "open": "إعادة جدولة",
+      "close": "إخفاء إعادة الجدولة",
+      "hint": "اختر وقتاً جديداً متاحاً. سيتم إشعار الطرف الآخر.",
+      "loading": "جاري تحميل البدائل…",
+      "empty": "لا توجد أوقات بديلة الآن.",
+      "confirm": "تأكيد الوقت الجديد"
+    },
+    "optimize": {
+      "badge": "جدولة ذكية",
+      "title": "مراجعة مسار اليوم",
+      "empty": "لا محطات اليوم."
+    },
+    "reminders": {
+      "title24h": "موعد غداً",
+      "body24h": "تذكير: لديك موعد خلال حوالي 24 ساعة.",
+      "title2h": "موعد خلال ساعتين",
+      "body2h": "موعدك يبدأ قريباً — كن جاهزاً.",
+      "titleOnWay": "المزود في الطريق",
+      "bodyOnWay": "المزود متوجه إلى الموعد.",
+      "titleChanged": "تم تحديث الموعد",
+      "bodyChanged": "تم تغيير وقت الموعد. راجع الوقت الجديد."
+    },
     "loadingSlots": "جاري تحميل الأوقات…",
     "noSlots": "لا توجد أوقات متاحة خلال الأسبوعين القادمين.",
     "location": "الموقع / العنوان",
@@ -4717,6 +5032,8 @@
       "timezone": "المنطقة الزمنية",
       "durations": "مدد الفترات (دقائق، مفصولة بفواصل)",
       "buffer": "فاصل بين المواعيد (دقيقة)",
+      "travelBuffer": "هامش التنقل (دقيقة)",
+      "defaultType": "نوع الموعد الافتراضي",
       "notice": "حد أدنى للإشعار المسبق (ساعات)",
       "ahead": "أيام الحجز المسبقة",
       "accepting": "قبول حجوزات جديدة",
@@ -4726,6 +5043,13 @@
       "blockStart": "يبدأ",
       "blockEnd": "ينتهي",
       "blockReason": "السبب",
+      "blockKind": "نوع الحظر",
+      "kinds": {
+        "vacation": "إجازة",
+        "blocked": "محظور",
+        "holiday": "عطلة",
+        "manual": "يدوي"
+      },
       "blockSubmit": "حظر الفترة",
       "noProvider": "أنشئ ملف عملك أولاً."
     },

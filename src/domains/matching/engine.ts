@@ -356,6 +356,40 @@ export async function expandMatchPool(requestId: string): Promise<MatchRunResult
   const already = new Set((existing ?? []).map((r) => r.provider_id as string));
   const urgency = request.urgency === "emergency" ? "emergency" : "normal";
 
+  // Stop expanding outreach once emergency dispatch has enough accepts.
+  if (urgency === "emergency") {
+    try {
+      const { isEmergencyDispatchEnabled } = await import(
+        "@/lib/config/feature-flags"
+      );
+      if (isEmergencyDispatchEnabled()) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: ed } = await (admin as any)
+          .from("emergency_dispatches")
+          .select("stopped_at, accepted_count, target_accepts")
+          .eq("service_request_id", requestId)
+          .maybeSingle();
+        if (
+          ed?.stopped_at ||
+          (Number(ed?.accepted_count ?? 0) >=
+            Number(ed?.target_accepts ?? 1) &&
+            Number(ed?.accepted_count ?? 0) > 0)
+        ) {
+          return {
+            ok: true,
+            skipped: true,
+            reason: "emergency_dispatch_stopped",
+            assignedCount: already.size,
+            expandCount: Number(pool.expand_count ?? 0),
+            status: "filled",
+          };
+        }
+      }
+    } catch {
+      /* soft */
+    }
+  }
+
   const candidates = await findEligibleProviderCandidates({
     categoryId: request.category_id,
     cityId: request.city_id,

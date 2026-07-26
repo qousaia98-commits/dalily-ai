@@ -8,7 +8,9 @@ import {
   isAiEngineV4Enabled,
   isAiEngineV5Enabled,
   isAiEngineV6Enabled,
+  isEmergencyDispatchEnabled,
   isMatchingV2Enabled,
+  isMultiServiceProjectsEnabled,
 } from "@/lib/config/feature-flags";
 import type { PublishIntentInput } from "@/domains/customer/intent-types";
 import {
@@ -141,7 +143,50 @@ export async function publishIntentRequest(input: {
   });
 
   // Matching must not block publish; undersupply remains an honest waiting-room state.
-  if (isMatchingV2Enabled()) {
+  // Emergency mode: activate priority dispatch (runs matching + timeline) instead of plain match.
+  // Multi-service: create parent project + packages (matching runs per package).
+  let multiProjectCreated = false;
+  if (isMultiServiceProjectsEnabled() && input.data.urgency !== "emergency") {
+    try {
+      const { createMultiServiceProject } = await import("@/lib/projects");
+      const created = await createMultiServiceProject({
+        rootServiceRequestId: request.id,
+        customerId: input.customerId,
+        intentText,
+        primaryCategorySlug: category.slug as string,
+        cityId: input.data.cityId,
+        urgency: input.data.urgency,
+        locationText: input.data.locationText ?? null,
+        runMatching: true,
+      });
+      multiProjectCreated = Boolean(created);
+    } catch {
+      multiProjectCreated = false;
+    }
+  }
+
+  if (
+    isEmergencyDispatchEnabled() &&
+    input.data.urgency === "emergency"
+  ) {
+    try {
+      const { activateEmergencyDispatch } = await import(
+        "@/lib/ai/dispatch/emergency"
+      );
+      await activateEmergencyDispatch({
+        serviceRequestId: request.id,
+        customerId: input.customerId,
+      });
+    } catch {
+      if (isMatchingV2Enabled()) {
+        try {
+          await runMatchingForRequest(request.id);
+        } catch {
+          /* best-effort */
+        }
+      }
+    }
+  } else if (!multiProjectCreated && isMatchingV2Enabled()) {
     try {
       await runMatchingForRequest(request.id);
     } catch {

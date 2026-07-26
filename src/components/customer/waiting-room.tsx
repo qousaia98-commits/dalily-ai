@@ -20,6 +20,8 @@ import type {
 } from "@/lib/ai/predictive/types";
 import { AutomationSuggestionsList } from "@/components/automation/automation-widgets";
 import type { AutomationSuggestion } from "@/lib/ai/automation/types";
+import { WorkflowSwitchHint } from "@/components/customer/workflow-switch-hint";
+import { isDualMarketplaceEnabled } from "@/lib/config/feature-flags";
 
 export async function WaitingRoom({
   request,
@@ -104,6 +106,10 @@ export async function WaitingRoom({
       ) : null}
       {automationSuggestions.length > 0 ? (
         <AutomationSuggestionsList items={automationSuggestions} />
+      ) : null}
+
+      {(!hasOffers || insufficient) && isDualMarketplaceEnabled() ? (
+        <WorkflowSwitchHint from="publish" />
       ) : null}
 
       <CustomerUnlockStatus

@@ -19,6 +19,9 @@ import {
   ChevronDown,
   Brain,
   Bot,
+  Siren,
+  FolderKanban,
+  RefreshCw,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -156,6 +159,27 @@ function buildGroups(opts: {
       href: "/admin/ai-automation",
       icon: Bot,
       key: "aiAutomation",
+      adminOnly: true,
+    },
+    {
+      id: "emergency",
+      href: "/admin/emergency",
+      icon: Siren,
+      key: "emergency",
+      adminOnly: true,
+    },
+    {
+      id: "projects",
+      href: "/admin/projects",
+      icon: FolderKanban,
+      key: "projects",
+      adminOnly: true,
+    },
+    {
+      id: "recurring",
+      href: "/admin/recurring",
+      icon: RefreshCw,
+      key: "recurring",
       adminOnly: true,
     },
     {

@@ -5,6 +5,8 @@ import { SearchForm } from "@/components/search/search-form";
 import { SearchFiltersPanel } from "@/components/search/search-filters-panel";
 import { SearchResults } from "@/components/search/search-results";
 import { SearchResultsSkeleton } from "@/components/shared/skeletons";
+import { WorkflowSwitchHint } from "@/components/customer/workflow-switch-hint";
+import { isDualMarketplaceEnabled } from "@/lib/config/feature-flags";
 import {
   getCategoryGroups,
   getLeafCategories,
@@ -77,6 +79,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <div className="mb-8">
           <SearchForm defaultQuery={defaultQuery} size="compact" />
         </div>
+
+        {isDualMarketplaceEnabled() ? (
+          <div className="mb-6">
+            <WorkflowSwitchHint from="find" />
+          </div>
+        ) : null}
 
         <div className="flex flex-col gap-8 lg:flex-row">
           <div className="lg:w-64 lg:shrink-0">

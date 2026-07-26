@@ -30,6 +30,13 @@ export type ProviderOpportunity = {
   etaLabel: string | null;
   operationalScore: number | null;
   responseBand: string | null;
+  /** Sprint 4 dual marketplace enrichment */
+  categorySlug: string | null;
+  preferredDate: string | null;
+  budget: number | null;
+  imageCount: number;
+  aiSummary: string | null;
+  estimatedDurationLabel: string | null;
 };
 
 /**
@@ -61,11 +68,61 @@ export async function listProviderOpportunities(
   const admin = createAdminClient();
   const { data: requests } = await admin
     .from("service_requests")
-    .select("id, title, intent_text, description, urgency, city_id, lifecycle_version, selection_id")
+    .select(
+      "id, title, intent_text, description, urgency, city_id, lifecycle_version, selection_id, preferred_date, budget, category_id",
+    )
     .in("id", requestIds)
     .eq("lifecycle_version", 2);
 
   const rmap = new Map((requests ?? []).map((r) => [r.id as string, r]));
+
+  const categoryIds = [
+    ...new Set(
+      (requests ?? [])
+        .map((r) => r.category_id as string | null)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
+  const { data: cats } = categoryIds.length
+    ? await admin.from("categories").select("id, slug").in("id", categoryIds)
+    : { data: [] as Array<{ id: string; slug: string }> };
+  const catMap = new Map((cats ?? []).map((c) => [c.id, c.slug as string]));
+
+  let imageCounts = new Map<string, number>();
+  try {
+    const { data: imgs } = await admin
+      .from("service_request_images")
+      .select("request_id")
+      .in("request_id", requestIds);
+    for (const img of imgs ?? []) {
+      const rid = String(img.request_id);
+      imageCounts.set(rid, (imageCounts.get(rid) ?? 0) + 1);
+    }
+  } catch {
+    imageCounts = new Map();
+  }
+
+  // Soft AI summaries from job analyses when present
+  const summaryByRequest = new Map<string, string>();
+  try {
+    const { data: jobs } = await admin
+      .from("ai_job_analyses")
+      .select("service_request_id, analysis")
+      .in("service_request_id", requestIds)
+      .limit(50);
+    for (const j of jobs ?? []) {
+      const rid = String(j.service_request_id);
+      const analysis = j.analysis as {
+        summaryEn?: string;
+        summary_en?: string;
+        durationLabel?: string;
+      } | null;
+      const summary = analysis?.summaryEn ?? analysis?.summary_en;
+      if (summary) summaryByRequest.set(rid, String(summary));
+    }
+  } catch {
+    // optional
+  }
 
   const { data: offers } = await supabase
     .from("marketplace_offers")
@@ -84,9 +141,11 @@ export async function listProviderOpportunities(
     if (!req) continue;
     if (req.selection_id) continue; // closed for new offers from this provider's view
     const offer = offerByAssignment.get(a.id as string);
+    const rid = a.service_request_id as string;
+    const categoryId = (req.category_id as string | null) ?? null;
     result.push({
       assignmentId: a.id as string,
-      serviceRequestId: a.service_request_id as string,
+      serviceRequestId: rid,
       rankInPool: Number(a.rank_in_pool ?? 0),
       source: a.source as string,
       assignedAt: a.assigned_at as string,
@@ -108,6 +167,12 @@ export async function listProviderOpportunities(
       operationalScore:
         a.operational_score == null ? null : Number(a.operational_score),
       responseBand: (a.response_band as string | null) ?? null,
+      categorySlug: categoryId ? (catMap.get(categoryId) ?? null) : null,
+      preferredDate: (req.preferred_date as string | null) ?? null,
+      budget: req.budget == null ? null : Number(req.budget),
+      imageCount: imageCounts.get(rid) ?? 0,
+      aiSummary: summaryByRequest.get(rid) ?? null,
+      estimatedDurationLabel: a.eta_label ? String(a.eta_label) : null,
     });
   }
   return result;
