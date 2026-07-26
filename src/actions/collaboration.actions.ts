@@ -23,6 +23,7 @@ import {
   type CollaborationWorkspace,
   type CollabAiSummary,
 } from "@/lib/collaboration";
+import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
 
 export type CollabActionResult =
   | { ok: true }
@@ -244,6 +245,10 @@ export async function decideCollabApprovalAction(input: {
   const user = await requireAuthUser();
   const access = await assertProjectAccess(input.projectId, user.id);
   if (!access.ok) return { ok: false, error: access.error };
+  // Only the project customer (or platform admin via separate path) may decide.
+  if (access.role !== "customer") {
+    return { ok: false, error: "customer_only" };
+  }
 
   const result = await decideProjectApproval({
     ...input,
@@ -274,6 +279,12 @@ export async function generateCollabAiSummaryAction(input: {
   const user = await requireAuthUser();
   const access = await assertProjectAccess(input.projectId, user.id);
   if (!access.ok) return { ok: false, error: access.error };
+
+  const rate = checkRateLimit(rateLimitKey("collab_ai", user.id), {
+    max: 15,
+    windowMs: 60_000,
+  });
+  if (!rate.ok) return { ok: false, error: "rate_limited" };
 
   const result = await generateProjectAiSummary(input);
   if (!result.ok) return result;

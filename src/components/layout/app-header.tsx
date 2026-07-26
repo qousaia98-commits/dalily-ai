@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { DalilyLogo } from "@/components/brand/dalily-logo";
 import { Button } from "@/components/ui/button";
-import { NotificationCenterBell } from "@/components/notifications/notification-center-bell";
+import { NotificationCenterBellLazy } from "@/components/notifications/notification-center-bell-lazy";
 import { isSmartNotificationCenterEnabled } from "@/lib/config/feature-flags";
 
 type AppHeaderProps = {
@@ -86,7 +86,7 @@ export async function AppHeader({
           {authUser ? (
             <>
               {isSmartNotificationCenterEnabled() ? (
-                <NotificationCenterBell />
+                <NotificationCenterBellLazy />
               ) : null}
               {accountLabel ? (
                 <span className="hidden max-w-[16rem] items-center gap-2 truncate text-sm text-muted-foreground lg:inline-flex">

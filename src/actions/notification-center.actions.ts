@@ -23,6 +23,7 @@ import {
   type NotificationPreferences,
   type SmartNotification,
 } from "@/lib/notifications";
+import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
 
 export type NotifActionResult =
   | { ok: true }
@@ -200,6 +201,11 @@ export async function generateDigestAction(input: {
 > {
   if (!featureOn()) return { ok: false, error: "feature_disabled" };
   const user = await requireAuthUser();
+  const rate = checkRateLimit(rateLimitKey("notif_digest", user.id), {
+    max: 10,
+    windowMs: 60_000,
+  });
+  if (!rate.ok) return { ok: false, error: "rate_limited" };
   const result = await generateNotificationDigest({
     userId: user.id,
     kind: input.kind,
@@ -243,8 +249,16 @@ export async function listDigestsAction(): Promise<
 
 /** Dev/demo helper: seed a sample notification for the current user. */
 export async function seedDemoNotificationAction(): Promise<NotifActionResult> {
+  if (process.env.NODE_ENV === "production") {
+    return { ok: false, error: "not_available" };
+  }
   if (!featureOn()) return { ok: false, error: "feature_disabled" };
   const user = await requireAuthUser();
+  const rate = checkRateLimit(rateLimitKey("notif_seed", user.id), {
+    max: 5,
+    windowMs: 60_000,
+  });
+  if (!rate.ok) return { ok: false, error: "rate_limited" };
   const result = await createSmartNotification({
     userId: user.id,
     category: "marketplace",

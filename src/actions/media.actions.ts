@@ -25,6 +25,15 @@ import { getUserStorageUsage } from "@/lib/media/storage-usage";
 import { createSignedMediaUrl } from "@/lib/media/media-object-service";
 import type { ProjectGalleryCategory } from "@/lib/media/types";
 import { MEDIA_RESTORE_DAYS } from "@/lib/media/mime";
+import {
+  isAllowedMediaBucket,
+  isValidChatAttachmentPath,
+  pathBelongsToConversation,
+  pathBelongsToProject,
+} from "@/lib/media/path-guards";
+import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
+import { logger } from "@/lib/observability/logger";
+import { assertProjectAccess } from "@/lib/media/project-gallery";
 
 async function assertConversationParticipant(conversationId: string, userId: string) {
   const { assertChatParticipants } = await import("@/domains/chat/authz");
@@ -98,6 +107,31 @@ export async function finalizeChatMediaUploadAction(input: {
   if (!authUser) return { success: false as const, error: "login_required" };
   const gate = await assertConversationParticipant(input.conversationId, authUser.id);
   if (!gate.ok) return { success: false as const, error: gate.error };
+
+  const rate = checkRateLimit(rateLimitKey("media_upload", authUser.id), {
+    max: 40,
+    windowMs: 60_000,
+  });
+  if (!rate.ok) {
+    logger.warn("media", "upload_rate_limited", { userId: authUser.id });
+    return { success: false as const, error: "rate_limited" };
+  }
+
+  if (!isAllowedMediaBucket(input.bucket) || input.bucket !== "chat-attachments") {
+    return { success: false as const, error: "invalid_bucket" };
+  }
+  if (
+    !isValidChatAttachmentPath({
+      path: input.path,
+      userId: authUser.id,
+      conversationId: input.conversationId,
+    })
+  ) {
+    logger.warn("media", "finalize_path_rejected", {
+      conversationId: input.conversationId,
+    });
+    return { success: false as const, error: "invalid_path" };
+  }
 
   const kind = attachmentKindForMime(input.mimeType);
   const messageType =
@@ -261,11 +295,19 @@ export async function getSignedAttachmentUrlAction(input: {
   if (!authUser) return { success: false as const, url: null };
   const gate = await assertConversationParticipant(input.conversationId, authUser.id);
   if (!gate.ok) return { success: false as const, url: null };
-  const url = await createSignedAttachmentUrl(
-    input.path,
-    3600,
-    input.bucket ?? "chat-attachments",
-  );
+
+  const bucket = input.bucket ?? "chat-attachments";
+  if (!isAllowedMediaBucket(bucket)) {
+    return { success: false as const, url: null };
+  }
+  if (!pathBelongsToConversation(input.path, input.conversationId)) {
+    logger.warn("media", "signed_url_path_mismatch", {
+      conversationId: input.conversationId,
+    });
+    return { success: false as const, url: null };
+  }
+
+  const url = await createSignedAttachmentUrl(input.path, 3600, bucket);
   return { success: Boolean(url), url };
 }
 
@@ -323,9 +365,28 @@ export async function copyMediaLinkAction(input: {
 }) {
   const authUser = await getAuthUser();
   if (!authUser) return { success: false as const, url: null };
+  if (!isAllowedMediaBucket(input.bucket)) {
+    return { success: false as const, url: null };
+  }
+  if (!input.conversationId && !input.projectId) {
+    return { success: false as const, url: null };
+  }
   if (input.conversationId) {
-    const gate = await assertConversationParticipant(input.conversationId, authUser.id);
+    const gate = await assertConversationParticipant(
+      input.conversationId,
+      authUser.id,
+    );
     if (!gate.ok) return { success: false as const, url: null };
+    if (!pathBelongsToConversation(input.path, input.conversationId)) {
+      return { success: false as const, url: null };
+    }
+  }
+  if (input.projectId) {
+    const gate = await assertProjectAccess(input.projectId, authUser.id);
+    if (!gate.ok) return { success: false as const, url: null };
+    if (!pathBelongsToProject(input.path, input.projectId)) {
+      return { success: false as const, url: null };
+    }
   }
   const url = await createSignedMediaUrl(input.bucket, input.path, 3600);
   return { success: Boolean(url), url };

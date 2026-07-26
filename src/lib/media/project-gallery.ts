@@ -80,35 +80,40 @@ export async function listProjectGallery(input: {
   const { data, error } = await query;
   if (error || !data) return [];
 
-  const items: ProjectGalleryItem[] = [];
-  for (const row of data as Array<Record<string, unknown>>) {
-    const bucket = String(row.bucket ?? PROJECT_MEDIA_BUCKET);
-    const path = String(row.storage_path ?? "");
-    const signedUrl = path ? await createSignedMediaUrl(bucket, path) : null;
-    const thumb =
-      row.thumbnail_path != null
-        ? await createSignedMediaUrl(bucket, String(row.thumbnail_path))
-        : null;
-    items.push({
-      id: String(row.id),
-      projectId: String(row.project_id),
-      packageId: (row.package_id as string | null) ?? null,
-      kind: String(row.kind ?? "other"),
-      galleryCategory: (row.gallery_category as ProjectGalleryCategory) ?? "other",
-      fileName: (row.file_name as string | null) ?? null,
-      displayName: (row.display_name as string | null) ?? null,
-      mimeType: (row.mime_type as string | null) ?? null,
-      sizeBytes: Number(row.size_bytes ?? 0),
-      width: (row.width as number | null) ?? null,
-      height: (row.height as number | null) ?? null,
-      durationMs: (row.duration_ms as number | null) ?? null,
-      isPinned: Boolean(row.is_pinned),
-      processingStatus: (row.processing_status as ProjectGalleryItem["processingStatus"]) ?? "ready",
-      signedUrl,
-      thumbnailUrl: thumb,
-      createdAt: String(row.created_at),
-    });
-  }
+  const items = await Promise.all(
+    (data as Array<Record<string, unknown>>).map(async (row) => {
+      const bucket = String(row.bucket ?? PROJECT_MEDIA_BUCKET);
+      const path = String(row.storage_path ?? "");
+      const [signedUrl, thumb] = await Promise.all([
+        path ? createSignedMediaUrl(bucket, path) : Promise.resolve(null),
+        row.thumbnail_path != null
+          ? createSignedMediaUrl(bucket, String(row.thumbnail_path))
+          : Promise.resolve(null),
+      ]);
+      return {
+        id: String(row.id),
+        projectId: String(row.project_id),
+        packageId: (row.package_id as string | null) ?? null,
+        kind: String(row.kind ?? "other"),
+        galleryCategory:
+          (row.gallery_category as ProjectGalleryCategory) ?? "other",
+        fileName: (row.file_name as string | null) ?? null,
+        displayName: (row.display_name as string | null) ?? null,
+        mimeType: (row.mime_type as string | null) ?? null,
+        sizeBytes: Number(row.size_bytes ?? 0),
+        width: (row.width as number | null) ?? null,
+        height: (row.height as number | null) ?? null,
+        durationMs: (row.duration_ms as number | null) ?? null,
+        isPinned: Boolean(row.is_pinned),
+        processingStatus:
+          (row.processing_status as ProjectGalleryItem["processingStatus"]) ??
+          "ready",
+        signedUrl,
+        thumbnailUrl: thumb,
+        createdAt: String(row.created_at),
+      } satisfies ProjectGalleryItem;
+    }),
+  );
 
   if (isFileMediaSharingEnabled() && items.length) {
     void emitAiLearningEvent({

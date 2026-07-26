@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
+import dynamic from "next/dynamic";
 import { Link } from "@/lib/i18n/routing";
 import { Button } from "@/components/ui/button";
 import type { ProjectDashboard } from "@/lib/projects";
@@ -11,9 +12,23 @@ import {
 } from "@/actions/project.actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { ProjectMediaGallery } from "@/components/projects/project-media-gallery";
-import { CollaborationWorkspacePanel } from "@/components/projects/collaboration-workspace-panel";
 import { isCollaborationWorkspaceEnabled } from "@/lib/config/feature-flags";
+
+const ProjectMediaGallery = dynamic(
+  () =>
+    import("@/components/projects/project-media-gallery").then(
+      (m) => m.ProjectMediaGallery,
+    ),
+  { ssr: false },
+);
+
+const CollaborationWorkspacePanel = dynamic(
+  () =>
+    import("@/components/projects/collaboration-workspace-panel").then(
+      (m) => m.CollaborationWorkspacePanel,
+    ),
+  { ssr: false },
+);
 
 type Props = {
   project: ProjectDashboard;

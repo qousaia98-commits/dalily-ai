@@ -98,8 +98,10 @@ export function NotificationCenterBell() {
         type="button"
         variant="ghost"
         size="icon"
-        className="relative"
+        className="relative min-h-11 min-w-11"
         aria-label={t("bellAria")}
+        aria-expanded={open}
+        aria-haspopup="dialog"
         onClick={() => setOpen((v) => !v)}
       >
         <Bell className="size-5" />
@@ -112,6 +114,8 @@ export function NotificationCenterBell() {
 
       {open ? (
         <div
+          role="dialog"
+          aria-label={t("title")}
           className={cn(
             "absolute end-0 top-full z-50 mt-2 w-[min(100vw-1.5rem,22rem)] overflow-hidden rounded-2xl border border-border bg-card shadow-lg sm:w-[24rem]",
           )}

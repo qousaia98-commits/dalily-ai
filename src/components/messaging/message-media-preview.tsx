@@ -35,7 +35,7 @@ export function MessageMediaPreview({ attachments, conversationId, mine }: Props
 
   return (
     <div className="mt-2 space-y-2">
-      {attachments.map((att, idx) => {
+      {attachments.map((att) => {
         const url = att.signedUrl;
         const isImage = att.kind === "image" || att.mimeType.startsWith("image/");
         const isVideo = att.kind === "video" || att.mimeType.startsWith("video/");

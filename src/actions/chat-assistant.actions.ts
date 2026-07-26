@@ -24,6 +24,8 @@ import type {
   ChatSummaryStyle,
   ChatSummaryWindow,
 } from "@/lib/ai/chat/types";
+import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
+import { logger } from "@/lib/observability/logger";
 
 async function assertParticipant(conversationId: string, userId: string) {
   const { assertChatParticipants } = await import("@/domains/chat/authz");
@@ -111,6 +113,15 @@ export async function generateChatSummaryAction(input: {
   const gate = await assertParticipant(input.conversationId, authUser.id);
   if (!gate.ok) return { success: false as const, error: gate.error };
 
+  const rate = checkRateLimit(rateLimitKey("chat_ai_summary", authUser.id), {
+    max: 20,
+    windowMs: 60_000,
+  });
+  if (!rate.ok) {
+    logger.warn("chat_ai", "summary_rate_limited", { userId: authUser.id });
+    return { success: false as const, error: "rate_limited" };
+  }
+
   const lines = await loadConversationLines(input.conversationId);
   const summary = await generateChatSummary({
     conversationId: input.conversationId,
@@ -148,6 +159,14 @@ export async function suggestChatRepliesAction(conversationId: string) {
   }
   const gate = await assertParticipant(conversationId, authUser.id);
   if (!gate.ok) return { success: false as const, suggestions: [] };
+
+  const rate = checkRateLimit(rateLimitKey("chat_ai_suggest", authUser.id), {
+    max: 30,
+    windowMs: 60_000,
+  });
+  if (!rate.ok) {
+    return { success: false as const, suggestions: [], error: "rate_limited" };
+  }
 
   const viewer = viewerRole(authUser.id, gate.customerId, gate.providerOwnerId);
   const lines = await loadConversationLines(conversationId);

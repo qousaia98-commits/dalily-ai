@@ -22,6 +22,8 @@ import {
   prepareChatMediaUploadAction,
 } from "@/actions/media.actions";
 import type { ChatAiLanguage } from "@/lib/ai/chat/types";
+import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
+import { logger } from "@/lib/observability/logger";
 
 async function assertParticipant(conversationId: string, userId: string) {
   const { assertChatParticipants } = await import("@/domains/chat/authz");
@@ -69,6 +71,15 @@ export async function sendChatVoiceMessageAction(formData: FormData) {
 
   const gate = await assertParticipant(conversationId, authUser.id);
   if (!gate.ok) return { success: false as const, error: gate.error };
+
+  const rate = checkRateLimit(rateLimitKey("chat_voice", authUser.id), {
+    max: 15,
+    windowMs: 60_000,
+  });
+  if (!rate.ok) {
+    logger.warn("chat_voice", "rate_limited", { userId: authUser.id });
+    return { success: false as const, error: "rate_limited" };
+  }
 
   const mimeType = file.type || "audio/webm";
   const slot = await prepareChatMediaUploadAction({
@@ -180,7 +191,10 @@ export async function getChatVoiceTranscriptAction(messageId: string) {
   const authUser = await getAuthUser();
   if (!authUser) return { success: false as const, transcript: null };
   const transcript = await getTranscriptForMessage(messageId);
-  return { success: Boolean(transcript), transcript };
+  if (!transcript) return { success: false as const, transcript: null };
+  const gate = await assertParticipant(transcript.conversationId, authUser.id);
+  if (!gate.ok) return { success: false as const, transcript: null };
+  return { success: true as const, transcript };
 }
 
 export async function deleteChatVoiceTranscriptAction(input: {
