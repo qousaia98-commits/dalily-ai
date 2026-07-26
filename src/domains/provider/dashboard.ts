@@ -41,6 +41,25 @@ export type ProviderDashboardReliability = {
   timedOutCount: number;
 };
 
+/** Today-focused counts for the clean business home (progressive disclosure). */
+export type ProviderDashboardTodaySummary = {
+  opportunitiesOpen: number;
+  waitingConfirmation: number;
+  unlockPending: number;
+  activeJobs: number;
+  pendingQa: number;
+  unreadMessages: number;
+  ratingAvg: number | null;
+};
+
+export type ProviderDashboardJobSections = {
+  newOpportunities: number;
+  waitingConfirmation: number;
+  unlockPending: number;
+  activeJobs: number;
+  pendingQa: number;
+};
+
 export type ProviderDashboardHome = {
   unlockPriority: UnlockSessionView[];
   opportunities: ProviderOpportunity[];
@@ -48,6 +67,13 @@ export type ProviderDashboardHome = {
   activeJobs: ProviderDashboardActiveJob[];
   pauseState: ProviderRequestSettings;
   reliability: ProviderDashboardReliability;
+  today: ProviderDashboardTodaySummary;
+  jobSections: ProviderDashboardJobSections;
+};
+
+export type GetProviderDashboardHomeOptions = {
+  unreadMessages?: number;
+  ratingAvg?: number | null;
 };
 
 /**
@@ -56,9 +82,10 @@ export type ProviderDashboardHome = {
  */
 export async function getProviderDashboardHome(
   providerId: string,
+  options: GetProviderDashboardHomeOptions = {},
 ): Promise<ProviderDashboardHome> {
   if (!isProviderDashboardV2Enabled()) {
-    return emptyHome(providerId);
+    return emptyHome(providerId, options);
   }
 
   const [unlockSessions, opportunities, pauseState, reliability, pendingQa, activeJobs] =
@@ -82,6 +109,35 @@ export async function getProviderDashboardHome(
     return new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime();
   });
 
+  const opportunitiesOpen = openFirst.filter((o) => !o.hasOffer).length;
+  const waitingConfirmation = openFirst.filter((o) => o.hasOffer).length;
+  const unlockPending = unlockPriority.length;
+  const activeJobCount = activeJobs.length;
+  const pendingQaCount = pendingQa.length;
+  const unreadMessages = Math.max(0, options.unreadMessages ?? 0);
+  const ratingAvg =
+    typeof options.ratingAvg === "number" && options.ratingAvg > 0
+      ? options.ratingAvg
+      : null;
+
+  const today: ProviderDashboardTodaySummary = {
+    opportunitiesOpen,
+    waitingConfirmation,
+    unlockPending,
+    activeJobs: activeJobCount,
+    pendingQa: pendingQaCount,
+    unreadMessages,
+    ratingAvg,
+  };
+
+  const jobSections: ProviderDashboardJobSections = {
+    newOpportunities: opportunitiesOpen,
+    waitingConfirmation,
+    unlockPending,
+    activeJobs: activeJobCount,
+    pendingQa: pendingQaCount,
+  };
+
   return {
     unlockPriority,
     opportunities: openFirst,
@@ -89,10 +145,27 @@ export async function getProviderDashboardHome(
     activeJobs,
     pauseState,
     reliability,
+    today,
+    jobSections,
   };
 }
 
-function emptyHome(providerId: string): ProviderDashboardHome {
+function emptyHome(
+  providerId: string,
+  options: GetProviderDashboardHomeOptions = {},
+): ProviderDashboardHome {
+  const today: ProviderDashboardTodaySummary = {
+    opportunitiesOpen: 0,
+    waitingConfirmation: 0,
+    unlockPending: 0,
+    activeJobs: 0,
+    pendingQa: 0,
+    unreadMessages: Math.max(0, options.unreadMessages ?? 0),
+    ratingAvg:
+      typeof options.ratingAvg === "number" && options.ratingAvg > 0
+        ? options.ratingAvg
+        : null,
+  };
   return {
     unlockPriority: [],
     opportunities: [],
@@ -108,6 +181,14 @@ function emptyHome(providerId: string): ProviderDashboardHome {
       handles_emergency: true,
     },
     reliability: { declinedCount: 0, timedOutCount: 0 },
+    today,
+    jobSections: {
+      newOpportunities: 0,
+      waitingConfirmation: 0,
+      unlockPending: 0,
+      activeJobs: 0,
+      pendingQa: 0,
+    },
   };
 }
 

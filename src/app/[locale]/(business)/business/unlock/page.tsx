@@ -6,6 +6,7 @@ import { isUnlockDevBypassEnabled, isUnlockV2Enabled } from "@/lib/config/featur
 import { listProviderUnlockSessions } from "@/domains/unlock/session";
 import { Link } from "@/lib/i18n/routing";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
+import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 
 export default async function BusinessUnlockListPage() {
   if (!isUnlockV2Enabled()) redirect("/business/opportunities");
@@ -17,6 +18,7 @@ export default async function BusinessUnlockListPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6 animate-fade-in">
+      <MarkNavChannelSeen channel="unlock" />
       {provider ? (
         <MarketplaceRealtimeBridge userId={authUser.id} providerId={provider.id} />
       ) : null}

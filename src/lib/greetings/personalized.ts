@@ -50,28 +50,66 @@ const CUSTOMER_EN: Array<(n: string) => Line> = [
 ];
 
 const PROVIDER_AR: Array<(n: string) => Line> = [
-  (n) => ({ title: `مرحباً ${n}`, subtitle: "لديك اليوم فرص عمل جديدة." }),
-  (n) => ({ title: `أهلاً بعودتك يا ${n}`, subtitle: "راجع الفرص والعروض من مكان واحد." }),
-  (n) => ({ title: `أهلاً ${n}`, subtitle: "لنراجع طلباتك النشطة معاً." }),
-  (n) => ({ title: `مرحباً ${n} 👋`, subtitle: "سوق دليلي جاهز — ابدأ من الفرص." }),
+  (n) => ({ title: `مرحباً ${n} 👋`, subtitle: "نتمنى لك يوماً موفقاً في عملك." }),
+  (n) => ({ title: `أهلاً بعودتك يا ${n}`, subtitle: "إليك نظرة سريعة على يومك." }),
+  (n) => ({ title: `مرحباً ${n}`, subtitle: "فرص جديدة بانتظارك — ابدأ من نظرة اليوم." }),
+  (n) => ({ title: `أهلاً ${n}`, subtitle: "دليلي جاهز ليساعدك في إدارة أعمالك اليوم." }),
+  (n) => ({ title: `يوم سعيد يا ${n}`, subtitle: "راجع الفرص والطلبات من مكان واحد." }),
+  (n) => ({ title: `مرحباً بك ${n}`, subtitle: "لنبدأ بترتيب أولويات عملك لهذا اليوم." }),
 ];
 
 const PROVIDER_EN: Array<(n: string) => Line> = [
-  (n) => ({ title: `Hi ${n}`, subtitle: "You have new job opportunities today." }),
-  (n) => ({ title: `Welcome back, ${n}`, subtitle: "Review opportunities and offers in one place." }),
-  (n) => ({ title: `Hello ${n}`, subtitle: "Let’s check your active jobs together." }),
+  (n) => ({ title: `Hi ${n} 👋`, subtitle: "Wishing you a productive day with your business." }),
+  (n) => ({ title: `Welcome back, ${n}`, subtitle: "Here’s a quick look at your day." }),
+  (n) => ({ title: `Hello ${n}`, subtitle: "New opportunities are waiting — start with today’s overview." }),
+  (n) => ({ title: `Good to see you, ${n}`, subtitle: "Dalily is ready to help you run today’s work." }),
+  (n) => ({ title: `Hi ${n}`, subtitle: "Review jobs and messages from one calm home." }),
 ];
 
 const ADMIN_AR: Array<(n: string) => Line> = [
-  (n) => ({ title: `مرحباً ${n}`, subtitle: "كل الأنظمة تعمل بشكل طبيعي." }),
-  (n) => ({ title: `أهلاً ${n}`, subtitle: "لديك اليوم بلاغات جديدة." }),
-  (n) => ({ title: `مرحباً ${n} 👋`, subtitle: "مركز التحكم جاهز للمراجعة." }),
+  (n) => ({
+    title: `مرحباً ${n} 👋`,
+    subtitle: "نتمنى لك يوماً موفقاً في إدارة المنصة.",
+  }),
+  (n) => ({
+    title: `أهلاً بعودتك يا ${n}`,
+    subtitle: "إليك أهم ما يحتاج انتباهك اليوم.",
+  }),
+  (n) => ({
+    title: `مرحباً ${n}`,
+    subtitle: "مركز العمليات جاهز — ابدأ بأولويات اليوم.",
+  }),
+  (n) => ({
+    title: `أهلاً ${n}`,
+    subtitle: "يوم هادئ ومنظم يبدأ بنظرة سريعة.",
+  }),
+  (n) => ({
+    title: `مرحباً ${n}`,
+    subtitle: "راجع المهام العاجلة ثم أكمل الباقي براحة.",
+  }),
 ];
 
 const ADMIN_EN: Array<(n: string) => Line> = [
-  (n) => ({ title: `Hi ${n}`, subtitle: "All systems look healthy." }),
-  (n) => ({ title: `Welcome, ${n}`, subtitle: "You have new items that need attention." }),
-  (n) => ({ title: `Hello ${n}`, subtitle: "Control Center is ready for review." }),
+  (n) => ({
+    title: `Hi ${n} 👋`,
+    subtitle: "Wishing you a focused day running the platform.",
+  }),
+  (n) => ({
+    title: `Welcome back, ${n}`,
+    subtitle: "Here’s what needs your attention today.",
+  }),
+  (n) => ({
+    title: `Hello ${n}`,
+    subtitle: "Operations Center is ready — start with today’s priorities.",
+  }),
+  (n) => ({
+    title: `Good to see you, ${n}`,
+    subtitle: "A calm overview first, then the queues that matter.",
+  }),
+  (n) => ({
+    title: `Hi ${n}`,
+    subtitle: "Review urgent items, then handle the rest with ease.",
+  }),
 ];
 
 function pool(role: GreetingRole, locale: Locale): Array<(n: string) => Line> {

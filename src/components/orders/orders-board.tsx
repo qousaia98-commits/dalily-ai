@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
@@ -19,7 +19,7 @@ import {
 } from "@/lib/orders/tabs";
 import { resolveOrderDisplayStatus } from "@/lib/orders/display-status";
 import { useMarketplaceRealtime } from "@/hooks/use-marketplace-realtime";
-import { markOrdersSeenAction } from "@/actions/orders.actions";
+import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 
 type CustomerProps = {
   mode: "customer";
@@ -45,10 +45,9 @@ export function OrdersBoard(props: Props) {
   const t = useTranslations("orders");
   const locale = useLocale();
   const [query, setQuery] = useState("");
-  const [, startTransition] = useTransition();
 
   const [customerTab, setCustomerTab] = useState<CustomerOrderTab>("pending");
-  const [providerTab, setProviderTab] = useState<ProviderOrderTab>("new");
+  const [providerTab, setProviderTab] = useState<ProviderOrderTab>("waiting");
 
   useMarketplaceRealtime({
     userId: props.userId,
@@ -56,12 +55,6 @@ export function OrdersBoard(props: Props) {
     inboxAsCustomer: props.mode === "customer",
     inboxAsProviderId: props.mode === "provider" ? props.providerId : null,
   });
-
-  useEffect(() => {
-    startTransition(() => {
-      void markOrdersSeenAction();
-    });
-  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -103,6 +96,7 @@ export function OrdersBoard(props: Props) {
 
   return (
     <div className="space-y-5">
+      <MarkNavChannelSeen channel="orders" />
       <div className="relative">
         <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input

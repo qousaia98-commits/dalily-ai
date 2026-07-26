@@ -19,6 +19,71 @@
       "selectRequired": "Please make a selection"
     }
   },
+  "paymentReceiptUpload": {
+    "title": "Attach a transfer receipt",
+    "subtitle": "We cannot review your payment before the receipt is uploaded.",
+    "formats": "PNG, JPG, JPEG, PDF",
+    "maxSize": "Max {size}",
+    "dropHint": "Drag a file here or click to choose",
+    "fromGallery": "Gallery",
+    "fromCamera": "Camera",
+    "change": "Change image",
+    "remove": "Remove image",
+    "previewAlt": "Transfer receipt preview",
+    "pdfSelected": "PDF ready to upload",
+    "imageLabel": "Image",
+    "selectedSuccess": "Image selected successfully",
+    "errors": {
+      "file_required": "Please choose a receipt file.",
+      "file_too_large": "File must be 10 MB or smaller.",
+      "invalid_file_type": "Allowed formats: PNG, JPG, JPEG, and PDF only.",
+      "upload_failed": "Receipt upload failed. Please try again.",
+      "save_failed": "Could not save the receipt. Please try again.",
+      "prepare_failed": "Could not start the upload. Please try again.",
+      "duplicate_receipt": "A receipt was already uploaded for this payment.",
+      "payment_not_submittable": "This payment can no longer accept a receipt.",
+      "invalid_payment": "Invalid payment.",
+      "use_direct_upload": "Please upload the receipt using the upload button.",
+      "receipt_failed": "Receipt upload failed. Please try again.",
+      "generic": "Could not complete the upload. Please try again."
+    }
+  },
+  "paymentExperience": {
+    "brand": "Dalily Pay",
+    "stepLabel": "Step {n}",
+    "unlockTitle": "Pay contact unlock fee",
+    "subscriptionTitle": "Complete payment",
+    "steps": {
+      "review": "Review payment details",
+      "upload": "Attach your transfer receipt",
+      "verify": "We’ll review payment, then open contact",
+      "verifySubscription": "We’ll review payment, then activate your plan"
+    },
+    "transferCta": "Transfer done — continue to upload",
+    "transferHint": "Transfer the amount using the details above, then upload your receipt photo.",
+    "submit": "Submit for review",
+    "uploading": "Submitting…",
+    "cancel": "Cancel",
+    "back": "Back",
+    "errorTitle": "Something went wrong while uploading the receipt.",
+    "errorFallback": "Please try again.",
+    "successTitle": "Receipt submitted successfully.",
+    "successBody": "Your payment will be reviewed shortly.",
+    "successNotify": "We’ll notify you as soon as payment is approved.",
+    "progress": "Upload progress",
+    "startPayment": "Start payment",
+    "details": {
+      "ariaLabel": "Payment details",
+      "amount": "Amount",
+      "reference": "Reference",
+      "receiver": "Recipient name",
+      "account": "Account",
+      "copy": "Copy",
+      "copyAmount": "Copy amount",
+      "copied": "Copied",
+      "referenceHint": "Add this number in the transfer note."
+    }
+  },
   "nav": {
     "search": "Search",
     "forBusiness": "For Business",
@@ -51,9 +116,11 @@
       "orders": "My Jobs",
       "messages": "Messages",
       "growth": "Growth",
-      "account": "Account",
-      "opportunities": "Offers",
-      "unlock": "Unlock"
+      "account": "My Account",
+      "newJobs": "New Requests",
+      "opportunities": "New Requests",
+      "unlock": "Unlock",
+      "payments": "Payments"
     },
     "admin": {
       "controlCenter": "Home",
@@ -61,7 +128,8 @@
       "payments": "Payments",
       "messages": "Messages",
       "marketplace": "Market",
-      "admin": "Admin"
+      "admin": "Admin",
+      "issues": "Reports"
     }
   },
   "orders": {
@@ -70,7 +138,7 @@
     "customerSubtitle": "Track every request from pending to completed — live.",
     "providerEyebrow": "My jobs",
     "providerTitle": "My Jobs",
-    "providerSubtitle": "New requests, offers, and active jobs in one place.",
+    "providerSubtitle": "Track your jobs by status — from waiting for confirmation to completed.",
     "searchPlaceholder": "Search by title or name…",
     "listLabel": "Orders by status",
     "emptyTitle": "Nothing in this tab",
@@ -84,11 +152,10 @@
       "cancelled": "Cancelled"
     },
     "providerTabs": {
-      "new": "New Requests",
-      "offers": "Submitted Offers",
-      "accepted": "Accepted Jobs",
-      "active": "Active Jobs",
-      "completed": "Completed Jobs"
+      "waiting": "Awaiting confirmation",
+      "active": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
     },
     "status": {
       "pending": "Pending",
@@ -162,19 +229,40 @@
       "comingSoon": "Chat is coming soon — you’ll get a badge when something needs attention."
     },
     "businessAccount": {
-      "title": "Account",
+      "title": "My Account",
+      "subtitle": "Manage your business profile and settings in one place.",
       "signedInAs": "Signed in as {name}",
       "language": "Language",
       "theme": "Appearance",
       "notifications": "Notifications",
-      "notificationsHint": "Managed in Growth",
+      "notificationsHint": "Badges update automatically",
+      "sections": {
+        "business": "Business settings",
+        "more": "More"
+      },
       "links": {
-        "profile": "Personal profile",
-        "profileDesc": "Your business contact details",
+        "profile": "Business profile",
+        "profileDesc": "Name, contact, and business details",
+        "services": "Services",
+        "servicesDesc": "What you offer customers",
+        "availability": "Availability",
+        "availabilityDesc": "When you can take new jobs",
+        "verification": "Verification",
+        "verificationDesc": "Build trust with a verified badge",
+        "settings": "Settings",
+        "settingsDesc": "Inbox and vacation mode",
+        "media": "Media",
+        "mediaDesc": "Photos and portfolio",
+        "calendar": "Calendar",
+        "calendarDesc": "Schedule and working days",
+        "bookings": "Bookings",
+        "bookingsDesc": "Appointments with customers",
+        "analytics": "Analytics",
+        "analyticsDesc": "Performance and growth",
         "subscription": "Subscription",
         "subscriptionDesc": "Plan and upgrade options",
         "payments": "Payments",
-        "paymentsDesc": "Payment status and history"
+        "paymentsDesc": "Unlocks, payments, and history"
       }
     },
     "growth": {
@@ -363,7 +451,47 @@
       "s1": "Leaking kitchen pipe",
       "s2": "AC not cooling",
       "s3": "Locked out of apartment",
-      "s4": "Need an electrician today"
+      "s4": "Need an electrician today",
+      "contextual": {
+        "general": {
+          "g1": "Need a technician today",
+          "g2": "Home repair issue",
+          "g3": "Home maintenance",
+          "g4": "Urgent repair"
+        },
+        "electrical": {
+          "e1": "Power outage",
+          "e2": "Install chandelier",
+          "e3": "Fix light switch",
+          "e4": "Replace outlet",
+          "e5": "Fix lighting"
+        },
+        "plumbing": {
+          "p1": "Water leak",
+          "p2": "Clogged sink",
+          "p3": "Fix faucet",
+          "p4": "Fix water heater",
+          "p5": "Unblock drain"
+        },
+        "painting": {
+          "a1": "Paint a room",
+          "a2": "Refresh walls",
+          "a3": "Fix wall cracks",
+          "a4": "Paint exterior"
+        },
+        "carpentry": {
+          "c1": "Fix door",
+          "c2": "Fix window",
+          "c3": "Install shelves",
+          "c4": "Fix wardrobe"
+        },
+        "hvac": {
+          "h1": "AC not cooling",
+          "h2": "Clean the AC",
+          "h3": "Refill refrigerant",
+          "h4": "Fix outdoor unit"
+        }
+      }
     },
     "clarify": {
       "electrical": {
@@ -500,10 +628,10 @@
       "selectedPendingUnlock": "Offer selected. Unlock and contact release come in the next step — nothing is shared yet."
     },
     "provider": {
-      "eyebrow": "Matching",
-      "listTitle": "Opportunities",
-      "listSubtitle": "Requests matched to your business. Send an offer without accepting into chat.",
-      "empty": "No open opportunities yet.",
+      "eyebrow": "New requests",
+      "listTitle": "New Requests",
+      "listSubtitle": "Jobs matched to your business. Send an offer directly — no accept step opens chat yet.",
+      "empty": "No new requests right now. Matching jobs will appear here.",
       "noProvider": "Create your business profile first.",
       "statusOffered": "Offer sent",
       "statusOpen": "Awaiting your offer",
@@ -652,6 +780,10 @@
       "not_unlock_fee": "Not an unlock fee payment.",
       "session_required": "Unlock session required.",
       "receipt_failed": "Receipt upload failed.",
+      "prepare_failed": "Could not start the upload. Please try again.",
+      "upload_failed": "Receipt upload failed. Please try again.",
+      "save_failed": "Could not save the receipt. Please try again.",
+      "duplicate_receipt": "A receipt was already uploaded for this payment.",
       "selection_not_found": "Selection not found.",
       "selection_not_pending": "Selection is not pending unlock.",
       "provider_required": "Provider required.",
@@ -1652,6 +1784,11 @@
       "title": "Business panel",
       "menu": "Menu",
       "dashboard": "Home",
+      "newJobs": "New Requests",
+      "orders": "My Jobs",
+      "messages": "Messages",
+      "payments": "Payments",
+      "account": "My Account",
       "profile": "Profile",
       "services": "Services",
       "gallery": "Gallery",
@@ -1660,10 +1797,8 @@
       "verification": "Verification",
       "upgrade": "⭐ Upgrade",
       "plan": "Plan tools",
-      "messages": "Messages",
       "requests": "Requests",
-      "orders": "My Jobs",
-      "opportunities": "Opportunities",
+      "opportunities": "New Requests",
       "unlock": "Unlock",
       "settings": "Settings",
       "bookings": "Bookings",
@@ -1742,6 +1877,21 @@
       },
       "handlesEmergency": "Handle emergency requests",
       "handlesEmergencyHint": "When off, emergency matches skip your business. Be honest — unlock trust depends on it."
+    },
+    "paymentsHub": {
+      "title": "Payments",
+      "subtitle": "Unlocks, subscriptions, and payment history in one place.",
+      "priorityTitle": "Unlocks waiting for you",
+      "priorityBody": "You have {count} unlock session(s) to complete.",
+      "priorityCta": "View unlock sessions",
+      "links": {
+        "unlock": "Contact unlock",
+        "unlockDesc": "Complete payment to release customer contact",
+        "subscription": "Subscription & plan",
+        "subscriptionDesc": "Manage your plan and upgrades",
+        "history": "Payment history",
+        "historyDesc": "Payment status and receipts"
+      }
     },
     "dashboard": {
       "title": "Dashboard",
@@ -3185,11 +3335,11 @@
   },
   "admin": {
     "nav": {
-      "title": "Control Center",
+      "title": "Operations",
       "menu": "Admin menu",
-      "dashboard": "Dashboard",
+      "dashboard": "Home",
       "providers": "Providers",
-      "businesses": "Businesses",
+      "businesses": "Providers",
       "verification": "Verification",
       "searches": "Search analytics",
       "users": "Users",
@@ -3201,16 +3351,23 @@
       "learning": "Learning AI",
       "ranking": "Ranking",
       "customers": "Customers",
-      "issues": "Issues",
+      "issues": "Reports",
       "reviewModeration": "Review moderation",
       "analytics": "Analytics",
       "content": "Content",
       "broadcasts": "Broadcasts",
-      "health": "System health",
-      "audit": "Audit log",
-      "unlockOps": "Unlock ops",
+      "health": "System status",
+      "audit": "Activity log",
+      "unlockOps": "Unlock requests",
       "cells": "Cells",
-      "inspect": "Inspect"
+      "inspect": "Inspect",
+      "settings": "Settings",
+      "groups": {
+        "people": "People",
+        "operations": "Operations",
+        "system": "System",
+        "more": "More"
+      }
     },
     "learning": {
       "eyebrow": "Internal · Learning AI",
@@ -3633,16 +3790,82 @@
     },
     "controlCenter": {
       "hero": {
-        "eyebrow": "Control Center",
-        "title": "Welcome back. Today's Overview.",
+        "eyebrow": "Operations Center",
+        "title": "Welcome back.",
         "subtitleAttention": "{count} items need your attention today.",
-        "subtitleClear": "You are clear for now — great work.",
-        "pendingBusinesses": "Pending businesses",
-        "pendingPayments": "Pending payments",
-        "changesRequested": "Changes requested",
-        "registrationsWeek": "Registrations (7d)",
-        "unreadMessages": "Unread messages",
-        "approvalsToday": "Today's approvals"
+        "subtitleClear": "You are clear for now — great work."
+      },
+      "health": {
+        "title": "Platform status",
+        "status": {
+          "healthy": {
+            "label": "All systems running normally",
+            "hint": "No urgent queues right now."
+          },
+          "attention": {
+            "label": "Some tasks are waiting",
+            "hint": "Review payments, verification, or approvals."
+          },
+          "critical": {
+            "label": "Issues need immediate attention",
+            "hint": "Open reports require follow-up."
+          }
+        }
+      },
+      "today": {
+        "title": "Today overview",
+        "subtitle": "Only the queues that matter right now.",
+        "open": "Open",
+        "cards": {
+          "businesses": "Approvals waiting",
+          "verification": "New verifications",
+          "payments": "Payments to confirm",
+          "issues": "New reports",
+          "messages": "New messages",
+          "changes": "Updates requested"
+        }
+      },
+      "priorities": {
+        "title": "Today's priorities",
+        "empty": "No urgent priorities — you are clear.",
+        "items": {
+          "payments": "There are {count} payments waiting for review.",
+          "verification": "You have {count} new verification requests.",
+          "businesses": "There are {count} provider approvals waiting.",
+          "issues": "There are {count} reports that need follow-up.",
+          "changes": "There are {count} profiles still updating documents.",
+          "messages": "You have {count} unread messages."
+        }
+      },
+      "quickActions": {
+        "title": "Quick actions",
+        "items": {
+          "payments": "Review payments",
+          "verification": "Verification requests",
+          "users": "Manage users",
+          "issues": "Reports",
+          "settings": "Settings"
+        }
+      },
+      "activity": {
+        "title": "Recent activity",
+        "viewAll": "View all activity",
+        "empty": "No recent activity yet.",
+        "by": "By {name}",
+        "system": "System",
+        "actions": {
+          "provider_approved": "A provider was approved",
+          "provider_rejected": "A provider was rejected",
+          "provider_changes_requested": "Document updates were requested",
+          "payment_approved": "A payment was confirmed",
+          "payment_rejected": "A payment was rejected",
+          "provider_suspended": "A provider was suspended",
+          "provider_archived": "A provider was archived",
+          "verification_approved": "A verification was approved",
+          "verification_rejected": "A verification was rejected",
+          "verification_changes_requested": "Verification changes were requested",
+          "generic": "An important update was recorded"
+        }
       },
       "tasks": {
         "title": "Today's Tasks",
@@ -3678,21 +3901,6 @@
         "starter": "Starter",
         "pro": "PRO",
         "premium": "PREMIUM"
-      },
-      "activity": {
-        "title": "Activity",
-        "empty": "No recent activity yet.",
-        "by": "By {name}",
-        "system": "System",
-        "actions": {
-          "provider_approved": "Business approved",
-          "provider_rejected": "Business rejected",
-          "provider_changes_requested": "Changes requested",
-          "payment_approved": "Payment approved",
-          "payment_rejected": "Payment rejected",
-          "provider_suspended": "Business suspended",
-          "provider_archived": "Business archived"
-        }
       },
       "marketplace": {
         "title": "Marketplace pulse",
@@ -4330,35 +4538,64 @@
     }
   },
   "providerDashboard": {
-    "eyebrow": "Action stack",
+    "eyebrow": "Your daily business assistant",
     "title": "{name}",
-    "subtitle": "Unlock leads first, then send offers. Subscription is not required for opportunities.",
+    "subtitle": "Start with today’s overview, then open details when you need them.",
+    "today": {
+      "title": "Today’s overview",
+      "hint": "Only what matters now",
+      "opportunities": "New opportunities",
+      "unlock": "Waiting to unlock",
+      "waiting": "Awaiting customer reply",
+      "activeJobs": "Active jobs",
+      "messages": "Unread messages",
+      "rating": "Your rating",
+      "ratingEmpty": "—"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "opportunities": "Browse jobs",
+      "jobs": "My jobs",
+      "messages": "Messages",
+      "payments": "Payments",
+      "profile": "Business profile",
+      "availability": "Availability"
+    },
+    "sections": {
+      "title": "My jobs",
+      "newOpportunities": "New opportunities",
+      "waitingConfirmation": "Waiting for customer confirmation",
+      "unlockPending": "Contact unlock",
+      "activeJobs": "Confirmed / active jobs",
+      "pendingQa": "Questions waiting",
+      "allJobs": "View all jobs"
+    },
     "pause": {
       "title": "Matching paused",
-      "body": "Vacation mode or closed inbox means you will not receive new matches.",
+      "body": "Vacation mode or a closed inbox means you will not receive new opportunities.",
       "cta": "Update settings"
     },
     "unlock": {
-      "title": "Unlock (P0)",
-      "empty": "No open unlock sessions.",
-      "leadPending": "Complete unlock to release contact",
-      "sla": "SLA deadline: {deadline}",
+      "title": "Contact unlock",
+      "empty": "No unlock sessions right now.",
+      "leadPending": "Complete unlock to contact the customer",
+      "sla": "Deadline: {deadline}",
       "viewAll": "All unlocks",
       "status": {
-        "opened": "Opened",
+        "opened": "Open",
         "payment_pending": "Payment pending"
       }
     },
     "opportunities": {
-      "title": "Opportunities",
-      "empty": "No open opportunities yet.",
+      "title": "Latest opportunities",
+      "empty": "No open opportunities yet. Matching jobs will appear here.",
       "open": "Awaiting your offer",
       "offered": "Offer sent",
       "emergency": "Emergency",
       "viewAll": "All opportunities"
     },
     "qa": {
-      "title": "Q&A waiting",
+      "title": "Questions waiting",
       "empty": "No customer questions waiting."
     },
     "jobs": {
@@ -4367,11 +4604,11 @@
       "openChat": "Open chat"
     },
     "reliability": {
-      "title": "Unlock reliability (30 days)",
+      "title": "Unlock reliability (last 30 days)",
       "body": "Declined: {declined} · Timed out: {timedOut}"
     },
     "matchReasons": {
-      "label": "Why you matched",
+      "label": "Why this opportunity matched you",
       "category_fit": "Category fit",
       "city_fit": "Same city",
       "active_accepting": "Accepting requests",

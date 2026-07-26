@@ -10,6 +10,7 @@ import {
 } from "@/domains/offer/queries";
 import { OfferComposer } from "@/components/business/offer-composer";
 import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
+import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 import { Link } from "@/lib/i18n/routing";
 
 type PageProps = { params: Promise<{ assignmentId: string }> };
@@ -40,6 +41,7 @@ export default async function BusinessOpportunityDetailPage({ params }: PageProp
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6 animate-fade-in">
+      <MarkNavChannelSeen channel="opportunities" />
       <Link href="/business/opportunities" className="text-sm text-muted-foreground underline">
         {t("back")}
       </Link>

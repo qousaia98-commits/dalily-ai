@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { LocalizedJson } from "@/types/database.types";
+import { resolveProviderBusinessName } from "@/lib/people/display-name";
 
 export async function getProviderOwnerEmailContext(providerId: string): Promise<{
   ownerId: string;
@@ -18,8 +19,8 @@ export async function getProviderOwnerEmailContext(providerId: string): Promise<
 
   const { data: authUser } = await admin.auth.admin.getUserById(provider.owner_id);
   const name = provider.name as LocalizedJson;
-  const businessName = name?.en || name?.ar || "Business";
   const locale = name?.ar ? "ar" : "en";
+  const businessName = resolveProviderBusinessName(name, locale);
 
   return {
     ownerId: provider.owner_id,

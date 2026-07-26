@@ -5,13 +5,12 @@ import { isBusinessUser } from "@/lib/auth/roles";
 import { getBusinessHeaderLabel } from "@/lib/business/header-label";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { loadBusinessConversations } from "@/lib/business/load-conversations";
-import { countUnreadConversations } from "@/lib/business/conversations";
-import { countPendingRequestsForOwner, getUnreadVerificationNotificationCount } from "@/lib/service-requests/queries";
 import { BusinessSidebar } from "@/components/business/business-sidebar";
 import { AppHeader } from "@/components/layout/app-header";
 import { MobileBottomNavHost } from "@/components/layout/mobile-bottom-nav";
 import { MobileBottomNavSpacer } from "@/components/layout/mobile-bottom-nav-spacer";
 import { PlanBadge } from "@/components/shared/plan-badge";
+import { getProviderNavBadges } from "@/lib/badges";
 import { isOffersV2Enabled, isUnlockV2Enabled, isProviderDashboardV2Enabled } from "@/lib/config/feature-flags";
 import type { Locale } from "@/lib/i18n/config";
 import type { PlanSlug } from "@/lib/subscription/types";
@@ -30,21 +29,30 @@ export default async function BusinessLayout({ children }: { children: React.Rea
     const businessLabel = getBusinessHeaderLabel(provider, locale, t("fallback"));
 
     let planSlug: PlanSlug = "free";
-    let unreadMessages = 0;
-    let pendingRequests = 0;
-    let unreadVerification = 0;
+    let badges = {
+      messages: 0,
+      requests: 0,
+      orders: 0,
+      opportunities: 0,
+      unlock: 0,
+      verification: 0,
+    };
 
     if (provider) {
       try {
-        const loaded = await loadBusinessConversations(authUser.id);
-        planSlug = loaded.planSlug;
-        unreadMessages = countUnreadConversations(loaded.conversations);
-        const [pending, verificationUnread] = await Promise.all([
-          countPendingRequestsForOwner(authUser.id),
-          getUnreadVerificationNotificationCount(authUser.id),
+        const [loaded, navBadges] = await Promise.all([
+          loadBusinessConversations(authUser.id),
+          getProviderNavBadges(authUser.id),
         ]);
-        pendingRequests = pending;
-        unreadVerification = verificationUnread;
+        planSlug = loaded.planSlug;
+        badges = {
+          messages: navBadges.messages,
+          requests: navBadges.requests,
+          orders: navBadges.orders,
+          opportunities: navBadges.opportunities,
+          unlock: navBadges.unlock,
+          verification: navBadges.verification,
+        };
       } catch {
         planSlug = "free";
       }
@@ -62,11 +70,7 @@ export default async function BusinessLayout({ children }: { children: React.Rea
           <BusinessSidebar
             planSlug={planSlug}
             businessName={provider ? businessLabel : null}
-            badges={{
-              messages: unreadMessages,
-              requests: pendingRequests,
-              verification: unreadVerification,
-            }}
+            badges={badges}
             showOpportunities={isOffersV2Enabled()}
             showUnlock={isUnlockV2Enabled()}
             marketplaceHome={isProviderDashboardV2Enabled()}

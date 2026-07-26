@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "@/lib/i18n/routing";
 import { createClient } from "@/lib/supabase/client";
-import { setTypingAction, setPresenceAction, markChatReadAction } from "@/actions/chat.actions";
+import { setTypingAction, setPresenceAction } from "@/actions/chat.actions";
+import { runServerAction } from "@/lib/next/server-action-recovery";
 
 type Options = {
   conversationId: string;
@@ -13,7 +14,10 @@ type Options = {
 };
 
 /**
- * Chat realtime: messages, typing broadcast, presence, auto-reconnect via channel resubscribe.
+ * Chat realtime: messages, typing broadcast, presence.
+ * Presence/typing Server Actions are intentional; read-state is handled by
+ * MarkConversationRead — do NOT re-call markChatRead on every message event
+ * (that floods actions, OOMs the dev server, and invalidates action IDs).
  */
 export function useChatRealtime({
   conversationId,
@@ -25,16 +29,21 @@ export function useChatRealtime({
   const [typingNames, setTypingNames] = useState<string[]>([]);
   const [peerOnline, setPeerOnline] = useState<boolean | null>(null);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const refreshRef = useRef(() => {
+    router.refresh();
+  });
+  refreshRef.current = () => {
+    router.refresh();
+  };
 
   useEffect(() => {
     if (!enabled || !conversationId || !userId) return;
 
     const supabase = createClient();
     const channels: ReturnType<typeof supabase.channel>[] = [];
-    const refresh = () => router.refresh();
+    const refresh = () => refreshRef.current();
 
-    void setPresenceAction("online");
-    void markChatReadAction(conversationId);
+    void runServerAction(() => setPresenceAction("online")).catch(() => undefined);
 
     const msgChannel = supabase
       .channel(`chat-msg-${conversationId}`)
@@ -48,7 +57,6 @@ export function useChatRealtime({
         },
         () => {
           refresh();
-          void markChatReadAction(conversationId);
         },
       )
       .on(
@@ -119,27 +127,31 @@ export function useChatRealtime({
     }
 
     const onOffline = () => {
-      void setPresenceAction("offline");
+      void runServerAction(() => setPresenceAction("offline")).catch(() => undefined);
+    };
+    const onVisibility = () => {
+      void runServerAction(() =>
+        setPresenceAction(document.visibilityState === "visible" ? "online" : "offline"),
+      ).catch(() => undefined);
     };
     window.addEventListener("beforeunload", onOffline);
-    document.addEventListener("visibilitychange", () => {
-      void setPresenceAction(document.visibilityState === "visible" ? "online" : "offline");
-    });
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       window.removeEventListener("beforeunload", onOffline);
-      void setTypingAction(conversationId, false);
-      void setPresenceAction("offline");
+      document.removeEventListener("visibilitychange", onVisibility);
+      void runServerAction(() => setTypingAction(conversationId, false)).catch(() => undefined);
+      void runServerAction(() => setPresenceAction("offline")).catch(() => undefined);
       for (const ch of channels) void supabase.removeChannel(ch);
     };
-  }, [conversationId, userId, peerUserId, enabled, router]);
+  }, [conversationId, userId, peerUserId, enabled]);
 
   const notifyTyping = useCallback(() => {
     if (!conversationId) return;
-    void setTypingAction(conversationId, true);
+    void runServerAction(() => setTypingAction(conversationId, true)).catch(() => undefined);
     if (typingTimer.current) clearTimeout(typingTimer.current);
     typingTimer.current = setTimeout(() => {
-      void setTypingAction(conversationId, false);
+      void runServerAction(() => setTypingAction(conversationId, false)).catch(() => undefined);
     }, 4000);
   }, [conversationId]);
 

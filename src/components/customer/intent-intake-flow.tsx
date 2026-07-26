@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/lib/i18n/routing";
 import {
@@ -20,6 +20,7 @@ import {
   suggestIntentCategoryAction,
 } from "@/actions/intent-request.actions";
 import type { CategorySuggestion, IntentUrgency } from "@/domains/customer/intent-types";
+import { getContextualSuggestionKeys } from "@/lib/intent/contextual-suggestions";
 import { cn } from "@/lib/utils";
 
 type CityOption = { id: string; slug: string; label: string };
@@ -76,11 +77,41 @@ export function IntentIntakeFlow({
   const [clarifyNotes, setClarifyNotes] = useState<string[]>([]);
   const [clarifyAnswers, setClarifyAnswers] = useState<Record<number, string>>({});
   const [error, setError] = useState<string | null>(null);
+  /** Live category from existing suggestIntentCategoryAction (debounced). */
+  const [liveCategorySlug, setLiveCategorySlug] = useState<string | null>(null);
 
-  const suggestions = useMemo(
-    () => [t("suggestions.s1"), t("suggestions.s2"), t("suggestions.s3"), t("suggestions.s4")],
-    [t],
-  );
+  const resolvedCategorySlug =
+    liveCategorySlug ??
+    suggestion?.categorySlug ??
+    categories.find((c) => c.id === categoryId)?.slug ??
+    null;
+
+  const suggestions = useMemo(() => {
+    const keys = getContextualSuggestionKeys(resolvedCategorySlug);
+    return keys.map((key) => t(key as "suggestions.contextual.general.g1"));
+  }, [resolvedCategorySlug, t]);
+
+  useEffect(() => {
+    const text = intentText.trim();
+    if (text.length < 8) {
+      setLiveCategorySlug(null);
+      return;
+    }
+
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      void (async () => {
+        const result = await suggestIntentCategoryAction(text);
+        if (cancelled) return;
+        setLiveCategorySlug(result.suggestion?.categorySlug ?? null);
+      })();
+    }, 400);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [intentText]);
 
   const selectedCategory = categories.find((c) => c.id === categoryId);
   const categoryLabel =
@@ -131,6 +162,7 @@ export function IntentIntakeFlow({
       setCategories(opts);
       if (result.suggestion) {
         setCategoryId(result.suggestion.categoryId);
+        setLiveCategorySlug(result.suggestion.categorySlug);
         const hyp = result.suggestion.hypothesizedUrgency;
         setNeedsUrgencyConfirm(hyp === "emergency");
         setUrgency(hyp === "emergency" ? "emergency" : "normal");
@@ -355,6 +387,7 @@ export function IntentIntakeFlow({
               onChange={(e) => {
                 setCategoryId(e.target.value);
                 const slug = categories.find((c) => c.id === e.target.value)?.slug;
+                setLiveCategorySlug(slug ?? null);
                 loadClarifyForCategory(slug);
               }}
             >

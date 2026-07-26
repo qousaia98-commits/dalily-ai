@@ -7,6 +7,7 @@ import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
 import { Link } from "@/lib/i18n/routing";
 import { redirect } from "next/navigation";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
+import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 
 export default async function BusinessOpportunitiesPage() {
   if (!isOffersV2Enabled()) {
@@ -22,6 +23,7 @@ export default async function BusinessOpportunitiesPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6 animate-fade-in">
+      <MarkNavChannelSeen channel="opportunities" />
       {provider ? (
         <MarketplaceRealtimeBridge userId={authUser.id} providerId={provider.id} />
       ) : null}

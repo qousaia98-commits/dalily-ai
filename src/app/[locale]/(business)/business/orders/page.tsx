@@ -5,14 +5,12 @@ import { listProviderRequests } from "@/lib/service-requests/queries";
 import { countProviderOrderTabs } from "@/lib/orders/tabs";
 import { OrdersBoard } from "@/components/orders/orders-board";
 import { Link } from "@/lib/i18n/routing";
-import { isOffersV2Enabled, isUnlockV2Enabled } from "@/lib/config/feature-flags";
+import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import { listProviderOpportunities } from "@/domains/offer/queries";
-import { Badge } from "@/components/ui/badge";
 
 export default async function ProviderOrdersPage() {
   const t = await getTranslations("orders");
   const tNav = await getTranslations("business.nav");
-  const tOffer = await getTranslations("offerFlow.provider");
   const authUser = await getAuthUser();
   if (!authUser) return null;
 
@@ -31,10 +29,14 @@ export default async function ProviderOrdersPage() {
     offersOn ? listProviderOpportunities(provider.id) : Promise.resolve([]),
   ]);
   const tabCounts = countProviderOrderTabs(requests);
-  const openOps = opportunities.filter((o) => !o.hasOffer);
-  const offeredOps = opportunities.filter((o) => o.hasOffer);
-  tabCounts.new += openOps.length;
-  tabCounts.offers += offeredOps.length;
+  const openOps = opportunities.filter((o) => !o.hasOffer).length;
+
+  const sectionChips = [
+    { key: "waiting", label: t("providerTabs.waiting"), count: tabCounts.waiting },
+    { key: "active", label: t("providerTabs.active"), count: tabCounts.active },
+    { key: "completed", label: t("providerTabs.completed"), count: tabCounts.completed },
+    { key: "cancelled", label: t("providerTabs.cancelled"), count: tabCounts.cancelled },
+  ] as const;
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -44,55 +46,31 @@ export default async function ProviderOrdersPage() {
         </p>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("providerTitle")}</h1>
         <p className="text-sm text-muted-foreground">{t("providerSubtitle")}</p>
-        <div className="flex flex-wrap gap-3 pt-1 text-sm">
-          {offersOn ? (
+        {offersOn ? (
+          <p className="pt-1 text-sm">
             <Link
               href="/business/opportunities"
               className="font-semibold text-[var(--dalily-gold)] hover:underline"
             >
-              {tNav("opportunities")}
+              {tNav("newJobs")}
+              {openOps > 0 ? ` (${openOps})` : ""}
             </Link>
-          ) : null}
-          {isUnlockV2Enabled() ? (
-            <Link
-              href="/business/unlock"
-              className="font-semibold text-[var(--dalily-gold)] hover:underline"
-            >
-              {tNav("unlock")}
-            </Link>
-          ) : null}
-        </div>
+          </p>
+        ) : null}
       </header>
 
-      {offersOn && opportunities.length > 0 ? (
-        <section className="space-y-3">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-            {t("providerTabs.new")}
-          </h2>
-          <ul className="space-y-3">
-            {opportunities.map((op) => (
-              <li key={op.assignmentId}>
-                <Link
-                  href={`/business/opportunities/${op.assignmentId}`}
-                  className="block rounded-3xl border border-border bg-card p-4 shadow-sm transition hover:border-[var(--dalily-gold)]/40"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="truncate font-bold text-foreground">{op.title}</p>
-                      <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                        {op.intentText}
-                      </p>
-                    </div>
-                    <Badge variant="secondary">
-                      {op.hasOffer ? tOffer("statusOffered") : tOffer("statusOpen")}
-                    </Badge>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+      <div className="flex flex-wrap gap-2" role="list" aria-label={t("providerTitle")}>
+        {sectionChips.map((chip) => (
+          <span
+            key={chip.key}
+            role="listitem"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium shadow-sm"
+          >
+            <span className="text-muted-foreground">{chip.label}</span>
+            <span className="tabular-nums font-bold text-foreground">{chip.count}</span>
+          </span>
+        ))}
+      </div>
 
       <OrdersBoard
         mode="provider"

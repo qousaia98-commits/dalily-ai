@@ -1,7 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
+import { getLocale } from "next-intl/server";
 import { getOwnedProvider } from "@/lib/providers/database";
 import type { BusinessConversation, ConversationMessage } from "@/lib/business/conversations";
 import { resolveLatestMessageAt } from "@/lib/messaging/format-conversation-time";
+import {
+  customerFallbackLabel,
+  resolvePersonDisplayName,
+  resolveProviderBusinessName,
+} from "@/lib/people/display-name";
 
 type ConversationRow = {
   id: string;
@@ -111,14 +117,14 @@ async function buildConversationList(
     .select("id, name, owner_id")
     .in("id", providerIds);
 
+  const locale = await getLocale();
+  const customerFallback = customerFallbackLabel(locale);
+
   const providerMap = new Map(
     (providers ?? []).map((p) => [
       p.id,
       {
-        name:
-          typeof p.name === "object" && p.name !== null
-            ? ((p.name as { en?: string }).en ?? (p.name as { ar?: string }).ar ?? "Business")
-            : "Business",
+        name: resolveProviderBusinessName(p.name, locale),
         ownerId: p.owner_id as string,
       },
     ]),
@@ -162,8 +168,8 @@ async function buildConversationList(
     const providerInfo = providerMap.get(conv.provider_id);
     const name =
       viewer === "customer"
-        ? (providerInfo?.name ?? "Business")
-        : (profileMap.get(conv.customer_id) ?? "Customer");
+        ? (providerInfo?.name ?? resolveProviderBusinessName(null, locale))
+        : resolvePersonDisplayName(profileMap.get(conv.customer_id), customerFallback);
     const unreadCount = mappedMessages.filter((m) => !m.read).length;
     // Prefer the newest message row; never fall back to a bogus/epoch last_message_at.
     const updatedAt = resolveLatestMessageAt(mappedMessages);

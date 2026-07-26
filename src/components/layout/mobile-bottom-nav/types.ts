@@ -8,7 +8,11 @@ export type MobileNavBadgeKey =
   | "messages"
   | "notifications"
   | "requests"
-  | "orders";
+  | "orders"
+  | "opportunities"
+  | "unlock"
+  | "verification"
+  | "issues";
 
 export type MobileNavBadges = Partial<Record<MobileNavBadgeKey, number>>;
 

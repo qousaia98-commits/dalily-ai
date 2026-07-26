@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
   // Fallback only — receipt uploads go direct to Supabase Storage.
   // Keep a modest limit so other actions cannot silently accept huge bodies.
   experimental: {
-    cpus: 1,
+    // Avoid single-CPU starvation on large App Router graphs (was amplifying
+    // memory pressure → automatic `next dev` restarts → stale Server Action IDs).
     serverActions: {
       // Verification docs: client compresses to ~1.5MB; allow headroom for FormData.
       bodySizeLimit: "6mb",

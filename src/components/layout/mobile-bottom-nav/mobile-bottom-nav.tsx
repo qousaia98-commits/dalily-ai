@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
 import { cn } from "@/lib/utils";
-import { getMobileNavItems, isMobileNavItemActive } from "./config";
+import { getMobileNavItems, getActiveMobileNavItem } from "./config";
 import type { MobileNavBadges, MobileNavRole } from "./types";
 
 type MobileBottomNavProps = {
@@ -37,6 +37,7 @@ export function MobileBottomNav({
     showOpportunities,
     showUnlock,
   });
+  const activeItem = getActiveMobileNavItem(pathname, items);
   const [pressedId, setPressedId] = useState<string | null>(null);
   const pressTimer = useRef<number | null>(null);
 
@@ -67,7 +68,7 @@ export function MobileBottomNav({
         >
           {items.map((item) => {
             const Icon = item.icon;
-            const active = isMobileNavItemActive(pathname, item);
+            const active = activeItem.id === item.id;
             const badgeCount = item.badgeKey ? (badges[item.badgeKey] ?? 0) : 0;
             const label = t(item.labelKey);
             const pressed = pressedId === item.id;

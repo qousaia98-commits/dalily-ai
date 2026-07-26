@@ -9,6 +9,7 @@ import { ProviderUnlockPanel } from "@/components/business/provider-unlock-panel
 import { Link } from "@/lib/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
+import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 
 type PageProps = { params: Promise<{ sessionId: string }> };
 
@@ -44,6 +45,7 @@ export default async function BusinessUnlockDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-4 animate-fade-in">
+      <MarkNavChannelSeen channel="unlock" />
       <MarketplaceRealtimeBridge
         userId={authUser.id}
         providerId={provider.id}

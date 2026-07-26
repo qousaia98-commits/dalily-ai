@@ -73,7 +73,12 @@ export default async function BusinessDashboardPage() {
   const businessName = getLocalizedField(provider.name, locale) || provider.id;
 
   if (isProviderDashboardV2Enabled()) {
-    const marketplaceHome = await getProviderDashboardHome(provider.id);
+    const { conversations } = await loadBusinessConversations(authUser.id);
+    const unreadMessages = countUnreadConversations(conversations);
+    const marketplaceHome = await getProviderDashboardHome(provider.id, {
+      unreadMessages,
+      ratingAvg: provider.ratingAvg,
+    });
     const greeting = buildPersonalizedGreeting({
       roles: authUser.roles,
       displayName: authUser.displayName ?? businessName,
@@ -84,11 +89,7 @@ export default async function BusinessDashboardPage() {
     return (
       <div className="w-full max-w-full space-y-6 overflow-x-hidden animate-fade-in">
         <VerificationDashboardAlert provider={provider} verification={verification} />
-        <header className="space-y-1.5">
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{greeting.title}</h1>
-          <p className="text-sm text-muted-foreground">{greeting.subtitle}</p>
-        </header>
-        <ProviderDashboardHomeView data={marketplaceHome} businessName={businessName} />
+        <ProviderDashboardHomeView data={marketplaceHome} greeting={greeting} />
       </div>
     );
   }

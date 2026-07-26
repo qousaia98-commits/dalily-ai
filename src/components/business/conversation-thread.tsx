@@ -20,6 +20,11 @@ import {
   isValidMessageTimestamp,
   resolveLatestMessageAt,
 } from "@/lib/messaging/format-conversation-time";
+import {
+  businessFallbackLabel,
+  customerFallbackLabel,
+  resolvePersonDisplayName,
+} from "@/lib/people/display-name";
 
 export async function ConversationThread({
   conversation,
@@ -39,7 +44,13 @@ export async function ConversationThread({
   const t = await getTranslations(namespace);
   const tm = await getTranslations("marketplace");
   const locale = await getLocale();
-  const name = conversation.nameKey ? t(conversation.nameKey) : (conversation.name ?? "Chat");
+  const fallback =
+    viewer === "customer"
+      ? businessFallbackLabel(locale)
+      : customerFallbackLabel(locale);
+  const name = conversation.nameKey
+    ? t(conversation.nameKey)
+    : resolvePersonDisplayName(conversation.name, fallback);
   const lastMessageAt = resolveLatestMessageAt(conversation.messages);
   const isOfficial = conversation.kind === "dalily" || conversation.official;
   const profileHref = `${messagesPath}/dalily/about`;

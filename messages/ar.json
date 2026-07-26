@@ -19,6 +19,71 @@
       "selectRequired": "يرجى الاختيار"
     }
   },
+  "paymentReceiptUpload": {
+    "title": "أرفق صورة إيصال التحويل",
+    "subtitle": "لن نتمكن من مراجعة عملية الدفع قبل رفع الإيصال.",
+    "formats": "PNG, JPG, JPEG, PDF",
+    "maxSize": "الحد الأقصى {size}",
+    "dropHint": "اسحب الملف هنا أو انقر للاختيار",
+    "fromGallery": "المعرض",
+    "fromCamera": "الكاميرا",
+    "change": "تغيير الصورة",
+    "remove": "إزالة الصورة",
+    "previewAlt": "معاينة إيصال التحويل",
+    "pdfSelected": "ملف PDF جاهز للرفع",
+    "imageLabel": "صورة",
+    "selectedSuccess": "تم اختيار الصورة بنجاح",
+    "errors": {
+      "file_required": "يرجى اختيار ملف الإيصال.",
+      "file_too_large": "الملف يجب أن يكون 10 ميغابايت أو أقل.",
+      "invalid_file_type": "الصيغ المسموحة: PNG و JPG و JPEG و PDF فقط.",
+      "upload_failed": "فشل رفع الإيصال. حاول مرة أخرى.",
+      "save_failed": "تعذر حفظ الإيصال. حاول مرة أخرى.",
+      "prepare_failed": "تعذر بدء الرفع. حاول مرة أخرى.",
+      "duplicate_receipt": "تم رفع إيصال لهذه الدفعة مسبقاً.",
+      "payment_not_submittable": "هذه الدفعة لم تعد تقبل إيصالاً.",
+      "invalid_payment": "دفعة غير صالحة.",
+      "use_direct_upload": "يرجى رفع الإيصال من زر الرفع.",
+      "receipt_failed": "فشل رفع الإيصال. حاول مرة أخرى.",
+      "generic": "تعذر إكمال الرفع. حاول مرة أخرى."
+    }
+  },
+  "paymentExperience": {
+    "brand": "Dalily Pay",
+    "stepLabel": "الخطوة {n}",
+    "unlockTitle": "دفع رسوم فتح التواصل",
+    "subscriptionTitle": "إتمام الدفع",
+    "steps": {
+      "review": "راجع بيانات الدفع",
+      "upload": "أرفق صورة إيصال التحويل",
+      "verify": "سنراجع الدفع ثم نفتح التواصل",
+      "verifySubscription": "سنراجع الدفع ثم نفعّل خطتك"
+    },
+    "transferCta": "تم التحويل — متابعة لرفع الإيصال",
+    "transferHint": "حوّل المبلغ باستخدام البيانات أعلاه، ثم ارفع صورة الإيصال.",
+    "submit": "إرسال للمراجعة",
+    "uploading": "جارٍ الإرسال…",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "errorTitle": "حدث خطأ أثناء رفع الإيصال.",
+    "errorFallback": "يرجى المحاولة مرة أخرى.",
+    "successTitle": "تم إرسال الإيصال بنجاح.",
+    "successBody": "سيتم مراجعة عملية الدفع قريباً.",
+    "successNotify": "سيتم إشعارك فور اعتماد الدفع.",
+    "progress": "تقدم الرفع",
+    "startPayment": "ابدأ الدفع",
+    "details": {
+      "ariaLabel": "بيانات الدفع",
+      "amount": "المبلغ",
+      "reference": "المرجع",
+      "receiver": "اسم المستلم",
+      "account": "الحساب",
+      "copy": "نسخ",
+      "copyAmount": "نسخ المبلغ",
+      "copied": "تم النسخ",
+      "referenceHint": "أضف هذا الرقم في ملاحظة التحويل."
+    }
+  },
   "nav": {
     "search": "البحث",
     "forBusiness": "للأعمال",
@@ -51,9 +116,11 @@
       "orders": "طلباتي",
       "messages": "الرسائل",
       "growth": "النمو",
-      "account": "الحساب",
-      "opportunities": "عروض",
-      "unlock": "فتح"
+      "account": "حسابي",
+      "newJobs": "الطلبات الجديدة",
+      "opportunities": "الطلبات الجديدة",
+      "unlock": "فتح التواصل",
+      "payments": "المدفوعات"
     },
     "admin": {
       "controlCenter": "الرئيسية",
@@ -61,7 +128,8 @@
       "payments": "المدفوعات",
       "messages": "الرسائل",
       "marketplace": "السوق",
-      "admin": "الإدارة"
+      "admin": "الإدارة",
+      "issues": "البلاغات"
     }
   },
   "orders": {
@@ -70,7 +138,7 @@
     "customerSubtitle": "تابع كل طلب من الانتظار حتى الإنجاز والتقييم — مباشرة.",
     "providerEyebrow": "طلباتي",
     "providerTitle": "طلباتي",
-    "providerSubtitle": "فرص وعروض وأعمال نشطة ومكتملة في مكان واحد.",
+    "providerSubtitle": "تابع أعمالك حسب الحالة — من انتظار التأكيد حتى الإكمال.",
     "searchPlaceholder": "ابحث بالعنوان أو الاسم…",
     "listLabel": "الطلبات حسب الحالة",
     "emptyTitle": "لا شيء في هذا التبويب",
@@ -84,11 +152,10 @@
       "cancelled": "ملغى"
     },
     "providerTabs": {
-      "new": "طلبات جديدة",
-      "offers": "عروض مرسلة",
-      "accepted": "أعمال مقبولة",
-      "active": "أعمال نشطة",
-      "completed": "أعمال مكتملة"
+      "waiting": "بانتظار التأكيد",
+      "active": "قيد التنفيذ",
+      "completed": "مكتملة",
+      "cancelled": "ملغاة"
     },
     "status": {
       "pending": "معلق",
@@ -162,19 +229,40 @@
       "comingSoon": "الدردشة قادمة قريباً — ستظهر شارة عند الحاجة للاهتمام."
     },
     "businessAccount": {
-      "title": "الحساب",
+      "title": "حسابي",
+      "subtitle": "إدارة ملف عملك وإعداداتك من مكان واحد.",
       "signedInAs": "مسجّل الدخول باسم {name}",
       "language": "اللغة",
       "theme": "المظهر",
       "notifications": "الإشعارات",
-      "notificationsHint": "تُدار في النمو",
+      "notificationsHint": "تظهر الشارات تلقائياً عند التحديثات",
+      "sections": {
+        "business": "إعدادات العمل",
+        "more": "المزيد"
+      },
       "links": {
         "profile": "الملف الشخصي",
-        "profileDesc": "بيانات التواصل لنشاطك",
+        "profileDesc": "الاسم والتواصل وتفاصيل النشاط",
+        "services": "الخدمات",
+        "servicesDesc": "ما تقدمه للزبائن",
+        "availability": "التوفر",
+        "availabilityDesc": "متى يمكنك استقبال الطلبات",
+        "verification": "التوثيق",
+        "verificationDesc": "ابنِ الثقة بشارة موثّق",
+        "settings": "الإعدادات",
+        "settingsDesc": "استقبال الطلبات ووضع الإجازة",
+        "media": "الوسائط",
+        "mediaDesc": "صور أعمالك ومعرض الأعمال",
+        "calendar": "التقويم",
+        "calendarDesc": "مواعيد وأيام العمل",
+        "bookings": "الحجوزات",
+        "bookingsDesc": "المواعيد المحجوزة مع الزبائن",
+        "analytics": "الإحصائيات",
+        "analyticsDesc": "أداء ونمو نشاطك",
         "subscription": "الاشتراك",
         "subscriptionDesc": "الخطة وخيارات الترقية",
         "payments": "المدفوعات",
-        "paymentsDesc": "حالة الدفع والسجل"
+        "paymentsDesc": "الفتح والمدفوعات والسجل"
       }
     },
     "growth": {
@@ -363,7 +451,47 @@
       "s1": "تسريب في أنبوب المطبخ",
       "s2": "المكيف لا يبرّد",
       "s3": "مغلوق برّا البيت",
-      "s4": "أحتاج كهربائي اليوم"
+      "s4": "أحتاج كهربائي اليوم",
+      "contextual": {
+        "general": {
+          "g1": "أحتاج فني اليوم",
+          "g2": "عطل في المنزل",
+          "g3": "صيانة منزلية",
+          "g4": "إصلاح عاجل"
+        },
+        "electrical": {
+          "e1": "انقطاع الكهرباء",
+          "e2": "تركيب نجفة",
+          "e3": "إصلاح مفتاح",
+          "e4": "تغيير مقبس",
+          "e5": "إصلاح إنارة"
+        },
+        "plumbing": {
+          "p1": "تسريب مياه",
+          "p2": "انسداد المجلى",
+          "p3": "إصلاح الحنفية",
+          "p4": "إصلاح السخان",
+          "p5": "تسليك الصرف"
+        },
+        "painting": {
+          "a1": "دهان غرفة",
+          "a2": "تجديد الجدران",
+          "a3": "إصلاح التشققات",
+          "a4": "طلاء الواجهة"
+        },
+        "carpentry": {
+          "c1": "إصلاح الباب",
+          "c2": "إصلاح النافذة",
+          "c3": "تركيب رفوف",
+          "c4": "إصلاح الخزانة"
+        },
+        "hvac": {
+          "h1": "المكيف لا يبرد",
+          "h2": "تنظيف المكيف",
+          "h3": "تعبئة غاز",
+          "h4": "إصلاح الوحدة الخارجية"
+        }
+      }
     },
     "clarify": {
       "electrical": {
@@ -372,7 +500,7 @@
       },
       "plumbing": {
         "where": "أين التسريب أو العطل تقريباً؟",
-        "severity": "هل المياه ما زالت تسرب الآن؟"
+        "ongoing": "هل المياه ما زالت تسرب الآن؟"
       },
       "hvac": {
         "symptom": "هل المكيف يشغّل لكن بدون تبريد؟",
@@ -500,15 +628,15 @@
       "selectedPendingUnlock": "تم اختيار العرض. فتح التواصل يأتي لاحقاً — لم يُشارك شيء بعد."
     },
     "provider": {
-      "eyebrow": "المطابقة",
-      "listTitle": "الفرص",
-      "listSubtitle": "طلبات مطابقة لعملك. أرسل عرضاً دون قبول يفتح الدردشة.",
-      "empty": "لا فرص مفتوحة بعد.",
+      "eyebrow": "الطلبات الجديدة",
+      "listTitle": "الطلبات الجديدة",
+      "listSubtitle": "فرص عمل مطابقة لنشاطك. أرسل عرضك مباشرة — دون خطوة قبول تفتح الدردشة.",
+      "empty": "لا طلبات جديدة حالياً. ستظهر هنا عند وصول فرصة مناسبة.",
       "noProvider": "أنشئ ملف عملك أولاً.",
       "statusOffered": "تم إرسال العرض",
       "statusOpen": "بانتظار عرضك",
       "emergency": "طارئ",
-      "back": "كل الفرص",
+      "back": "كل الطلبات الجديدة",
       "area": "ملاحظة الموقع",
       "noAcceptRequired": "لا خطوة قبول — أرسل العرض مباشرة.",
       "composeTitle": "إرسال عرض",
@@ -652,6 +780,10 @@
       "not_unlock_fee": "ليست دفعة رسوم فتح.",
       "session_required": "جلسة الفتح مطلوبة.",
       "receipt_failed": "فشل رفع الإيصال.",
+      "prepare_failed": "تعذر بدء الرفع. حاول مرة أخرى.",
+      "upload_failed": "فشل رفع الإيصال. حاول مرة أخرى.",
+      "save_failed": "تعذر حفظ الإيصال. حاول مرة أخرى.",
+      "duplicate_receipt": "تم رفع إيصال لهذه الدفعة مسبقاً.",
       "selection_not_found": "الاختيار غير موجود.",
       "selection_not_pending": "الاختيار ليس بانتظار الفتح.",
       "provider_required": "مزود الخدمة مطلوب.",
@@ -1323,17 +1455,20 @@
       "title": "لوحة الأعمال",
       "menu": "القائمة",
       "dashboard": "الرئيسية",
+      "newJobs": "الطلبات الجديدة",
+      "orders": "طلباتي",
+      "messages": "الرسائل",
+      "payments": "المدفوعات",
+      "account": "حسابي",
       "profile": "الملف الشخصي",
       "services": "الخدمات",
       "gallery": "المعرض",
       "media": "الوسائط",
       "analytics": "الإحصائيات",
-      "verification": "التحقق",
+      "verification": "التوثيق",
       "upgrade": "⭐ تطوير",
-      "messages": "الرسائل",
       "requests": "الطلبات",
-      "orders": "طلباتي",
-      "opportunities": "الفرص",
+      "opportunities": "الطلبات الجديدة",
       "unlock": "فتح التواصل",
       "settings": "الإعدادات",
       "bookings": "الحجوزات",
@@ -1386,6 +1521,21 @@
         "reject_failed": "تعذر رفض الطلب.",
         "not_pending": "هذا الطلب لم يعد معلقاً.",
         "forbidden": "لا يمكنك إدارة هذا الطلب."
+      }
+    },
+    "paymentsHub": {
+      "title": "المدفوعات",
+      "subtitle": "فتح التواصل، الاشتراكات، وسجل المدفوعات في مكان واحد.",
+      "priorityTitle": "يوجد فتح بانتظارك",
+      "priorityBody": "لديك {count} جلسة فتح تحتاج إلى إكمال.",
+      "priorityCta": "عرض جلسات الفتح",
+      "links": {
+        "unlock": "فتح التواصل",
+        "unlockDesc": "أكمل الدفع لإتاحة بيانات الزبون",
+        "subscription": "الاشتراك والخطة",
+        "subscriptionDesc": "إدارة خطتك وخيارات الترقية",
+        "history": "سجل المدفوعات",
+        "historyDesc": "حالة الدفع والإيصالات"
       }
     },
     "dashboard": {
@@ -2315,7 +2465,9 @@
             "early": "ميزات جديدة أولاً"
           }
         },
-        "free": "Starter"
+        "free": "Starter",
+        "proLegacy": "PRO",
+        "premiumLegacy": "PREMIUM"
       },
       "status": {
         "trial": "تجريبي",
@@ -2854,32 +3006,39 @@
   },
   "admin": {
     "nav": {
-      "title": "مركز التحكم",
+      "title": "مركز العمليات",
       "menu": "قائمة الإدارة",
-      "dashboard": "لوحة المعلومات",
+      "dashboard": "الرئيسية",
       "providers": "المزودون",
-      "verification": "التحقق",
+      "verification": "التوثيق",
       "searches": "تحليلات البحث",
       "users": "المستخدمون",
       "categories": "الفئات",
       "payments": "المدفوعات",
       "subscriptions": "موافقات الاشتراك",
-      "businesses": "الأعمال",
+      "businesses": "مزودو الخدمة",
       "messages": "الرسائل",
       "marketplace": "السوق",
       "learning": "ذكاء التعلم",
       "ranking": "الترتيب",
       "customers": "العملاء",
-      "issues": "المشكلات",
+      "issues": "البلاغات",
       "reviewModeration": "إشراف التقييمات",
       "analytics": "التحليلات",
       "content": "المحتوى",
       "broadcasts": "البث",
-      "health": "صحة النظام",
-      "audit": "سجل التدقيق",
-      "unlockOps": "عمليات الفتح",
+      "health": "حالة النظام",
+      "audit": "سجل النشاط",
+      "unlockOps": "طلبات الفتح",
       "cells": "الخلايا",
-      "inspect": "فحص"
+      "inspect": "فحص",
+      "settings": "الإعدادات",
+      "groups": {
+        "people": "إدارة المستخدمين",
+        "operations": "العمليات",
+        "system": "النظام",
+        "more": "المزيد"
+      }
     },
     "learning": {
       "eyebrow": "داخلي · Learning AI",
@@ -3284,16 +3443,82 @@
     },
     "controlCenter": {
       "hero": {
-        "eyebrow": "مركز التحكم",
-        "title": "أهلاً بعودتك. نظرة اليوم.",
-        "subtitleAttention": "{count} عناصر تحتاج انتباهك اليوم.",
-        "subtitleClear": "كل شي تمام حالياً — شغل ممتاز.",
-        "pendingBusinesses": "أعمال معلّقة",
-        "pendingPayments": "مدفوعات معلّقة",
-        "changesRequested": "تعديلات مطلوبة",
-        "registrationsWeek": "تسجيلات (7 أيام)",
-        "unreadMessages": "رسائل غير مقروءة",
-        "approvalsToday": "اعتمادات اليوم"
+        "eyebrow": "مركز العمليات",
+        "title": "أهلاً بعودتك.",
+        "subtitleAttention": "هناك {count} عناصر تحتاج انتباهك اليوم.",
+        "subtitleClear": "كل شيء على ما يرام حالياً."
+      },
+      "health": {
+        "title": "حالة المنصة",
+        "status": {
+          "healthy": {
+            "label": "جميع الأنظمة تعمل بشكل طبيعي",
+            "hint": "لا توجد طوابير عاجلة الآن."
+          },
+          "attention": {
+            "label": "توجد بعض المهام المعلقة",
+            "hint": "راجع المدفوعات أو التوثيق أو الاعتمادات."
+          },
+          "critical": {
+            "label": "توجد مشكلات تتطلب تدخلاً فورياً",
+            "hint": "بلاغات مفتوحة تحتاج متابعة."
+          }
+        }
+      },
+      "today": {
+        "title": "نظرة اليوم",
+        "subtitle": "فقط الطوابير الأهم الآن.",
+        "open": "فتح",
+        "cards": {
+          "businesses": "طلبات بانتظار المراجعة",
+          "verification": "توثيقات جديدة",
+          "payments": "مدفوعات بانتظار التأكيد",
+          "issues": "بلاغات جديدة",
+          "messages": "رسائل جديدة",
+          "changes": "مشكلات تحتاج متابعة"
+        }
+      },
+      "priorities": {
+        "title": "أولويات اليوم",
+        "empty": "لا أولويات عاجلة — الوضع مستقر.",
+        "items": {
+          "payments": "هناك {count} مدفوعات تحتاج للمراجعة.",
+          "verification": "لديك {count} طلبات توثيق جديدة.",
+          "businesses": "هناك {count} طلبات اعتماد بانتظار المراجعة.",
+          "issues": "يوجد {count} بلاغات تحتاج إلى متابعة.",
+          "changes": "هناك {count} ملفات ما زالت تحدّث وثائقها.",
+          "messages": "لديك {count} رسائل غير مقروءة."
+        }
+      },
+      "quickActions": {
+        "title": "إجراءات سريعة",
+        "items": {
+          "payments": "مراجعة المدفوعات",
+          "verification": "طلبات التوثيق",
+          "users": "إدارة المستخدمين",
+          "issues": "البلاغات",
+          "settings": "الإعدادات"
+        }
+      },
+      "activity": {
+        "title": "النشاط الأخير",
+        "viewAll": "عرض جميع النشاطات",
+        "empty": "لا يوجد نشاط حديث بعد.",
+        "by": "بواسطة {name}",
+        "system": "النظام",
+        "actions": {
+          "provider_approved": "تم اعتماد مزود خدمة",
+          "provider_rejected": "تم رفض مزود خدمة",
+          "provider_changes_requested": "طُلب تحديث للوثائق",
+          "payment_approved": "تم تأكيد دفعة",
+          "payment_rejected": "تم رفض دفعة",
+          "provider_suspended": "تم تعليق مزود خدمة",
+          "provider_archived": "تم أرشفة مزود خدمة",
+          "verification_approved": "تم قبول طلب توثيق",
+          "verification_rejected": "تم رفض طلب توثيق",
+          "verification_changes_requested": "طُلب تعديل على التوثيق",
+          "generic": "تم تسجيل تحديث مهم"
+        }
       },
       "tasks": {
         "title": "مهام اليوم",
@@ -3329,21 +3554,6 @@
         "starter": "Starter",
         "pro": "PRO",
         "premium": "PREMIUM"
-      },
-      "activity": {
-        "title": "النشاط",
-        "empty": "ما في نشاط حديث بعد.",
-        "by": "بواسطة {name}",
-        "system": "النظام",
-        "actions": {
-          "provider_approved": "تم اعتماد نشاط",
-          "provider_rejected": "تم رفض نشاط",
-          "provider_changes_requested": "طُلبت تعديلات",
-          "payment_approved": "تم اعتماد دفعة",
-          "payment_rejected": "تم رفض دفعة",
-          "provider_suspended": "تم تعليق نشاط",
-          "provider_archived": "تم أرشفة نشاط"
-        }
       },
       "marketplace": {
         "title": "نبض السوق",
@@ -4328,18 +4538,47 @@
     }
   },
   "providerDashboard": {
-    "eyebrow": "أولويات العمل",
+    "eyebrow": "مساعد عملك اليومي",
     "title": "{name}",
-    "subtitle": "أكمل فتح العملاء أولاً ثم أرسل العروض. الاشتراك غير مطلوب للفرص.",
+    "subtitle": "ابدأ بنظرة اليوم، ثم انتقل للتفاصيل عند الحاجة.",
+    "today": {
+      "title": "نظرة اليوم",
+      "hint": "الأهم الآن فقط",
+      "opportunities": "فرص جديدة",
+      "unlock": "بانتظار الفتح",
+      "waiting": "بانتظار رد الزبون",
+      "activeJobs": "أعمال نشطة",
+      "messages": "رسائل غير مقروءة",
+      "rating": "تقييمك",
+      "ratingEmpty": "—"
+    },
+    "quickActions": {
+      "title": "اختصارات سريعة",
+      "opportunities": "فرص جديدة",
+      "jobs": "أعمالي",
+      "messages": "الرسائل",
+      "payments": "المدفوعات",
+      "profile": "ملف العمل",
+      "availability": "التوفر"
+    },
+    "sections": {
+      "title": "أعمالي",
+      "newOpportunities": "فرص جديدة",
+      "waitingConfirmation": "بانتظار تأكيد الزبون",
+      "unlockPending": "فتح التواصل",
+      "activeJobs": "أعمال مؤكدة / نشطة",
+      "pendingQa": "أسئلة بانتظار الرد",
+      "allJobs": "عرض كل الأعمال"
+    },
     "pause": {
-      "title": "المطابقة متوقفة",
-      "body": "وضع الإجازة أو إغلاق الطلبات يمنع استلام مطابقات جديدة.",
+      "title": "استقبال الفرص متوقف",
+      "body": "وضع الإجازة أو إغلاق الطلبات يمنع وصول فرص جديدة إليك.",
       "cta": "تحديث الإعدادات"
     },
     "unlock": {
-      "title": "فتح العملاء (أولوية)",
-      "empty": "لا جلسات فتح مفتوحة.",
-      "leadPending": "أكمل الفتح لإتاحة التواصل",
+      "title": "فتح التواصل",
+      "empty": "لا توجد جلسات فتح حالياً.",
+      "leadPending": "أكمل الفتح لإتاحة التواصل مع الزبون",
       "sla": "المهلة: {deadline}",
       "viewAll": "كل جلسات الفتح",
       "status": {
@@ -4348,8 +4587,8 @@
       }
     },
     "opportunities": {
-      "title": "الفرص",
-      "empty": "لا فرص مفتوحة بعد.",
+      "title": "أحدث الفرص",
+      "empty": "لا فرص مفتوحة حالياً. ستظهر هنا عند وصول طلب مناسب.",
       "open": "بانتظار عرضك",
       "offered": "تم إرسال العرض",
       "emergency": "طارئ",
@@ -4365,11 +4604,11 @@
       "openChat": "فتح المحادثة"
     },
     "reliability": {
-      "title": "موثوقية الفتح (30 يوماً)",
-      "body": "رفض: {declined} · انتهاء مهلة: {timedOut}"
+      "title": "موثوقية الفتح (آخر 30 يوماً)",
+      "body": "رفض: {declined} · انتهاء المهلة: {timedOut}"
     },
     "matchReasons": {
-      "label": "لماذا طابقت",
+      "label": "لماذا ظهرت لك هذه الفرصة",
       "category_fit": "ملاءمة الفئة",
       "city_fit": "نفس المدينة",
       "active_accepting": "يقبل الطلبات",

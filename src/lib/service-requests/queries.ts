@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { SERVICE_REQUEST_MEDIA_BUCKET } from "@/lib/service-requests/constants";
@@ -16,6 +17,11 @@ import type {
   ServiceReviewRow,
 } from "@/lib/service-requests/types";
 import { attachMarketplaceReadModels } from "@/domains/marketplace/repository";
+import {
+  customerFallbackLabel,
+  resolvePersonDisplayName,
+  resolveProviderBusinessName,
+} from "@/lib/people/display-name";
 
 function mapRequest(row: Record<string, unknown>): ServiceRequestRow {
   return {
@@ -296,18 +302,14 @@ async function hydrateDetails(
   const providers = providersRes.data;
   const conversations = conversationsRes.data;
   const reviews = reviewsRes.data;
+  const locale = await getLocale();
+  const customerFallback = customerFallbackLabel(locale);
 
   const profileMap = new Map(
     (profiles ?? []).map((p) => [p.user_id, p.display_name as string]),
   );
   const providerMap = new Map(
-    (providers ?? []).map((p) => {
-      const name =
-        typeof p.name === "object" && p.name !== null
-          ? ((p.name as { en?: string }).en ?? (p.name as { ar?: string }).ar ?? "Business")
-          : "Business";
-      return [p.id, name];
-    }),
+    (providers ?? []).map((p) => [p.id, resolveProviderBusinessName(p.name, locale)]),
   );
   const convMap = new Map(
     (conversations ?? []).map((c) => [c.service_request_id as string, c.id as string]),
@@ -348,9 +350,13 @@ async function hydrateDetails(
         .filter((url): url is string => Boolean(url));
       return {
         ...mapped,
-        customerName: profileMap.get(mapped.customer_id) ?? "Customer",
+        customerName: resolvePersonDisplayName(
+          profileMap.get(mapped.customer_id),
+          customerFallback,
+        ),
         providerName: mapped.provider_id
-          ? (providerMap.get(mapped.provider_id) ?? "Business")
+          ? (providerMap.get(mapped.provider_id) ??
+            resolveProviderBusinessName(null, locale))
           : "—",
         imagePaths: paths,
         imageUrls,
@@ -466,38 +472,10 @@ export async function getUnreadNotificationCount(userId: string): Promise<number
   return count ?? 0;
 }
 
-const VERIFICATION_NOTIFY_TYPES = [
-  "verification_approved",
-  "verification_rejected",
-  "verification_changes_requested",
-  "verification_resubmitted",
-] as const;
-
-export async function getUnreadVerificationNotificationCount(
-  userId: string,
-): Promise<number> {
-  const supabase = await createClient();
-  const { count } = await supabase
-    .from("marketplace_notifications")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", userId)
-    .is("read_at", null)
-    .in("type", [...VERIFICATION_NOTIFY_TYPES]);
-  return count ?? 0;
-}
-
-export async function markVerificationNotificationsRead(
-  userId: string,
-): Promise<void> {
-  const supabase = await createClient();
-  const now = new Date().toISOString();
-  await supabase
-    .from("marketplace_notifications")
-    .update({ read_at: now })
-    .eq("user_id", userId)
-    .is("read_at", null)
-    .in("type", [...VERIFICATION_NOTIFY_TYPES]);
-}
+export {
+  getUnreadVerificationNotificationCount,
+  markVerificationNotificationsRead,
+} from "@/lib/orders/notifications";
 
 export async function listNotifications(
   userId: string,

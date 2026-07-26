@@ -19,6 +19,12 @@ type PrepareResult = {
   path?: string;
   token?: string;
   signedUrl?: string;
+  /** Action shape from preparePaymentReceiptUploadAction */
+  upload?: {
+    path: string;
+    token: string;
+    signedUrl: string;
+  };
 };
 
 type ConfirmResult = {
@@ -26,6 +32,25 @@ type ConfirmResult = {
   error?: string;
   message?: string;
 };
+
+function normalizePrepareResult(prepared: PrepareResult): {
+  success: boolean;
+  error?: string;
+  path?: string;
+  token?: string;
+  signedUrl?: string;
+} {
+  if (!prepared.success) {
+    return { success: false, error: prepared.error ?? "prepare_failed" };
+  }
+  const path = prepared.path ?? prepared.upload?.path;
+  const token = prepared.token ?? prepared.upload?.token;
+  const signedUrl = prepared.signedUrl ?? prepared.upload?.signedUrl;
+  if (!path) {
+    return { success: false, error: "prepare_failed" };
+  }
+  return { success: true, path, token, signedUrl };
+}
 
 /**
  * Direct-to-Storage receipt upload with progress.
@@ -59,11 +84,12 @@ export async function uploadPaymentReceiptDirect(input: {
 
   onProgress?.({ phase: "preparing", percent: 12 });
 
-  const prepared = await prepare(paymentId, {
+  const preparedRaw = await prepare(paymentId, {
     fileName: file.name,
     mimeType: validated.mimeType,
     size: file.size,
   });
+  const prepared = normalizePrepareResult(preparedRaw);
 
   if (!prepared.success || !prepared.path) {
     return { success: false, error: prepared.error ?? "prepare_failed" };
@@ -87,7 +113,7 @@ export async function uploadPaymentReceiptDirect(input: {
   });
 
   if (!uploaded.ok) {
-    return { success: false, error: "upload_failed" };
+    return { success: false, error: uploaded.error ?? "upload_failed" };
   }
 
   onProgress?.({ phase: "confirming", percent: 90 });

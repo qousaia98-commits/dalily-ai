@@ -4,85 +4,167 @@ import {
   LayoutDashboard,
   Building2,
   ShieldCheck,
-  Search,
   Users,
   Menu,
-  CreditCard,
-  Tags,
   Banknote,
-  Megaphone,
-  Brain,
-  Gauge,
   AlertTriangle,
-  MessageSquareWarning,
-  Radio,
-  Activity,
-  ScrollText,
-  BarChart3,
-  FolderOpen,
   MessageCircle,
   KeyRound,
-  MapPinned,
-  ScanSearch,
+  Activity,
+  ScrollText,
+  Settings,
+  BarChart3,
+  Megaphone,
+  Tags,
+  ChevronDown,
 } from "lucide-react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/lib/i18n/routing";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useMemo, useState } from "react";
 import { useAdminBadges } from "@/components/admin/admin-badges-provider";
 import type { AdminBadgeChannel } from "@/lib/admin/badge-ack";
+import { getActiveNavigationItem } from "@/lib/navigation/active-item";
+import { NavCountBadge } from "@/components/shared/nav-count-badge";
 
 type AdminSidebarProps = {
   showAdminOnly?: boolean;
-  /** Sprint 9 — economy/unlock ops nav when ADMIN_MIGRATION_V2 */
   marketplaceOps?: boolean;
 };
 
-const sharedNav = [
-  { href: "/admin", icon: LayoutDashboard, key: "dashboard", exact: true },
-  { href: "/admin/providers", icon: Building2, key: "businesses", badgeKey: "businesses" as const },
-  { href: "/admin/users", icon: Users, key: "customers" },
-  {
-    href: "/admin/verification",
-    icon: ShieldCheck,
-    key: "verification",
-    badgeKey: "verification" as const,
-  },
-  { href: "/admin/issues", icon: AlertTriangle, key: "issues", badgeKey: "issues" as const },
-  {
-    href: "/admin/reviews",
-    icon: MessageSquareWarning,
-    key: "reviewModeration",
-    badgeKey: "reviews" as const,
-  },
-  { href: "/admin/messages", icon: MessageCircle, key: "messages", badgeKey: "messages" as const },
-  { href: "/admin/ranking", icon: Gauge, key: "ranking" },
-  { href: "/admin/analytics", icon: BarChart3, key: "analytics" },
-  { href: "/admin/searches", icon: Search, key: "searches" },
-  { href: "/admin/content", icon: FolderOpen, key: "content" },
-  { href: "/admin/health", icon: Activity, key: "health" },
-  { href: "/admin/audit", icon: ScrollText, key: "audit", badgeKey: "audit" as const },
-] as const;
+type NavItem = {
+  id: string;
+  href: string;
+  icon: typeof LayoutDashboard;
+  key: string;
+  exact?: boolean;
+  badgeKey?: AdminBadgeChannel;
+  matchPrefixes?: readonly string[];
+  /** Visible only when showAdminOnly */
+  adminOnly?: boolean;
+  /** Visible only when marketplaceOps */
+  opsOnly?: boolean;
+};
 
-const adminOnlyNav = [
-  { href: "/admin/payments", icon: Banknote, key: "payments", badgeKey: "payments" as const },
-  {
-    href: "/admin/subscriptions",
-    icon: CreditCard,
-    key: "subscriptions",
-    badgeKey: "subscriptions" as const,
-  },
-  { href: "/admin/marketplace", icon: Megaphone, key: "marketplace" },
-  { href: "/admin/learning", icon: Brain, key: "learning" },
-  {
-    href: "/admin/broadcasts",
-    icon: Radio,
-    key: "broadcasts",
-    badgeKey: "broadcasts" as const,
-  },
-  { href: "/admin/categories", icon: Tags, key: "categories" },
-] as const;
+type NavGroup = {
+  id: string;
+  labelKey: string;
+  items: NavItem[];
+};
+
+const HOME: NavItem = {
+  id: "dashboard",
+  href: "/admin",
+  icon: LayoutDashboard,
+  key: "dashboard",
+  exact: true,
+};
+
+function buildGroups(opts: {
+  showAdminOnly: boolean;
+  marketplaceOps: boolean;
+}): NavGroup[] {
+  const people: NavItem[] = [
+    {
+      id: "businesses",
+      href: "/admin/providers",
+      icon: Building2,
+      key: "businesses",
+      badgeKey: "businesses",
+    },
+    { id: "customers", href: "/admin/users", icon: Users, key: "customers" },
+    {
+      id: "verification",
+      href: "/admin/verification",
+      icon: ShieldCheck,
+      key: "verification",
+      badgeKey: "verification",
+    },
+  ];
+
+  const operations: NavItem[] = [
+    {
+      id: "payments",
+      href: "/admin/payments",
+      icon: Banknote,
+      key: "payments",
+      badgeKey: "payments",
+      adminOnly: true,
+    },
+    {
+      id: "issues",
+      href: "/admin/issues",
+      icon: AlertTriangle,
+      key: "issues",
+      badgeKey: "issues",
+    },
+    {
+      id: "messages",
+      href: "/admin/messages",
+      icon: MessageCircle,
+      key: "messages",
+      badgeKey: "messages",
+    },
+    {
+      id: "unlockOps",
+      href: "/admin/unlock-ops",
+      icon: KeyRound,
+      key: "unlockOps",
+      adminOnly: true,
+      opsOnly: true,
+    },
+  ];
+
+  const system: NavItem[] = [
+    { id: "settings", href: "/admin/settings", icon: Settings, key: "settings" },
+    {
+      id: "audit",
+      href: "/admin/audit",
+      icon: ScrollText,
+      key: "audit",
+      badgeKey: "audit",
+    },
+    { id: "health", href: "/admin/health", icon: Activity, key: "health" },
+    {
+      id: "categories",
+      href: "/admin/categories",
+      icon: Tags,
+      key: "categories",
+      adminOnly: true,
+    },
+  ];
+
+  const more: NavItem[] = [
+    {
+      id: "analytics",
+      href: "/admin/analytics",
+      icon: BarChart3,
+      key: "analytics",
+    },
+    {
+      id: "marketplace",
+      href: "/admin/marketplace",
+      icon: Megaphone,
+      key: "marketplace",
+      adminOnly: true,
+    },
+  ];
+
+  const filter = (items: NavItem[]) =>
+    items.filter((item) => {
+      if (item.adminOnly && !opts.showAdminOnly) return false;
+      if (item.opsOnly && !opts.marketplaceOps) return false;
+      return true;
+    });
+
+  return [
+    { id: "people", labelKey: "groups.people", items: filter(people) },
+    { id: "operations", labelKey: "groups.operations", items: filter(operations) },
+    { id: "system", labelKey: "groups.system", items: filter(system) },
+    { id: "more", labelKey: "groups.more", items: filter(more) },
+  ].filter((g) => g.items.length > 0);
+}
 
 export function AdminSidebar({
   showAdminOnly = true,
@@ -91,70 +173,89 @@ export function AdminSidebar({
   const t = useTranslations("admin.nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const { badges } = useAdminBadges();
 
-  const navItems = useMemo(() => {
-    type Item = {
-      href: string;
-      icon: typeof LayoutDashboard;
-      key: string;
-      exact?: boolean;
-      badgeKey?: AdminBadgeChannel;
-    };
-    const shared: Item[] = [...sharedNav];
-    if (marketplaceOps) {
-      shared.splice(1, 0, {
-        href: "/admin/inspect",
-        icon: ScanSearch,
-        key: "inspect",
-      });
-    }
-    if (!showAdminOnly) return shared;
+  const groups = useMemo(
+    () => buildGroups({ showAdminOnly, marketplaceOps }),
+    [showAdminOnly, marketplaceOps],
+  );
 
-    const adminOnly: Item[] = [...adminOnlyNav];
-    if (marketplaceOps) {
-      adminOnly.unshift(
-        { href: "/admin/unlock-ops", icon: KeyRound, key: "unlockOps" },
-        { href: "/admin/cells", icon: MapPinned, key: "cells" },
-      );
-      // Rename subscriptions emphasis via key already "subscriptions" — UI shows read-only
-    }
-    return [...shared, ...adminOnly];
-  }, [showAdminOnly, marketplaceOps]);
+  const flatItems = useMemo(() => {
+    const items: NavItem[] = [HOME];
+    for (const g of groups) items.push(...g.items);
+    return items;
+  }, [groups]);
+
+  const activeItem = getActiveNavigationItem(pathname, flatItems);
+  const moreGroup = groups.find((g) => g.id === "more");
+  const activeInMore = Boolean(
+    moreGroup?.items.some((item) => item.id === activeItem.id),
+  );
+  const moreExpanded = moreOpen || activeInMore;
+
+  const renderLink = (item: NavItem) => {
+    const Icon = item.icon;
+    const active = activeItem.id === item.id;
+    const badgeCount = item.badgeKey ? (badges[item.badgeKey] ?? 0) : 0;
+    return (
+      <Link
+        key={item.id}
+        href={item.href}
+        onClick={() => setMobileOpen(false)}
+        aria-current={active ? "page" : undefined}
+        className={cn(
+          "flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)]",
+          active
+            ? "bg-primary text-primary-foreground"
+            : "text-muted-foreground hover:bg-muted hover:text-foreground",
+        )}
+      >
+        <Icon className="size-4 shrink-0" aria-hidden />
+        <span className="flex-1 truncate">{t(item.key)}</span>
+        <NavCountBadge count={badgeCount} />
+      </Link>
+    );
+  };
 
   const NavContent = () => (
-    <nav className="flex flex-col gap-1" aria-label={t("menu")}>
-      {navItems.map((item) => {
-        const { href, icon: Icon, key } = item;
-        const exact = "exact" in item && item.exact;
-        const badgeKey = "badgeKey" in item ? (item.badgeKey as AdminBadgeChannel) : undefined;
-        const badgeCount = badgeKey ? (badges[badgeKey] ?? 0) : 0;
-        const active = exact
-          ? pathname === href
-          : pathname === href || pathname.startsWith(`${href}/`);
-        return (
-          <Link
-            key={href}
-            href={href}
-            onClick={() => setMobileOpen(false)}
-            className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-              active
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
-            )}
-          >
-            <Icon className="size-4 shrink-0" aria-hidden />
-            <span className="flex-1">{t(key)}</span>
-            {badgeCount > 0 ? (
-              <span
-                className="inline-flex min-w-5 items-center justify-center rounded-full bg-[var(--dalily-gold)] px-1.5 py-0.5 text-[0.625rem] font-bold text-[var(--dalily-navy)]"
-                aria-label={`${badgeCount}`}
+    <nav className="flex flex-col gap-5" aria-label={t("menu")}>
+      <div className="space-y-1">{renderLink(HOME)}</div>
+
+      {groups.map((group) => {
+        if (group.id === "more") {
+          return (
+            <div key={group.id} className="space-y-1">
+              <button
+                type="button"
+                onClick={() => setMoreOpen((v) => !v)}
+                className={cn(
+                  "flex min-h-10 w-full items-center justify-between rounded-lg px-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase",
+                  "hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)]",
+                )}
+                aria-expanded={moreExpanded}
               >
-                {badgeCount > 99 ? "99+" : badgeCount}
-              </span>
-            ) : null}
-          </Link>
+                {t(group.labelKey)}
+                <ChevronDown
+                  className={cn("size-4 transition-transform", moreExpanded && "rotate-180")}
+                  aria-hidden
+                />
+              </button>
+              {moreExpanded ? (
+                <div className="space-y-1">{group.items.map(renderLink)}</div>
+              ) : null}
+            </div>
+          );
+        }
+
+        return (
+          <div key={group.id} className="space-y-1">
+            <p className="px-3 text-[0.65rem] font-semibold tracking-wider text-muted-foreground uppercase">
+              {t(group.labelKey)}
+            </p>
+            {group.items.map(renderLink)}
+          </div>
         );
       })}
     </nav>
@@ -163,7 +264,12 @@ export function AdminSidebar({
   return (
     <>
       <div className="mb-4 hidden md:block lg:hidden">
-        <Button variant="outline" size="sm" onClick={() => setMobileOpen(!mobileOpen)} className="gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="min-h-11 gap-2"
+        >
           <Menu className="size-4" />
           {t("menu")}
         </Button>

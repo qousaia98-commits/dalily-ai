@@ -13,12 +13,15 @@ export const CUSTOMER_ORDER_TABS = [
 
 export type CustomerOrderTab = (typeof CUSTOMER_ORDER_TABS)[number];
 
+/**
+ * Provider “My Jobs” tabs — new opportunities live under /business/opportunities.
+ * waiting = awaiting customer confirmation · active = in progress · completed · cancelled
+ */
 export const PROVIDER_ORDER_TABS = [
-  "new",
-  "offers",
-  "accepted",
+  "waiting",
   "active",
   "completed",
+  "cancelled",
 ] as const;
 
 export type ProviderOrderTab = (typeof PROVIDER_ORDER_TABS)[number];
@@ -54,19 +57,18 @@ export function providerOrderTab(request: ServiceRequestDetail): ProviderOrderTa
     switch (display) {
       case "waiting":
       case "pending":
-        return "new";
       case "quoted":
-        return "offers";
+        return "waiting";
       case "accepted":
-        return "accepted";
       case "in_progress":
       case "disputed":
         return "active";
       case "completed":
       case "reviewed":
+        return "completed";
       case "cancelled":
       case "rejected":
-        return "completed";
+        return "cancelled";
       default:
         return "active";
     }
@@ -75,13 +77,11 @@ export function providerOrderTab(request: ServiceRequestDetail): ProviderOrderTa
   const status = request.status as ServiceRequestStatus;
   switch (status) {
     case "pending":
-      return "new";
     case "quoted":
     case "quote_declined":
-      return "offers";
+      return "waiting";
     case "accepted":
     case "quote_accepted":
-      return "accepted";
     case "in_progress":
     case "completed_by_business":
     case "disputed":
@@ -91,9 +91,9 @@ export function providerOrderTab(request: ServiceRequestDetail): ProviderOrderTa
       return "completed";
     case "rejected":
     case "cancelled":
-      return "completed";
+      return "cancelled";
     default:
-      return "new";
+      return "waiting";
   }
 }
 
