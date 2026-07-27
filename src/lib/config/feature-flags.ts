@@ -215,6 +215,78 @@ export function isChatAuthV2Enabled(): boolean {
 }
 
 /**
+ * Sprint 8 Phase 1 — AI Smart Matching Engine (modular weighted signals).
+ * When false: legacy AI match score in lib/ai/matching remains.
+ */
+export function isSmartMatchingEngineEnabled(): boolean {
+  return (
+    envFlag("SMART_MATCHING_ENGINE") ||
+    envFlag("SMART_MATCHING_ENGINE_V1") ||
+    envFlag("AI_SMART_MATCHING")
+  );
+}
+
+/**
+ * Sprint 8 Phase 2 — AI Dynamic Pricing & Market Intelligence.
+ * Recommendations only — Dalily never forces provider prices.
+ */
+export function isAiDynamicPricingEnabled(): boolean {
+  return (
+    envFlag("AI_DYNAMIC_PRICING") ||
+    envFlag("AI_DYNAMIC_PRICING_V1") ||
+    envFlag("DYNAMIC_PRICING")
+  );
+}
+
+/**
+ * Sprint 8 Phase 3 — AI Demand Forecasting & Market Prediction.
+ * Advisory forecasts only — never guarantees future outcomes.
+ */
+export function isAiDemandForecastingEnabled(): boolean {
+  return (
+    envFlag("AI_DEMAND_FORECASTING") ||
+    envFlag("AI_DEMAND_FORECASTING_V1") ||
+    envFlag("DEMAND_FORECASTING")
+  );
+}
+
+/**
+ * Sprint 8 Phase 4 — AI Scheduling, Capacity & Opportunity Planner.
+ * Advisory recommendations only — providers always decide.
+ */
+export function isAiSchedulingEnabled(): boolean {
+  return (
+    envFlag("AI_SCHEDULING") ||
+    envFlag("AI_SCHEDULING_V1") ||
+    envFlag("AI_CAPACITY_OPTIMIZATION")
+  );
+}
+
+/**
+ * Sprint 8 Phase 5 — AI Business Assistant (coaching & insights).
+ * Recommendations only — providers remain in control.
+ */
+export function isAiBusinessAssistantEnabled(): boolean {
+  return (
+    envFlag("AI_BUSINESS_ASSISTANT") ||
+    envFlag("AI_BUSINESS_ASSISTANT_V1") ||
+    envFlag("BUSINESS_ASSISTANT")
+  );
+}
+
+/**
+ * Sprint 8 Phase 6 — AI Marketplace Intelligence Platform.
+ * Unified advisory intelligence; simulations never affect production.
+ */
+export function isAiMarketplaceIntelligenceEnabled(): boolean {
+  return (
+    envFlag("AI_MARKETPLACE_INTELLIGENCE") ||
+    envFlag("AI_MARKETPLACE_INTELLIGENCE_V1") ||
+    envFlag("MARKETPLACE_INTELLIGENCE")
+  );
+}
+
+/**
  * Sprint 8 — Provider dashboard: Unlock-first action stack, opportunities feed,
  * why-matched, offer-primary nav. When false: legacy Provider Success home.
  */

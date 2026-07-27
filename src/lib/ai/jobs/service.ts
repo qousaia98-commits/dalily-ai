@@ -64,6 +64,39 @@ export async function getProviderPrepForRequest(input: {
 
   if (!analysis) return null;
 
+  // Sprint 8 Phase 2 — enrich catalog price with live market recommendation
+  try {
+    const { isAiDynamicPricingEnabled } = await import(
+      "@/lib/config/feature-flags"
+    );
+    if (isAiDynamicPricingEnabled()) {
+      const { recommendPrice } = await import("@/lib/pricing-engine/service");
+      const computation = await recommendPrice({
+        categoryKey: analysis.categorySlug || analysis.serviceKey || "general",
+        catalogMin: analysis.price.min,
+        catalogTypical: analysis.price.typical,
+        catalogMax: analysis.price.max,
+        currency: analysis.price.currency,
+        urgency01: input.urgency === "emergency" ? 0.9 : 0.2,
+        requestId: input.serviceRequestId,
+        persist: false,
+      });
+      if (computation) {
+        analysis = {
+          ...analysis,
+          price: {
+            ...analysis.price,
+            min: computation.suggestedMin,
+            typical: computation.suggestedAvg,
+            max: computation.suggestedPremium,
+          },
+        };
+      }
+    }
+  } catch {
+    /* catalog fallback */
+  }
+
   void emitAiLearningEvent({
     eventType: "job_prep_shown",
     serviceRequestId: input.serviceRequestId,

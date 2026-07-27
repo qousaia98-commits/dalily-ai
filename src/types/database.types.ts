@@ -5026,6 +5026,1189 @@ export type Database = {
         };
         Relationships: [];
       };
+
+      matching_weights: {
+        Row: {
+          signal_key: string;
+          category: string;
+          weight: number;
+          enabled: boolean;
+          ml_ready: boolean;
+          description: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          signal_key: string;
+          category: string;
+          weight?: number;
+          enabled?: boolean;
+          ml_ready?: boolean;
+          description?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          signal_key?: string;
+          category?: string;
+          weight?: number;
+          enabled?: boolean;
+          ml_ready?: boolean;
+          description?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      matching_scores: {
+        Row: {
+          id: string;
+          request_id: string | null;
+          customer_id: string | null;
+          provider_id: string;
+          internal_score: number;
+          signal_breakdown: Json;
+          fairness_boost: number;
+          ml_contribution: number;
+          algorithm_version: string;
+          experiment_id: string | null;
+          latency_ms: number | null;
+          rank: number | null;
+          cached_until: string | null;
+          computed_at: string;
+        };
+        Insert: {
+          id?: string;
+          request_id?: string | null;
+          customer_id?: string | null;
+          provider_id: string;
+          internal_score: number;
+          signal_breakdown?: Json;
+          fairness_boost?: number;
+          ml_contribution?: number;
+          algorithm_version?: string;
+          experiment_id?: string | null;
+          latency_ms?: number | null;
+          rank?: number | null;
+          cached_until?: string | null;
+          computed_at?: string;
+        };
+        Update: {
+          id?: string;
+          request_id?: string | null;
+          customer_id?: string | null;
+          provider_id?: string;
+          internal_score?: number;
+          signal_breakdown?: Json;
+          fairness_boost?: number;
+          ml_contribution?: number;
+          algorithm_version?: string;
+          experiment_id?: string | null;
+          latency_ms?: number | null;
+          rank?: number | null;
+          cached_until?: string | null;
+          computed_at?: string;
+        };
+        Relationships: [];
+      };
+      matching_history: {
+        Row: {
+          id: string;
+          request_id: string | null;
+          customer_id: string | null;
+          provider_ids: Json;
+          scores: Json;
+          algorithm_version: string;
+          experiment_id: string | null;
+          latency_ms: number | null;
+          source: string;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          request_id?: string | null;
+          customer_id?: string | null;
+          provider_ids?: Json;
+          scores?: Json;
+          algorithm_version: string;
+          experiment_id?: string | null;
+          latency_ms?: number | null;
+          source?: string;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          request_id?: string | null;
+          customer_id?: string | null;
+          provider_ids?: Json;
+          scores?: Json;
+          algorithm_version?: string;
+          experiment_id?: string | null;
+          latency_ms?: number | null;
+          source?: string;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      matching_feedback: {
+        Row: {
+          id: string;
+          request_id: string | null;
+          booking_id: string | null;
+          customer_id: string | null;
+          provider_id: string;
+          recommended: boolean;
+          accepted: boolean | null;
+          completed: boolean | null;
+          rating: number | null;
+          complaint: boolean;
+          repeat_booking: boolean;
+          algorithm_version: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          request_id?: string | null;
+          booking_id?: string | null;
+          customer_id?: string | null;
+          provider_id: string;
+          recommended?: boolean;
+          accepted?: boolean | null;
+          completed?: boolean | null;
+          rating?: number | null;
+          complaint?: boolean;
+          repeat_booking?: boolean;
+          algorithm_version?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          request_id?: string | null;
+          booking_id?: string | null;
+          customer_id?: string | null;
+          provider_id?: string;
+          recommended?: boolean;
+          accepted?: boolean | null;
+          completed?: boolean | null;
+          rating?: number | null;
+          complaint?: boolean;
+          repeat_booking?: boolean;
+          algorithm_version?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      matching_explanations: {
+        Row: {
+          id: string;
+          score_id: string | null;
+          request_id: string | null;
+          provider_id: string;
+          code: string;
+          label_en: string;
+          label_ar: string | null;
+          params: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          score_id?: string | null;
+          request_id?: string | null;
+          provider_id: string;
+          code: string;
+          label_en: string;
+          label_ar?: string | null;
+          params?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          score_id?: string | null;
+          request_id?: string | null;
+          provider_id?: string;
+          code?: string;
+          label_en?: string;
+          label_ar?: string | null;
+          params?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      customer_preferences: {
+        Row: {
+          customer_id: string;
+          preferred_language: string | null;
+          preferred_gender: string | null;
+          budget_min: number | null;
+          budget_max: number | null;
+          preferred_response_speed: string | null;
+          favourite_provider_ids: Json;
+          preferred_hours: Json;
+          favourite_categories: Json;
+          frequent_locations: Json;
+          learned_profile: Json;
+          updated_at: string;
+        };
+        Insert: {
+          customer_id: string;
+          preferred_language?: string | null;
+          preferred_gender?: string | null;
+          budget_min?: number | null;
+          budget_max?: number | null;
+          preferred_response_speed?: string | null;
+          favourite_provider_ids?: Json;
+          preferred_hours?: Json;
+          favourite_categories?: Json;
+          frequent_locations?: Json;
+          learned_profile?: Json;
+          updated_at?: string;
+        };
+        Update: {
+          customer_id?: string;
+          preferred_language?: string | null;
+          preferred_gender?: string | null;
+          budget_min?: number | null;
+          budget_max?: number | null;
+          preferred_response_speed?: string | null;
+          favourite_provider_ids?: Json;
+          preferred_hours?: Json;
+          favourite_categories?: Json;
+          frequent_locations?: Json;
+          learned_profile?: Json;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      provider_capacity: {
+        Row: {
+          provider_id: string;
+          max_daily_jobs: number;
+          jobs_today: number;
+          vacation_mode: boolean;
+          pause_mode: boolean;
+          accepting_requests: boolean;
+          business_hours: Json;
+          next_available_at: string | null;
+          workload_score: number;
+          updated_at: string;
+        };
+        Insert: {
+          provider_id: string;
+          max_daily_jobs?: number;
+          jobs_today?: number;
+          vacation_mode?: boolean;
+          pause_mode?: boolean;
+          accepting_requests?: boolean;
+          business_hours?: Json;
+          next_available_at?: string | null;
+          workload_score?: number;
+          updated_at?: string;
+        };
+        Update: {
+          provider_id?: string;
+          max_daily_jobs?: number;
+          jobs_today?: number;
+          vacation_mode?: boolean;
+          pause_mode?: boolean;
+          accepting_requests?: boolean;
+          business_hours?: Json;
+          next_available_at?: string | null;
+          workload_score?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      matching_experiments: {
+        Row: {
+          id: string;
+          experiment_key: string;
+          title: string;
+          description: string | null;
+          algorithm_a: string;
+          algorithm_b: string;
+          traffic_b_pct: number;
+          active: boolean;
+          config: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          experiment_key: string;
+          title: string;
+          description?: string | null;
+          algorithm_a?: string;
+          algorithm_b?: string;
+          traffic_b_pct?: number;
+          active?: boolean;
+          config?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          experiment_key?: string;
+          title?: string;
+          description?: string | null;
+          algorithm_a?: string;
+          algorithm_b?: string;
+          traffic_b_pct?: number;
+          active?: boolean;
+          config?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      matching_fairness_state: {
+        Row: {
+          provider_id: string;
+          exploration_boost: number;
+          cold_start_boost: number;
+          rotation_token: number;
+          boost_expires_at: string | null;
+          impressions: number;
+          selections: number;
+          updated_at: string;
+        };
+        Insert: {
+          provider_id: string;
+          exploration_boost?: number;
+          cold_start_boost?: number;
+          rotation_token?: number;
+          boost_expires_at?: string | null;
+          impressions?: number;
+          selections?: number;
+          updated_at?: string;
+        };
+        Update: {
+          provider_id?: string;
+          exploration_boost?: number;
+          cold_start_boost?: number;
+          rotation_token?: number;
+          boost_expires_at?: string | null;
+          impressions?: number;
+          selections?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      pricing_weights: {
+        Row: {
+          signal_key: string;
+          category: string;
+          weight: number;
+          enabled: boolean;
+          ml_ready: boolean;
+          description: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          signal_key: string;
+          category: string;
+          weight?: number;
+          enabled?: boolean;
+          ml_ready?: boolean;
+          description?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          signal_key?: string;
+          category?: string;
+          weight?: number;
+          enabled?: boolean;
+          ml_ready?: boolean;
+          description?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      pricing_market_data: {
+        Row: {
+          id: string;
+          category_key: string;
+          region_key: string;
+          currency: string;
+          sample_count: number;
+          avg_price: number | null;
+          p25_price: number | null;
+          p50_price: number | null;
+          p75_price: number | null;
+          min_price: number | null;
+          max_price: number | null;
+          demand_index: number;
+          acceptance_rate: number | null;
+          completion_rate: number | null;
+          computed_at: string;
+        };
+        Insert: {
+          id?: string;
+          category_key: string;
+          region_key?: string;
+          currency?: string;
+          sample_count?: number;
+          avg_price?: number | null;
+          p25_price?: number | null;
+          p50_price?: number | null;
+          p75_price?: number | null;
+          min_price?: number | null;
+          max_price?: number | null;
+          demand_index?: number;
+          acceptance_rate?: number | null;
+          completion_rate?: number | null;
+          computed_at?: string;
+        };
+        Update: {
+          id?: string;
+          category_key?: string;
+          region_key?: string;
+          currency?: string;
+          sample_count?: number;
+          avg_price?: number | null;
+          p25_price?: number | null;
+          p50_price?: number | null;
+          p75_price?: number | null;
+          min_price?: number | null;
+          max_price?: number | null;
+          demand_index?: number;
+          acceptance_rate?: number | null;
+          completion_rate?: number | null;
+          computed_at?: string;
+        };
+        Relationships: [];
+      };
+      pricing_history: {
+        Row: {
+          id: string;
+          request_id: string | null;
+          offer_id: string | null;
+          provider_id: string | null;
+          customer_id: string | null;
+          category_key: string | null;
+          region_key: string | null;
+          currency: string;
+          suggested_min: number;
+          suggested_avg: number;
+          suggested_premium: number;
+          confidence: number;
+          market_position: string | null;
+          signal_breakdown: Json;
+          algorithm_version: string;
+          experiment_id: string | null;
+          latency_ms: number | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          request_id?: string | null;
+          offer_id?: string | null;
+          provider_id?: string | null;
+          customer_id?: string | null;
+          category_key?: string | null;
+          region_key?: string | null;
+          currency?: string;
+          suggested_min: number;
+          suggested_avg: number;
+          suggested_premium: number;
+          confidence?: number;
+          market_position?: string | null;
+          signal_breakdown?: Json;
+          algorithm_version?: string;
+          experiment_id?: string | null;
+          latency_ms?: number | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          request_id?: string | null;
+          offer_id?: string | null;
+          provider_id?: string | null;
+          customer_id?: string | null;
+          category_key?: string | null;
+          region_key?: string | null;
+          currency?: string;
+          suggested_min?: number;
+          suggested_avg?: number;
+          suggested_premium?: number;
+          confidence?: number;
+          market_position?: string | null;
+          signal_breakdown?: Json;
+          algorithm_version?: string;
+          experiment_id?: string | null;
+          latency_ms?: number | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      pricing_explanations: {
+        Row: {
+          id: string;
+          history_id: string | null;
+          code: string;
+          label_en: string;
+          label_ar: string | null;
+          params: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          history_id?: string | null;
+          code: string;
+          label_en: string;
+          label_ar?: string | null;
+          params?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          history_id?: string | null;
+          code?: string;
+          label_en?: string;
+          label_ar?: string | null;
+          params?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      pricing_feedback: {
+        Row: {
+          id: string;
+          history_id: string | null;
+          provider_id: string | null;
+          customer_id: string | null;
+          offered_price: number | null;
+          accepted: boolean | null;
+          completed: boolean | null;
+          within_suggested_range: boolean | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          history_id?: string | null;
+          provider_id?: string | null;
+          customer_id?: string | null;
+          offered_price?: number | null;
+          accepted?: boolean | null;
+          completed?: boolean | null;
+          within_suggested_range?: boolean | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          history_id?: string | null;
+          provider_id?: string | null;
+          customer_id?: string | null;
+          offered_price?: number | null;
+          accepted?: boolean | null;
+          completed?: boolean | null;
+          within_suggested_range?: boolean | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      pricing_experiments: {
+        Row: {
+          id: string;
+          experiment_key: string;
+          title: string;
+          description: string | null;
+          algorithm_a: string;
+          algorithm_b: string;
+          traffic_b_pct: number;
+          active: boolean;
+          config: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          experiment_key: string;
+          title: string;
+          description?: string | null;
+          algorithm_a?: string;
+          algorithm_b?: string;
+          traffic_b_pct?: number;
+          active?: boolean;
+          config?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          experiment_key?: string;
+          title?: string;
+          description?: string | null;
+          algorithm_a?: string;
+          algorithm_b?: string;
+          traffic_b_pct?: number;
+          active?: boolean;
+          config?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      forecast_signal_weights: {
+        Row: {
+          signal_key: string;
+          category: string;
+          weight: number;
+          enabled: boolean;
+          ml_ready: boolean;
+          description: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          signal_key: string;
+          category: string;
+          weight?: number;
+          enabled?: boolean;
+          ml_ready?: boolean;
+          description?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          signal_key?: string;
+          category?: string;
+          weight?: number;
+          enabled?: boolean;
+          ml_ready?: boolean;
+          description?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      forecast_models: {
+        Row: {
+          model_key: string;
+          title: string;
+          description: string | null;
+          algorithm: string;
+          signal_weights: Json;
+          enabled: boolean;
+          ml_ready: boolean;
+          is_default: boolean;
+          config: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          model_key: string;
+          title: string;
+          description?: string | null;
+          algorithm?: string;
+          signal_weights?: Json;
+          enabled?: boolean;
+          ml_ready?: boolean;
+          is_default?: boolean;
+          config?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          model_key?: string;
+          title?: string;
+          description?: string | null;
+          algorithm?: string;
+          signal_weights?: Json;
+          enabled?: boolean;
+          ml_ready?: boolean;
+          is_default?: boolean;
+          config?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      forecast_history: {
+        Row: {
+          id: string;
+          model_key: string;
+          algorithm_version: string;
+          experiment_id: string | null;
+          category_key: string | null;
+          region_key: string;
+          horizon: string;
+          expected_demand: number;
+          confidence: number;
+          trend: string;
+          recommended_capacity: number | null;
+          signal_breakdown: Json;
+          latency_ms: number | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          model_key?: string;
+          algorithm_version?: string;
+          experiment_id?: string | null;
+          category_key?: string | null;
+          region_key?: string;
+          horizon: string;
+          expected_demand: number;
+          confidence?: number;
+          trend?: string;
+          recommended_capacity?: number | null;
+          signal_breakdown?: Json;
+          latency_ms?: number | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          model_key?: string;
+          algorithm_version?: string;
+          experiment_id?: string | null;
+          category_key?: string | null;
+          region_key?: string;
+          horizon?: string;
+          expected_demand?: number;
+          confidence?: number;
+          trend?: string;
+          recommended_capacity?: number | null;
+          signal_breakdown?: Json;
+          latency_ms?: number | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      forecast_results: {
+        Row: {
+          id: string;
+          history_id: string | null;
+          provider_id: string | null;
+          category_key: string | null;
+          region_key: string;
+          horizon: string;
+          expected_demand: number;
+          confidence: number;
+          trend: string;
+          recommended_capacity: number | null;
+          busy_periods: Json;
+          best_hours: Json;
+          revenue_opportunity: number | null;
+          vacation_windows: Json;
+          public_payload: Json;
+          cached_until: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          history_id?: string | null;
+          provider_id?: string | null;
+          category_key?: string | null;
+          region_key?: string;
+          horizon: string;
+          expected_demand: number;
+          confidence?: number;
+          trend?: string;
+          recommended_capacity?: number | null;
+          busy_periods?: Json;
+          best_hours?: Json;
+          revenue_opportunity?: number | null;
+          vacation_windows?: Json;
+          public_payload?: Json;
+          cached_until?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          history_id?: string | null;
+          provider_id?: string | null;
+          category_key?: string | null;
+          region_key?: string;
+          horizon?: string;
+          expected_demand?: number;
+          confidence?: number;
+          trend?: string;
+          recommended_capacity?: number | null;
+          busy_periods?: Json;
+          best_hours?: Json;
+          revenue_opportunity?: number | null;
+          vacation_windows?: Json;
+          public_payload?: Json;
+          cached_until?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      forecast_accuracy: {
+        Row: {
+          id: string;
+          history_id: string | null;
+          model_key: string | null;
+          horizon: string;
+          predicted_demand: number;
+          actual_demand: number | null;
+          absolute_error: number | null;
+          percent_error: number | null;
+          evaluated_at: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          history_id?: string | null;
+          model_key?: string | null;
+          horizon: string;
+          predicted_demand: number;
+          actual_demand?: number | null;
+          absolute_error?: number | null;
+          percent_error?: number | null;
+          evaluated_at?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          history_id?: string | null;
+          model_key?: string | null;
+          horizon?: string;
+          predicted_demand?: number;
+          actual_demand?: number | null;
+          absolute_error?: number | null;
+          percent_error?: number | null;
+          evaluated_at?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      forecast_explanations: {
+        Row: {
+          id: string;
+          history_id: string | null;
+          code: string;
+          label_en: string;
+          label_ar: string | null;
+          audience: string;
+          params: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          history_id?: string | null;
+          code: string;
+          label_en: string;
+          label_ar?: string | null;
+          audience?: string;
+          params?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          history_id?: string | null;
+          code?: string;
+          label_en?: string;
+          label_ar?: string | null;
+          audience?: string;
+          params?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      forecast_market_snapshots: {
+        Row: {
+          id: string;
+          category_key: string;
+          region_key: string;
+          booking_velocity: number;
+          demand_index: number;
+          cancellation_rate: number | null;
+          complaint_rate: number | null;
+          provider_availability_index: number | null;
+          pricing_trend_index: number | null;
+          growing: boolean;
+          declining: boolean;
+          sample_count: number;
+          snapshot_json: Json;
+          computed_at: string;
+        };
+        Insert: {
+          id?: string;
+          category_key: string;
+          region_key?: string;
+          booking_velocity?: number;
+          demand_index?: number;
+          cancellation_rate?: number | null;
+          complaint_rate?: number | null;
+          provider_availability_index?: number | null;
+          pricing_trend_index?: number | null;
+          growing?: boolean;
+          declining?: boolean;
+          sample_count?: number;
+          snapshot_json?: Json;
+          computed_at?: string;
+        };
+        Update: {
+          id?: string;
+          category_key?: string;
+          region_key?: string;
+          booking_velocity?: number;
+          demand_index?: number;
+          cancellation_rate?: number | null;
+          complaint_rate?: number | null;
+          provider_availability_index?: number | null;
+          pricing_trend_index?: number | null;
+          growing?: boolean;
+          declining?: boolean;
+          sample_count?: number;
+          snapshot_json?: Json;
+          computed_at?: string;
+        };
+        Relationships: [];
+      };
+      forecast_experiments: {
+        Row: {
+          id: string;
+          experiment_key: string;
+          title: string;
+          description: string | null;
+          algorithm_a: string;
+          algorithm_b: string;
+          traffic_b_pct: number;
+          active: boolean;
+          config: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          experiment_key: string;
+          title: string;
+          description?: string | null;
+          algorithm_a?: string;
+          algorithm_b?: string;
+          traffic_b_pct?: number;
+          active?: boolean;
+          config?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          experiment_key?: string;
+          title?: string;
+          description?: string | null;
+          algorithm_a?: string;
+          algorithm_b?: string;
+          traffic_b_pct?: number;
+          active?: boolean;
+          config?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+          schedule_signal_weights: {
+        Row: { signal_key: string; category: string; weight: number; enabled: boolean; ml_ready: boolean; description: string | null; updated_at: string };
+        Insert: { signal_key: string; category: string; weight?: number; enabled?: boolean; ml_ready?: boolean; description?: string | null; updated_at?: string };
+        Update: { signal_key?: string; category?: string; weight?: number; enabled?: boolean; ml_ready?: boolean; description?: string | null; updated_at?: string };
+        Relationships: [];
+      };
+      schedule_profiles: {
+        Row: { profile_key: string; title: string; description: string | null; optimization_goal: string; signal_weights: Json; enabled: boolean; ml_ready: boolean; is_default: boolean; config: Json; created_at: string; updated_at: string };
+        Insert: { profile_key: string; title: string; description?: string | null; optimization_goal?: string; signal_weights?: Json; enabled?: boolean; ml_ready?: boolean; is_default?: boolean; config?: Json; created_at?: string; updated_at?: string };
+        Update: { profile_key?: string; title?: string; description?: string | null; optimization_goal?: string; signal_weights?: Json; enabled?: boolean; ml_ready?: boolean; is_default?: boolean; config?: Json; created_at?: string; updated_at?: string };
+        Relationships: [];
+      };
+      schedule_history: {
+        Row: { id: string; provider_id: string | null; profile_key: string; algorithm_version: string; experiment_id: string | null; schedule_date: string | null; utilization: number | null; travel_minutes: number | null; idle_minutes: number | null; revenue_forecast: number | null; burnout_risk: number | null; opportunity_score: number | null; signal_breakdown: Json; optimized_payload: Json; latency_ms: number | null; metadata: Json; created_at: string };
+        Insert: { id?: string; provider_id?: string | null; profile_key?: string; algorithm_version?: string; experiment_id?: string | null; schedule_date?: string | null; utilization?: number | null; travel_minutes?: number | null; idle_minutes?: number | null; revenue_forecast?: number | null; burnout_risk?: number | null; opportunity_score?: number | null; signal_breakdown?: Json; optimized_payload?: Json; latency_ms?: number | null; metadata?: Json; created_at?: string };
+        Update: { id?: string; provider_id?: string | null; profile_key?: string; algorithm_version?: string; experiment_id?: string | null; schedule_date?: string | null; utilization?: number | null; travel_minutes?: number | null; idle_minutes?: number | null; revenue_forecast?: number | null; burnout_risk?: number | null; opportunity_score?: number | null; signal_breakdown?: Json; optimized_payload?: Json; latency_ms?: number | null; metadata?: Json; created_at?: string };
+        Relationships: [];
+      };
+      schedule_recommendations: {
+        Row: { id: string; history_id: string | null; provider_id: string | null; kind: string; title_en: string; title_ar: string | null; payload: Json; score: number | null; status: string; created_at: string; decided_at: string | null };
+        Insert: { id?: string; history_id?: string | null; provider_id?: string | null; kind: string; title_en: string; title_ar?: string | null; payload?: Json; score?: number | null; status?: string; created_at?: string; decided_at?: string | null };
+        Update: { id?: string; history_id?: string | null; provider_id?: string | null; kind?: string; title_en?: string; title_ar?: string | null; payload?: Json; score?: number | null; status?: string; created_at?: string; decided_at?: string | null };
+        Relationships: [];
+      };
+      capacity_history: {
+        Row: { id: string; provider_id: string; day: string; max_daily_jobs: number | null; max_weekly_jobs: number | null; jobs_booked: number; remaining_capacity: number | null; available_capacity: number | null; overbooking_risk: number | null; burnout_risk: number | null; vacation_mode: boolean; pause_mode: boolean; workload_score: number | null; metadata: Json; created_at: string };
+        Insert: { id?: string; provider_id: string; day: string; max_daily_jobs?: number | null; max_weekly_jobs?: number | null; jobs_booked?: number; remaining_capacity?: number | null; available_capacity?: number | null; overbooking_risk?: number | null; burnout_risk?: number | null; vacation_mode?: boolean; pause_mode?: boolean; workload_score?: number | null; metadata?: Json; created_at?: string };
+        Update: { id?: string; provider_id?: string; day?: string; max_daily_jobs?: number | null; max_weekly_jobs?: number | null; jobs_booked?: number; remaining_capacity?: number | null; available_capacity?: number | null; overbooking_risk?: number | null; burnout_risk?: number | null; vacation_mode?: boolean; pause_mode?: boolean; workload_score?: number | null; metadata?: Json; created_at?: string };
+        Relationships: [];
+      };
+      capacity_predictions: {
+        Row: { id: string; provider_id: string | null; horizon: string; predicted_jobs: number | null; predicted_utilization: number | null; burnout_risk: number | null; algorithm_version: string; payload: Json; created_at: string };
+        Insert: { id?: string; provider_id?: string | null; horizon?: string; predicted_jobs?: number | null; predicted_utilization?: number | null; burnout_risk?: number | null; algorithm_version?: string; payload?: Json; created_at?: string };
+        Update: { id?: string; provider_id?: string | null; horizon?: string; predicted_jobs?: number | null; predicted_utilization?: number | null; burnout_risk?: number | null; algorithm_version?: string; payload?: Json; created_at?: string };
+        Relationships: [];
+      };
+      schedule_explanations: {
+        Row: { id: string; history_id: string | null; code: string; label_en: string; label_ar: string | null; audience: string; params: Json; created_at: string };
+        Insert: { id?: string; history_id?: string | null; code: string; label_en: string; label_ar?: string | null; audience?: string; params?: Json; created_at?: string };
+        Update: { id?: string; history_id?: string | null; code?: string; label_en?: string; label_ar?: string | null; audience?: string; params?: Json; created_at?: string };
+        Relationships: [];
+      };
+      provider_routes: {
+        Row: { id: string; provider_id: string; route_date: string; stops: Json; total_distance_km: number | null; total_travel_min: number | null; algorithm_version: string; cached_until: string | null; created_at: string };
+        Insert: { id?: string; provider_id: string; route_date: string; stops?: Json; total_distance_km?: number | null; total_travel_min?: number | null; algorithm_version?: string; cached_until?: string | null; created_at?: string };
+        Update: { id?: string; provider_id?: string; route_date?: string; stops?: Json; total_distance_km?: number | null; total_travel_min?: number | null; algorithm_version?: string; cached_until?: string | null; created_at?: string };
+        Relationships: [];
+      };
+      provider_schedule_gaps: {
+        Row: { id: string; provider_id: string; gap_date: string; starts_at: string; ends_at: string; duration_minutes: number; status: string; metadata: Json; created_at: string };
+        Insert: { id?: string; provider_id: string; gap_date: string; starts_at: string; ends_at: string; duration_minutes: number; status?: string; metadata?: Json; created_at?: string };
+        Update: { id?: string; provider_id?: string; gap_date?: string; starts_at?: string; ends_at?: string; duration_minutes?: number; status?: string; metadata?: Json; created_at?: string };
+        Relationships: [];
+      };
+      provider_opportunities: {
+        Row: { id: string; provider_id: string; gap_id: string | null; request_id: string | null; assignment_id: string | null; title_en: string; title_ar: string | null; distance_km: number | null; travel_minutes: number | null; expected_earnings: number | null; expected_duration_min: number | null; matching_score: number | null; opportunity_score: number | null; currency: string; status: string; payload: Json; created_at: string; decided_at: string | null };
+        Insert: { id?: string; provider_id: string; gap_id?: string | null; request_id?: string | null; assignment_id?: string | null; title_en: string; title_ar?: string | null; distance_km?: number | null; travel_minutes?: number | null; expected_earnings?: number | null; expected_duration_min?: number | null; matching_score?: number | null; opportunity_score?: number | null; currency?: string; status?: string; payload?: Json; created_at?: string; decided_at?: string | null };
+        Update: { id?: string; provider_id?: string; gap_id?: string | null; request_id?: string | null; assignment_id?: string | null; title_en?: string; title_ar?: string | null; distance_km?: number | null; travel_minutes?: number | null; expected_earnings?: number | null; expected_duration_min?: number | null; matching_score?: number | null; opportunity_score?: number | null; currency?: string; status?: string; payload?: Json; created_at?: string; decided_at?: string | null };
+        Relationships: [];
+      };
+      provider_opportunity_history: {
+        Row: { id: string; opportunity_id: string | null; provider_id: string; action: string; metadata: Json; created_at: string };
+        Insert: { id?: string; opportunity_id?: string | null; provider_id: string; action: string; metadata?: Json; created_at?: string };
+        Update: { id?: string; opportunity_id?: string | null; provider_id?: string; action?: string; metadata?: Json; created_at?: string };
+        Relationships: [];
+      };
+      route_optimization_cache: {
+        Row: { cache_key: string; provider_id: string | null; route_json: Json; total_distance_km: number | null; total_travel_min: number | null; algorithm_version: string; expires_at: string; created_at: string };
+        Insert: { cache_key: string; provider_id?: string | null; route_json?: Json; total_distance_km?: number | null; total_travel_min?: number | null; algorithm_version?: string; expires_at: string; created_at?: string };
+        Update: { cache_key?: string; provider_id?: string | null; route_json?: Json; total_distance_km?: number | null; total_travel_min?: number | null; algorithm_version?: string; expires_at?: string; created_at?: string };
+        Relationships: [];
+      };
+      schedule_experiments: {
+        Row: { id: string; experiment_key: string; title: string; description: string | null; algorithm_a: string; algorithm_b: string; traffic_b_pct: number; active: boolean; config: Json; created_at: string; updated_at: string };
+        Insert: { id?: string; experiment_key: string; title: string; description?: string | null; algorithm_a?: string; algorithm_b?: string; traffic_b_pct?: number; active?: boolean; config?: Json; created_at?: string; updated_at?: string };
+        Update: { id?: string; experiment_key?: string; title?: string; description?: string | null; algorithm_a?: string; algorithm_b?: string; traffic_b_pct?: number; active?: boolean; config?: Json; created_at?: string; updated_at?: string };
+        Relationships: [];
+      };
+          business_health: {
+        Row: { id: string; provider_id: string; health_score: number; revenue_score: number | null; booking_score: number | null; quality_score: number | null; trust_score: number | null; capacity_score: number | null; trend: string; metrics: Json; computed_at: string };
+        Insert: { id?: string; provider_id: string; health_score?: number; revenue_score?: number | null; booking_score?: number | null; quality_score?: number | null; trust_score?: number | null; capacity_score?: number | null; trend?: string; metrics?: Json; computed_at?: string };
+        Update: { id?: string; provider_id?: string; health_score?: number; revenue_score?: number | null; booking_score?: number | null; quality_score?: number | null; trust_score?: number | null; capacity_score?: number | null; trend?: string; metrics?: Json; computed_at?: string };
+        Relationships: [];
+      };
+      business_insights: {
+        Row: { id: string; provider_id: string; code: string; category: string; label_en: string; label_ar: string | null; severity: string; payload: Json; algorithm_version: string; created_at: string };
+        Insert: { id?: string; provider_id: string; code: string; category?: string; label_en: string; label_ar?: string | null; severity?: string; payload?: Json; algorithm_version?: string; created_at?: string };
+        Update: { id?: string; provider_id?: string; code?: string; category?: string; label_en?: string; label_ar?: string | null; severity?: string; payload?: Json; algorithm_version?: string; created_at?: string };
+        Relationships: [];
+      };
+      business_recommendations: {
+        Row: { id: string; provider_id: string; code: string; title_en: string; title_ar: string | null; body_en: string | null; body_ar: string | null; priority: number; status: string; payload: Json; algorithm_version: string; created_at: string; decided_at: string | null };
+        Insert: { id?: string; provider_id: string; code: string; title_en: string; title_ar?: string | null; body_en?: string | null; body_ar?: string | null; priority?: number; status?: string; payload?: Json; algorithm_version?: string; created_at?: string; decided_at?: string | null };
+        Update: { id?: string; provider_id?: string; code?: string; title_en?: string; title_ar?: string | null; body_en?: string | null; body_ar?: string | null; priority?: number; status?: string; payload?: Json; algorithm_version?: string; created_at?: string; decided_at?: string | null };
+        Relationships: [];
+      };
+      business_goals: {
+        Row: { id: string; provider_id: string; goal_type: string; title: string; target_value: number; current_value: number; unit: string | null; period: string; active: boolean; starts_at: string | null; ends_at: string | null; created_at: string; updated_at: string };
+        Insert: { id?: string; provider_id: string; goal_type: string; title: string; target_value: number; current_value?: number; unit?: string | null; period?: string; active?: boolean; starts_at?: string | null; ends_at?: string | null; created_at?: string; updated_at?: string };
+        Update: { id?: string; provider_id?: string; goal_type?: string; title?: string; target_value?: number; current_value?: number; unit?: string | null; period?: string; active?: boolean; starts_at?: string | null; ends_at?: string | null; created_at?: string; updated_at?: string };
+        Relationships: [];
+      };
+      business_goal_progress: {
+        Row: { id: string; goal_id: string; provider_id: string; recorded_value: number; progress_pct: number | null; note: string | null; created_at: string };
+        Insert: { id?: string; goal_id: string; provider_id: string; recorded_value: number; progress_pct?: number | null; note?: string | null; created_at?: string };
+        Update: { id?: string; goal_id?: string; provider_id?: string; recorded_value?: number; progress_pct?: number | null; note?: string | null; created_at?: string };
+        Relationships: [];
+      };
+      business_benchmarks: {
+        Row: { id: string; provider_id: string; region_key: string; category_key: string; cohort: string; percentile: number | null; metrics: Json; computed_at: string };
+        Insert: { id?: string; provider_id: string; region_key?: string; category_key?: string; cohort?: string; percentile?: number | null; metrics?: Json; computed_at?: string };
+        Update: { id?: string; provider_id?: string; region_key?: string; category_key?: string; cohort?: string; percentile?: number | null; metrics?: Json; computed_at?: string };
+        Relationships: [];
+      };
+      business_briefings: {
+        Row: { id: string; provider_id: string; briefing_date: string; summary_en: string; summary_ar: string | null; sections: Json; algorithm_version: string; created_at: string };
+        Insert: { id?: string; provider_id: string; briefing_date: string; summary_en: string; summary_ar?: string | null; sections?: Json; algorithm_version?: string; created_at?: string };
+        Update: { id?: string; provider_id?: string; briefing_date?: string; summary_en?: string; summary_ar?: string | null; sections?: Json; algorithm_version?: string; created_at?: string };
+        Relationships: [];
+      };
+      business_assistant_experiments: {
+        Row: { id: string; experiment_key: string; title: string; description: string | null; algorithm_a: string; algorithm_b: string; traffic_b_pct: number; active: boolean; config: Json; created_at: string; updated_at: string };
+        Insert: { id?: string; experiment_key: string; title: string; description?: string | null; algorithm_a?: string; algorithm_b?: string; traffic_b_pct?: number; active?: boolean; config?: Json; created_at?: string; updated_at?: string };
+        Update: { id?: string; experiment_key?: string; title?: string; description?: string | null; algorithm_a?: string; algorithm_b?: string; traffic_b_pct?: number; active?: boolean; config?: Json; created_at?: string; updated_at?: string };
+        Relationships: [];
+      };
+      marketplace_algorithm_versions: {
+        Row: { id: string; module_key: string; algorithm_version: string; engine_kind: string; enabled: boolean; is_default: boolean; config: Json; notes: string | null; created_at: string; updated_at: string };
+        Insert: { id?: string; module_key: string; algorithm_version: string; engine_kind?: string; enabled?: boolean; is_default?: boolean; config?: Json; notes?: string | null; created_at?: string; updated_at?: string };
+        Update: { id?: string; module_key?: string; algorithm_version?: string; engine_kind?: string; enabled?: boolean; is_default?: boolean; config?: Json; notes?: string | null; created_at?: string; updated_at?: string };
+        Relationships: [];
+      };
+      marketplace_intelligence: {
+        Row: { id: string; snapshot_key: string; metrics: Json; growth_index: number | null; liquidity_index: number | null; health_score: number | null; demand_index: number | null; supply_index: number | null; algorithm_version: string; computed_at: string };
+        Insert: { id?: string; snapshot_key?: string; metrics?: Json; growth_index?: number | null; liquidity_index?: number | null; health_score?: number | null; demand_index?: number | null; supply_index?: number | null; algorithm_version?: string; computed_at?: string };
+        Update: { id?: string; snapshot_key?: string; metrics?: Json; growth_index?: number | null; liquidity_index?: number | null; health_score?: number | null; demand_index?: number | null; supply_index?: number | null; algorithm_version?: string; computed_at?: string };
+        Relationships: [];
+      };
+      marketplace_category_metrics: {
+        Row: { id: string; category_key: string; growth: number | null; demand: number | null; provider_density: number | null; competition: number | null; average_pricing: number | null; completion_rate: number | null; quality: number | null; trust: number | null; profitability: number | null; seasonality: Json; peak_hours: Json; forecast: Json; opportunity_score: number | null; risk_score: number | null; summary_en: string | null; summary_ar: string | null; algorithm_version: string; computed_at: string };
+        Insert: { id?: string; category_key: string; growth?: number | null; demand?: number | null; provider_density?: number | null; competition?: number | null; average_pricing?: number | null; completion_rate?: number | null; quality?: number | null; trust?: number | null; profitability?: number | null; seasonality?: Json; peak_hours?: Json; forecast?: Json; opportunity_score?: number | null; risk_score?: number | null; summary_en?: string | null; summary_ar?: string | null; algorithm_version?: string; computed_at?: string };
+        Update: { id?: string; category_key?: string; growth?: number | null; demand?: number | null; provider_density?: number | null; competition?: number | null; average_pricing?: number | null; completion_rate?: number | null; quality?: number | null; trust?: number | null; profitability?: number | null; seasonality?: Json; peak_hours?: Json; forecast?: Json; opportunity_score?: number | null; risk_score?: number | null; summary_en?: string | null; summary_ar?: string | null; algorithm_version?: string; computed_at?: string };
+        Relationships: [];
+      };
+      marketplace_region_metrics: {
+        Row: { id: string; region_key: string; demand: number | null; supply: number | null; competition: number | null; growth: number | null; provider_density: number | null; avg_response_min: number | null; avg_travel_km: number | null; average_pricing: number | null; customer_satisfaction: number | null; complaint_rate: number | null; forecast: Json; opportunity_score: number | null; expansion_potential: number | null; heatmap: Json; summary_en: string | null; summary_ar: string | null; algorithm_version: string; computed_at: string };
+        Insert: { id?: string; region_key: string; demand?: number | null; supply?: number | null; competition?: number | null; growth?: number | null; provider_density?: number | null; avg_response_min?: number | null; avg_travel_km?: number | null; average_pricing?: number | null; customer_satisfaction?: number | null; complaint_rate?: number | null; forecast?: Json; opportunity_score?: number | null; expansion_potential?: number | null; heatmap?: Json; summary_en?: string | null; summary_ar?: string | null; algorithm_version?: string; computed_at?: string };
+        Update: { id?: string; region_key?: string; demand?: number | null; supply?: number | null; competition?: number | null; growth?: number | null; provider_density?: number | null; avg_response_min?: number | null; avg_travel_km?: number | null; average_pricing?: number | null; customer_satisfaction?: number | null; complaint_rate?: number | null; forecast?: Json; opportunity_score?: number | null; expansion_potential?: number | null; heatmap?: Json; summary_en?: string | null; summary_ar?: string | null; algorithm_version?: string; computed_at?: string };
+        Relationships: [];
+      };
+      marketplace_heatmaps: {
+        Row: { id: string; region_key: string; metric_key: string; cells: Json; algorithm_version: string; computed_at: string };
+        Insert: { id?: string; region_key: string; metric_key?: string; cells?: Json; algorithm_version?: string; computed_at?: string };
+        Update: { id?: string; region_key?: string; metric_key?: string; cells?: Json; algorithm_version?: string; computed_at?: string };
+        Relationships: [];
+      };
+      marketplace_opportunities: {
+        Row: { id: string; code: string; kind: string; title_en: string; title_ar: string | null; body_en: string | null; body_ar: string | null; region_key: string | null; category_key: string | null; score: number; status: string; payload: Json; algorithm_version: string; created_at: string; decided_at: string | null; decided_by: string | null };
+        Insert: { id?: string; code: string; kind?: string; title_en: string; title_ar?: string | null; body_en?: string | null; body_ar?: string | null; region_key?: string | null; category_key?: string | null; score?: number; status?: string; payload?: Json; algorithm_version?: string; created_at?: string; decided_at?: string | null; decided_by?: string | null };
+        Update: { id?: string; code?: string; kind?: string; title_en?: string; title_ar?: string | null; body_en?: string | null; body_ar?: string | null; region_key?: string | null; category_key?: string | null; score?: number; status?: string; payload?: Json; algorithm_version?: string; created_at?: string; decided_at?: string | null; decided_by?: string | null };
+        Relationships: [];
+      };
+      marketplace_recommendations: {
+        Row: { id: string; audience: string; subject_id: string | null; code: string; title_en: string; title_ar: string | null; reason_en: string | null; reason_ar: string | null; expected_impact: string | null; confidence: number; required_effort: string | null; estimated_roi: number | null; estimated_time: string | null; dependencies: Json; status: string; payload: Json; algorithm_version: string; created_at: string; decided_at: string | null; decided_by: string | null; audit_log: Json };
+        Insert: { id?: string; audience?: string; subject_id?: string | null; code: string; title_en: string; title_ar?: string | null; reason_en?: string | null; reason_ar?: string | null; expected_impact?: string | null; confidence?: number; required_effort?: string | null; estimated_roi?: number | null; estimated_time?: string | null; dependencies?: Json; status?: string; payload?: Json; algorithm_version?: string; created_at?: string; decided_at?: string | null; decided_by?: string | null; audit_log?: Json };
+        Update: { id?: string; audience?: string; subject_id?: string | null; code?: string; title_en?: string; title_ar?: string | null; reason_en?: string | null; reason_ar?: string | null; expected_impact?: string | null; confidence?: number; required_effort?: string | null; estimated_roi?: number | null; estimated_time?: string | null; dependencies?: Json; status?: string; payload?: Json; algorithm_version?: string; created_at?: string; decided_at?: string | null; decided_by?: string | null; audit_log?: Json };
+        Relationships: [];
+      };
+      marketplace_reports: {
+        Row: { id: string; report_type: string; period_start: string | null; period_end: string | null; summary_en: string; summary_ar: string | null; key_changes: Json; risks: Json; opportunities: Json; predictions: Json; recommended_actions: Json; confidence: number | null; trend_direction: string | null; algorithm_version: string; created_at: string };
+        Insert: { id?: string; report_type: string; period_start?: string | null; period_end?: string | null; summary_en: string; summary_ar?: string | null; key_changes?: Json; risks?: Json; opportunities?: Json; predictions?: Json; recommended_actions?: Json; confidence?: number | null; trend_direction?: string | null; algorithm_version?: string; created_at?: string };
+        Update: { id?: string; report_type?: string; period_start?: string | null; period_end?: string | null; summary_en?: string; summary_ar?: string | null; key_changes?: Json; risks?: Json; opportunities?: Json; predictions?: Json; recommended_actions?: Json; confidence?: number | null; trend_direction?: string | null; algorithm_version?: string; created_at?: string };
+        Relationships: [];
+      };
+      marketplace_executive_reports: {
+        Row: { id: string; report_id: string | null; title: string; executive_summary_en: string; executive_summary_ar: string | null; sections: Json; restricted: boolean; algorithm_version: string; created_at: string };
+        Insert: { id?: string; report_id?: string | null; title: string; executive_summary_en: string; executive_summary_ar?: string | null; sections?: Json; restricted?: boolean; algorithm_version?: string; created_at?: string };
+        Update: { id?: string; report_id?: string | null; title?: string; executive_summary_en?: string; executive_summary_ar?: string | null; sections?: Json; restricted?: boolean; algorithm_version?: string; created_at?: string };
+        Relationships: [];
+      };
+      marketplace_simulations: {
+        Row: { id: string; title: string; scenario_type: string; inputs: Json; results: Json; impact_summary_en: string | null; impact_summary_ar: string | null; affects_production: boolean; status: string; algorithm_version: string; created_by: string | null; created_at: string; completed_at: string | null };
+        Insert: { id?: string; title: string; scenario_type?: string; inputs?: Json; results?: Json; impact_summary_en?: string | null; impact_summary_ar?: string | null; affects_production?: boolean; status?: string; algorithm_version?: string; created_by?: string | null; created_at?: string; completed_at?: string | null };
+        Update: { id?: string; title?: string; scenario_type?: string; inputs?: Json; results?: Json; impact_summary_en?: string | null; impact_summary_ar?: string | null; affects_production?: boolean; status?: string; algorithm_version?: string; created_by?: string | null; created_at?: string; completed_at?: string | null };
+        Relationships: [];
+      };
+      marketplace_decisions: {
+        Row: { id: string; recommendation_id: string | null; title_en: string; title_ar: string | null; reason_en: string | null; expected_impact: string | null; confidence: number | null; required_effort: string | null; estimated_roi: number | null; estimated_time: string | null; dependencies: Json; status: string; audit_log: Json; created_by: string | null; decided_by: string | null; created_at: string; decided_at: string | null };
+        Insert: { id?: string; recommendation_id?: string | null; title_en: string; title_ar?: string | null; reason_en?: string | null; expected_impact?: string | null; confidence?: number | null; required_effort?: string | null; estimated_roi?: number | null; estimated_time?: string | null; dependencies?: Json; status?: string; audit_log?: Json; created_by?: string | null; decided_by?: string | null; created_at?: string; decided_at?: string | null };
+        Update: { id?: string; recommendation_id?: string | null; title_en?: string; title_ar?: string | null; reason_en?: string | null; expected_impact?: string | null; confidence?: number | null; required_effort?: string | null; estimated_roi?: number | null; estimated_time?: string | null; dependencies?: Json; status?: string; audit_log?: Json; created_by?: string | null; decided_by?: string | null; created_at?: string; decided_at?: string | null };
+        Relationships: [];
+      };
+      marketplace_knowledge_graph: {
+        Row: { id: string; node_type: string; node_key: string; label: string | null; properties: Json; edges: Json; internal_only: boolean; algorithm_version: string; updated_at: string; created_at: string };
+        Insert: { id?: string; node_type: string; node_key: string; label?: string | null; properties?: Json; edges?: Json; internal_only?: boolean; algorithm_version?: string; updated_at?: string; created_at?: string };
+        Update: { id?: string; node_type?: string; node_key?: string; label?: string | null; properties?: Json; edges?: Json; internal_only?: boolean; algorithm_version?: string; updated_at?: string; created_at?: string };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;

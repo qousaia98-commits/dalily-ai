@@ -12,7 +12,7 @@ import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getAuthUser } from "@/lib/auth/session";
 import { isBusinessUser, canAccessAdminPanel } from "@/lib/auth/roles";
-import { isQualityCasesEnabled } from "@/lib/config/feature-flags";
+import { isQualityCasesEnabled, isAiDynamicPricingEnabled, isAiDemandForecastingEnabled, isAiSchedulingEnabled } from "@/lib/config/feature-flags";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -59,6 +59,36 @@ export default async function AccountPage() {
                 title: t("links.quality"),
                 description: t("links.qualityDesc"),
                 icon: ShieldAlert,
+              },
+            ]
+          : []),
+        ...(isAiDynamicPricingEnabled()
+          ? [
+              {
+                href: "/account/pricing",
+                title: t("links.pricing"),
+                description: t("links.pricingDesc"),
+                icon: ClipboardList,
+              },
+            ]
+          : []),
+        ...(isAiDemandForecastingEnabled()
+          ? [
+              {
+                href: "/account/forecast",
+                title: t("links.forecast"),
+                description: t("links.forecastDesc"),
+                icon: CalendarClock,
+              },
+            ]
+          : []),
+        ...(isAiSchedulingEnabled()
+          ? [
+              {
+                href: "/account/scheduling",
+                title: t("links.scheduling"),
+                description: t("links.schedulingDesc"),
+                icon: CalendarClock,
               },
             ]
           : []),

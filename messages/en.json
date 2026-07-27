@@ -587,7 +587,13 @@
         "myBookings": "My bookings",
         "myBookingsDesc": "Appointments you requested with providers",
         "quality": "Quality & complaints",
-        "qualityDesc": "Track complaints and resolutions"
+        "qualityDesc": "Track complaints and resolutions",
+        "pricing": "Fair market estimate",
+        "pricingDesc": "See a transparent price range for typical jobs",
+        "forecast": "Demand outlook",
+        "forecastDesc": "High demand days and booking tips",
+        "scheduling": "Availability windows",
+        "schedulingDesc": "Appointment windows and arrival estimates"
       }
     },
     "myBusiness": {
@@ -605,7 +611,15 @@
         "verification": "Verification",
         "verificationDesc": "Build trust with a verified badge",
         "quality": "Quality insights",
-        "qualityDesc": "Complaints and improvement tips"
+        "qualityDesc": "Complaints and improvement tips",
+        "pricing": "Pricing intelligence",
+        "pricingDesc": "Suggested ranges — you set the final price",
+        "forecast": "Demand forecast",
+        "forecastDesc": "Plan capacity and busy periods",
+        "scheduling": "AI scheduling",
+        "schedulingDesc": "Optimize routes, gaps and opportunities",
+        "assistant": "AI business assistant",
+        "assistantDesc": "Daily briefing, goals and growth tips"
       }
     },
     "businessMessages": {
@@ -4203,7 +4217,13 @@
       },
       "quality": "Quality cases",
       "fraud": "Fraud & risk",
-      "aiOps": "AI Operations"
+      "aiOps": "AI Operations",
+      "matching": "Smart matching",
+      "pricing": "Dynamic pricing",
+      "forecast": "Demand forecast",
+      "scheduling": "AI scheduling",
+      "businessAssistant": "Business assistant",
+      "marketplaceIntelligence": "Marketplace intelligence"
     },
     "learning": {
       "eyebrow": "Internal · Learning AI",
@@ -5666,6 +5686,503 @@
         "reputation": "Reputation",
         "systemHealth": "System status"
       }
+    },
+    "matching": {
+      "eyebrow": "Matching",
+      "title": "AI Smart Matching",
+      "subtitle": "Modular weighted matching with fairness, preferences and ML-ready experiments.",
+      "privacyNotice": "Internal scores stay admin-only. Customers see providers and public explanations only.",
+      "stats": {
+        "avgLatency": "Avg latency",
+        "feedback": "Feedback rows",
+        "accepted": "Accepted recs",
+        "model": "Model"
+      },
+      "experiment": {
+        "title": "A/B experiment",
+        "hint": "Rules vs ML-ready shadow traffic.",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable B traffic",
+        "disable": "Disable experiment",
+        "empty": "No experiment row yet — apply migration."
+      },
+      "weights": {
+        "title": "Signal weights",
+        "hint": "No hardcoded scoring — adjust live weights.",
+        "weight": "Weight",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "mlReady": "ML-ready",
+        "save": "Save"
+      },
+      "simulate": {
+        "title": "Simulation / replay",
+        "hint": "Paste provider UUIDs to compare ranking.",
+        "placeholder": "provider-uuid-1, provider-uuid-2",
+        "run": "Run simulation"
+      },
+      "history": {
+        "title": "Recent matching runs",
+        "empty": "No history yet."
+      },
+      "fairness": {
+        "title": "Fairness",
+        "body": "Cold-start boost, exploration, controlled rotation and boost decay prevent permanent dominance."
+      },
+      "links": {
+        "reputation": "Reputation",
+        "fraud": "Fraud",
+        "aiOps": "AI Operations"
+      }
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "AI Dynamic Pricing",
+      "subtitle": "Weighted market intelligence that recommends ranges — Dalily never forces prices.",
+      "privacyNotice": "Internal signal math stays admin-only. Providers and customers see public ranges and explanations.",
+      "stats": {
+        "avgLatency": "Avg latency",
+        "feedback": "Feedback rows",
+        "accepted": "Accepted offers",
+        "model": "Model"
+      },
+      "experiment": {
+        "title": "A/B experiment",
+        "hint": "Rules vs ML-ready shadow traffic for pricing versions.",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable B traffic",
+        "disable": "Disable experiment",
+        "empty": "No experiment row yet — apply migration."
+      },
+      "weights": {
+        "title": "Signal weights",
+        "hint": "No hardcoded final formula — adjust live weights.",
+        "weight": "Weight",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "mlReady": "ML-ready",
+        "save": "Save"
+      },
+      "simulate": {
+        "title": "Simulation",
+        "hint": "Replay pricing for a category and travel distance.",
+        "category": "Category key",
+        "distance": "Distance km",
+        "run": "Run simulation"
+      },
+      "market": {
+        "title": "Market snapshots",
+        "empty": "No market data yet — refresh after offers exist.",
+        "refresh": "Refresh market stats"
+      },
+      "history": {
+        "title": "Recent recommendations",
+        "empty": "No history yet.",
+        "replay": "Replay"
+      },
+      "links": {
+        "matching": "Smart matching",
+        "reputation": "Reputation",
+        "aiOps": "AI Operations"
+      }
+    },
+    "forecast": {
+      "eyebrow": "Forecast",
+      "title": "AI Demand Forecasting",
+      "subtitle": "Modular demand predictions for capacity planning — advisory only, never guaranteed.",
+      "privacyNotice": "Internal signal math stays admin-only. Providers and customers see public horizons and explanations.",
+      "stats": {
+        "avgLatency": "Avg latency",
+        "accuracyRows": "Accuracy rows",
+        "avgError": "Avg error",
+        "model": "Model"
+      },
+      "models": {
+        "title": "Prediction models",
+        "hint": "Compare rule-based and ML-ready forecasting models.",
+        "empty": "No models yet — apply migration.",
+        "default": "Default"
+      },
+      "experiment": {
+        "title": "A/B experiment",
+        "hint": "Rules vs ML-ready shadow traffic for forecast versions.",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable B traffic",
+        "disable": "Disable experiment",
+        "empty": "No experiment row yet — apply migration."
+      },
+      "weights": {
+        "title": "Signal weights",
+        "hint": "Independent signals — adjust live weights.",
+        "weight": "Weight",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "mlReady": "ML-ready",
+        "save": "Save"
+      },
+      "simulate": {
+        "title": "Simulation",
+        "hint": "Replay a forecast for a category and horizon.",
+        "category": "Category key",
+        "run": "Run simulation"
+      },
+      "market": {
+        "title": "Market snapshots",
+        "empty": "No snapshots yet — refresh after requests exist.",
+        "refresh": "Refresh market stats",
+        "growing": "Growing",
+        "declining": "Declining"
+      },
+      "history": {
+        "title": "Recent forecasts",
+        "empty": "No history yet.",
+        "replay": "Replay",
+        "evaluate": "Evaluate accuracy",
+        "actual": "Actual"
+      },
+      "links": {
+        "pricing": "Dynamic pricing",
+        "matching": "Smart matching",
+        "aiOps": "AI Operations"
+      }
+    },
+    "scheduling": {
+      "eyebrow": "Scheduling",
+      "title": "AI Scheduling & Capacity",
+      "subtitle": "Optimize routes, fill gaps and plan opportunities — advisory only.",
+      "privacyNotice": "Internal signal math stays admin-only. Providers decide every acceptance.",
+      "stats": {
+        "avgLatency": "Avg latency",
+        "utilization": "Avg utilization",
+        "idle": "Avg idle",
+        "capture": "Opp. capture"
+      },
+      "profiles": {
+        "title": "Optimization profiles",
+        "empty": "No profiles yet — apply migration.",
+        "default": "Default"
+      },
+      "experiment": {
+        "title": "A/B experiment",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable B traffic",
+        "disable": "Disable experiment",
+        "empty": "No experiment row yet — apply migration."
+      },
+      "weights": {
+        "title": "Signal weights",
+        "hint": "Independent optimization signals.",
+        "weight": "Weight",
+        "mlReady": "ML-ready",
+        "save": "Save"
+      },
+      "simulate": {
+        "title": "Simulation / replay",
+        "placeholder": "provider-uuid",
+        "run": "Run simulation"
+      },
+      "history": {
+        "title": "Recent optimizations",
+        "empty": "No history yet.",
+        "replay": "Replay"
+      },
+      "links": {
+        "forecast": "Demand forecast",
+        "matching": "Smart matching",
+        "pricing": "Dynamic pricing"
+      }
+    },
+    "businessAssistant": {
+      "eyebrow": "Business",
+      "title": "AI Business Insights",
+      "subtitle": "Aggregated marketplace coaching analytics — never competitor identities.",
+      "stats": {
+        "providers": "Providers tracked",
+        "briefings": "Briefings (7d)",
+        "healthy": "Healthy",
+        "atRisk": "At risk"
+      },
+      "experiment": {
+        "title": "A/B experiment",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable B traffic",
+        "disable": "Disable experiment",
+        "empty": "No experiment row yet — apply migration."
+      },
+      "regions": {
+        "title": "Regional opportunities",
+        "empty": "No regional signals yet."
+      },
+      "categories": {
+        "title": "Category opportunities",
+        "empty": "No category signals yet."
+      },
+      "privacy": "Admins see aggregates only. Provider metrics stay private to each owner.",
+      "links": {
+        "scheduling": "AI scheduling",
+        "forecast": "Demand forecast"
+      }
+    },
+    "marketplaceIntelligence": {
+      "eyebrow": "Intelligence",
+      "title": "Marketplace Intelligence Center",
+      "subtitle": "Unified advisory intelligence across the marketplace. Simulations never affect production.",
+      "stats": {
+        "health": "Health",
+        "liquidity": "Liquidity",
+        "bookings": "Bookings (30d)",
+        "latency": "Latency",
+        "demand": "Demand",
+        "supply": "Supply",
+        "completion": "Completion",
+        "satisfaction": "Satisfaction"
+      },
+      "executive": {
+        "title": "Executive report",
+        "trend": "Trend",
+        "confidence": "Confidence"
+      },
+      "kpis": {
+        "title": "Marketplace KPIs",
+        "growth": "Growth",
+        "acceptance": "Acceptance",
+        "cancellation": "Cancellation",
+        "trust": "Trust",
+        "fraud": "Fraud pressure",
+        "quality": "Quality",
+        "pricing": "Pricing trends",
+        "forecast": "Forecast accuracy",
+        "scheduling": "Scheduling efficiency"
+      },
+      "opportunities": {
+        "title": "Opportunities",
+        "empty": "No opportunities yet."
+      },
+      "regions": {
+        "title": "Regional intelligence",
+        "empty": "No regional signals."
+      },
+      "categories": {
+        "title": "Category intelligence",
+        "empty": "No category signals."
+      },
+      "decisions": {
+        "title": "Decision support",
+        "confidence": "Confidence"
+      },
+      "simulation": {
+        "title": "Digital twin",
+        "notice": "Isolated simulations — production is never modified.",
+        "run": "Run provider +15 simulation"
+      },
+      "modules": {
+        "title": "Intelligence modules",
+        "on": "On",
+        "off": "Off",
+        "enableMl": "Enable ML shadow",
+        "disableMl": "Disable ML shadow"
+      },
+      "agents": {
+        "title": "Future AI agents",
+        "notice": "Agents may recommend only — irreversible actions require explicit authorization."
+      },
+      "meta": {
+        "reports": "Reports stored",
+        "simulations": "Simulations logged",
+        "version": "Algorithm"
+      },
+      "privacy": "Executive dashboards are admin-restricted. Knowledge graph is internal only.",
+      "links": {
+        "businessAssistant": "Business assistant",
+        "forecast": "Demand forecast",
+        "pricing": "Dynamic pricing"
+      }
+    }
+  },
+  "pricing": {
+    "provider": {
+      "title": "Pricing intelligence",
+      "subtitle": "Suggested ranges from market data. You always set the final price.",
+      "stats": {
+        "suggestedRange": "Suggested range",
+        "marketAverage": "Market average",
+        "pastAccepted": "Past accepted avg",
+        "acceptanceRate": "Acceptance rate",
+        "competitiveness": "Competitiveness",
+        "confidence": "Confidence"
+      },
+      "competitiveness": {
+        "below": "Below market",
+        "at": "At market",
+        "above": "Above market",
+        "unknown": "Not enough data"
+      },
+      "position": {
+        "budget": "Budget band",
+        "fair": "Fair market",
+        "premium": "Premium band"
+      },
+      "aiTitle": "AI recommendation",
+      "suggestedAvg": "Suggested average",
+      "neverForced": "Dalily never forces this price — it is guidance only.",
+      "tipsTitle": "AI tips"
+    },
+    "customer": {
+      "eyebrow": "Market estimate",
+      "title": "Fair market range",
+      "subtitle": "Based on similar jobs in your area — not a final quote.",
+      "fairAverage": "Typical mid-range",
+      "position": {
+        "budget": "Budget-friendly band",
+        "fair": "Fair market band",
+        "premium": "Premium band"
+      },
+      "budget": {
+        "under": "Your budget sits under the typical range.",
+        "within": "Your budget fits the fair market range.",
+        "over": "Your budget is above the typical range."
+      },
+      "disclaimer": "Providers set their own prices. This estimate does not show provider internals."
+    }
+  },
+  "forecast": {
+    "provider": {
+      "title": "Demand forecast",
+      "subtitle": "Plan staffing and busy periods. Forecasts are advisory — never guaranteed.",
+      "stats": {
+        "staffing": "Recommended staffing",
+        "revenue": "Revenue opportunity",
+        "busy": "Busy period"
+      },
+      "horizonsTitle": "Forecast horizons",
+      "horizon": {
+        "24h": "Next 24 hours",
+        "7d": "Next 7 days",
+        "30d": "Next 30 days",
+        "90d": "Next 90 days"
+      },
+      "trend": {
+        "rising": "Rising",
+        "stable": "Stable",
+        "declining": "Declining"
+      },
+      "expectedDemand": "Expected demand",
+      "confidence": "Confidence",
+      "capacity": "Recommended capacity",
+      "bestHours": "Best working hours",
+      "vacation": "Suggested vacation windows",
+      "accept": "Mark useful",
+      "advisory": "Advisory only — Dalily does not guarantee future demand or outcomes."
+    },
+    "customer": {
+      "eyebrow": "Availability",
+      "title": "Demand outlook",
+      "subtitle": "Helpful hints for when to book — not a guarantee.",
+      "demand": {
+        "low": "Lower demand today",
+        "moderate": "Moderate demand today",
+        "high": "High demand today"
+      },
+      "availability": {
+        "scarce": "Providers may fill up faster",
+        "normal": "Typical availability",
+        "ample": "Faster availability likely"
+      },
+      "bookEarly": "Book early recommendation.",
+      "faster": "Low demand — faster availability expected.",
+      "advisory": "Advisory only — Dalily does not guarantee future availability."
+    }
+  },
+  "scheduling": {
+    "provider": {
+      "title": "AI scheduling",
+      "subtitle": "Optimize today, fill idle gaps and capture nearby opportunities. You decide.",
+      "stats": {
+        "utilization": "Utilization",
+        "idle": "Idle time",
+        "travel": "Travel time",
+        "burnout": "Burnout risk"
+      },
+      "optimizedTitle": "AI optimized schedule",
+      "departure": "Departure",
+      "finish": "Expected finish",
+      "lunch": "Lunch",
+      "break": "Break",
+      "revenue": "Revenue forecast",
+      "opportunityScore": "Opportunity score",
+      "capacityTitle": "Capacity",
+      "remaining": "Remaining",
+      "overbooking": "Overbooking risk",
+      "opportunitiesTitle": "Opportunity planner",
+      "opportunitiesEmpty": "No fillable gaps right now.",
+      "accept": "Accept",
+      "ignore": "Ignore",
+      "advisory": "Advisory only — Dalily never auto-books or forces decisions."
+    },
+    "customer": {
+      "eyebrow": "Scheduling",
+      "title": "Availability windows",
+      "subtitle": "Helpful timing hints — not a hard guarantee.",
+      "confidence": "Booking confidence",
+      "arrival": "Estimated arrival window",
+      "availability": {
+        "scarce": "Limited availability",
+        "normal": "Normal availability",
+        "ample": "Good availability"
+      },
+      "advisory": "Advisory only — confirm the final slot with your provider."
+    }
+  },
+  "businessAssistant": {
+    "provider": {
+      "title": "AI business assistant",
+      "subtitle": "Personal coaching to grow revenue and quality — you stay in control.",
+      "stats": {
+        "health": "Business health",
+        "revenue": "Revenue (30d)",
+        "bookings": "Bookings",
+        "acceptance": "Acceptance",
+        "completion": "Completion",
+        "cancellation": "Cancellation",
+        "response": "Response time",
+        "satisfaction": "Satisfaction",
+        "trust": "Trust",
+        "reputation": "Reputation",
+        "capacity": "Capacity",
+        "benchmark": "Benchmark"
+      },
+      "trend": {
+        "rising": "Rising",
+        "stable": "Stable",
+        "declining": "Declining"
+      },
+      "cohort": {
+        "top_20": "Top 20%",
+        "above_average": "Above average",
+        "average": "Average",
+        "improving": "Improving",
+        "below_average": "Below average"
+      },
+      "briefingTitle": "Morning briefing",
+      "todaysBookings": "Today's bookings",
+      "revenueForecast": "Revenue forecast",
+      "busyHours": "Busy hours",
+      "reminders": "Reminders",
+      "insightsTitle": "Business insights",
+      "recsTitle": "AI recommendations",
+      "growthTitle": "Growth opportunities",
+      "goalsTitle": "Goals",
+      "goalsEmpty": "No goals yet — set one below.",
+      "goalPlaceholder": "Monthly bookings goal",
+      "addGoal": "Add goal",
+      "accept": "Accept",
+      "dismiss": "Dismiss",
+      "advisory": "Advisory coaching only — Dalily never forces provider decisions."
     }
   },
   "auth": {

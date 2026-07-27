@@ -6,6 +6,7 @@ import { getProviderBehaviourSignals } from "@/lib/ai/provider/behaviour";
 import { rankProvidersByMatchScore } from "@/lib/ai/matching/score";
 import type { AiUrgencyLevel } from "@/lib/ai/decision/types";
 import { emitAiLearningEvent } from "@/lib/ai/learning/events";
+import { isSmartMatchingEngineEnabled } from "@/lib/config/feature-flags";
 
 export type AiRankedAssignment = RankedAssignment & {
   aiMatchScore: number;
@@ -19,6 +20,7 @@ export type AiRankedAssignment = RankedAssignment & {
 /**
  * AI-ranked scarce assignment selection (subscription-free).
  * Preserves newcomer oxygen from Matching policy.
+ * When SMART_MATCHING_ENGINE is on, uses modular Sprint 8 engine.
  */
 export async function selectAssignmentsWithAiRanking(
   candidates: EligibleProviderCandidate[],
@@ -30,6 +32,7 @@ export async function selectAssignmentsWithAiRanking(
     alreadyAssignedIds?: Set<string>;
     categorySlug?: string | null;
     serviceRequestId?: string | null;
+    customerId?: string | null;
   },
 ): Promise<AiRankedAssignment[]> {
   const taken = opts.alreadyAssignedIds ?? new Set<string>();
@@ -42,23 +45,73 @@ export async function selectAssignmentsWithAiRanking(
     opts.aiUrgency ??
     (opts.urgency === "emergency" ? "high" : "medium");
 
-  const scored = rankProvidersByMatchScore(
-    pool.map((c) => ({
-      providerId: c.id,
-      ratingAvg: c.ratingAvg,
-      reviewCount: c.reviewCount,
-      verificationStatus: c.verificationStatus,
-      cityFit: c.reasons.some((r) => r.code === "city_fit"),
-      categoryFit: c.reasons.some((r) => r.code === "category_fit"),
-      acceptingRequests: c.acceptingRequests,
-      behaviour: behaviour.get(c.id) ?? null,
-      reputationBoost: reputationMeta.get(c.id)?.boost ?? null,
-      trustLevel: reputationMeta.get(c.id)?.trustLevel ?? null,
-    })),
-    { urgency: aiUrgency, categorySlug: opts.categorySlug },
-  );
+  const scoreMap = new Map<
+    string,
+    {
+      score: number;
+      explanations: Array<{
+        code: string;
+        params?: Record<string, string | number>;
+        labelEn: string;
+      }>;
+    }
+  >();
 
-  const scoreMap = new Map(scored.map((s) => [s.providerId, s]));
+  if (isSmartMatchingEngineEnabled()) {
+    const { rankProvidersSmartMatch } = await import(
+      "@/lib/matching-engine/service"
+    );
+    const smart = await rankProvidersSmartMatch({
+      candidates: pool.map((c) => ({
+        providerId: c.id,
+        ratingAvg: c.ratingAvg,
+        reviewCount: c.reviewCount,
+        verificationStatus: c.verificationStatus,
+        categoryFit: c.reasons.some((r) => r.code === "category_fit"),
+        acceptingRequests: c.acceptingRequests,
+        behaviour: behaviour.get(c.id) ?? null,
+        reputationBoost: reputationMeta.get(c.id)?.boost ?? null,
+        trustLevel: reputationMeta.get(c.id)?.trustLevel ?? null,
+      })),
+      customerId: opts.customerId,
+      requestId: opts.serviceRequestId,
+      requestSalt: opts.serviceRequestId ?? undefined,
+      persist: true,
+    });
+    for (const s of smart) {
+      scoreMap.set(s.providerId, {
+        score: s.internalScore,
+        explanations: s.explanations.map((e) => ({
+          code: e.code,
+          params: e.params,
+          labelEn: e.labelEn,
+        })),
+      });
+    }
+  } else {
+    const scored = rankProvidersByMatchScore(
+      pool.map((c) => ({
+        providerId: c.id,
+        ratingAvg: c.ratingAvg,
+        reviewCount: c.reviewCount,
+        verificationStatus: c.verificationStatus,
+        cityFit: c.reasons.some((r) => r.code === "city_fit"),
+        categoryFit: c.reasons.some((r) => r.code === "category_fit"),
+        acceptingRequests: c.acceptingRequests,
+        behaviour: behaviour.get(c.id) ?? null,
+        reputationBoost: reputationMeta.get(c.id)?.boost ?? null,
+        trustLevel: reputationMeta.get(c.id)?.trustLevel ?? null,
+      })),
+      { urgency: aiUrgency, categorySlug: opts.categorySlug },
+    );
+    for (const s of scored) {
+      scoreMap.set(s.providerId, {
+        score: s.score,
+        explanations: s.explanations ?? [],
+      });
+    }
+  }
+
   const sorted = [...pool].sort((a, b) => {
     const sa = scoreMap.get(a.id)?.score ?? 0;
     const sb = scoreMap.get(b.id)?.score ?? 0;
@@ -120,6 +173,7 @@ export async function selectAssignmentsWithAiRanking(
       count: ranked.length,
       topScore: ranked[0]?.aiMatchScore ?? null,
       urgency: aiUrgency,
+      engine: isSmartMatchingEngineEnabled() ? "smart-match-v1" : "legacy",
     },
   });
 
@@ -132,7 +186,9 @@ async function loadReputationMeta(
   const map = new Map<string, { boost: number; trustLevel: string }>();
   if (providerIds.length === 0) return map;
   try {
-    const { isAiReputationEngineEnabled } = await import("@/lib/config/feature-flags");
+    const { isAiReputationEngineEnabled } = await import(
+      "@/lib/config/feature-flags"
+    );
     if (!isAiReputationEngineEnabled()) return map;
     const { createAdminClient } = await import("@/lib/supabase/admin");
     const admin = createAdminClient();

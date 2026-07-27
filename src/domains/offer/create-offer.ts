@@ -96,6 +96,25 @@ export async function createOfferFromAssignment(input: {
     return { ok: false, error: "offer_failed" };
   }
 
+  try {
+    const { isAiDynamicPricingEnabled } = await import(
+      "@/lib/config/feature-flags"
+    );
+    if (isAiDynamicPricingEnabled()) {
+      const { recordPricingFeedback } = await import(
+        "@/lib/pricing-engine/service"
+      );
+      void recordPricingFeedback({
+        providerId: input.providerId,
+        customerId: request.customer_id as string | null,
+        offeredPrice: price,
+        accepted: false,
+      });
+    }
+  } catch {
+    /* pricing feedback optional */
+  }
+
   // Provider has no ownership column on marketplace-native rows (provider_id null).
   // Use admin to bump updated_at so customer realtime on service_requests fires.
   const admin = createAdminClient();
@@ -233,7 +252,7 @@ export async function selectOffer(input: {
   const supabase = await createClient();
   const { data: offer } = await supabase
     .from("marketplace_offers")
-    .select("id, service_request_id, provider_id, status")
+    .select("id, service_request_id, provider_id, status, price")
     .eq("id", input.offerId)
     .eq("status", "sent")
     .maybeSingle();
@@ -275,6 +294,25 @@ export async function selectOffer(input: {
     .from("marketplace_offers")
     .update({ status: "selected", updated_at: new Date().toISOString() })
     .eq("id", offer.id);
+
+  try {
+    const { isAiDynamicPricingEnabled } = await import(
+      "@/lib/config/feature-flags"
+    );
+    if (isAiDynamicPricingEnabled() && offer.price != null) {
+      const { recordPricingFeedback } = await import(
+        "@/lib/pricing-engine/service"
+      );
+      void recordPricingFeedback({
+        providerId: offer.provider_id as string,
+        customerId: input.customerId,
+        offeredPrice: Number(offer.price),
+        accepted: true,
+      });
+    }
+  } catch {
+    /* pricing feedback optional */
+  }
 
   await admin
     .from("marketplace_offers")

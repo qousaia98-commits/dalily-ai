@@ -24,6 +24,9 @@ import {
   RefreshCw,
   RotateCcw,
   LineChart,
+  Sparkles,
+  CalendarClock,
+  Globe2,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -125,6 +128,48 @@ function buildGroups(opts: {
       href: "/admin/reputation",
       icon: ShieldCheck,
       key: "reputation",
+      adminOnly: true,
+    },
+    {
+      id: "matching",
+      href: "/admin/matching",
+      icon: Sparkles,
+      key: "matching",
+      adminOnly: true,
+    },
+    {
+      id: "pricing",
+      href: "/admin/pricing",
+      icon: LineChart,
+      key: "pricing",
+      adminOnly: true,
+    },
+    {
+      id: "forecast",
+      href: "/admin/forecast",
+      icon: BarChart3,
+      key: "forecast",
+      adminOnly: true,
+    },
+    {
+      id: "scheduling",
+      href: "/admin/scheduling",
+      icon: CalendarClock,
+      key: "scheduling",
+      adminOnly: true,
+    },
+    {
+      id: "businessAssistant",
+      href: "/admin/business-assistant",
+      icon: Brain,
+      key: "businessAssistant",
+      adminOnly: true,
+    },
+    {
+      id: "marketplaceIntelligence",
+      href: "/admin/marketplace-intelligence",
+      icon: Globe2,
+      key: "marketplaceIntelligence",
       adminOnly: true,
     },
     {

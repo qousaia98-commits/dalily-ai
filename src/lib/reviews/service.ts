@@ -61,7 +61,7 @@ export async function submitVerifiedReview(
   ).toISOString();
 
   const v2 = isReviewsReputationV2Enabled();
-  let analysis = analyzeReviewText({
+  const analysis = analyzeReviewText({
     rating: input.rating,
     comment: input.comment ?? null,
     recommend: input.recommend,

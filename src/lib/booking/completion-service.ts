@@ -281,6 +281,64 @@ export async function customerConfirmCompletion(input: {
     actorId: input.customerId,
   });
 
+  try {
+    const { isSmartMatchingEngineEnabled, isAiDynamicPricingEnabled } =
+      await import("@/lib/config/feature-flags");
+    if (isSmartMatchingEngineEnabled()) {
+      const { recordMatchFeedback } = await import(
+        "@/lib/matching-engine/service"
+      );
+      const { learnFromMatchFeedback } = await import(
+        "@/lib/matching-engine/preferences"
+      );
+      void recordMatchFeedback({
+        bookingId: input.bookingId,
+        customerId: input.customerId,
+        providerId: booking.providerId,
+        recommended: true,
+        accepted: true,
+        completed: true,
+      });
+      void learnFromMatchFeedback({
+        customerId: input.customerId,
+        providerId: booking.providerId,
+        accepted: true,
+      });
+    }
+    if (isAiDynamicPricingEnabled()) {
+      const { recordPricingFeedback } = await import(
+        "@/lib/pricing-engine/service"
+      );
+      let offeredPrice: number | null = null;
+      if (booking.serviceRequestId) {
+        try {
+          const admin = createAdminClient();
+          const { data: offer } = await admin
+            .from("marketplace_offers")
+            .select("price")
+            .eq("service_request_id", booking.serviceRequestId)
+            .eq("provider_id", booking.providerId)
+            .eq("status", "selected")
+            .maybeSingle();
+          if (offer?.price != null) offeredPrice = Number(offer.price);
+        } catch {
+          /* optional */
+        }
+      }
+      if (offeredPrice != null && offeredPrice > 0) {
+        void recordPricingFeedback({
+          providerId: booking.providerId,
+          customerId: input.customerId,
+          offeredPrice,
+          accepted: true,
+          completed: true,
+        });
+      }
+    }
+  } catch {
+    /* matching / pricing feedback optional */
+  }
+
   const supabase = await createClient();
   const { data: provider } = await supabase
     .from("providers")
