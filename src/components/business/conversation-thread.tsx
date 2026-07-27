@@ -9,6 +9,7 @@ import { ConversationQuickActions } from "@/components/messaging/conversation-qu
 import { OfficialDalilyAvatar } from "@/components/messaging/official-dalily-avatar";
 import { OfficialMessageCard } from "@/components/messaging/official-message-card";
 import { ReadReceiptIcon } from "@/components/messaging/read-receipt-icon";
+import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { VerifiedBadge } from "@/components/messaging/verified-badge";
 import { MessageBubbleActions } from "@/components/messaging/message-bubble-actions";
 import { requestChatReply } from "@/components/messaging/chat-thread-client-shell";
@@ -18,6 +19,7 @@ import { MessageTranslateToggle } from "@/components/messaging/message-translate
 import { VoiceTranscriptPanel } from "@/components/messaging/voice-transcript-panel";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 import { isAiChatAssistantEnabled, isChatVoiceMessagingEnabled } from "@/lib/config/feature-flags";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -64,6 +66,21 @@ export async function ConversationThread({
   const lastMessageAt = resolveLatestMessageAt(conversation.messages);
   const isOfficial = conversation.kind === "dalily" || conversation.official;
   const profileHref = `${messagesPath}/dalily/about`;
+
+  let providerVerified = false;
+  if (viewer === "customer" && request?.provider_id) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data } = await (createAdminClient() as any)
+        .from("providers")
+        .select("verification_status")
+        .eq("id", request.provider_id)
+        .maybeSingle();
+      providerVerified = data?.verification_status === "verified";
+    } catch {
+      providerVerified = false;
+    }
+  }
 
   const chatOpen = request
     ? await canAccessFullChat({
@@ -125,7 +142,17 @@ export async function ConversationThread({
                 {name.slice(0, 1).toUpperCase()}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-bold text-foreground">{name}</p>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <p className="truncate font-bold text-foreground">{name}</p>
+                  {viewer === "customer" &&
+                  request?.provider_id &&
+                  providerVerified ? (
+                    <PublicVerificationBadge
+                      providerId={request.provider_id}
+                      verified
+                    />
+                  ) : null}
+                </div>
                 {request ? (
                   <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
                     <span className="truncate text-xs text-muted-foreground">{request.title}</span>

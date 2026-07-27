@@ -5,8 +5,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { getLocalizedText } from "@/types/domain.types";
 import type { Locale } from "@/lib/i18n/config";
 import type { PublicProviderProfile } from "@/lib/providers/database";
-import { TrustScore } from "@/components/providers/trust-score";
 import { StarRating } from "@/components/providers/star-rating";
+import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { Badge } from "@/components/ui/badge";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ import { TrackProfileView } from "@/components/providers/track-profile-view";
 import { TrackContactClick } from "@/components/providers/track-contact-click";
 import { ProviderReviewsSection } from "@/components/reviews/provider-reviews-section";
 import { TrustBadgeList } from "@/components/reviews/trust-badge-list";
+import { PublicTrustPanel } from "@/components/reviews/public-trust-panel";
+import type { PublicTrustView } from "@/lib/reputation/types";
 import {
   NEARBY_LOC_COOKIE,
   parseNearbyLocCookie,
@@ -49,6 +51,7 @@ type ProviderProfileViewProps = {
   canVoteReviews: boolean;
   canReplyReviews?: boolean;
   bookingServices?: { id: string; name: string }[];
+  publicTrust: PublicTrustView;
 };
 
 export async function ProviderProfileView({
@@ -67,6 +70,7 @@ export async function ProviderProfileView({
   canVoteReviews,
   canReplyReviews = false,
   bookingServices = [],
+  publicTrust,
 }: ProviderProfileViewProps) {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("provider");
@@ -134,7 +138,11 @@ export async function ProviderProfileView({
                   {getLocalizedText(provider.name, locale)}
                 </h1>
                 {provider.verified ? (
-                  <Badge variant="success">{t("verified")}</Badge>
+                  <PublicVerificationBadge
+                    providerId={provider.id}
+                    verified
+                    size="md"
+                  />
                 ) : null}
                 <PlanBadge planSlug={provider.planSlug} size="md" />
                 {provider.planSlug === "premium" ? (
@@ -292,19 +300,7 @@ export async function ProviderProfileView({
               smartBookingEnabled={isSmartBookingEnabled()}
             />
 
-            <Card>
-              <CardHeader>
-                <CardTitle>{t("trustScore")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <TrustScore
-                  score={reviewStats.trustScore || provider.trustScore}
-                  verified={provider.verified}
-                  size="lg"
-                  showBar
-                />
-              </CardContent>
-            </Card>
+            <PublicTrustPanel trust={publicTrust} />
 
             {destLat != null && destLng != null ? (
               <Card>

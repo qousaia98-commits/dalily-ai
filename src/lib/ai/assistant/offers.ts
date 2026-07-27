@@ -67,6 +67,7 @@ function scoreOffers(offers: MarketplaceOfferView[]): OfferCompareItem[] {
 
     return {
       offerId: o.id,
+      providerId: o.providerId,
       providerName: o.providerName ?? "Business",
       price: o.price,
       currency: o.currency,

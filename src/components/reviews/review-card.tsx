@@ -88,6 +88,31 @@ export function ReviewCard({ review, canVote, canReply = false }: Props) {
         <p className="text-sm leading-relaxed text-foreground">{review.comment}</p>
       ) : null}
 
+      {review.dimensions &&
+      Object.values(review.dimensions).some((v) => typeof v === "number") ? (
+        <ul className="grid grid-cols-2 gap-1.5 text-xs text-muted-foreground sm:grid-cols-3">
+          {(
+            [
+              "communication",
+              "quality",
+              "punctuality",
+              "professionalism",
+              "value",
+            ] as const
+          ).map((dim) =>
+            review.dimensions?.[dim] != null ? (
+              <li key={dim}>
+                {t(`dimensions.${dim}`)}: {review.dimensions[dim]}/5
+              </li>
+            ) : null,
+          )}
+        </ul>
+      ) : null}
+
+      {review.aiSummary ? (
+        <p className="text-xs italic text-muted-foreground">{review.aiSummary}</p>
+      ) : null}
+
       {review.images.length > 0 ? (
         <ul className="flex gap-2 overflow-x-auto pb-1">
           {review.images.map((image) => (

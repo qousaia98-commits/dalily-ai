@@ -1,13 +1,5 @@
 /**
- * Fraud / abuse detection stub (future).
- * Keep signals aggregate; never store unnecessary PII.
+ * Fraud / abuse detection — Sprint 7 Phase 5.
+ * Rule engine + ML-ready signals; assists admins, never auto-suspends permanently.
  */
-export const fraudModule = {
-  id: "fraud",
-  status: "planned" as const,
-  future: [
-    "duplicate request bursts",
-    "payment receipt anomalies",
-    "review spam signals",
-  ],
-};
+export { fraudModule } from "@/lib/fraud/module";

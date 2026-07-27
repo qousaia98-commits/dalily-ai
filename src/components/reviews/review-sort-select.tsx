@@ -13,6 +13,7 @@ const SORTS: ReviewSort[] = [
   "helpful",
   "verified",
   "photos",
+  "recommended",
 ];
 
 type Props = {

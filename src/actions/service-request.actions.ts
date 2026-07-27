@@ -23,7 +23,6 @@ import {
   canCompleteService,
   canConfirmCompletion,
   canDecideQuote,
-  canReview,
   canSendQuote,
 } from "@/lib/service-requests/status-machine";
 import type { ServiceRequestStatus } from "@/lib/service-requests/status-machine";
@@ -845,86 +844,93 @@ export async function submitReviewAction(
     comment: formData.get("comment") ?? "",
     recommend: formData.get("recommend") ?? "",
     anonymous: formData.get("anonymous") ?? "",
+    communication: formData.get("communication") || undefined,
+    quality: formData.get("quality") || undefined,
+    punctuality: formData.get("punctuality") || undefined,
+    professionalism: formData.get("professionalism") || undefined,
+    value: formData.get("value") || undefined,
+    language: formData.get("language") ?? "",
+    photoKind: formData.get("photoKind") ?? "",
   });
   if (!parsed.success) return validationError(parsed.error);
+
+  const recommend =
+    parsed.data.recommend === "yes" ? true : parsed.data.recommend === "no" ? false : null;
+  const isAnonymous = parsed.data.anonymous === "true";
+  const dimensions = {
+    overall: parsed.data.rating,
+    communication: parsed.data.communication,
+    quality: parsed.data.quality,
+    punctuality: parsed.data.punctuality,
+    professionalism: parsed.data.professionalism,
+    value: parsed.data.value,
+  };
+
+  const photoKind =
+    parsed.data.photoKind === "before" ||
+    parsed.data.photoKind === "after" ||
+    parsed.data.photoKind === "completed" ||
+    parsed.data.photoKind === "general"
+      ? parsed.data.photoKind
+      : "completed";
+
+  const photoFiles = formData
+    .getAll("photos")
+    .filter((f): f is File => f instanceof File && f.size > 0);
+
+  const { submitVerifiedReview } = await import("@/lib/reviews/service");
+  const result = await submitVerifiedReview({
+    customerId: authUser.id,
+    serviceRequestId: parsed.data.requestId,
+    rating: parsed.data.rating,
+    comment: parsed.data.comment,
+    recommend,
+    isAnonymous,
+    dimensions,
+    language: parsed.data.language || undefined,
+    photos: photoFiles.map((file) => ({ file, kind: photoKind })),
+  });
+
+  if (!result.ok) {
+    const err = result.error;
+    if (
+      err === "not_found" ||
+      err === "not_completed" ||
+      err === "payment_pending" ||
+      err === "already_reviewed" ||
+      err === "not_participant"
+    ) {
+      return {
+        success: false,
+        error:
+          err === "already_reviewed"
+            ? "review_failed"
+            : err === "payment_pending"
+              ? "invalid_status"
+              : err === "not_found"
+                ? "not_found"
+                : "invalid_status",
+      };
+    }
+    return { success: false, error: "review_failed" };
+  }
 
   const supabase = await createClient();
   const { data: request } = await supabase
     .from("service_requests")
-    .select("*")
+    .select("id, title, provider_id, lifecycle_version")
     .eq("id", parsed.data.requestId)
-    .eq("customer_id", authUser.id)
     .maybeSingle();
 
-  if (!request) return { success: false, error: "not_found" };
-  if (!canReview(request.status as ServiceRequestStatus)) {
-    return { success: false, error: "invalid_status" };
-  }
-
-  let reviewProviderId = request.provider_id as string | null;
-  if (!reviewProviderId && (request.lifecycle_version ?? 1) >= 2) {
+  let reviewProviderId = request?.provider_id as string | null;
+  if (!reviewProviderId && request && (request.lifecycle_version ?? 1) >= 2) {
     const { resolveMarketplaceReviewProviderId } = await import(
       "@/domains/marketplace/completion"
     );
     reviewProviderId = await resolveMarketplaceReviewProviderId(request.id);
   }
-  if (!reviewProviderId) return { success: false, error: "invalid_status" };
 
-  const recommend =
-    parsed.data.recommend === "yes" ? true : parsed.data.recommend === "no" ? false : null;
-  const isAnonymous = parsed.data.anonymous === "true";
-
-  const { data: review, error } = await (
-    (request.lifecycle_version ?? 1) >= 2 && !request.provider_id
-      ? createAdminClient()
-      : supabase
-  )
-    .from("service_reviews")
-    .insert({
-      service_request_id: request.id,
-      provider_id: reviewProviderId,
-      customer_id: authUser.id,
-      rating: parsed.data.rating,
-      comment: parsed.data.comment?.trim() || null,
-      recommend,
-      is_anonymous: isAnonymous,
-      is_verified: true,
-      verified_booking: true,
-      verified_customer: true,
-      verified_interaction: true,
-      status: "approved",
-    })
-    .select("id")
-    .single();
-
-  if (error || !review) return { success: false, error: "review_failed" };
-
-  const photoFiles = formData
-    .getAll("photos")
-    .filter((f): f is File => f instanceof File && f.size > 0);
-  if (photoFiles.length > 0) {
-    const { uploadReviewImages } = await import("@/actions/review.actions");
-    await uploadReviewImages(review.id, reviewProviderId, authUser.id, photoFiles);
-  }
-
-  const statusClient =
-    (request.lifecycle_version ?? 1) >= 2 && !request.provider_id
-      ? createAdminClient()
-      : supabase;
-
-  const { data: reviewed, error: reviewStatusError } = await statusClient
-    .from("service_requests")
-    .update({ status: "reviewed", reviewed_at: new Date().toISOString() })
-    .eq("id", request.id)
-    .eq("status", "completed")
-    .select("id")
-    .maybeSingle();
-
-  if (reviewStatusError || !reviewed) {
-    return { success: false, error: "invalid_status" };
-  }
-
-  if ((request.lifecycle_version ?? 1) >= 2) {
+  if (request && (request.lifecycle_version ?? 1) >= 2) {
     const { syncMarketplaceRequestProjection } = await import(
       "@/domains/marketplace/projection"
     );
@@ -936,10 +942,10 @@ export async function submitReviewAction(
     });
   }
 
-  // Recompute aggregates + trust (subscription-agnostic DB function)
-  await supabase.rpc("recompute_provider_trust_score", {
-    p_provider_id: reviewProviderId,
-  });
+  if (!reviewProviderId) {
+    revalidateAfterMarketplaceWrite(parsed.data.requestId, "reviewed");
+    return { success: true, message: result.blocked ? "review_pending" : "reviewed" };
+  }
 
   const { data: provider } = await supabase
     .from("providers")
@@ -947,13 +953,15 @@ export async function submitReviewAction(
     .eq("id", reviewProviderId)
     .maybeSingle();
 
-  const conversationId = await getConversationIdForRequest(request.id);
-  if (provider?.owner_id) {
+  const conversationId = await getConversationIdForRequest(parsed.data.requestId);
+  if (provider?.owner_id && request) {
     await postSystemAndNotify({
       requestId: request.id,
       actorId: authUser.id,
       conversationId,
-      body: `Review submitted: ${parsed.data.rating}/5`,
+      body: result.blocked
+        ? `Review submitted (pending moderation): ${parsed.data.rating}/5`
+        : `Review submitted: ${parsed.data.rating}/5`,
       eventType: "review_submitted",
       notifyUserId: provider.owner_id,
       notifyType: "new_review",
@@ -964,13 +972,17 @@ export async function submitReviewAction(
     });
   }
 
-  revalidateAfterMarketplaceWrite(request.id, "reviewed");
+  revalidateAfterMarketplaceWrite(parsed.data.requestId, "reviewed");
   void logLearningEvent({
     eventType: "review_submitted",
     providerId: reviewProviderId,
     customerId: authUser.id,
-    serviceRequestId: request.id,
-    metadata: { rating: parsed.data.rating },
+    serviceRequestId: parsed.data.requestId,
+    metadata: {
+      rating: parsed.data.rating,
+      blocked: result.blocked,
+      reviewId: result.reviewId,
+    },
   });
   try {
     const { trackBookingReviewSubmitted } = await import("@/lib/booking/completion-service");
@@ -978,7 +990,7 @@ export async function submitReviewAction(
     const { data: linkedBooking } = await (supabase as any)
       .from("bookings")
       .select("id")
-      .eq("service_request_id", request.id)
+      .eq("service_request_id", parsed.data.requestId)
       .is("deleted_at", null)
       .maybeSingle();
     await trackBookingReviewSubmitted({
@@ -993,7 +1005,11 @@ export async function submitReviewAction(
     providerId: reviewProviderId,
     customerId: authUser.id,
   });
-  return { success: true, message: "reviewed", conversationId: conversationId ?? undefined };
+  return {
+    success: true,
+    message: result.blocked ? "review_pending" : "reviewed",
+    conversationId: conversationId ?? undefined,
+  };
 }
 
 export async function sendMessageAction(

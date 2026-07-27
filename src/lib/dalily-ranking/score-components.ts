@@ -44,7 +44,10 @@ export function scoreTrust(input: ScoreCalculatorInput): number {
   const jobs = clamp01(Math.log10(1 + input.completedJobs) / 2.5);
   const cancelPenalty =
     input.cancellationRate != null ? clamp01(1 - input.cancellationRate) : 0.7;
-  return clamp01(v * 0.55 + jobs * 0.25 + cancelPenalty * 0.2);
+  const base = clamp01(v * 0.55 + jobs * 0.25 + cancelPenalty * 0.2);
+  // Soft reputation influence — never the sole ranking factor
+  const boost = input.reputationSearchBoost ?? 0;
+  return clamp01(base + Math.max(-0.08, Math.min(0.08, boost)));
 }
 
 export function scoreReliability(input: ScoreCalculatorInput): number {

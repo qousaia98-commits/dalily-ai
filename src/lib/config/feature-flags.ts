@@ -147,6 +147,65 @@ export function isFinanceDashboardEnabled(): boolean {
 
 
 /**
+ * Sprint 7 Phase 2 — Ratings, Reviews & AI Reputation.
+ * Multi-dim ratings, AI analysis, fake detection, reputation cache.
+ * When false: legacy single-rating review flow still works.
+ */
+export function isReviewsReputationV2Enabled(): boolean {
+  return (
+    envFlag("REVIEWS_REPUTATION_V2") ||
+    envFlag("REVIEWS_REPUTATION") ||
+    envFlag("AI_REPUTATION_V1")
+  );
+}
+
+/**
+ * Sprint 7 Phase 3 — AI Reputation Engine (modular signals, trust levels, search boosts).
+ * Defaults on when Phase 2 reputation flag is on.
+ */
+export function isAiReputationEngineEnabled(): boolean {
+  return (
+    envFlag("AI_REPUTATION_ENGINE") ||
+    envFlag("AI_REPUTATION_ENGINE_V1") ||
+    isReviewsReputationV2Enabled()
+  );
+}
+
+/**
+ * Sprint 7 Phase 4 — Quality Assurance & Case Management.
+ */
+export function isQualityCasesEnabled(): boolean {
+  return (
+    envFlag("QUALITY_CASES") ||
+    envFlag("QUALITY_CASES_V1") ||
+    envFlag("QA_CASE_MANAGEMENT")
+  );
+}
+
+/**
+ * Sprint 7 Phase 5 — Fraud Detection & Risk Intelligence (admin-only).
+ */
+export function isFraudDetectionEnabled(): boolean {
+  return (
+    envFlag("FRAUD_DETECTION") ||
+    envFlag("FRAUD_DETECTION_V1") ||
+    envFlag("RISK_INTELLIGENCE")
+  );
+}
+
+/**
+ * Sprint 7 Phase 6 — AI Operations & Platform Health (admin-only).
+ */
+export function isAiOpsEnabled(): boolean {
+  return (
+    envFlag("AI_OPS") ||
+    envFlag("AI_OPS_V1") ||
+    envFlag("PLATFORM_HEALTH") ||
+    envFlag("AI_OPERATIONS")
+  );
+}
+
+/**
  * Sprint 7 — Full chat only with contact_release_grants (scope includes chat).
  * When false: legacy status-based canChat() unchanged.
  * Q&A (offer_clarifications) stays pre-unlock either way.

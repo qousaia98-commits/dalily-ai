@@ -37,6 +37,7 @@ export async function selectAssignmentsWithAiRanking(
   if (pool.length === 0) return [];
 
   const behaviour = await getProviderBehaviourSignals(pool.map((c) => c.id));
+  const reputationMeta = await loadReputationMeta(pool.map((c) => c.id));
   const aiUrgency: AiUrgencyLevel =
     opts.aiUrgency ??
     (opts.urgency === "emergency" ? "high" : "medium");
@@ -51,6 +52,8 @@ export async function selectAssignmentsWithAiRanking(
       categoryFit: c.reasons.some((r) => r.code === "category_fit"),
       acceptingRequests: c.acceptingRequests,
       behaviour: behaviour.get(c.id) ?? null,
+      reputationBoost: reputationMeta.get(c.id)?.boost ?? null,
+      trustLevel: reputationMeta.get(c.id)?.trustLevel ?? null,
     })),
     { urgency: aiUrgency, categorySlug: opts.categorySlug },
   );
@@ -121,4 +124,30 @@ export async function selectAssignmentsWithAiRanking(
   });
 
   return ranked;
+}
+
+async function loadReputationMeta(
+  providerIds: string[],
+): Promise<Map<string, { boost: number; trustLevel: string }>> {
+  const map = new Map<string, { boost: number; trustLevel: string }>();
+  if (providerIds.length === 0) return map;
+  try {
+    const { isAiReputationEngineEnabled } = await import("@/lib/config/feature-flags");
+    if (!isAiReputationEngineEnabled()) return map;
+    const { createAdminClient } = await import("@/lib/supabase/admin");
+    const admin = createAdminClient();
+    const { data } = await admin
+      .from("provider_reputation_scores")
+      .select("provider_id, recommendation_boost, trust_level")
+      .in("provider_id", providerIds);
+    for (const row of data ?? []) {
+      map.set(row.provider_id, {
+        boost: Number(row.recommendation_boost ?? 0),
+        trustLevel: String(row.trust_level),
+      });
+    }
+  } catch {
+    /* optional */
+  }
+  return map;
 }

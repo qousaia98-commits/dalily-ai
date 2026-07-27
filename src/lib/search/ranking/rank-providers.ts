@@ -46,6 +46,8 @@ export type RankProvidersContext = {
   applyLearning?: boolean;
   /** Sprint 40 Dalily Ranking — default on */
   applyDalilyRanking?: boolean;
+  /** Sprint 7 Phase 3 — soft reputation search boosts */
+  reputationBoostByProviderId?: Map<string, number>;
 };
 
 export type RankProvidersResult = {
@@ -107,6 +109,7 @@ export function rankProvidersDetailed(
       targetCategorySlug: context.targetCategorySlug,
       categorySlugByProviderId: context.categorySlugByProviderId,
       radiusKm: context.radiusKm,
+      reputationBoostByProviderId: context.reputationBoostByProviderId,
     });
     candidates = dalily.candidates;
     dalilyBreakdownByProviderId = dalily.breakdownByProviderId;

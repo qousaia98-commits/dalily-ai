@@ -21,6 +21,10 @@ export type MatchScoreCandidate = {
   languageFit?: number;
   recentActivityScore?: number;
   behaviour?: ProviderBehaviourSignals | null;
+  /** Soft boost from AI Reputation Engine (-0.1…0.1) */
+  reputationBoost?: number | null;
+  /** Public trust level label — never a numeric score */
+  trustLevel?: string | null;
 };
 
 export type MatchScoreContext = {
@@ -29,19 +33,20 @@ export type MatchScoreContext = {
 };
 
 const W = {
-  distance: 0.16,
+  distance: 0.15,
   availability: 0.1,
-  category: 0.12,
-  rating: 0.12,
-  acceptance: 0.1,
-  response: 0.1,
-  completion: 0.1,
-  experience: 0.08,
+  category: 0.11,
+  rating: 0.11,
+  acceptance: 0.09,
+  response: 0.09,
+  completion: 0.09,
+  experience: 0.07,
   preferred: 0.04,
   language: 0.03,
-  verified: 0.08,
+  verified: 0.07,
   activity: 0.04,
   urgencyAlign: 0.03,
+  reputation: 0.08,
 } as const;
 
 function distanceScore(km: number | null | undefined): number {
@@ -84,6 +89,7 @@ export function scoreProviderMatch(
     verified: candidate.verificationStatus === "verified" ? 1 : 0.35,
     activity: candidate.recentActivityScore ?? 0.5,
     urgencyAlign: urgencyRankingBoost(ctx.urgency),
+    reputation: reputationPart(candidate.reputationBoost, candidate.trustLevel),
   };
 
   // City fit soft multiplier on distance component
@@ -117,6 +123,30 @@ function preferredJobBoost(
   if (!behaviour || !categorySlug) return 0.5;
   if (behaviour.preferredJobTypes.includes(categorySlug)) return 1;
   return 0.45;
+}
+
+/** Maps soft boost / trust level into 0–1 match component — never uses raw internal score. */
+function reputationPart(
+  boost: number | null | undefined,
+  trustLevel: string | null | undefined,
+): number {
+  if (boost != null && Number.isFinite(boost)) {
+    return clamp01(0.55 + boost * 4);
+  }
+  switch (trustLevel) {
+    case "excellent":
+      return 0.95;
+    case "very_good":
+      return 0.82;
+    case "good":
+      return 0.7;
+    case "developing":
+      return 0.5;
+    case "needs_attention":
+      return 0.25;
+    default:
+      return 0.55;
+  }
 }
 
 function buildExplanations(

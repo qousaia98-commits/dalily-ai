@@ -23,6 +23,20 @@ export default async function AccountBookingDetailPage({ params }: Props) {
 
   if (!booking || booking.customerId !== authUser.id) notFound();
 
+  let providerVerified = false;
+  try {
+    const { createAdminClient } = await import("@/lib/supabase/admin");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (createAdminClient() as any)
+      .from("providers")
+      .select("verification_status")
+      .eq("id", booking.providerId)
+      .maybeSingle();
+    providerVerified = data?.verification_status === "verified";
+  } catch {
+    providerVerified = false;
+  }
+
   return (
     <div className="mx-auto w-full max-w-xl space-y-6 px-4 py-8 animate-fade-in">
       <header className="space-y-2">
@@ -33,7 +47,11 @@ export default async function AccountBookingDetailPage({ params }: Props) {
         <p className="text-sm text-muted-foreground">{t("confirmHint")}</p>
       </header>
 
-      <BookingCard booking={booking} viewer="customer" />
+      <BookingCard
+        booking={booking}
+        viewer="customer"
+        providerVerified={providerVerified}
+      />
 
       {booking.locationLat != null && booking.locationLng != null ? (
         <section className="space-y-2 rounded-3xl border border-border bg-card p-4">

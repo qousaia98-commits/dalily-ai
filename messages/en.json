@@ -585,7 +585,9 @@
         "requestSettings": "Request settings",
         "requestSettingsDesc": "Manage how customers contact you",
         "myBookings": "My bookings",
-        "myBookingsDesc": "Appointments you requested with providers"
+        "myBookingsDesc": "Appointments you requested with providers",
+        "quality": "Quality & complaints",
+        "qualityDesc": "Track complaints and resolutions"
       }
     },
     "myBusiness": {
@@ -601,7 +603,9 @@
         "hours": "Working hours",
         "hoursDesc": "When customers can reach you",
         "verification": "Verification",
-        "verificationDesc": "Build trust with a verified badge"
+        "verificationDesc": "Build trust with a verified badge",
+        "quality": "Quality insights",
+        "qualityDesc": "Complaints and improvement tips"
       }
     },
     "businessMessages": {
@@ -1823,12 +1827,44 @@
     "healthShort": "Health",
     "featured": "Featured"
   },
+  "publicVerification": {
+    "eyebrow": "Trust",
+    "title": "Verification details",
+    "badgeDefault": "Verified",
+    "openDetails": "Open verification details for {label}",
+    "close": "Close",
+    "loading": "Loading verification details…",
+    "empty": "No public verification details are available yet.",
+    "verifiedOn": "Verified on: {date}",
+    "trustBody": "Verified providers have confirmed their identity and address.",
+    "trustOptional": "Optional business and professional documents increase customer confidence and improve provider visibility on Dalily.",
+    "privacyNote": "For your privacy and theirs, Dalily never shows identity documents, ID numbers, home addresses, insurance policy numbers, or uploaded files to customers.",
+    "expiration": {
+      "valid": "Valid",
+      "expiring_soon": "Expiring soon",
+      "expired": "Expired"
+    }
+  },
   "reviews": {
     "sectionTitle": "Customer reviews",
     "sectionSubtitle": "{count, plural, =0 {No reviews yet} one {# review} other {# reviews}}",
     "empty": "No reviews yet. Completed jobs can leave the first review.",
     "averageLabel": "Average rating",
     "basedOn": "Based on {count} reviews",
+    "basedOnVerified": "Based on {count} verified reviews",
+    "recommendedBy": "Recommended by {pct}% of customers",
+    "aiSummaryLabel": "AI Summary",
+    "trustLevel": {
+      "eyebrow": "Trust level",
+      "excellent": "Excellent",
+      "very_good": "Very good",
+      "good": "Good",
+      "developing": "Developing",
+      "new_provider": "New provider",
+      "needs_attention": "Needs attention",
+      "rising": "Improving recently",
+      "fallback": "Trust signals build as verified reviews and completed jobs accumulate."
+    },
     "breakdownLabel": "Rating breakdown",
     "anonymous": "Anonymous customer",
     "customer": "Customer",
@@ -1843,6 +1879,20 @@
     "replyPlaceholder": "Write an official reply…",
     "submitReply": "Post reply",
     "replying": "Posting…",
+    "quality": {
+      "excellent": "Excellent",
+      "veryGood": "Very good",
+      "good": "Good",
+      "fair": "Fair",
+      "needsImprovement": "Needs improvement"
+    },
+    "dimensions": {
+      "communication": "Communication",
+      "quality": "Quality of work",
+      "punctuality": "Punctuality",
+      "professionalism": "Professionalism",
+      "value": "Value for money"
+    },
     "errors": {
       "login_required": "Please log in",
       "forbidden": "Not allowed",
@@ -1858,7 +1908,9 @@
       "lowest": "Lowest rating",
       "helpful": "Most helpful",
       "verified": "Verified first",
-      "photos": "With photos"
+      "photos": "With photos",
+      "recommended": "Recommended",
+      "language": "Your language"
     },
     "badges": {
       "top_rated": "Top Rated",
@@ -2222,6 +2274,20 @@
       "comment": "Comment",
       "photos": "Photos (optional)",
       "photosHint": "Up to 5 images of the completed work.",
+      "photoKind": "Photo type",
+      "photoKinds": {
+        "before": "Before",
+        "after": "After",
+        "completed": "Completed work",
+        "general": "General"
+      },
+      "dimensions": {
+        "communication": "Communication",
+        "quality": "Quality of work",
+        "punctuality": "Punctuality",
+        "professionalism": "Professionalism",
+        "value": "Value for money"
+      },
       "anonymous": "Show my name as anonymous",
       "recommend": "Recommend this business?",
       "recommendSkip": "Prefer not to say",
@@ -3864,6 +3930,8 @@
         "actionsHint": "Jump to the tools you use most.",
         "recommendations": "Recommendations",
         "recommendationsHint": "Simple tips to get more work.",
+        "reputation": "Reputation insights",
+        "reputationHint": "Private strengths, trends, and AI suggestions — scores stay internal.",
         "statistics": "Statistics",
         "statisticsHint": "Charts, history, and achievements."
       },
@@ -4060,6 +4128,34 @@
           "improve_response": "Reply faster to messages and booking requests."
         }
       }
+    },
+    "reputationInsights": {
+      "eyebrow": "Private",
+      "title": "Your reputation",
+      "strengths": "Strengths",
+      "improvements": "Improvement opportunities",
+      "suggestions": "AI suggestions",
+      "monthlyTrend": "Recent trust trend",
+      "scorePrivateNote": "Numeric scores are private — customers only see your trust level.",
+      "metrics": {
+        "completedJobs": "Completed jobs",
+        "cancellationRate": "Cancellation rate",
+        "responseTime": "Response time",
+        "recommendationRate": "Recommendation rate"
+      },
+      "levels": {
+        "excellent": "Excellent",
+        "very_good": "Very good",
+        "good": "Good",
+        "developing": "Developing",
+        "new_provider": "New provider",
+        "needs_attention": "Needs attention"
+      },
+      "trend": {
+        "rising": "Rising",
+        "stable": "Stable",
+        "declining": "Declining"
+      }
     }
   },
   "admin": {
@@ -4082,6 +4178,7 @@
       "customers": "Customers",
       "issues": "Reports",
       "reviewModeration": "Review moderation",
+      "reputation": "Reputation engine",
       "analytics": "Analytics",
       "aiPredictions": "AI Predictions",
       "aiAutomation": "AI Automation",
@@ -4103,7 +4200,10 @@
         "operations": "Operations",
         "system": "System",
         "more": "More"
-      }
+      },
+      "quality": "Quality cases",
+      "fraud": "Fraud & risk",
+      "aiOps": "AI Operations"
     },
     "learning": {
       "eyebrow": "Internal · Learning AI",
@@ -4829,19 +4929,26 @@
     "reviewModeration": {
       "eyebrow": "Moderation",
       "title": "Review moderation",
-      "subtitle": "Newest, low ratings, and reported reviews. Spam detection ready.",
+      "subtitle": "Newest, low ratings, AI flags, and delete requests. Fake-review heuristics active when REVIEWS_REPUTATION_V2 is on.",
       "empty": "No reviews in this filter.",
-      "spamReady": "Spam detection extension point is ready (AI not enabled).",
+      "spamReady": "AI fake-review detection is active (heuristic-v1).",
       "spamNotReady": "Spam detection unavailable.",
       "verified": "Verified",
       "noComment": "No comment",
       "provider": "Provider",
       "warnDefault": "Please follow Dalily community guidelines.",
+      "aiSummary": "AI summary",
+      "fakeRisk": "Fake risk",
+      "flags": "Flags",
+      "history": "History",
+      "deleteRequested": "Delete requested",
       "filters": {
         "newest": "Newest",
         "low": "Low ratings",
         "hidden": "Hidden",
-        "pending": "Pending"
+        "pending": "Pending",
+        "flagged": "AI flagged",
+        "delete_requests": "Delete requests"
       },
       "actions": {
         "hide": "Hide",
@@ -4849,6 +4956,36 @@
         "delete": "Delete",
         "deleteConfirm": "Soft-delete this review?",
         "warnCustomer": "Warn customer"
+      }
+    },
+    "reputation": {
+      "eyebrow": "Trust",
+      "title": "AI Reputation Engine",
+      "subtitle": "Internal scores are admin-only. Customers only see trust levels and positive explanations.",
+      "distribution": "Trust level distribution",
+      "highest": "Highest reputation",
+      "rising": "Improving rapidly",
+      "declining": "Declining",
+      "needsReview": "Needs review",
+      "complaintHeavy": "Repeated reliability issues",
+      "empty": "No providers in this list yet. Recalculate after migration.",
+      "internalScore": "Internal score",
+      "levels": {
+        "excellent": "Excellent",
+        "very_good": "Very good",
+        "good": "Good",
+        "developing": "Developing",
+        "new_provider": "New provider",
+        "needs_attention": "Needs attention"
+      },
+      "trend": {
+        "rising": "Rising",
+        "stable": "Stable",
+        "declining": "Declining"
+      },
+      "links": {
+        "reviews": "Review moderation",
+        "providers": "Providers"
       }
     },
     "broadcasts": {
@@ -5312,6 +5449,222 @@
         "wonDisputes": "Won",
         "lostDisputes": "Lost",
         "avgResolution": "Avg resolution"
+      }
+    },
+    "quality": {
+      "eyebrow": "Quality",
+      "title": "Case management",
+      "subtitle": "Assign, escalate, merge, and resolve marketplace quality cases.",
+      "empty": "No quality cases yet.",
+      "byCategory": "By category",
+      "provider": "Provider",
+      "stats": {
+        "open": "Open cases",
+        "escalated": "Escalated",
+        "resolvedWeek": "Resolved this week"
+      },
+      "actions": {
+        "assign": "Assign to me",
+        "changeStatus": "Change status…",
+        "escalate": "Escalate",
+        "resolve": "Resolve",
+        "reject": "Reject",
+        "rejectConfirm": "Reject this case?",
+        "mergeIntoNewest": "Merge into newest"
+      },
+      "links": {
+        "issues": "Booking reports",
+        "refunds": "Refunds"
+      },
+      "categories": {
+        "customer_complaint": "Customer complaint",
+        "provider_complaint": "Provider complaint",
+        "booking_issue": "Booking issue",
+        "service_quality": "Service quality issue",
+        "communication": "Communication issue",
+        "damage_report": "Damage report",
+        "late_arrival": "Late arrival",
+        "no_show": "No show",
+        "policy_violation": "Policy violation",
+        "other": "Other"
+      },
+      "statuses": {
+        "open": "Open",
+        "pending_information": "Pending information",
+        "under_review": "Under review",
+        "waiting_for_provider": "Waiting for provider",
+        "waiting_for_customer": "Waiting for customer",
+        "resolved": "Resolved",
+        "rejected": "Rejected",
+        "escalated": "Escalated",
+        "closed": "Closed"
+      },
+      "priorities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      }
+    },
+    "fraud": {
+      "eyebrow": "Risk",
+      "title": "Fraud & risk intelligence",
+      "subtitle": "Admin-assisted detection. Risk levels are internal only and never shown to customers.",
+      "privacyNotice": "Internal scores never appear on public profiles or customer surfaces.",
+      "riskScores": "Highest internal risk scores",
+      "investigations": "Investigations",
+      "events": "Recent fraud events",
+      "triggered": "Triggered rules",
+      "emptyScores": "No risk scores yet. Recalculate an entity to seed.",
+      "emptyInvestigations": "No investigations yet.",
+      "emptyEvents": "No fraud events yet.",
+      "stats": {
+        "open": "Open investigations",
+        "escalated": "Escalated",
+        "highRisk": "High / critical entities",
+        "eventsToday": "Events today"
+      },
+      "recalculate": {
+        "title": "Recalculate risk",
+        "hint": "Runs the modular rule engine (+ optional ML layer). Never auto-suspends.",
+        "entityId": "Entity UUID",
+        "submit": "Calculate"
+      },
+      "entities": {
+        "provider": "Provider",
+        "customer": "Customer"
+      },
+      "actions": {
+        "investigate": "Open investigation",
+        "assign": "Assign to me",
+        "changeStatus": "Change status…",
+        "escalate": "Escalate",
+        "resolve": "Resolve",
+        "falsePositive": "False positive",
+        "mergeIntoNewest": "Merge into newest"
+      },
+      "links": {
+        "quality": "Quality cases",
+        "reviews": "Review moderation"
+      },
+      "levels": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical"
+      },
+      "statuses": {
+        "open": "Open",
+        "in_progress": "In progress",
+        "awaiting_info": "Awaiting info",
+        "escalated": "Escalated",
+        "resolved": "Resolved",
+        "closed": "Closed",
+        "false_positive": "False positive"
+      },
+      "priorities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      },
+      "graph": {
+        "title": "Confirmed relationships",
+        "loading": "Loading graph…",
+        "empty": "No confirmed links yet."
+      }
+    },
+    "aiOps": {
+      "eyebrow": "Operations",
+      "title": "AI Operations & platform health",
+      "subtitle": "Unified operational intelligence across quality, trust, fraud, payments and experience.",
+      "health": {
+        "title": "Platform health",
+        "levels": {
+          "healthy": "Healthy",
+          "degraded": "Degraded",
+          "critical": "Critical"
+        }
+      },
+      "kpis": {
+        "activeUsers": "Active users",
+        "bookingsToday": "Bookings today",
+        "completedJobs": "Completed jobs",
+        "openCases": "Open cases",
+        "escalatedCases": "Escalated cases",
+        "fraudAlerts": "Fraud alerts",
+        "reviews": "Reviews (7d)",
+        "verificationPending": "Verification pending",
+        "verificationVerified": "Verified providers",
+        "paymentSuccess": "Payment success",
+        "refundRate": "Refund rate",
+        "systemHealth": "System health"
+      },
+      "trust": {
+        "title": "Trust distribution",
+        "empty": "No reputation data yet."
+      },
+      "insights": {
+        "title": "AI insights",
+        "empty": "Refresh to generate insights.",
+        "tones": {
+          "positive": "Positive",
+          "neutral": "Neutral",
+          "warning": "Warning",
+          "critical": "Critical"
+        }
+      },
+      "alerts": {
+        "title": "Operational alerts",
+        "empty": "No open alerts."
+      },
+      "anomalies": {
+        "title": "Anomalies",
+        "empty": "No open anomalies."
+      },
+      "trends": {
+        "title": "Trends"
+      },
+      "categories": {
+        "title": "Category health",
+        "empty": "Refresh to compute category health.",
+        "score": "Score"
+      },
+      "regions": {
+        "title": "Region health",
+        "empty": "Refresh to compute region health."
+      },
+      "tasks": {
+        "title": "Action center tasks",
+        "empty": "No open tasks."
+      },
+      "severity": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical"
+      },
+      "alertStatus": {
+        "open": "Open",
+        "acknowledged": "Acknowledged",
+        "resolved": "Resolved",
+        "dismissed": "Dismissed"
+      },
+      "actions": {
+        "refresh": "Refresh health",
+        "export": "Export report",
+        "acknowledge": "Acknowledge",
+        "resolve": "Resolve",
+        "assignTask": "Assign task",
+        "completeTask": "Complete",
+        "createInvestigation": "Create investigation",
+        "openQualityCase": "Open quality case"
+      },
+      "links": {
+        "fraud": "Fraud & risk",
+        "quality": "Quality cases",
+        "reputation": "Reputation",
+        "systemHealth": "System status"
       }
     }
   },
@@ -5854,6 +6207,81 @@
       "amount_exceeds_remaining": "Amount exceeds remaining balance",
       "refund_already_open": "A refund request is already open",
       "create_failed": "Could not create request"
+    }
+  },
+  "quality": {
+    "form": {
+      "title": "Open a quality case",
+      "category": "Category",
+      "priority": "Priority",
+      "caseTitle": "Title",
+      "description": "Describe what happened",
+      "evidence": "Photo evidence (optional)",
+      "submit": "Submit case",
+      "submitting": "Submitting…",
+      "success": "Case {number} created. We will keep you updated.",
+      "categories": {
+        "customer_complaint": "Customer complaint",
+        "provider_complaint": "Provider complaint",
+        "booking_issue": "Booking issue",
+        "service_quality": "Service quality issue",
+        "communication": "Communication issue",
+        "damage_report": "Damage report",
+        "late_arrival": "Late arrival",
+        "no_show": "No show",
+        "policy_violation": "Policy violation",
+        "other": "Other"
+      },
+      "priorities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      }
+    },
+    "errors": {
+      "failed": "Could not submit the case.",
+      "feature_disabled": "Quality cases are not enabled.",
+      "login_required": "Please sign in.",
+      "forbidden": "Not allowed.",
+      "validation_error": "Check the form fields.",
+      "create_failed": "Could not create the case.",
+      "not_found": "Case not found.",
+      "invalid_status": "This action is not available for the current status."
+    },
+    "customer": {
+      "title": "Quality & complaints",
+      "subtitle": "Report an issue, upload evidence, and track resolution.",
+      "yourCases": "Your cases",
+      "empty": "No cases yet.",
+      "resolution": "Resolution",
+      "rateResolution": "How satisfied are you with the resolution?",
+      "statuses": {
+        "open": "Open",
+        "pending_information": "Pending information",
+        "under_review": "Under review",
+        "waiting_for_provider": "Waiting for provider",
+        "waiting_for_customer": "Waiting for customer",
+        "resolved": "Resolved",
+        "rejected": "Rejected",
+        "escalated": "Escalated",
+        "closed": "Closed"
+      }
+    },
+    "provider": {
+      "title": "Quality insights",
+      "subtitle": "Private view of complaints, resolution performance, and improvement tips.",
+      "openCase": "Report a quality issue",
+      "recommendations": "AI recommendations",
+      "history": "Complaint history",
+      "empty": "No quality cases for your business yet.",
+      "respondHint": "Respond to customers in Messages when asked for information.",
+      "metrics": {
+        "total": "Total cases",
+        "open": "Open",
+        "resolutionRate": "Resolution rate",
+        "avgHours": "Avg. resolution time"
+      }
     }
   }
 }

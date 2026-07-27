@@ -58,6 +58,9 @@ export async function ProviderReviewsSection({
             distribution={stats.distribution}
             ratingAvg={stats.ratingAvg}
             reviewCount={stats.reviewCount}
+            recommendationRate={stats.recommendationRate}
+            qualityLabel={stats.qualityLabel}
+            aiSummary={stats.aiSummary}
           />
           <ReviewSortSelect current={sort} />
           <div className="space-y-3">

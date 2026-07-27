@@ -11,6 +11,7 @@ import {
 } from "@/actions/booking.actions";
 import type { Booking } from "@/lib/booking/types";
 import { OpenRouteButton } from "@/components/providers/open-route-button";
+import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { CompletionConfirmationPanel } from "@/components/booking/completion-confirmation-panel";
 import { RescheduleBookingPanel } from "@/components/booking/reschedule-booking-panel";
 import { Button } from "@/components/ui/button";
@@ -21,9 +22,14 @@ import { formatDateTime } from "@/lib/format/datetime";
 type Props = {
   booking: Booking;
   viewer: "customer" | "business";
+  providerVerified?: boolean;
 };
 
-export function BookingCard({ booking, viewer }: Props) {
+export function BookingCard({
+  booking,
+  viewer,
+  providerVerified = false,
+}: Props) {
   const t = useTranslations("booking");
   const locale = useLocale();
   const router = useRouter();
@@ -49,6 +55,17 @@ export function BookingCard({ booking, viewer }: Props) {
           <p className="text-sm text-muted-foreground">
             {t("minutes", { count: booking.durationMinutes })}
           </p>
+          {viewer === "customer" && booking.providerName ? (
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              <p className="text-sm font-medium">{booking.providerName}</p>
+              {providerVerified ? (
+                <PublicVerificationBadge
+                  providerId={booking.providerId}
+                  verified
+                />
+              ) : null}
+            </div>
+          ) : null}
         </div>
         <Badge
           variant="secondary"

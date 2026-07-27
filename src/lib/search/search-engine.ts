@@ -147,12 +147,14 @@ export class DalilySearchEngine {
       categorySlugById,
       performanceByProviderId,
       customerPreferences,
+      reputationBoostByProviderId,
     ] = await Promise.all([
       getActivePlanSlugsByProviderIds(providerIds),
       fetchCompletedJobsByProviderIds(providerIds),
       getCategorySlugMap(),
       fetchPerformanceScoresByProviderIds(providerIds),
       fetchCustomerPreferenceProfile(input.userId),
+      fetchReputationSearchBoosts(providerIds),
     ]);
 
     const categorySlugByProviderId = new Map<string, string>();
@@ -184,6 +186,7 @@ export class DalilySearchEngine {
       customerPreferences,
       applyLearning: true,
       applyDalilyRanking: true,
+      reputationBoostByProviderId,
     });
 
     const ranked = rankedAll.slice(0, TOP_N);
@@ -330,4 +333,27 @@ export const dalilySearchEngine = new DalilySearchEngine();
 
 export async function runDalilySearch(input: SearchEngineInput): Promise<SearchEngineResult> {
   return dalilySearchEngine.search(input);
+}
+
+async function fetchReputationSearchBoosts(
+  providerIds: string[],
+): Promise<Map<string, number>> {
+  const map = new Map<string, number>();
+  if (providerIds.length === 0) return map;
+  try {
+    const { isAiReputationEngineEnabled } = await import("@/lib/config/feature-flags");
+    if (!isAiReputationEngineEnabled()) return map;
+    const { createAdminClient } = await import("@/lib/supabase/admin");
+    const admin = createAdminClient();
+    const { data } = await admin
+      .from("provider_reputation_scores")
+      .select("provider_id, search_boost")
+      .in("provider_id", providerIds);
+    for (const row of data ?? []) {
+      map.set(row.provider_id, Number(row.search_boost ?? 0));
+    }
+  } catch {
+    /* table may be missing pre-migration */
+  }
+  return map;
 }

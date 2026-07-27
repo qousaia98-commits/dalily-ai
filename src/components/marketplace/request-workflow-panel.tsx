@@ -481,6 +481,13 @@ function ReviewForm({ requestId }: { requestId: string }) {
   const router = useRouter();
   const [state, action, pending] = useActionState(submitReviewAction, initial);
   const [rating, setRating] = useState(0);
+  const [dims, setDims] = useState({
+    communication: 0,
+    quality: 0,
+    punctuality: 0,
+    professionalism: 0,
+    value: 0,
+  });
   const { fieldErrors, guardSubmit, clearFieldError } = useClientFormValidation({
     formId: "review",
   });
@@ -513,9 +520,43 @@ function ReviewForm({ requestId }: { requestId: string }) {
         errorMessage={fieldErrors.rating}
         formId="review"
       />
+      {(
+        [
+          "communication",
+          "quality",
+          "punctuality",
+          "professionalism",
+          "value",
+        ] as const
+      ).map((key) => (
+        <InteractiveStarRating
+          key={key}
+          name={key}
+          label={t(`dimensions.${key}`)}
+          value={dims[key]}
+          onChange={(value) => setDims((d) => ({ ...d, [key]: value }))}
+          disabled={pending}
+          formId={`review-${key}`}
+          required={false}
+        />
+      ))}
       <div className="space-y-1.5">
         <Label htmlFor="comment">{t("comment")}</Label>
         <Textarea id="comment" name="comment" rows={4} className="rounded-xl" />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="photoKind">{t("photoKind")}</Label>
+        <select
+          id="photoKind"
+          name="photoKind"
+          className="flex h-10 w-full rounded-xl border border-input bg-background px-3 text-sm"
+          defaultValue="completed"
+        >
+          <option value="completed">{t("photoKinds.completed")}</option>
+          <option value="before">{t("photoKinds.before")}</option>
+          <option value="after">{t("photoKinds.after")}</option>
+          <option value="general">{t("photoKinds.general")}</option>
+        </select>
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="photos">{t("photos")}</Label>

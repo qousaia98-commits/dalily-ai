@@ -62,6 +62,7 @@ export type OfferCompareDimension =
 
 export type OfferCompareItem = {
   offerId: string;
+  providerId: string;
   providerName: string;
   price: number;
   currency: string;

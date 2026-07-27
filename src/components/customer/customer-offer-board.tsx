@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/lib/i18n/routing";
+import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -160,7 +161,10 @@ function OfferCard({
       <div className="flex flex-wrap items-center gap-2">
         <p className="font-medium">{offer.providerName || t("customer.business")}</p>
         {offer.verificationStatus === "verified" ? (
-          <Badge variant="secondary">{t("customer.verified")}</Badge>
+          <PublicVerificationBadge
+            providerId={offer.providerId}
+            verified
+          />
         ) : null}
         {selected ? <Badge>{t("customer.selectedBadge")}</Badge> : null}
         {comparing ? <Badge variant="outline">{t("customer.comparing")}</Badge> : null}

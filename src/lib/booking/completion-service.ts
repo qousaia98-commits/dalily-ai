@@ -347,12 +347,33 @@ export async function customerReportIssue(input: {
 
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (supabase as any).from("booking_issue_reports").insert({
-    booking_id: input.bookingId,
-    customer_id: input.customerId,
-    provider_id: booking.providerId,
-    reason: input.reason,
-  });
+  const { data: issueReport } = await (supabase as any)
+    .from("booking_issue_reports")
+    .insert({
+      booking_id: input.bookingId,
+      customer_id: input.customerId,
+      provider_id: booking.providerId,
+      reason: input.reason,
+    })
+    .select("id")
+    .maybeSingle();
+
+  try {
+    const { isQualityCasesEnabled } = await import("@/lib/config/feature-flags");
+    if (isQualityCasesEnabled() && issueReport?.id) {
+      const { createCaseFromBookingIssue } = await import("@/lib/quality/service");
+      void createCaseFromBookingIssue({
+        bookingIssueReportId: issueReport.id as string,
+        bookingId: input.bookingId,
+        customerId: input.customerId,
+        providerId: booking.providerId,
+        reason: input.reason,
+        details: null,
+      });
+    }
+  } catch {
+    /* quality bridge optional */
+  }
 
   await trackBookingAnalytics({
     eventType: "issue_reported",

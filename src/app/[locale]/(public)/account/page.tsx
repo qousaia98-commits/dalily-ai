@@ -5,12 +5,14 @@ import {
   Languages,
   LogIn,
   Settings,
+  ShieldAlert,
   UserPlus,
 } from "lucide-react";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getAuthUser } from "@/lib/auth/session";
 import { isBusinessUser, canAccessAdminPanel } from "@/lib/auth/roles";
+import { isQualityCasesEnabled } from "@/lib/config/feature-flags";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -50,6 +52,16 @@ export default async function AccountPage() {
           description: t("links.myBookingsDesc"),
           icon: CalendarClock,
         },
+        ...(isQualityCasesEnabled()
+          ? [
+              {
+                href: "/account/quality",
+                title: t("links.quality"),
+                description: t("links.qualityDesc"),
+                icon: ShieldAlert,
+              },
+            ]
+          : []),
         ...(platformAdmin
           ? [
               {

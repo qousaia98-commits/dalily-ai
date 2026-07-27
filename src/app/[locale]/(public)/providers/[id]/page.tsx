@@ -46,16 +46,18 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
   const reviewPage = Math.max(1, Number(sp.reviewPage) || 1);
 
   const supabase = await createClient();
-  const [pending, settings, reviewStats, reviewPageData, jobsMap, owned, servicesResult] =
+  const [pending, settings, reviewStats, reviewPageData, jobsMap, owned, servicesResult, publicTrust] =
     await Promise.all([
       authUser != null ? hasPendingRequest(authUser.id, provider.id) : Promise.resolve(false),
       getProviderRequestSettings(provider.id),
-      getProviderReviewStats(provider.id),
+      getProviderReviewStats(provider.id, locale),
       listProviderReviews({
         providerId: provider.id,
         sort: reviewSort,
         page: reviewPage,
         viewerId: authUser?.id ?? null,
+        language: reviewSort === "language" ? locale : null,
+        recommendOnly: reviewSort === "recommended",
       }),
       fetchCompletedJobsByProviderIds([provider.id]),
       authUser ? getOwnedProvider(authUser.id) : Promise.resolve(null),
@@ -66,6 +68,10 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
         .eq("is_active", true)
         .is("deleted_at", null)
         .order("sort_order"),
+      (async () => {
+        const { getPublicTrustView } = await import("@/lib/reputation/public");
+        return getPublicTrustView(provider.id, locale === "ar" ? "ar" : "en");
+      })(),
     ]);
 
   const trustBadges = resolveTrustBadges({
@@ -103,6 +109,15 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
         canVoteReviews={Boolean(authUser)}
         canReplyReviews={Boolean(owned && owned.id === provider.id)}
         bookingServices={bookingServices}
+        publicTrust={
+          publicTrust ?? {
+            providerId: provider.id,
+            trustLevel: "new_provider",
+            trend: "stable",
+            explanations: [],
+            verificationBadges: provider.verified ? ["verified"] : [],
+          }
+        }
       />
     </main>
   );

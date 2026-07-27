@@ -585,7 +585,9 @@
         "requestSettings": "إعدادات الطلبات",
         "requestSettingsDesc": "تحكم بكيفية تواصل الزبائن معك",
         "myBookings": "حجوزاتي",
-        "myBookingsDesc": "المواعيد التي طلبتها مع مزودي الخدمة"
+        "myBookingsDesc": "المواعيد التي طلبتها مع مزودي الخدمة",
+        "quality": "الجودة والشكاوى",
+        "qualityDesc": "تتبع الشكاوى والحلول"
       }
     },
     "myBusiness": {
@@ -601,7 +603,9 @@
         "hours": "ساعات العمل",
         "hoursDesc": "متى يمكن للعملاء التواصل",
         "verification": "التوثيق",
-        "verificationDesc": "ابنِ الثقة بشارة موثّق"
+        "verificationDesc": "ابنِ الثقة بشارة موثّق",
+        "quality": "رؤى الجودة",
+        "qualityDesc": "الشكاوى ونصائح التحسين"
       }
     },
     "businessMessages": {
@@ -1823,12 +1827,44 @@
       "paused": "متوقف"
     }
   },
+  "publicVerification": {
+    "eyebrow": "الثقة",
+    "title": "تفاصيل التوثيق",
+    "badgeDefault": "موثّق",
+    "openDetails": "فتح تفاصيل التوثيق لـ {label}",
+    "close": "إغلاق",
+    "loading": "جارٍ تحميل تفاصيل التوثيق…",
+    "empty": "لا تتوفر تفاصيل توثيق عامة بعد.",
+    "verifiedOn": "تم التوثيق في: {date}",
+    "trustBody": "المزودون الموثّقون أكّدوا هويتهم وعنوانهم.",
+    "trustOptional": "المستندات التجارية والمهنية الاختيارية تزيد ثقة الزبائن وتحسّن ظهور المزود على دليلي.",
+    "privacyNote": "لحمايتك وحمايتهم، لا يعرض دليلي للزبائن وثائق الهوية أو أرقام الهوية أو عناوين السكن أو أرقام وثائق التأمين أو الملفات المرفوعة.",
+    "expiration": {
+      "valid": "ساري",
+      "expiring_soon": "ينتهي قريبًا",
+      "expired": "منتهٍ"
+    }
+  },
   "reviews": {
     "sectionTitle": "تقييمات الزبائن",
     "sectionSubtitle": "{count, plural, =0 {لا توجد تقييمات بعد} one {تقييم واحد} other {# تقييمات}}",
     "empty": "لا توجد تقييمات بعد. الأعمال المكتملة يمكنها ترك أول تقييم.",
     "averageLabel": "متوسط التقييم",
     "basedOn": "بناءً على {count} تقييمات",
+    "basedOnVerified": "بناءً على {count} تقييمات موثّقة",
+    "recommendedBy": "يوصي به {pct}% من الزبائن",
+    "aiSummaryLabel": "ملخص الذكاء الاصطناعي",
+    "trustLevel": {
+      "eyebrow": "مستوى الثقة",
+      "excellent": "ممتاز",
+      "very_good": "جيد جداً",
+      "good": "جيد",
+      "developing": "قيد التطور",
+      "new_provider": "مزود جديد",
+      "needs_attention": "يحتاج انتباهاً",
+      "rising": "يتحسّن مؤخراً",
+      "fallback": "تُبنى إشارات الثقة مع التقييمات الموثّقة والأعمال المنجزة."
+    },
     "breakdownLabel": "توزيع التقييمات",
     "anonymous": "زبون مجهول",
     "customer": "زبون",
@@ -1843,6 +1879,20 @@
     "replyPlaceholder": "اكتب رداً رسمياً…",
     "submitReply": "نشر الرد",
     "replying": "جارٍ النشر…",
+    "quality": {
+      "excellent": "ممتاز",
+      "veryGood": "جيد جداً",
+      "good": "جيد",
+      "fair": "مقبول",
+      "needsImprovement": "يحتاج تحسين"
+    },
+    "dimensions": {
+      "communication": "التواصل",
+      "quality": "جودة العمل",
+      "punctuality": "الالتزام بالمواعيد",
+      "professionalism": "الاحترافية",
+      "value": "القيمة مقابل السعر"
+    },
     "errors": {
       "login_required": "يرجى تسجيل الدخول",
       "forbidden": "غير مسموح",
@@ -1858,7 +1908,9 @@
       "lowest": "الأقل تقييماً",
       "helpful": "الأكثر فائدة",
       "verified": "الموثّق أولاً",
-      "photos": "مع صور"
+      "photos": "مع صور",
+      "recommended": "موصى به",
+      "language": "لغتك"
     },
     "badges": {
       "top_rated": "الأعلى تقييماً",
@@ -3519,6 +3571,8 @@
         "actionsHint": "انتقل بسرعة إلى الأدوات التي تستخدمها أكثر.",
         "recommendations": "نصائح لتحسين عملك",
         "recommendationsHint": "خطوات بسيطة لتزيد طلباتك.",
+        "reputation": "رؤى السمعة",
+        "reputationHint": "نقاط القوة والاتجاهات واقتراحات الذكاء — النتائج الرقمية تبقى داخلية.",
         "statistics": "إحصائياتك",
         "statisticsHint": "رسوم بيانية وسجلك وإنجازاتك."
       },
@@ -3715,6 +3769,34 @@
           "improve_response": "ردّ أسرع على الرسائل وطلبات الحجز."
         }
       }
+    },
+    "reputationInsights": {
+      "eyebrow": "خاص",
+      "title": "سمعتك",
+      "strengths": "نقاط القوة",
+      "improvements": "فرص التحسين",
+      "suggestions": "اقتراحات الذكاء الاصطناعي",
+      "monthlyTrend": "اتجاه الثقة الأخير",
+      "scorePrivateNote": "النتائج الرقمية خاصة — العملاء يرون مستوى الثقة فقط.",
+      "metrics": {
+        "completedJobs": "أعمال مكتملة",
+        "cancellationRate": "معدل الإلغاء",
+        "responseTime": "وقت الرد",
+        "recommendationRate": "معدل التوصية"
+      },
+      "levels": {
+        "excellent": "ممتاز",
+        "very_good": "جيد جداً",
+        "good": "جيد",
+        "developing": "قيد التطور",
+        "new_provider": "مزود جديد",
+        "needs_attention": "يحتاج انتباهاً"
+      },
+      "trend": {
+        "rising": "صاعد",
+        "stable": "مستقر",
+        "declining": "متراجع"
+      }
     }
   },
   "admin": {
@@ -3737,6 +3819,7 @@
       "customers": "العملاء",
       "issues": "البلاغات",
       "reviewModeration": "إشراف التقييمات",
+      "reputation": "محرك السمعة",
       "analytics": "التحليلات",
       "aiPredictions": "توقعات الذكاء",
       "aiAutomation": "أتمتة الذكاء",
@@ -3758,7 +3841,10 @@
         "operations": "العمليات",
         "system": "النظام",
         "more": "المزيد"
-      }
+      },
+      "quality": "حالات الجودة",
+      "fraud": "الاحتيال والمخاطر",
+      "aiOps": "عمليات الذكاء الاصطناعي"
     },
     "learning": {
       "eyebrow": "داخلي · Learning AI",
@@ -4484,19 +4570,26 @@
     "reviewModeration": {
       "eyebrow": "الإشراف",
       "title": "إشراف التقييمات",
-      "subtitle": "الأحدث والتقييمات المنخفضة والمبلّغ عنها. كشف السبام جاهز.",
+      "subtitle": "الأحدث والتقييمات المنخفضة وأعلام الذكاء الاصطناعي وطلبات الحذف.",
       "empty": "لا تقييمات في هذا الفلتر.",
-      "spamReady": "نقطة توسعة كشف السبام جاهزة (الذكاء الاصطناعي غير مفعّل).",
+      "spamReady": "كشف التقييمات المزيفة مفعّل (heuristic-v1).",
       "spamNotReady": "كشف السبام غير متاح.",
       "verified": "موثّق",
       "noComment": "بدون تعليق",
       "provider": "المزود",
       "warnDefault": "يرجى الالتزام بإرشادات مجتمع دليلي.",
+      "aiSummary": "ملخص الذكاء الاصطناعي",
+      "fakeRisk": "خطر التزييف",
+      "flags": "أعلام",
+      "history": "السجل",
+      "deleteRequested": "طلب حذف",
       "filters": {
         "newest": "الأحدث",
         "low": "تقييمات منخفضة",
         "hidden": "مخفي",
-        "pending": "معلّق"
+        "pending": "معلّق",
+        "flagged": "معلّم بالذكاء",
+        "delete_requests": "طلبات الحذف"
       },
       "actions": {
         "hide": "إخفاء",
@@ -4504,6 +4597,36 @@
         "delete": "حذف",
         "deleteConfirm": "حذف ناعم لهذا التقييم؟",
         "warnCustomer": "تحذير العميل"
+      }
+    },
+    "reputation": {
+      "eyebrow": "الثقة",
+      "title": "محرك السمعة بالذكاء الاصطناعي",
+      "subtitle": "النتائج الداخلية للإدارة فقط. العملاء يرون مستويات الثقة والتفسيرات الإيجابية.",
+      "distribution": "توزيع مستويات الثقة",
+      "highest": "أعلى سمعة",
+      "rising": "تحسّن سريع",
+      "declining": "تراجع",
+      "needsReview": "يحتاج مراجعة",
+      "complaintHeavy": "مشاكل موثوقية متكررة",
+      "empty": "لا مزودين في هذه القائمة بعد. أعد الحساب بعد الترحيل.",
+      "internalScore": "النتيجة الداخلية",
+      "levels": {
+        "excellent": "ممتاز",
+        "very_good": "جيد جداً",
+        "good": "جيد",
+        "developing": "قيد التطور",
+        "new_provider": "مزود جديد",
+        "needs_attention": "يحتاج انتباهاً"
+      },
+      "trend": {
+        "rising": "صاعد",
+        "stable": "مستقر",
+        "declining": "متراجع"
+      },
+      "links": {
+        "reviews": "إشراف التقييمات",
+        "providers": "المزودون"
       }
     },
     "broadcasts": {
@@ -4968,6 +5091,222 @@
         "lostDisputes": "خسارة",
         "avgResolution": "متوسط الحل"
       }
+    },
+    "quality": {
+      "eyebrow": "الجودة",
+      "title": "إدارة الحالات",
+      "subtitle": "تعيين وتصعيد ودمج وحل حالات جودة السوق.",
+      "empty": "لا توجد حالات جودة بعد.",
+      "byCategory": "حسب الفئة",
+      "provider": "المزود",
+      "stats": {
+        "open": "حالات مفتوحة",
+        "escalated": "مُصعَّدة",
+        "resolvedWeek": "تم حلها هذا الأسبوع"
+      },
+      "actions": {
+        "assign": "تعيين لي",
+        "changeStatus": "تغيير الحالة…",
+        "escalate": "تصعيد",
+        "resolve": "حل",
+        "reject": "رفض",
+        "rejectConfirm": "رفض هذه الحالة؟",
+        "mergeIntoNewest": "دمج في الأحدث"
+      },
+      "links": {
+        "issues": "بلاغات الحجوزات",
+        "refunds": "المبالغ المستردة"
+      },
+      "categories": {
+        "customer_complaint": "شكوى عميل",
+        "provider_complaint": "شكوى مزود",
+        "booking_issue": "مشكلة حجز",
+        "service_quality": "مشكلة جودة الخدمة",
+        "communication": "مشكلة تواصل",
+        "damage_report": "بلاغ ضرر",
+        "late_arrival": "تأخر الوصول",
+        "no_show": "عدم الحضور",
+        "policy_violation": "مخالفة السياسة",
+        "other": "أخرى"
+      },
+      "statuses": {
+        "open": "مفتوح",
+        "pending_information": "بانتظار معلومات",
+        "under_review": "قيد المراجعة",
+        "waiting_for_provider": "بانتظار المزود",
+        "waiting_for_customer": "بانتظار العميل",
+        "resolved": "تم الحل",
+        "rejected": "مرفوض",
+        "escalated": "مُصعَّد",
+        "closed": "مغلق"
+      },
+      "priorities": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "urgent": "عاجل"
+      }
+    },
+    "fraud": {
+      "eyebrow": "المخاطر",
+      "title": "الاحتيال واستخبارات المخاطر",
+      "subtitle": "اكتشاف بمساعدة المشرف. مستويات المخاطر داخلية ولا تُعرض للعملاء.",
+      "privacyNotice": "الدرجات الداخلية لا تظهر في الملفات العامة أو واجهات العملاء.",
+      "riskScores": "أعلى درجات المخاطر الداخلية",
+      "investigations": "التحقيقات",
+      "events": "أحداث الاحتيال الأخيرة",
+      "triggered": "القواعد المُفعَّلة",
+      "emptyScores": "لا توجد درجات مخاطر بعد. أعد حساب كيان للبدء.",
+      "emptyInvestigations": "لا توجد تحقيقات بعد.",
+      "emptyEvents": "لا توجد أحداث احتيال بعد.",
+      "stats": {
+        "open": "تحقيقات مفتوحة",
+        "escalated": "مُصعَّدة",
+        "highRisk": "كيانات عالية/حرجة",
+        "eventsToday": "أحداث اليوم"
+      },
+      "recalculate": {
+        "title": "إعادة حساب المخاطر",
+        "hint": "يشغّل محرك القواعد (+ طبقة ML اختيارية). لا يعلّق تلقائياً بشكل دائم.",
+        "entityId": "معرّف الكيان",
+        "submit": "احسب"
+      },
+      "entities": {
+        "provider": "مزود",
+        "customer": "عميل"
+      },
+      "actions": {
+        "investigate": "فتح تحقيق",
+        "assign": "تعيين لي",
+        "changeStatus": "تغيير الحالة…",
+        "escalate": "تصعيد",
+        "resolve": "حل",
+        "falsePositive": "إيجابية كاذبة",
+        "mergeIntoNewest": "دمج في الأحدث"
+      },
+      "links": {
+        "quality": "حالات الجودة",
+        "reviews": "إشراف التقييمات"
+      },
+      "levels": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "critical": "حرج"
+      },
+      "statuses": {
+        "open": "مفتوح",
+        "in_progress": "قيد التنفيذ",
+        "awaiting_info": "بانتظار معلومات",
+        "escalated": "مُصعَّد",
+        "resolved": "تم الحل",
+        "closed": "مغلق",
+        "false_positive": "إيجابية كاذبة"
+      },
+      "priorities": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "urgent": "عاجل"
+      },
+      "graph": {
+        "title": "علاقات مؤكدة",
+        "loading": "جارٍ تحميل الرسم…",
+        "empty": "لا روابط مؤكدة بعد."
+      }
+    },
+    "aiOps": {
+      "eyebrow": "العمليات",
+      "title": "عمليات الذكاء الاصطناعي وصحة المنصة",
+      "subtitle": "ذكاء تشغيلي موحّد عبر الجودة والثقة والاحتيال والمدفوعات والتجربة.",
+      "health": {
+        "title": "صحة المنصة",
+        "levels": {
+          "healthy": "سليم",
+          "degraded": "متدهور",
+          "critical": "حرج"
+        }
+      },
+      "kpis": {
+        "activeUsers": "المستخدمون النشطون",
+        "bookingsToday": "الحجوزات اليوم",
+        "completedJobs": "المهام المكتملة",
+        "openCases": "حالات مفتوحة",
+        "escalatedCases": "حالات مُصعَّدة",
+        "fraudAlerts": "تنبيهات احتيال",
+        "reviews": "التقييمات (7 أيام)",
+        "verificationPending": "تحقق معلّق",
+        "verificationVerified": "مزودون موثّقون",
+        "paymentSuccess": "نجاح الدفع",
+        "refundRate": "معدل الاسترداد",
+        "systemHealth": "صحة النظام"
+      },
+      "trust": {
+        "title": "توزيع الثقة",
+        "empty": "لا توجد بيانات سمعة بعد."
+      },
+      "insights": {
+        "title": "رؤى الذكاء الاصطناعي",
+        "empty": "حدّث لتوليد الرؤى.",
+        "tones": {
+          "positive": "إيجابي",
+          "neutral": "محايد",
+          "warning": "تحذير",
+          "critical": "حرج"
+        }
+      },
+      "alerts": {
+        "title": "تنبيهات تشغيلية",
+        "empty": "لا تنبيهات مفتوحة."
+      },
+      "anomalies": {
+        "title": "شذوذات",
+        "empty": "لا شذوذات مفتوحة."
+      },
+      "trends": {
+        "title": "الاتجاهات"
+      },
+      "categories": {
+        "title": "صحة الفئات",
+        "empty": "حدّث لحساب صحة الفئات.",
+        "score": "الدرجة"
+      },
+      "regions": {
+        "title": "صحة المناطق",
+        "empty": "حدّث لحساب صحة المناطق."
+      },
+      "tasks": {
+        "title": "مهام مركز الإجراءات",
+        "empty": "لا مهام مفتوحة."
+      },
+      "severity": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "critical": "حرج"
+      },
+      "alertStatus": {
+        "open": "مفتوح",
+        "acknowledged": "تم الإقرار",
+        "resolved": "تم الحل",
+        "dismissed": "مرفوض"
+      },
+      "actions": {
+        "refresh": "تحديث الصحة",
+        "export": "تصدير تقرير",
+        "acknowledge": "إقرار",
+        "resolve": "حل",
+        "assignTask": "تعيين مهمة",
+        "completeTask": "إكمال",
+        "createInvestigation": "إنشاء تحقيق",
+        "openQualityCase": "فتح حالة جودة"
+      },
+      "links": {
+        "fraud": "الاحتيال والمخاطر",
+        "quality": "حالات الجودة",
+        "reputation": "السمعة",
+        "systemHealth": "حالة النظام"
+      }
     }
   },
   "auth": {
@@ -5241,6 +5580,20 @@
       "comment": "تعليق",
       "photos": "صور (اختياري)",
       "photosHint": "حتى 5 صور للعمل المنجز.",
+      "photoKind": "نوع الصورة",
+      "photoKinds": {
+        "before": "قبل",
+        "after": "بعد",
+        "completed": "عمل مكتمل",
+        "general": "عام"
+      },
+      "dimensions": {
+        "communication": "التواصل",
+        "quality": "جودة العمل",
+        "punctuality": "الالتزام بالمواعيد",
+        "professionalism": "الاحترافية",
+        "value": "القيمة مقابل السعر"
+      },
       "anonymous": "اعرض اسمي كمجهول",
       "recommend": "هل توصي بهذا العمل؟",
       "recommendSkip": "أفضل عدم الإجابة",
@@ -5854,6 +6207,81 @@
       "amount_exceeds_remaining": "المبلغ يتجاوز الرصيد المتبقي",
       "refund_already_open": "يوجد طلب استرداد مفتوح",
       "create_failed": "تعذر إنشاء الطلب"
+    }
+  },
+  "quality": {
+    "form": {
+      "title": "فتح حالة جودة",
+      "category": "الفئة",
+      "priority": "الأولوية",
+      "caseTitle": "العنوان",
+      "description": "صف ما حدث",
+      "evidence": "دليل مصور (اختياري)",
+      "submit": "إرسال الحالة",
+      "submitting": "جارٍ الإرسال…",
+      "success": "تم إنشاء الحالة {number}. سنبقيك على اطلاع.",
+      "categories": {
+        "customer_complaint": "شكوى عميل",
+        "provider_complaint": "شكوى مزود",
+        "booking_issue": "مشكلة حجز",
+        "service_quality": "مشكلة جودة الخدمة",
+        "communication": "مشكلة تواصل",
+        "damage_report": "بلاغ ضرر",
+        "late_arrival": "تأخر الوصول",
+        "no_show": "عدم الحضور",
+        "policy_violation": "مخالفة السياسة",
+        "other": "أخرى"
+      },
+      "priorities": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "urgent": "عاجل"
+      }
+    },
+    "errors": {
+      "failed": "تعذر إرسال الحالة.",
+      "feature_disabled": "حالات الجودة غير مفعّلة.",
+      "login_required": "يرجى تسجيل الدخول.",
+      "forbidden": "غير مسموح.",
+      "validation_error": "تحقق من الحقول.",
+      "create_failed": "تعذر إنشاء الحالة.",
+      "not_found": "الحالة غير موجودة.",
+      "invalid_status": "هذا الإجراء غير متاح للحالة الحالية."
+    },
+    "customer": {
+      "title": "الجودة والشكاوى",
+      "subtitle": "أبلغ عن مشكلة، ارفع الأدلة، وتابع الحل.",
+      "yourCases": "حالاتك",
+      "empty": "لا توجد حالات بعد.",
+      "resolution": "القرار",
+      "rateResolution": "ما مدى رضاك عن الحل؟",
+      "statuses": {
+        "open": "مفتوح",
+        "pending_information": "بانتظار معلومات",
+        "under_review": "قيد المراجعة",
+        "waiting_for_provider": "بانتظار المزود",
+        "waiting_for_customer": "بانتظار العميل",
+        "resolved": "تم الحل",
+        "rejected": "مرفوض",
+        "escalated": "مُصعَّد",
+        "closed": "مغلق"
+      }
+    },
+    "provider": {
+      "title": "رؤى الجودة",
+      "subtitle": "عرض خاص للشكاوى وأداء الحل ونصائح التحسين.",
+      "openCase": "الإبلاغ عن مشكلة جودة",
+      "recommendations": "توصيات الذكاء الاصطناعي",
+      "history": "سجل الشكاوى",
+      "empty": "لا توجد حالات جودة لنشاطك بعد.",
+      "respondHint": "رد على العملاء في الرسائل عند طلب معلومات.",
+      "metrics": {
+        "total": "إجمالي الحالات",
+        "open": "مفتوح",
+        "resolutionRate": "معدل الحل",
+        "avgHours": "متوسط وقت الحل"
+      }
     }
   }
 }

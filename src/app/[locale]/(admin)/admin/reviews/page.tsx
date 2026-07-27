@@ -12,7 +12,7 @@ export default async function AdminReviewsPage({ searchParams }: PageProps) {
   await requireAdminUser();
   const t = await getTranslations("admin.reviewModeration");
   const params = await searchParams;
-  const filters = ["newest", "low", "hidden", "pending"] as const;
+  const filters = ["newest", "low", "hidden", "pending", "flagged", "delete_requests"] as const;
   const filter =
     params.filter && filters.includes(params.filter as (typeof filters)[number])
       ? (params.filter as (typeof filters)[number])

@@ -40,8 +40,32 @@ export function AdminReviewModerationPanel({ items, spamReady }: Props) {
                   <p className="text-sm font-semibold">
                     ★ {item.rating} · {item.status}
                     {item.isVerified ? ` · ${t("verified")}` : ""}
+                    {item.deleteRequested ? ` · ${t("deleteRequested")}` : ""}
                   </p>
                   <p className="text-sm text-muted-foreground">{item.comment || t("noComment")}</p>
+                  {item.aiSummary ? (
+                    <p className="text-xs text-muted-foreground">
+                      {t("aiSummary")}: {item.aiSummary}
+                      {item.sentiment ? ` (${item.sentiment})` : ""}
+                      {item.fakeRisk != null
+                        ? ` · ${t("fakeRisk")}: ${(item.fakeRisk * 100).toFixed(0)}%`
+                        : ""}
+                    </p>
+                  ) : null}
+                  {item.flags.length > 0 ? (
+                    <p className="text-xs text-amber-700 dark:text-amber-400">
+                      {t("flags")}:{" "}
+                      {item.flags.map((f) => `${f.type}(${f.severity})`).join(", ")}
+                    </p>
+                  ) : null}
+                  {item.moderationHistory.length > 0 ? (
+                    <p className="text-xs text-muted-foreground">
+                      {t("history")}:{" "}
+                      {item.moderationHistory
+                        .map((h) => `${h.action}@${formatDateTime(h.at)}`)
+                        .join(" · ")}
+                    </p>
+                  ) : null}
                   <p className="text-xs text-muted-foreground">
                     <Link href={`/admin/providers/${item.providerId}`} className="underline">
                       {t("provider")}
@@ -63,7 +87,9 @@ export function AdminReviewModerationPanel({ items, spamReady }: Props) {
                     size="sm"
                     variant="outline"
                     disabled={pending}
-                    onClick={() => run(() => moderateReviewAction({ reviewId: item.id, action: "restore" }))}
+                    onClick={() =>
+                      run(() => moderateReviewAction({ reviewId: item.id, action: "restore" }))
+                    }
                   >
                     {t("actions.restore")}
                   </Button>

@@ -277,6 +277,34 @@ export default async function BusinessDashboardPage() {
         showVerify={showVerification}
         userId={authUser.id}
         providerId={provider.id}
+        reputationInsights={await (async () => {
+          try {
+            const { isAiReputationEngineEnabled } = await import(
+              "@/lib/config/feature-flags"
+            );
+            if (!isAiReputationEngineEnabled()) return null;
+            const { getProviderReputationInsights } = await import(
+              "@/lib/reputation/insights"
+            );
+            const { recalculateProviderReputation } = await import(
+              "@/lib/reputation/service"
+            );
+            let insights = await getProviderReputationInsights(
+              provider.id,
+              locale === "ar" ? "ar" : "en",
+            );
+            if (!insights) {
+              await recalculateProviderReputation(provider.id);
+              insights = await getProviderReputationInsights(
+                provider.id,
+                locale === "ar" ? "ar" : "en",
+              );
+            }
+            return insights;
+          } catch {
+            return null;
+          }
+        })()}
       />
 
       <DashboardConversationsPreview conversations={conversations} />

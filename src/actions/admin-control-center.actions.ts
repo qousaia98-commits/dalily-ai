@@ -110,6 +110,27 @@ export async function moderateReviewAction(input: {
     if (error) return { success: false, error: "update_failed" };
   }
 
+  try {
+    const { auditModeration } = await import("@/lib/reviews/service");
+    const { trackReviewEvent } = await import("@/lib/reviews/observability");
+    await auditModeration({
+      reviewId: parsed.data,
+      action: input.action,
+      actorId: authUser.id,
+      metadata: { providerId: reviewRow.provider_id },
+    });
+    void trackReviewEvent(
+      input.action === "hide" ? "review_hidden" : "review_approved",
+      { reviewId: parsed.data, providerId: reviewRow.provider_id },
+    );
+    if (input.action === "restore" || input.action === "hide" || input.action === "delete") {
+      const { refreshProviderReputation } = await import("@/lib/reviews/service");
+      await refreshProviderReputation(reviewRow.provider_id);
+    }
+  } catch {
+    /* soft */
+  }
+
   // Recompute provider.rating_avg / review_count / trust via existing RPC.
   await admin.rpc("recompute_provider_trust_score", {
     p_provider_id: reviewRow.provider_id,

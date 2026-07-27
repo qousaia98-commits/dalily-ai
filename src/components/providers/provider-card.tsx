@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Clock, MapPin } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Card, CardContent } from "@/components/ui/card";
+import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { Badge } from "@/components/ui/badge";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { StarRating } from "@/components/providers/star-rating";
@@ -64,7 +65,11 @@ export async function ProviderCard({
           />
           <div className="absolute start-3 top-3 flex flex-wrap gap-1.5">
             {provider.verified ? (
-              <Badge variant="success">{tProvider("verified")}</Badge>
+              <PublicVerificationBadge
+                providerId={provider.id}
+                verified
+                stopLinkNavigation
+              />
             ) : null}
             {benefits.canAppearFeatured ? (
               <Badge className="bg-[var(--dalily-navy)] text-[var(--dalily-gold)]">

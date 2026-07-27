@@ -1,6 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import type { CustomerAssistantView } from "@/lib/ai/assistant/types";
 import { AssistantSuggestionsClient } from "@/components/assistant/assistant-suggestions-client";
+import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 
 /**
  * Customer-facing personal AI assistant panel.
@@ -62,9 +63,16 @@ export async function CustomerAssistantPanel({
           <ol className="mt-2 space-y-1 text-sm">
             {view.offerComparison.items.slice(0, 3).map((item, i) => (
               <li key={item.offerId} className="flex justify-between gap-2">
-                <span>
-                  {i + 1}. {item.providerName}
-                  {item.verified ? ` · ${t("verified")}` : ""}
+                <span className="flex min-w-0 flex-wrap items-center gap-1.5">
+                  <span>
+                    {i + 1}. {item.providerName}
+                  </span>
+                  {item.verified ? (
+                    <PublicVerificationBadge
+                      providerId={item.providerId}
+                      verified
+                    />
+                  ) : null}
                 </span>
                 <span className="text-muted-foreground tabular-nums">
                   {item.price} {item.currency}

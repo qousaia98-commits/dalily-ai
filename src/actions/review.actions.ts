@@ -118,23 +118,76 @@ export async function replyToReviewAction(
     return { success: false, error: "reply_exists" };
   }
 
-  const { error } = await supabase
-    .from("service_reviews")
-    .update({
-      provider_reply: reply,
-      provider_replied_at: new Date().toISOString(),
-      provider_reply_by: authUser.id,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", reviewId)
-    .eq("provider_id", provider.id)
-    .is("provider_reply", null);
-
-  if (error) return { success: false, error: "failed" };
+  const { syncProviderResponse } = await import("@/lib/reviews/service");
+  const synced = await syncProviderResponse({
+    reviewId,
+    providerId: provider.id,
+    body: reply,
+    actorId: authUser.id,
+  });
+  if (!synced.ok) return { success: false, error: "failed" };
 
   void trackReviewAnalytics("provider_reply", { reviewId }, provider.id);
   revalidatePath(`/providers/${provider.id}`);
   revalidatePath("/business", "layout");
+  return { success: true };
+}
+
+export async function editReviewAction(
+  _prev: ReviewActionState,
+  formData: FormData,
+): Promise<ReviewActionState> {
+  const authUser = await getAuthUser();
+  if (!authUser) return { success: false, error: "login_required" };
+
+  const reviewId = String(formData.get("reviewId") ?? "");
+  const rating = Number(formData.get("rating"));
+  const comment = String(formData.get("comment") ?? "");
+  const recommendRaw = String(formData.get("recommend") ?? "");
+  if (!reviewId || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+    return { success: false, error: "validation_error" };
+  }
+
+  const recommend =
+    recommendRaw === "yes" ? true : recommendRaw === "no" ? false : null;
+
+  const { editReview } = await import("@/lib/reviews/service");
+  const result = await editReview({
+    customerId: authUser.id,
+    reviewId,
+    rating,
+    comment,
+    recommend,
+    dimensions: {
+      overall: rating,
+      communication: Number(formData.get("communication")) || undefined,
+      quality: Number(formData.get("quality")) || undefined,
+      punctuality: Number(formData.get("punctuality")) || undefined,
+      professionalism: Number(formData.get("professionalism")) || undefined,
+      value: Number(formData.get("value")) || undefined,
+    },
+  });
+
+  if (!result.ok) return { success: false, error: result.error };
+  revalidatePath("/providers", "layout");
+  return { success: true };
+}
+
+export async function requestReviewDeleteAction(
+  reviewId: string,
+  reason?: string,
+): Promise<ReviewActionState> {
+  const authUser = await getAuthUser();
+  if (!authUser) return { success: false, error: "login_required" };
+  if (!reviewId) return { success: false, error: "validation_error" };
+
+  const { requestReviewDelete } = await import("@/lib/reviews/service");
+  const result = await requestReviewDelete({
+    customerId: authUser.id,
+    reviewId,
+    reason,
+  });
+  if (!result.ok) return { success: false, error: result.error ?? "failed" };
   return { success: true };
 }
 

@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
 import { Navigation, Phone, Star, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceKm } from "@/lib/geo/distance";
 import {
@@ -78,7 +79,9 @@ export function SmartMapPreviewCard({
             ) : null}
           </div>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {provider.verified ? <Badge variant="success">{t("verified")}</Badge> : null}
+            {provider.verified ? (
+              <PublicVerificationBadge providerId={provider.id} verified />
+            ) : null}
             {emergencySearch ? (
               <Badge variant="destructive">{t("emergency")}</Badge>
             ) : null}

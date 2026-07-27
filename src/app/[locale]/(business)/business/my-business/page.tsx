@@ -1,10 +1,12 @@
 import {
   Clock3,
   Images,
+  ShieldAlert,
   ShieldCheck,
   User,
   Wrench,
 } from "lucide-react";
+import { isQualityCasesEnabled } from "@/lib/config/feature-flags";
 import { getTranslations } from "next-intl/server";
 import { MobileHubLinks } from "@/components/layout/mobile-hub-links";
 
@@ -42,6 +44,16 @@ export default async function MyBusinessPage() {
       description: t("links.verificationDesc"),
       icon: ShieldCheck,
     },
+    ...(isQualityCasesEnabled()
+      ? [
+          {
+            href: "/business/quality",
+            title: t("links.quality"),
+            description: t("links.qualityDesc"),
+            icon: ShieldAlert,
+          },
+        ]
+      : []),
   ];
 
   return (

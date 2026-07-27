@@ -18,3 +18,16 @@ export {
   type VerificationTimelineEventId,
   type VerificationTimelineEvent,
 } from "@/lib/verification/status";
+
+export {
+  getPublicVerificationSummary,
+  grantProviderVerificationCheck,
+  syncIdentityCheckOnApproval,
+} from "@/lib/verification/public-summary";
+
+export type {
+  PublicVerificationSummary,
+  PublicVerificationLevelGroup,
+  PublicVerificationCheck,
+  VerificationExpirationStatus,
+} from "@/lib/verification/public-types";

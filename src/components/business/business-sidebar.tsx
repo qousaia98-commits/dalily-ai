@@ -56,6 +56,7 @@ const ACCOUNT_PREFIXES = [
   "/business/calendar",
   "/business/bookings",
   "/business/verification",
+  "/business/quality",
   "/business/settings",
   "/business/analytics",
   "/business/my-business",
