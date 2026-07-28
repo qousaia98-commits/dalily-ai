@@ -1,0 +1,8 @@
+{
+  "expo": {
+    "name": "Dalily",
+    "slug": "dalily",
+    "version": "1.0.0",
+    "_comment": "Static fallback. Dynamic production config lives in app.config.ts (source of truth)."
+  }
+}

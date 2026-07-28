@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.app.dalily.mobile",
+        "paths": [
+          "/providers/*",
+          "/bookings/*",
+          "/r/*",
+          "/invite/*",
+          "/q/*",
+          "/customer/*",
+          "/provider/*"
+        ]
+      }
+    ]
+  }
+}

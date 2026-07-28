@@ -1,0 +1,308 @@
+import type {
+  CustomerBooking,
+  CustomerCategory,
+  CustomerNotification,
+  CustomerProvider,
+  HomeFeed,
+  ProviderProfile,
+} from '@/features/customer/types';
+
+export const DEMO_CATEGORIES: CustomerCategory[] = [
+  {
+    id: 'cat-cleaning',
+    slug: 'cleaning',
+    name: { en: 'Cleaning', ar: 'تنظيف' },
+    icon: '✨',
+    featured: true,
+    popular: true,
+    parentId: null,
+  },
+  {
+    id: 'cat-plumbing',
+    slug: 'plumbing',
+    name: { en: 'Plumbing', ar: 'سباكة' },
+    icon: '🔧',
+    featured: true,
+    popular: true,
+    parentId: null,
+  },
+  {
+    id: 'cat-electrical',
+    slug: 'electrical',
+    name: { en: 'Electrical', ar: 'كهرباء' },
+    icon: '⚡',
+    featured: false,
+    popular: true,
+    parentId: null,
+  },
+  {
+    id: 'cat-gardening',
+    slug: 'gardening',
+    name: { en: 'Gardening', ar: 'حدائق' },
+    icon: '🌿',
+    featured: true,
+    popular: false,
+    parentId: null,
+  },
+  {
+    id: 'cat-ac',
+    slug: 'ac',
+    name: { en: 'AC & Cooling', ar: 'تكييف' },
+    icon: '❄️',
+    featured: false,
+    popular: true,
+    parentId: null,
+  },
+  {
+    id: 'cat-moving',
+    slug: 'moving',
+    name: { en: 'Moving', ar: 'نقل' },
+    icon: '📦',
+    featured: false,
+    popular: false,
+    parentId: null,
+  },
+  {
+    id: 'cat-deep-clean',
+    slug: 'deep-cleaning',
+    name: { en: 'Deep Cleaning', ar: 'تنظيف عميق' },
+    icon: '🧽',
+    featured: false,
+    popular: false,
+    parentId: 'cat-cleaning',
+  },
+];
+
+export const DEMO_PROVIDERS: CustomerProvider[] = [
+  {
+    id: 'prv-1',
+    name: 'Amman Clean Pros',
+    photoUrl: null,
+    verified: true,
+    rating: 4.8,
+    reviewCount: 126,
+    distanceKm: 1.2,
+    startingPrice: 15,
+    currency: 'JOD',
+    available: true,
+    responseTimeMin: 12,
+    aiMatchScore: 0.92,
+    categoryIds: ['cat-cleaning'],
+    city: 'Amman',
+    about: {
+      en: 'Trusted home cleaning with verified staff.',
+      ar: 'تنظيف منازل موثوق بطاقم موثّق.',
+    },
+    trustScore: 0.88,
+  },
+  {
+    id: 'prv-2',
+    name: 'Zarqa Fix It',
+    photoUrl: null,
+    verified: true,
+    rating: 4.6,
+    reviewCount: 84,
+    distanceKm: 3.4,
+    startingPrice: 20,
+    currency: 'JOD',
+    available: true,
+    responseTimeMin: 18,
+    aiMatchScore: 0.86,
+    categoryIds: ['cat-plumbing', 'cat-electrical'],
+    city: 'Zarqa',
+    about: {
+      en: 'Fast plumbing and electrical repairs.',
+      ar: 'إصلاحات سباكة وكهرباء سريعة.',
+    },
+    trustScore: 0.81,
+  },
+  {
+    id: 'prv-3',
+    name: 'Green Yard Co',
+    photoUrl: null,
+    verified: false,
+    rating: 4.4,
+    reviewCount: 41,
+    distanceKm: 2.1,
+    startingPrice: 18,
+    currency: 'JOD',
+    available: false,
+    responseTimeMin: 30,
+    aiMatchScore: 0.74,
+    categoryIds: ['cat-gardening'],
+    city: 'Amman',
+    about: {
+      en: 'Garden care and seasonal landscaping.',
+      ar: 'العناية بالحدائق وتنسيق موسمي.',
+    },
+    trustScore: 0.7,
+  },
+  {
+    id: 'prv-4',
+    name: 'CoolAir Jordan',
+    photoUrl: null,
+    verified: true,
+    rating: 4.9,
+    reviewCount: 201,
+    distanceKm: 4.8,
+    startingPrice: 25,
+    currency: 'JOD',
+    available: true,
+    responseTimeMin: 10,
+    aiMatchScore: 0.95,
+    categoryIds: ['cat-ac'],
+    city: 'Irbid',
+    about: {
+      en: 'AC install, service and emergency cooling.',
+      ar: 'تركيب وصيانة تكييف وطوارئ تبريد.',
+    },
+    trustScore: 0.93,
+  },
+];
+
+export function demoProviderProfile(id: string): ProviderProfile | null {
+  const base = DEMO_PROVIDERS.find((p) => p.id === id);
+  if (!base) return null;
+  return {
+    ...base,
+    gallery: [],
+    services: [
+      {
+        id: `${id}-svc-1`,
+        title: { en: 'Standard visit', ar: 'زيارة عادية' },
+        priceFrom: base.startingPrice,
+        durationMin: 60,
+      },
+      {
+        id: `${id}-svc-2`,
+        title: { en: 'Premium package', ar: 'باقة مميزة' },
+        priceFrom: base.startingPrice + 10,
+        durationMin: 120,
+      },
+    ],
+    reviews: [
+      {
+        id: 'rev-1',
+        rating: 5,
+        comment: 'On time and professional.',
+        author: 'Sara',
+        createdAt: new Date().toISOString(),
+      },
+    ],
+    highlights: [
+      'Customers prefer evening appointments',
+      'Strong weekend availability',
+    ],
+    lat: 31.95,
+    lng: 35.91,
+  };
+}
+
+export function demoHomeFeed(): HomeFeed {
+  return {
+    locationLabel: 'Amman, Jordan',
+    categories: DEMO_CATEGORIES.filter((c) => c.popular || c.featured),
+    recommended: DEMO_PROVIDERS.filter((p) => (p.aiMatchScore ?? 0) >= 0.85),
+    recentlyViewed: [DEMO_PROVIDERS[0]!, DEMO_PROVIDERS[1]!],
+    trending: [...DEMO_PROVIDERS].sort((a, b) => b.reviewCount - a.reviewCount),
+    nearby: [...DEMO_PROVIDERS].sort(
+      (a, b) => (a.distanceKm ?? 99) - (b.distanceKm ?? 99),
+    ),
+    aiRecommendations: [
+      {
+        code: 'book_earlier_weekend',
+        labelEn: 'Book earlier this weekend for better availability.',
+        labelAr: 'احجز مبكراً في نهاية الأسبوع لتوفر أفضل.',
+        kind: 'availability',
+      },
+      {
+        code: 'fair_price_cleaning',
+        labelEn: 'Fair price range for cleaning nearby: 15–22 JOD.',
+        labelAr: 'نطاق سعر عادل للتنظيف القريب: 15–22 دينار.',
+        kind: 'price',
+      },
+    ],
+    banners: [
+      {
+        id: 'ban-1',
+        title: 'Verified pros near you',
+        subtitle: 'Book with confidence — trust badges included.',
+      },
+    ],
+    quickActions: [
+      { id: 'qa-search', label: 'Search', href: '/(customer)/(tabs)/search' },
+      { id: 'qa-bookings', label: 'Bookings', href: '/(customer)/(tabs)/bookings' },
+      { id: 'qa-fav', label: 'Favorites', href: '/(customer)/(tabs)/favorites' },
+      { id: 'qa-cats', label: 'Categories', href: '/(customer)/categories' },
+    ],
+  };
+}
+
+export const DEMO_BOOKINGS: CustomerBooking[] = [
+  {
+    id: 'bk-1',
+    providerId: 'prv-1',
+    providerName: 'Amman Clean Pros',
+    serviceTitle: 'Standard visit',
+    status: 'upcoming',
+    scheduledAt: new Date(Date.now() + 86400000).toISOString(),
+    address: 'Abdoun, Amman',
+    priceEstimate: 18,
+    currency: 'JOD',
+    notes: null,
+    canReschedule: true,
+  },
+  {
+    id: 'bk-2',
+    providerId: 'prv-4',
+    providerName: 'CoolAir Jordan',
+    serviceTitle: 'AC service',
+    status: 'in_progress',
+    scheduledAt: new Date().toISOString(),
+    address: 'Jabal Amman',
+    priceEstimate: 30,
+    currency: 'JOD',
+    notes: 'Unit on balcony',
+    canReschedule: false,
+  },
+  {
+    id: 'bk-3',
+    providerId: 'prv-2',
+    providerName: 'Zarqa Fix It',
+    serviceTitle: 'Plumbing check',
+    status: 'completed',
+    scheduledAt: new Date(Date.now() - 7 * 86400000).toISOString(),
+    address: 'Sweifieh',
+    priceEstimate: 22,
+    currency: 'JOD',
+    notes: null,
+    canReschedule: false,
+  },
+];
+
+export const DEMO_NOTIFICATIONS: CustomerNotification[] = [
+  {
+    id: 'n-1',
+    kind: 'booking',
+    title: 'Booking confirmed',
+    body: 'Amman Clean Pros accepted your request.',
+    read: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'n-2',
+    kind: 'recommendation',
+    title: 'Great match nearby',
+    body: 'CoolAir Jordan is highly available today.',
+    read: false,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'n-3',
+    kind: 'promotion',
+    title: 'Weekend offer',
+    body: 'Save on verified cleaning this weekend.',
+    read: true,
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+];

@@ -1,0 +1,321 @@
+{
+  "common": {
+    "appName": "دليلي",
+    "loading": "جارٍ التحميل…",
+    "retry": "إعادة المحاولة",
+    "cancel": "إلغاء",
+    "continue": "متابعة",
+    "save": "حفظ",
+    "offline": "أنت غير متصل",
+    "empty": "لا يوجد شيء هنا بعد",
+    "error": "حدث خطأ ما"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "fullName": "الاسم الكامل",
+    "sendReset": "إرسال رابط إعادة التعيين",
+    "logout": "تسجيل الخروج",
+    "welcomeBack": "مرحباً بعودتك",
+    "createAccount": "انضم إلى دليلي"
+  },
+  "customer": {
+    "title": "اعثر على مساعدة موثوقة بالقرب منك",
+    "subtitle": "احجز الخدمات بثقة.",
+    "tabs": {
+      "home": "الرئيسية",
+      "search": "بحث",
+      "bookings": "الحجوزات",
+      "favorites": "المفضلة",
+      "profile": "الملف"
+    },
+    "home": {
+      "welcome": "مرحباً",
+      "searchPlaceholder": "ابحث عن خدمات أو مزوّدين",
+      "quickActions": "إجراءات سريعة",
+      "popularCategories": "فئات شائعة",
+      "aiRecommendations": "لك",
+      "recommended": "خدمات موصى بها",
+      "recentlyViewed": "شوهدت مؤخراً",
+      "trending": "مزودون رائجون",
+      "nearby": "خدمات قريبة"
+    },
+    "search": {
+      "label": "بحث",
+      "history": "عمليات بحث أخيرة",
+      "clear": "مسح",
+      "suggestions": "اقتراحات",
+      "aiSuggestions": "اقتراحات الذكاء",
+      "results": "النتائج",
+      "voicePrep": "البحث الصوتي قريباً"
+    },
+    "categories": {
+      "featured": "مميزة",
+      "popular": "شائعة",
+      "nested": "أكثر تحديداً",
+      "all": "كل الفئات",
+      "detailHint": "تصفّح مزوّدين موثوقين في هذه الفئة."
+    },
+    "provider": {
+      "about": "نبذة",
+      "gallery": "المعرض",
+      "noGallery": "الصور قريباً",
+      "services": "الخدمات والأسعار",
+      "availability": "التوفر",
+      "availableNow": "متاح الآن",
+      "busy": "مشغول حالياً",
+      "reviews": "التقييمات",
+      "highlights": "أبرز النقاط",
+      "map": "الموقع",
+      "mapUnavailable": "الخريطة غير متاحة",
+      "book": "احجز الآن",
+      "share": "مشاركة"
+    },
+    "book": {
+      "title": "احجز خدمة",
+      "selectService": "اختر خدمة",
+      "schedule": "اختر التاريخ والوقت",
+      "nativePickerHint": "يمكن استبدال الحقول بمنتقي أصلي لاحقاً.",
+      "date": "التاريخ",
+      "time": "الوقت",
+      "address": "العنوان",
+      "notes": "ملاحظات",
+      "imagesHint": "إرفاق الصور في إصدار لاحق.",
+      "estimate": "تقدير السعر",
+      "aiPrice": "تلميح سعر عادل بالذكاء",
+      "confirm": "مراجعة وتأكيد",
+      "confirmTitle": "تأكيد الحجز",
+      "confirmBody": "سنُعلم المزوّد. أنت تبقى متحكماً.",
+      "place": "تأكيد الحجز",
+      "steps": {
+        "service": "الخدمة",
+        "schedule": "الجدول",
+        "details": "التفاصيل",
+        "confirm": "تأكيد"
+      }
+    },
+    "bookings": {
+      "trackStatus": "تتبّع الحالة",
+      "trackHint": "التتبّع الحي في سباق لاحق.",
+      "reschedule": "إعادة جدولة",
+      "filters": {
+        "all": "الكل",
+        "upcoming": "قادمة",
+        "in_progress": "جارٍ",
+        "completed": "مكتملة",
+        "cancelled": "ملغاة"
+      }
+    },
+    "favorites": {
+      "empty": "لا مفضلات بعد",
+      "emptyHint": "احفظ المزوّدين والفئات لإعادة الحجز بسرعة.",
+      "categories": "فئات محفوظة",
+      "providers": "مزودون محفوظون",
+      "rebook": "إعادة حجز سريعة",
+      "quickRebook": "أعد حجز أفضل مفضلة",
+      "save": "حفظ",
+      "saved": "محفوظ"
+    },
+    "profile": {
+      "guest": "زائر",
+      "personal": "المعلومات الشخصية",
+      "personalHint": "تعديل الملف عبر الويب أو إصدار موبايل لاحق.",
+      "addresses": "العناوين",
+      "payments": "طرق الدفع",
+      "paymentsHint": "طرق الدفع الآمنة جاهزة لإصدار لاحق.",
+      "language": "اللغة",
+      "theme": "المظهر",
+      "privacy": "الخصوصية وإمكانية الوصول",
+      "highContrast": "تباين عالٍ",
+      "largeFonts": "خطوط كبيرة",
+      "security": "الأمان",
+      "securityHint": "فتح بيومتري وجلسة آمنة جاهزان في الأساس."
+    }
+  },
+  "provider": {
+    "home": "الأعمال",
+    "title": "نمِّ عملك",
+    "subtitle": "أدر الوظائف والعروض والجدول."
+  },
+  "providerApp": {
+    "tabs": {
+      "home": "الرئيسية",
+      "jobs": "الوظائف",
+      "calendar": "التقويم",
+      "messages": "الرسائل",
+      "profile": "الملف"
+    },
+    "dashboard": {
+      "subtitle": "عملك في نظرة سريعة",
+      "health": "الصحة",
+      "revenueToday": "اليوم",
+      "assistant": "مساعد الأعمال بالذكاء",
+      "pendingRecs": "معلّقة",
+      "openAssistant": "فتح المساعد",
+      "today": "جدول اليوم",
+      "performance": "نظرة على الأداء",
+      "aiInsights": "رؤى الذكاء",
+      "quickActions": "إجراءات سريعة",
+      "analytics": "التحليلات",
+      "fab": "فتح الوظائف"
+    },
+    "jobs": {
+      "customer": "العميل",
+      "attachments": "المرفقات",
+      "noAttachments": "لا مرفقات",
+      "navigate": "التنقّل",
+      "share": "مشاركة الوظيفة",
+      "addNote": "إضافة ملاحظة",
+      "notes": "ملاحظات",
+      "advance": "تحديث الحالة",
+      "filters": {
+        "all": "الكل",
+        "upcoming": "قادمة",
+        "active": "نشطة",
+        "completed": "مكتملة",
+        "cancelled": "ملغاة",
+        "rescheduled": "معاد جدولتها"
+      }
+    },
+    "calendar": {
+      "schedule": "الجدول",
+      "workingHours": "ساعات العمل",
+      "blocked": "وقت محظور",
+      "blockedHint": "احظر وقتاً شخصياً من شاشة التوفر.",
+      "vacation": "إجازة",
+      "vacationHint": "خطّط للإجازة في فترات انخفاض الطلب.",
+      "recurring": "متكرر",
+      "weekday": "اليوم {{day}}",
+      "manageAvailability": "إدارة التوفر",
+      "views": {
+        "day": "يوم",
+        "week": "أسبوع",
+        "month": "شهر"
+      }
+    },
+    "messages": {
+      "unread": "غير مقروء"
+    },
+    "profile": {
+      "trust": "الثقة",
+      "services": "الخدمات والأسعار",
+      "documents": "المستندات",
+      "gallery": "المعرض",
+      "photos": "صور"
+    },
+    "assistant": {
+      "disabled": "مساعد الأعمال معطّل.",
+      "briefing": "إحاطة الصباح",
+      "insights": "الرؤى",
+      "recommendations": "التوصيات",
+      "accept": "قبول",
+      "dismiss": "رفض",
+      "goals": "الأهداف",
+      "growth": "فرص النمو",
+      "benchmark": "المعيار",
+      "history": "سجل التوصيات"
+    },
+    "analytics": {
+      "revenue": "الإيراد",
+      "bookings": "الحجوزات",
+      "rating": "التقييم",
+      "completion": "الإنجاز",
+      "response": "الاستجابة",
+      "repeat": "عملاء متكررون",
+      "capacity": "السعة",
+      "forecast": "التوقّع",
+      "weekly": "إيراد أسبوعي",
+      "pricingTrend": "اتجاه التسعير"
+    },
+    "offline": {
+      "queued": "تحديثات في الطابور"
+    }
+  },
+  "admin": {
+    "home": "الإدارة",
+    "title": "الإدارة (قريباً)",
+    "subtitle": "وحدة عمليات السوق."
+  },
+  "legal": {
+    "privacyTitle": "الخصوصية والبيانات",
+    "privacySubtitle": "تحكم بالموافقة، صدّر بياناتك، أو اطلب حذف الحساب.",
+    "accept": "قبول سياسة الخصوصية والشروط",
+    "accepted": "تم قبول المستندات القانونية",
+    "preferences": "التفضيلات",
+    "analytics": "التحليلات",
+    "crashReporting": "تقارير الأعطال",
+    "marketing": "رسائل تسويقية",
+    "openPrivacy": "فتح سياسة الخصوصية",
+    "openTerms": "فتح شروط الخدمة",
+    "exportData": "طلب تصدير البيانات",
+    "deleteAccount": "طلب حذف الحساب",
+    "deleteQueued": "تم وضع طلب الحذف في قائمة الانتظار. سيتواصل الدعم عبر البريد."
+  },
+  "native": {
+    "open": "الميزات الأصلية",
+    "title": "القدرات الأصلية",
+    "subtitle": "الكاميرا، الموقع، الإشعارات، القياسات الحيوية، والوسائط دون اتصال — iOS و Android.",
+    "disabled": "الميزات الأصلية معطّلة.",
+    "permissions": "الأذونات",
+    "perm": {
+      "camera": "الكاميرا",
+      "cameraDesc": "صور الملف، توثيق العمل، والتحقق.",
+      "photos": "الصور",
+      "photosDesc": "اختيار من المعرض للحجوزات ومعرض العمل.",
+      "location": "الموقع",
+      "locationDesc": "الخدمات القريبة، اكتشاف العنوان، والتنقل.",
+      "notifications": "الإشعارات",
+      "notificationsDesc": "تحديثات الحجز والوظائف والرسائل والملخصات."
+    },
+    "push": {
+      "title": "إشعارات الدفع",
+      "register": "تسجيل الجهاز (FCM / APNs)",
+      "test": "إرسال إشعار تجريبي",
+      "history": "السجل",
+      "unavailable": "رمز الدفع غير متاح على هذا الجهاز/المحاكي."
+    },
+    "biometric": {
+      "title": "فتح بالقياسات الحيوية",
+      "enable": "طلب القياسات الحيوية",
+      "prompt": "فتح دليلي",
+      "setPin": "تعيين رمز بديل (1357)",
+      "pinSet": "تم حفظ الرمز البديل بأمان."
+    },
+    "media": {
+      "title": "الكاميرا والمعرض",
+      "camera": "التقاط صورة",
+      "gallery": "اختيار من المعرض",
+      "queueUpload": "إضافة للطابور",
+      "sync": "مزامنة الرفع دون اتصال",
+      "queued": "في الطابور / معلّق",
+      "before": "صورة قبل",
+      "after": "صور بعد",
+      "attachments": "مرفقات الحجز",
+      "addPhotos": "إضافة صور"
+    },
+    "location": {
+      "title": "الموقع والخرائط",
+      "detect": "اكتشاف عنواني"
+    },
+    "nav": {
+      "title": "التنقل",
+      "google": "خرائط Google",
+      "apple": "خرائط Apple",
+      "copy": "نسخ العنوان",
+      "shareLocation": "مشاركة الموقع",
+      "eta": "وقت الوصول التقديري"
+    },
+    "share": {
+      "referral": "الإحالات",
+      "shareReferral": "مشاركة رابط الإحالة",
+      "booking": "مشاركة الحجز"
+    },
+    "device": {
+      "title": "ميزات الجهاز (تحضير)",
+      "subtitle": "التقويم، الويدجت، Live Activities، الاختصارات — البنية جاهزة."
+    }
+  }
+}
