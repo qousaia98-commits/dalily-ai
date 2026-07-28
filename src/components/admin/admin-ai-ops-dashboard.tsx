@@ -15,7 +15,7 @@ import {
 } from "@/actions/ai-ops.actions";
 import type { AiOpsDashboard } from "@/lib/ai-ops/queries";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { formatDateTime } from "@/lib/format/datetime";
 
 type Props = { data: AiOpsDashboard };

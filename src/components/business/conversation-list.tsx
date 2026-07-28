@@ -1,6 +1,6 @@
 import { MessageCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import type { BusinessConversation } from "@/lib/business/conversations";
 import { ConversationListClient } from "@/components/business/conversation-list-client";
 import { EmptyState } from "@/components/shared/empty-state";

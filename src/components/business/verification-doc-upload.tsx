@@ -7,7 +7,7 @@
 
 import { useActionState, useEffect, useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { Camera, CheckCircle2, ImagePlus, Loader2, Upload } from "lucide-react";
 import {
   uploadVerificationDocumentAction,

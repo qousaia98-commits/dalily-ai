@@ -1,5 +1,5 @@
 import { getLocale } from "next-intl/server";
-import { redirect } from "@/lib/i18n/routing";
+import { redirect } from "@/lib/i18n/navigation";
 import { getAuthUser } from "@/lib/auth/session";
 import { canAccessAdminPanel, isPlatformAdmin } from "@/lib/auth/roles";
 import { getAdminUnreadBadgeCounts } from "@/lib/admin/nav-badges";

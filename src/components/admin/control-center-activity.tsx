@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import type { AdminActivityItem } from "@/lib/admin/control-center";
 import { formatDateTime } from "@/lib/format/datetime";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const KNOWN_ACTIONS = new Set([

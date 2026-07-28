@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 import dynamic from "next/dynamic";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import type { ProjectDashboard } from "@/lib/projects";
 import {

@@ -4,7 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import type { MonetizationDashboard } from "@/lib/monetization";
 import { upgradeBusinessPlanAction } from "@/actions/monetization.actions";
 import {

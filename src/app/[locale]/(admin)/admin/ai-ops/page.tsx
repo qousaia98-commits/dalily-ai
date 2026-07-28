@@ -5,7 +5,7 @@ import { isAdminUser } from "@/lib/auth/roles";
 import { isAiOpsEnabled } from "@/lib/config/feature-flags";
 import { getAiOpsDashboard } from "@/lib/ai-ops/queries";
 import { AdminAiOpsDashboardPanel } from "@/components/admin/admin-ai-ops-dashboard";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminAiOpsPage() {
   if (!isAiOpsEnabled()) {

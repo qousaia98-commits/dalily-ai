@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { markAllChatsReadAction } from "@/actions/chat.actions";
 import { ChatSearchBar } from "@/components/messaging/chat-search-bar";
 import { Button } from "@/components/ui/button";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Star, Trophy, ShieldCheck, CircleGauge } from "lucide-react";
 import type { DashboardKpis } from "@/lib/provider-success/types";

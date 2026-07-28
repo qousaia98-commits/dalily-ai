@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { saveAvailabilitySettingsAction, blockTimeAction } from "@/actions/booking.actions";
 import type { AvailabilitySettings } from "@/lib/booking/types";
 import { Button } from "@/components/ui/button";

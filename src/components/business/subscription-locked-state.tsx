@@ -1,6 +1,6 @@
 import { Clock3, ShieldCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import type { ProviderStatus } from "@/types/database.types";
 

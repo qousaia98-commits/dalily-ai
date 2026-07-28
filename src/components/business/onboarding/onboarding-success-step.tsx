@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/lib/i18n/routing";
+import { Link, useRouter } from "@/lib/i18n/navigation";
 import { CheckCircle2, Images, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { deferOnboardingAction } from "@/actions/onboarding-preference.actions";

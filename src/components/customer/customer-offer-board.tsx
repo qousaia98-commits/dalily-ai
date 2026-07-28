@@ -1,13 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import { useActionState, useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { Link, useRouter } from "@/lib/i18n/navigation";
 import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   selectOfferAction,
+  declineOfferAction,
   postOfferClarificationAction,
   type OfferActionState,
 } from "@/actions/offer.actions";
@@ -17,6 +19,7 @@ import {
   type OfferClarificationView,
 } from "@/domains/offer/types";
 import { Textarea } from "@/components/ui/textarea";
+import { StarRating } from "@/components/providers/star-rating";
 
 const initial: OfferActionState = { success: false };
 
@@ -60,6 +63,18 @@ export function CustomerOfferBoard({
     });
   };
 
+  const decline = (offerId: string) => {
+    setError(null);
+    startTransition(async () => {
+      const result = await declineOfferAction(offerId);
+      if (!result.success) {
+        setError(result.error ?? "failed");
+        return;
+      }
+      router.refresh();
+    });
+  };
+
   if (offers.length === 0) return null;
 
   return (
@@ -92,14 +107,32 @@ export function CustomerOfferBoard({
               selected={selectionOfferId === offer.id}
             />
             <div className="mt-3 flex flex-wrap gap-2">
-              {!selectionOfferId && offer.status === "sent" ? (
-                <Button
-                  className="rounded-xl"
-                  disabled={pending}
-                  onClick={() => select(offer.id)}
+              <Button asChild variant="secondary" className="rounded-xl">
+                <Link
+                  href={`/providers/${offer.providerId}?offerId=${offer.id}&requestId=${offer.serviceRequestId}`}
                 >
-                  {t("customer.select")}
-                </Button>
+                  {t("customer.viewProfile")}
+                </Link>
+              </Button>
+              {!selectionOfferId && offer.status === "sent" ? (
+                <>
+                  <Button
+                    className="rounded-xl"
+                    disabled={pending}
+                    onClick={() => select(offer.id)}
+                  >
+                    {t("customer.accept")}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="rounded-xl"
+                    disabled={pending}
+                    onClick={() => decline(offer.id)}
+                  >
+                    {t("customer.decline")}
+                  </Button>
+                </>
               ) : null}
               <Button
                 type="button"
@@ -156,18 +189,43 @@ function OfferCard({
   comparing?: boolean;
 }) {
   const t = useTranslations("offerFlow");
+  const name = offer.providerName || t("customer.business");
+  const initial = name.slice(0, 1).toUpperCase();
+
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap items-center gap-2">
-        <p className="font-medium">{offer.providerName || t("customer.business")}</p>
-        {offer.verificationStatus === "verified" ? (
-          <PublicVerificationBadge
-            providerId={offer.providerId}
-            verified
-          />
-        ) : null}
-        {selected ? <Badge>{t("customer.selectedBadge")}</Badge> : null}
-        {comparing ? <Badge variant="outline">{t("customer.comparing")}</Badge> : null}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative size-12 shrink-0 overflow-hidden rounded-full border border-border bg-muted">
+          {offer.providerAvatarUrl ? (
+            <Image
+              src={offer.providerAvatarUrl}
+              alt=""
+              fill
+              className="object-cover"
+              sizes="48px"
+            />
+          ) : (
+            <span className="flex size-full items-center justify-center text-sm font-bold">
+              {initial}
+            </span>
+          )}
+        </div>
+        <div className="min-w-0 flex-1 space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="font-medium">{name}</p>
+            {offer.verificationStatus === "verified" ? (
+              <PublicVerificationBadge providerId={offer.providerId} verified />
+            ) : null}
+            {selected ? <Badge>{t("customer.selectedBadge")}</Badge> : null}
+            {comparing ? <Badge variant="outline">{t("customer.comparing")}</Badge> : null}
+          </div>
+          {offer.ratingAvg != null && offer.ratingAvg > 0 ? (
+            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+              <StarRating rating={offer.ratingAvg} size="sm" />
+              <span>{t("customer.rating", { rating: offer.ratingAvg.toFixed(1) })}</span>
+            </div>
+          ) : null}
+        </div>
       </div>
       <p className="text-2xl font-bold">
         {offer.price} {offer.currency}
@@ -186,11 +244,6 @@ function OfferCard({
       {!compact && offer.message ? (
         <p className="text-sm whitespace-pre-wrap text-muted-foreground">{offer.message}</p>
       ) : null}
-      {offer.ratingAvg != null && offer.ratingAvg > 0 ? (
-        <p className="text-xs text-muted-foreground">
-          {t("customer.rating", { rating: offer.ratingAvg.toFixed(1) })}
-        </p>
-      ) : null}
     </div>
   );
 }
@@ -205,19 +258,17 @@ function ClarificationThread({
   items: OfferClarificationView[];
 }) {
   const t = useTranslations("offerFlow.qa");
-  const router = useRouter();
   const [state, action, pending] = useActionState(postOfferClarificationAction, initial);
+  const router = useRouter();
 
   useEffect(() => {
     if (state.success) router.refresh();
   }, [state.success, router]);
 
   return (
-    <div className="mt-4 space-y-2 border-t border-border/60 pt-3">
-      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        {t("title")}
-      </p>
-      <p className="text-xs text-muted-foreground">{t("hint")}</p>
+    <div className="mt-3 space-y-2 rounded-xl border border-dashed border-border/80 p-3">
+      <p className="text-xs font-medium text-muted-foreground">{t("title")}</p>
+      <p className="text-[11px] text-muted-foreground">{t("hint")}</p>
       <ul className="space-y-1.5">
         {items.map((item) => (
           <li key={item.id} className="text-sm">
@@ -233,16 +284,19 @@ function ClarificationThread({
         <input type="hidden" name="role" value={role} />
         <Textarea
           name="body"
-          maxLength={500}
           rows={2}
+          maxLength={500}
           placeholder={t("placeholder")}
-          className="rounded-xl"
+          className="rounded-xl text-sm"
+          required
         />
-        <Button type="submit" size="sm" variant="outline" disabled={pending} className="rounded-xl">
+        <Button type="submit" size="sm" className="rounded-xl" disabled={pending}>
           {t("send")}
         </Button>
         {state.error ? (
-          <p className="text-xs text-destructive">{t(`errors.${state.error}` as "errors.failed")}</p>
+          <p className="text-xs text-destructive" role="alert">
+            {t(`errors.${state.error}` as "errors.failed")}
+          </p>
         ) : null}
       </form>
     </div>

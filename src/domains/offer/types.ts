@@ -7,6 +7,7 @@ export const OFFER_STATUSES = [
   "selected",
   "superseded",
   "expired",
+  "declined",
 ] as const;
 export type OfferStatus = (typeof OFFER_STATUSES)[number];
 
@@ -22,8 +23,10 @@ export type MarketplaceOfferView = {
   matchAssignmentId: string;
   providerId: string;
   providerName: string | null;
+  providerAvatarUrl: string | null;
   verificationStatus: string | null;
   ratingAvg: number | null;
+  reviewCount: number | null;
   price: number;
   currency: string;
   priceModel: OfferPriceModel;

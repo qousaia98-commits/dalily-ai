@@ -5,7 +5,7 @@ import { isAdminUser } from "@/lib/auth/roles";
 import { isAiDynamicPricingEnabled } from "@/lib/config/feature-flags";
 import { getAdminPricingDashboard } from "@/lib/pricing-engine/admin";
 import { AdminPricingCenterPanel } from "@/components/admin/admin-pricing-center-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminPricingPage() {
   if (!isAiDynamicPricingEnabled()) {

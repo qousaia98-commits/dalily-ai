@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getLocale } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 export type MobileHubLink = {

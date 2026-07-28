@@ -5,7 +5,7 @@ import { isAdminUser } from "@/lib/auth/roles";
 import { isAiMarketplaceIntelligenceEnabled } from "@/lib/config/feature-flags";
 import { getAdminMarketplaceCenter } from "@/lib/marketplace-intelligence/admin";
 import { AdminMarketplaceIntelligencePanel } from "@/components/admin/admin-marketplace-intelligence-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminMarketplaceIntelligencePage() {
   if (!isAiMarketplaceIntelligenceEnabled()) redirect("/admin");

@@ -21,12 +21,16 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { MobileHubLinks } from "@/components/layout/mobile-hub-links";
 import { NavCountBadge } from "@/components/shared/nav-count-badge";
+import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 import { getProviderNavBadges } from "@/lib/badges";
+import { markNavChannelNotificationsRead } from "@/lib/orders/notifications";
 import type { PlanSlug } from "@/lib/subscription/types";
 
 /**
  * Provider account hub — profile, services, availability, verification, settings,
  * and other tools that used to clutter the sidebar.
+ *
+ * Opening this hub clears the Account nav unread badge (verification channel).
  */
 export default async function BusinessAccountPage() {
   const t = await getTranslations("mobilePages.businessAccount");
@@ -37,6 +41,8 @@ export default async function BusinessAccountPage() {
   let verificationBadge = 0;
   if (provider) {
     try {
+      // Persist read state before counting so hub chrome does not re-show the pill.
+      await markNavChannelNotificationsRead(authUser.id, "verification");
       const [{ subscription }, badges] = await Promise.all([
         getSubscriptionPageData(authUser.id),
         getProviderNavBadges(authUser.id),
@@ -116,6 +122,7 @@ export default async function BusinessAccountPage() {
 
   return (
     <div className="mx-auto w-full max-w-lg space-y-8 animate-fade-in">
+      <MarkNavChannelSeen channel="verification" />
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("title")}</h1>

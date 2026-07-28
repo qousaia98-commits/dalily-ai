@@ -12,7 +12,7 @@ import type { AdminQualityDashboard } from "@/lib/quality/queries";
 import type { QualityCaseStatus } from "@/lib/quality/types";
 import { QUALITY_CASE_STATUSES } from "@/lib/quality/types";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { formatDateTime } from "@/lib/format/datetime";
 
 type Props = { data: AdminQualityDashboard };

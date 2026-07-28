@@ -9,7 +9,7 @@ import {
   Hourglass,
   ShieldAlert,
 } from "lucide-react";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { VerificationAdminFeedback } from "@/lib/verification/feedback";

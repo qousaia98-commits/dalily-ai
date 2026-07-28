@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, useTransition, type ReactNode } from 
 import { useLocale, useTranslations } from "next-intl";
 import { Bell, Settings2, X } from "lucide-react";
 import { toast } from "sonner";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type {

@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { ArrowRight, Target } from "lucide-react";
 import { buildOpsPriorities, type OpsAttentionCounts } from "@/lib/admin/ops-health";
 import { cn } from "@/lib/utils";

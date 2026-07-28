@@ -24,7 +24,7 @@ import {
   updateChatAiPreferencesAction,
   acceptChatReplySuggestionAction,
 } from "@/actions/chat-assistant.actions";
-import { requestChatDraft } from "@/components/messaging/chat-thread-client-shell";
+import { requestChatDraft } from "@/components/messaging/chat-composer-events";
 import { VoiceTranscriptSearch } from "@/components/messaging/voice-transcript-panel";
 import type {
   ChatActionItem,

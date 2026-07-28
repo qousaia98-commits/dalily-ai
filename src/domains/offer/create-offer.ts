@@ -146,6 +146,8 @@ function mapOfferRow(row: Record<string, unknown>, provider?: {
   name?: unknown;
   verification_status?: string | null;
   rating_avg?: number | null;
+  review_count?: number | null;
+  avatarUrl?: string | null;
 }): MarketplaceOfferView {
   const nameJson = provider?.name as { ar?: string; en?: string } | string | null | undefined;
   let providerName: string | null = null;
@@ -163,8 +165,10 @@ function mapOfferRow(row: Record<string, unknown>, provider?: {
     matchAssignmentId: row.match_assignment_id as string,
     providerId: row.provider_id as string,
     providerName,
+    providerAvatarUrl: provider?.avatarUrl ?? null,
     verificationStatus: provider?.verification_status ?? null,
     ratingAvg: provider?.rating_avg ?? null,
+    reviewCount: provider?.review_count ?? null,
     price: Number(row.price),
     currency: row.currency as string,
     priceModel: row.price_model as MarketplaceOfferView["priceModel"],
@@ -211,10 +215,40 @@ export async function listOffersForRequest(
   const providerIds = [...new Set(rows.map((r) => r.provider_id as string))];
   const { data: providers } = await supabase
     .from("providers")
-    .select("id, name, verification_status, rating_avg")
+    .select("id, name, verification_status, rating_avg, review_count, avatar_image_id")
     .in("id", providerIds);
 
-  const pmap = new Map((providers ?? []).map((p) => [p.id as string, p]));
+  const avatarIds = (providers ?? [])
+    .map((p) => p.avatar_image_id as string | null)
+    .filter((id): id is string => Boolean(id));
+
+  const avatarPathById = new Map<string, string>();
+  if (avatarIds.length > 0) {
+    const { data: images } = await supabase
+      .from("images")
+      .select("id, path")
+      .in("id", avatarIds)
+      .is("deleted_at", null);
+    for (const img of images ?? []) {
+      avatarPathById.set(img.id as string, img.path as string);
+    }
+  }
+
+  const { getStoragePublicUrl } = await import("@/lib/providers/storage");
+
+  const pmap = new Map(
+    (providers ?? []).map((p) => {
+      const avatarId = p.avatar_image_id as string | null;
+      const path = avatarId ? avatarPathById.get(avatarId) : null;
+      return [
+        p.id as string,
+        {
+          ...p,
+          avatarUrl: path ? getStoragePublicUrl(path) : null,
+        },
+      ];
+    }),
+  );
 
   return rows.map((row) =>
     mapOfferRow(row as Record<string, unknown>, pmap.get(row.provider_id as string)),
@@ -348,4 +382,103 @@ export async function selectOffer(input: {
   }
 
   return { ok: true, selectionId: selection.id, serviceRequestId: request.id };
+}
+
+/**
+ * Customer declines a sent offer from the trust profile / offer board.
+ * Does not open chat or release contact. Other offers remain selectable.
+ */
+export async function declineOffer(input: {
+  customerId: string;
+  offerId: string;
+}): Promise<{ ok: true; serviceRequestId: string } | { ok: false; error: string }> {
+  if (!isOffersV2Enabled()) return { ok: false, error: "feature_disabled" };
+
+  const supabase = await createClient();
+  const { data: offer } = await supabase
+    .from("marketplace_offers")
+    .select("id, service_request_id, provider_id, status")
+    .eq("id", input.offerId)
+    .eq("status", "sent")
+    .maybeSingle();
+
+  if (!offer) return { ok: false, error: "offer_not_found" };
+
+  const { data: request } = await supabase
+    .from("service_requests")
+    .select("id, customer_id, selection_id")
+    .eq("id", offer.service_request_id)
+    .eq("customer_id", input.customerId)
+    .maybeSingle();
+
+  if (!request) return { ok: false, error: "forbidden" };
+  if (request.selection_id) return { ok: false, error: "already_selected" };
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("marketplace_offers")
+    .update({ status: "declined", updated_at: new Date().toISOString() })
+    .eq("id", offer.id)
+    .eq("status", "sent");
+
+  if (error) return { ok: false, error: "decline_failed" };
+
+  try {
+    const { isAiEngineV2Enabled } = await import("@/lib/config/feature-flags");
+    if (isAiEngineV2Enabled()) {
+      const { learnFromProviderDecision } = await import(
+        "@/lib/ai/learning/match-feedback"
+      );
+      void learnFromProviderDecision({
+        kind: "rejected",
+        providerId: offer.provider_id as string,
+        serviceRequestId: offer.service_request_id as string,
+        customerId: input.customerId,
+        matchScore: null,
+      });
+    }
+  } catch {
+    /* learning optional */
+  }
+
+  return { ok: true, serviceRequestId: request.id as string };
+}
+
+/** Verify the authenticated customer owns a sent/selected offer for this provider. */
+export async function getCustomerOfferContext(input: {
+  customerId: string;
+  offerId: string;
+  providerId: string;
+}): Promise<{
+  offerId: string;
+  serviceRequestId: string;
+  status: string;
+  canDecide: boolean;
+} | null> {
+  if (!isOffersV2Enabled()) return null;
+  const supabase = await createClient();
+  const { data: offer } = await supabase
+    .from("marketplace_offers")
+    .select("id, service_request_id, provider_id, status")
+    .eq("id", input.offerId)
+    .eq("provider_id", input.providerId)
+    .maybeSingle();
+
+  if (!offer) return null;
+
+  const { data: request } = await supabase
+    .from("service_requests")
+    .select("id, customer_id, selection_id")
+    .eq("id", offer.service_request_id)
+    .eq("customer_id", input.customerId)
+    .maybeSingle();
+
+  if (!request) return null;
+
+  return {
+    offerId: offer.id as string,
+    serviceRequestId: offer.service_request_id as string,
+    status: offer.status as string,
+    canDecide: offer.status === "sent" && !request.selection_id,
+  };
 }

@@ -6,11 +6,16 @@ import { isUnlockV2Enabled, isProviderMonetizationEnabled } from "@/lib/config/f
 import { listProviderUnlockSessions } from "@/domains/unlock/session";
 import { MobileHubLinks } from "@/components/layout/mobile-hub-links";
 import { NavCountBadge } from "@/components/shared/nav-count-badge";
-import { Link } from "@/lib/i18n/routing";
+import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
+import { Link } from "@/lib/i18n/navigation";
+import { markNavChannelNotificationsRead } from "@/lib/orders/notifications";
 
 /**
  * Payments hub — unlocks, subscription payments, and earnings entry points.
  * Reuses existing unlock + subscription routes (no duplicated payment logic).
+ *
+ * Opening this hub clears the Payments nav unread badge (unlock notification channel).
+ * The gold priority count remains session-based (open unlocks still needing action).
  */
 export default async function BusinessPaymentsPage() {
   const t = await getTranslations("business.paymentsHub");
@@ -20,6 +25,7 @@ export default async function BusinessPaymentsPage() {
   let unlockPending = 0;
   if (provider && isUnlockV2Enabled()) {
     try {
+      await markNavChannelNotificationsRead(authUser.id, "unlock");
       const sessions = await listProviderUnlockSessions(provider.id);
       unlockPending = sessions.filter(
         (s) => s.status === "opened" || s.status === "payment_pending",
@@ -66,6 +72,7 @@ export default async function BusinessPaymentsPage() {
 
   return (
     <div className="mx-auto w-full max-w-lg space-y-8 animate-fade-in">
+      {isUnlockV2Enabled() ? <MarkNavChannelSeen channel="unlock" /> : null}
       <header className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>

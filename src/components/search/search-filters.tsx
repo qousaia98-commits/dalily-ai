@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { usePathname, useRouter } from "@/lib/i18n/routing";
+import { usePathname, useRouter } from "@/lib/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import {
   Select,

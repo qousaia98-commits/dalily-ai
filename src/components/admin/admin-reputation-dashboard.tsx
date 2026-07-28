@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { AdminReputationDashboard } from "@/lib/reputation/admin";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 type Props = { data: AdminReputationDashboard };
 

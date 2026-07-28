@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { ImagePlus, MapPin, Paperclip, Send, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { sendChatMessageAction } from "@/actions/chat.actions";
 import {
   finalizeChatMediaUploadAction,

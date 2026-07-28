@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { BadgeCheck, ThumbsUp } from "lucide-react";
 import { StarRating } from "@/components/providers/star-rating";
 import { Badge } from "@/components/ui/badge";

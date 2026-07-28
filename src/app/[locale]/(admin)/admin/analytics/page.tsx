@@ -5,7 +5,7 @@ import {
   getExtendedSearchAnalytics,
 } from "@/lib/admin/control-center-v2";
 import { getMarketplaceStats } from "@/lib/admin/marketplace-stats";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminAnalyticsPage() {
   await requireAdminUser();

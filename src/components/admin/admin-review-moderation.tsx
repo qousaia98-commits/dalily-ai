@@ -7,7 +7,7 @@ import { moderateReviewAction, warnUserAction } from "@/actions/admin-control-ce
 import type { AdminModerationReview } from "@/lib/admin/review-moderation";
 import { formatDateTime } from "@/lib/format/datetime";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 type Props = { items: AdminModerationReview[]; spamReady: boolean };
 

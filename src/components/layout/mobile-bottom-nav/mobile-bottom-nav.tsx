@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link, usePathname } from "@/lib/i18n/routing";
+import { Link, usePathname } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { getMobileNavItems, getActiveMobileNavItem } from "./config";
 import type { MobileNavBadges, MobileNavRole } from "./types";

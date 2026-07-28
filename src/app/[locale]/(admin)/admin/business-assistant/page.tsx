@@ -5,7 +5,7 @@ import { isAdminUser } from "@/lib/auth/roles";
 import { isAiBusinessAssistantEnabled } from "@/lib/config/feature-flags";
 import { getAdminBusinessDashboard } from "@/lib/business-assistant/admin";
 import { AdminBusinessAssistantPanel } from "@/components/admin/admin-business-assistant-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminBusinessAssistantPage() {
   if (!isAiBusinessAssistantEnabled()) redirect("/admin");

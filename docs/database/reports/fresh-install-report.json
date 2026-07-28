@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T03:09:54.776Z",
+  "generatedAt": "2026-07-28T03:25:04.279Z",
   "baselinePath": "supabase/migrations/baseline/baseline.sql",
   "applyOk": true,
   "applyError": null,

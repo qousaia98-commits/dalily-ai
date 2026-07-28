@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { requireAdminUser } from "@/lib/auth/session";
 import { listStripeWebhookEventsAction } from "@/actions/stripe.actions";
 import { AdminStripeWebhooksPanel } from "@/components/admin/admin-stripe-webhooks-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminStripeWebhooksPage() {
   await requireAdminUser();

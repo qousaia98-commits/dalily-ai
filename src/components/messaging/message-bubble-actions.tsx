@@ -9,7 +9,8 @@ import {
   pinChatMessageAction,
   softDeleteChatMessageAction,
 } from "@/actions/chat.actions";
-import { useRouter } from "@/lib/i18n/routing";
+import { requestChatReply } from "@/components/messaging/chat-composer-events";
+import { useRouter } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -18,7 +19,6 @@ type Props = {
   bodyText: string;
   mine: boolean;
   isPinned?: boolean;
-  onReply?: (payload: { messageId: string; preview: string }) => void;
 };
 
 export function MessageBubbleActions({
@@ -27,7 +27,6 @@ export function MessageBubbleActions({
   bodyText,
   mine,
   isPinned,
-  onReply,
 }: Props) {
   const t = useTranslations("messaging.actions");
   const router = useRouter();
@@ -81,19 +80,17 @@ export function MessageBubbleActions({
           <IconBtn label={t("copy")} onClick={copy}>
             <Copy className="size-3" />
           </IconBtn>
-          {onReply ? (
-            <IconBtn
-              label={t("reply")}
-              onClick={() =>
-                onReply({
-                  messageId,
-                  preview: bodyText.slice(0, 120),
-                })
-              }
-            >
-              <Reply className="size-3" />
-            </IconBtn>
-          ) : null}
+          <IconBtn
+            label={t("reply")}
+            onClick={() =>
+              requestChatReply({
+                messageId,
+                preview: bodyText.slice(0, 120),
+              })
+            }
+          >
+            <Reply className="size-3" />
+          </IconBtn>
           <IconBtn
             label={isPinned ? t("unpin") : t("pin")}
             onClick={() =>

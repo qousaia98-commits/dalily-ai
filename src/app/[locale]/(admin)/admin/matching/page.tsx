@@ -5,7 +5,7 @@ import { isAdminUser } from "@/lib/auth/roles";
 import { isSmartMatchingEngineEnabled } from "@/lib/config/feature-flags";
 import { getAdminMatchingDashboard } from "@/domains/matching";
 import { AdminMatchingCenterPanel } from "@/components/admin/admin-matching-center-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminMatchingPage() {
   if (!isSmartMatchingEngineEnabled()) {

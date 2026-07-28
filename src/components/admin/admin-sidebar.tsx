@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link, usePathname } from "@/lib/i18n/routing";
+import { Link, usePathname } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useAdminBadges } from "@/components/admin/admin-badges-provider";

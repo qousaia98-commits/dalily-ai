@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { redirect } from "@/lib/i18n/routing";
+import { redirect } from "@/lib/i18n/navigation";
 import { getAuthUser } from "@/lib/auth/session";
 import { getRequestDetail } from "@/lib/service-requests/queries";
 import { RequestWorkflowPanel } from "@/components/marketplace/request-workflow-panel";

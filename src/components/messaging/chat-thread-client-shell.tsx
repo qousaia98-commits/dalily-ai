@@ -8,6 +8,12 @@ import { SmartReplyChips } from "@/components/messaging/smart-reply-chips";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { isAiChatAssistantEnabledClient } from "@/lib/config/feature-flags-client";
+import type { ChatReplyTarget } from "@/components/messaging/chat-composer-events";
+
+export {
+  requestChatReply,
+  requestChatDraft,
+} from "@/components/messaging/chat-composer-events";
 
 type Props = {
   conversationId: string;
@@ -16,8 +22,6 @@ type Props = {
   chatOpen: boolean;
   lockedLabel: string;
 };
-
-type ReplyTarget = { messageId: string; preview: string };
 
 /** Client shell for composer + typing + presence subscriptions. */
 export function ChatThreadClientShell({
@@ -35,13 +39,13 @@ export function ChatThreadClientShell({
       peerUserId,
       enabled: chatOpen,
     });
-  const [reply, setReply] = useState<ReplyTarget | null>(null);
+  const [reply, setReply] = useState<ChatReplyTarget | null>(null);
   const [draft, setDraft] = useState<string | null>(null);
   const aiEnabled = isAiChatAssistantEnabledClient();
 
   useEffect(() => {
     function onReply(e: Event) {
-      const detail = (e as CustomEvent<ReplyTarget>).detail;
+      const detail = (e as CustomEvent<ChatReplyTarget>).detail;
       if (detail?.messageId) setReply(detail);
     }
     function onDraft(e: Event) {
@@ -107,18 +111,4 @@ export function ChatThreadClientShell({
       />
     </div>
   );
-}
-
-/** Helper used by message bubbles to set reply target on the active shell. */
-export function requestChatReply(payload: ReplyTarget) {
-  if (typeof window === "undefined") return;
-  window.dispatchEvent(
-    new CustomEvent("dalily-chat-reply", { detail: payload }),
-  );
-}
-
-/** Insert editable AI suggestion into the composer (never auto-sends). */
-export function requestChatDraft(text: string) {
-  if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent("dalily-chat-draft", { detail: { text } }));
 }

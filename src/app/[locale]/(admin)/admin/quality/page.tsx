@@ -5,7 +5,7 @@ import { isAdminUser } from "@/lib/auth/roles";
 import { isQualityCasesEnabled } from "@/lib/config/feature-flags";
 import { getAdminQualityDashboard } from "@/lib/quality/queries";
 import { AdminQualityCasesPanel } from "@/components/admin/admin-quality-cases-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminQualityPage() {
   if (!isQualityCasesEnabled()) {

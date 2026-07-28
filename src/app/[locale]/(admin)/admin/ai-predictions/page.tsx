@@ -3,7 +3,7 @@ import { requireAdminUser } from "@/lib/auth/session";
 import { isPredictiveEngineEnabled } from "@/lib/config/feature-flags";
 import { redirect } from "next/navigation";
 import { buildAdminPredictiveDashboard } from "@/domains/forecast";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminAiPredictionsPage() {
   await requireAdminUser();

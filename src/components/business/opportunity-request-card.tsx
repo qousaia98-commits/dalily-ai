@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
 import type { ProviderOpportunity } from "@/domains/offer/queries";
 import { Badge } from "@/components/ui/badge";

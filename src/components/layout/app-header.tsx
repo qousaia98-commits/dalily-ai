@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { getAuthUser } from "@/lib/auth/session";
 import { isBusinessUser, canAccessAdminPanel } from "@/lib/auth/roles";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";

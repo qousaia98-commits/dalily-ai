@@ -4,10 +4,8 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { getProviderVisibleRequestDetail } from "@/lib/service-requests/queries";
 import { RequestWorkflowPanel } from "@/components/marketplace/request-workflow-panel";
-import {
-  acceptServiceRequestAction,
-  rejectServiceRequestAction,
-} from "@/actions/service-request.actions";
+import { acceptServiceRequestAction } from "@/actions/service-request/assign";
+import { rejectServiceRequestAction } from "@/actions/service-request/cancel";
 import { PendingRequestActions } from "@/components/business/pending-request-actions";
 import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import { canAccessFullChat } from "@/domains/chat";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { setTypingAction, setPresenceAction } from "@/actions/chat.actions";
 import { runServerAction } from "@/lib/next/server-action-recovery";

@@ -3,7 +3,7 @@ import { requireAdminUser } from "@/lib/auth/session";
 import { isAiEngineV9Enabled } from "@/lib/config/feature-flags";
 import { redirect } from "next/navigation";
 import { buildAdminAutomationDashboard } from "@/lib/ai/automation/dashboard";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminAiAutomationPage() {
   await requireAdminUser();

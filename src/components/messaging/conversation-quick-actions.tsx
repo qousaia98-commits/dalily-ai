@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { Archive, Pin } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { updateConversationFlagsAction } from "@/actions/chat.actions";
 import { Button } from "@/components/ui/button";
 

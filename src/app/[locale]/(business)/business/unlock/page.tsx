@@ -4,7 +4,7 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { isUnlockDevBypassEnabled, isUnlockV2Enabled } from "@/lib/config/feature-flags";
 import { listProviderUnlockSessions } from "@/domains/unlock/session";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 

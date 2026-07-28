@@ -1,4 +1,4 @@
-import { redirect } from "@/lib/i18n/routing";
+import { redirect } from "@/lib/i18n/navigation";
 import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import type { AppRole } from "@/types/database.types";

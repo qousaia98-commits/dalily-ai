@@ -1,5 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
-import { redirect } from "@/lib/i18n/routing";
+import { redirect } from "@/lib/i18n/navigation";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { getCategoryGroupsWithLeaves } from "@/lib/categories/queries";

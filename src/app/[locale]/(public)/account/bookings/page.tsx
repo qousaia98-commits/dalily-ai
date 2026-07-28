@@ -4,7 +4,7 @@ import { listCustomerBookings } from "@/lib/booking/booking-service";
 import { processCompletionPrompts } from "@/lib/booking/completion-service";
 import { BookingCalendarLazy } from "@/components/booking/booking-calendar-lazy";
 import { isRecurringServicesEnabled } from "@/lib/config/feature-flags";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AccountBookingsPage() {
   const t = await getTranslations("booking");

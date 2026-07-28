@@ -1,19 +1,24 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "@/lib/i18n/routing";
+import { usePathname } from "@/lib/i18n/navigation";
 import { localeNames, type Locale } from "@/lib/i18n/config";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function LanguageSwitcher({ className }: { className?: string }) {
   const locale = useLocale() as Locale;
-  const router = useRouter();
   const pathname = usePathname();
 
   const switchLocale = () => {
     const nextLocale: Locale = locale === "ar" ? "en" : "ar";
-    router.replace(pathname, { locale: nextLocale });
+    // Full navigation keeps NEXT_LOCALE cookie + middleware aligned under
+    // localePrefix "as-needed" (soft replace was reverted by Accept-Language).
+    const path = pathname || "/";
+    const href =
+      nextLocale === "en" ? (path === "/" ? "/en" : `/en${path}`) : path === "/" ? "/" : path;
+    document.cookie = `NEXT_LOCALE=${nextLocale};path=/;max-age=31536000;samesite=lax`;
+    window.location.assign(href);
   };
 
   return (

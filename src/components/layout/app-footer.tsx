@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { Separator } from "@/components/ui/separator";
 import { DalilyLogo } from "@/components/brand/dalily-logo";
 import { cn } from "@/lib/utils";

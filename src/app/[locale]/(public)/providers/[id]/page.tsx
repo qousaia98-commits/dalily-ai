@@ -1,29 +1,40 @@
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { getPublicProviderById, getOwnedProvider } from "@/lib/providers/database";
+import { redirect } from "@/lib/i18n/navigation";
+import { getOwnedProvider } from "@/lib/providers/database";
+import {
+  getPublicProviderTrustProfile,
+  type PublicProviderTrustExtras,
+} from "@/lib/providers/public-profile";
 import { getAuthUser } from "@/lib/auth/session";
 import { hasPendingRequest, getProviderRequestSettings } from "@/lib/service-requests/queries";
 import { getLocalizedText } from "@/types/domain.types";
 import type { Locale } from "@/lib/i18n/config";
 import { ProviderProfileView } from "@/components/providers/provider-profile-view";
+import { OfferDecisionBar } from "@/components/providers/offer-decision-bar";
 import {
   getProviderReviewStats,
   listProviderReviews,
   parseReviewSort,
 } from "@/lib/reviews/queries";
 import { resolveTrustBadges } from "@/lib/reviews/trust-score";
-import { fetchCompletedJobsByProviderIds } from "@/domains/matching";
 import { createClient } from "@/lib/supabase/server";
+import { getCustomerOfferContext } from "@/domains/offer";
 
 type ProviderPageProps = {
   params: Promise<{ id: string; locale: string }>;
-  searchParams: Promise<{ reviewSort?: string; reviewPage?: string }>;
+  searchParams: Promise<{
+    reviewSort?: string;
+    reviewPage?: string;
+    offerId?: string;
+    requestId?: string;
+  }>;
 };
 
 export async function generateMetadata({ params }: ProviderPageProps): Promise<Metadata> {
   const { id } = await params;
-  const provider = await getPublicProviderById(id);
+  const provider = await getPublicProviderTrustProfile(id);
   const locale = (await getLocale()) as Locale;
 
   if (!provider) return { title: "Provider" };
@@ -35,32 +46,53 @@ export async function generateMetadata({ params }: ProviderPageProps): Promise<M
 }
 
 export default async function ProviderPage({ params, searchParams }: ProviderPageProps) {
-  const { id } = await params;
+  const { id, locale: localeParam } = await params;
   const sp = await searchParams;
-  const provider = await getPublicProviderById(id);
-  if (!provider) notFound();
-
   const authUser = await getAuthUser();
   const locale = (await getLocale()) as Locale;
+
+  if (!authUser) {
+    const qs = new URLSearchParams();
+    if (sp.offerId) qs.set("offerId", sp.offerId);
+    if (sp.requestId) qs.set("requestId", sp.requestId);
+    const suffix = qs.toString() ? `?${qs.toString()}` : "";
+    redirect({
+      href: `/login?redirect=${encodeURIComponent(`/providers/${id}${suffix}`)}`,
+      locale: localeParam || locale,
+    });
+    return;
+  }
+
+  const provider = await getPublicProviderTrustProfile(id);
+  if (!provider) notFound();
+
   const reviewSort = parseReviewSort(sp.reviewSort);
   const reviewPage = Math.max(1, Number(sp.reviewPage) || 1);
 
+  let offerContext: Awaited<ReturnType<typeof getCustomerOfferContext>> = null;
+  if (sp.offerId) {
+    offerContext = await getCustomerOfferContext({
+      customerId: authUser.id,
+      offerId: sp.offerId,
+      providerId: provider.id,
+    });
+  }
+
   const supabase = await createClient();
-  const [pending, settings, reviewStats, reviewPageData, jobsMap, owned, servicesResult, publicTrust] =
+  const [pending, settings, reviewStats, reviewPageData, owned, servicesResult, publicTrust] =
     await Promise.all([
-      authUser != null ? hasPendingRequest(authUser.id, provider.id) : Promise.resolve(false),
+      hasPendingRequest(authUser.id, provider.id),
       getProviderRequestSettings(provider.id),
       getProviderReviewStats(provider.id, locale),
       listProviderReviews({
         providerId: provider.id,
         sort: reviewSort,
         page: reviewPage,
-        viewerId: authUser?.id ?? null,
+        viewerId: authUser.id,
         language: reviewSort === "language" ? locale : null,
         recommendOnly: reviewSort === "recommended",
       }),
-      fetchCompletedJobsByProviderIds([provider.id]),
-      authUser ? getOwnedProvider(authUser.id) : Promise.resolve(null),
+      getOwnedProvider(authUser.id),
       supabase
         .from("provider_services")
         .select("id, name")
@@ -80,7 +112,7 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
     trustScore: reviewStats.trustScore || provider.trustScore,
     verified: provider.verified,
     responseTimeHours: provider.responseTimeHours,
-    completedJobs: jobsMap.get(provider.id) ?? 0,
+    completedJobs: provider.stats.completedJobs,
   });
 
   const bookingServices = (servicesResult.data ?? []).map((row) => ({
@@ -91,11 +123,25 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
     ),
   }));
 
+  const trustExtras: PublicProviderTrustExtras = {
+    workingHours: provider.workingHours,
+    languages: provider.languages,
+    headline: provider.headline,
+    displayName: provider.displayName,
+    certificates: provider.certificates,
+    awards: provider.awards,
+    stats: provider.stats,
+    serviceCities: provider.serviceCities,
+  };
+
+  const offerDecisionMode = Boolean(offerContext);
+
   return (
     <main className="flex flex-1 flex-col pb-16 pt-0">
       <ProviderProfileView
         provider={provider}
-        isLoggedIn={Boolean(authUser)}
+        trustExtras={trustExtras}
+        isLoggedIn
         hasPendingRequest={pending}
         acceptingRequests={settings.accepting_requests && !settings.vacation_mode}
         estimatedResponseHours={settings.estimated_response_hours}
@@ -106,9 +152,10 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
         reviewPage={reviewPage}
         reviewSort={reviewSort}
         trustBadges={trustBadges}
-        canVoteReviews={Boolean(authUser)}
+        canVoteReviews
         canReplyReviews={Boolean(owned && owned.id === provider.id)}
         bookingServices={bookingServices}
+        offerDecisionMode={offerDecisionMode}
         publicTrust={
           publicTrust ?? {
             providerId: provider.id,
@@ -119,6 +166,18 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
           }
         }
       />
+      {offerContext ? (
+        <OfferDecisionBar
+          offerId={offerContext.offerId}
+          requestId={offerContext.serviceRequestId}
+          canDecide={offerContext.canDecide}
+          backHref={
+            sp.requestId
+              ? `/request/${sp.requestId}/waiting`
+              : `/request/${offerContext.serviceRequestId}/waiting`
+          }
+        />
+      ) : null}
     </main>
   );
 }

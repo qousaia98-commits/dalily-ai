@@ -3,11 +3,9 @@
 import { useActionState, useCallback, useEffect, useRef, useState } from "react";
 import { Calendar, Camera, MapPin, Send, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/lib/i18n/routing";
-import {
-  createServiceRequestAction,
-  type ServiceRequestActionState,
-} from "@/actions/service-request.actions";
+import { Link, useRouter } from "@/lib/i18n/navigation";
+import { createServiceRequestAction } from "@/actions/service-request/create";
+import type { ServiceRequestActionState } from "@/actions/service-request/types";
 import { MAX_REQUEST_PHOTOS } from "@/lib/service-requests/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

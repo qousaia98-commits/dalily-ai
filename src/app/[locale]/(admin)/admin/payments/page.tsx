@@ -4,7 +4,7 @@ import { countPaymentsByStatus, listPaymentsForAdmin } from "@/lib/subscription/
 import { getPaymentAdminStats } from "@/lib/payment/admin-stats";
 import { AdminPaymentsPanel } from "@/components/admin/admin-payments-panel";
 import { AdminPaymentStatsCards } from "@/components/admin/admin-payment-stats-cards";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 type PageProps = {
   searchParams: Promise<{ tab?: string }>;

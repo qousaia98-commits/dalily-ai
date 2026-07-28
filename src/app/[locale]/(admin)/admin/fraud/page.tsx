@@ -5,7 +5,7 @@ import { isAdminUser } from "@/lib/auth/roles";
 import { isFraudDetectionEnabled } from "@/lib/config/feature-flags";
 import { getAdminFraudDashboard } from "@/lib/fraud/queries";
 import { AdminFraudInvestigationPanel } from "@/components/admin/admin-fraud-investigation-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminFraudPage() {
   if (!isFraudDetectionEnabled()) {

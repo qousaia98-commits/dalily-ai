@@ -4,7 +4,7 @@ import { getOwnedProvider } from "@/lib/providers/database";
 import { listProviderRequests } from "@/lib/service-requests/queries";
 import { countProviderOrderTabs } from "@/lib/orders/tabs";
 import { OrdersBoard } from "@/components/orders/orders-board";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import { listProviderOpportunities } from "@/domains/offer/queries";
 

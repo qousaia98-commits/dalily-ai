@@ -11,7 +11,7 @@ import { getUnlockSessionById } from "@/domains/unlock/session";
 import { getActiveUnlockFeePayment } from "@/domains/payment/unlock-fee";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ProviderUnlockPanel } from "@/components/business/provider-unlock-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";

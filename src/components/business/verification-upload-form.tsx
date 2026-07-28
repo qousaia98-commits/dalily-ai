@@ -1,8 +1,8 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import { useRouter } from "@/lib/i18n/routing";
-import { Link } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
+import { Link } from "@/lib/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { CheckCircle2, Loader2, LayoutDashboard } from "lucide-react";
 import {

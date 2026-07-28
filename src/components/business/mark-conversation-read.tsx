@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { markConversationReadAction } from "@/actions/messaging.actions";
 import { DALILY_CONVERSATION_ID } from "@/domains/chat/client";
 import { runServerAction } from "@/lib/next/server-action-recovery";

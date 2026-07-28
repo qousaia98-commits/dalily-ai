@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 import type { DalilyMessageCategory, DalilyRichContent } from "@/domains/chat/client";
 import { Button } from "@/components/ui/button";

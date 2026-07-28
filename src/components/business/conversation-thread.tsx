@@ -1,6 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import type { BusinessConversation } from "@/lib/business/conversations";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
 import { MarkConversationRead } from "@/components/business/mark-conversation-read";
@@ -12,7 +12,6 @@ import { ReadReceiptIcon } from "@/components/messaging/read-receipt-icon";
 import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { VerifiedBadge } from "@/components/messaging/verified-badge";
 import { MessageBubbleActions } from "@/components/messaging/message-bubble-actions";
-import { requestChatReply } from "@/components/messaging/chat-thread-client-shell";
 import { MessageMediaPreview } from "@/components/messaging/message-media-preview";
 import { AiChatPanel } from "@/components/messaging/ai-chat-panel";
 import { MessageTranslateToggle } from "@/components/messaging/message-translate-toggle";
@@ -366,7 +365,6 @@ export async function ConversationThread({
                     bodyText={msg.bodyText}
                     mine={mine}
                     isPinned={msg.isPinned}
-                    onReply={(payload) => requestChatReply(payload)}
                   />
                 ) : null}
               </div>

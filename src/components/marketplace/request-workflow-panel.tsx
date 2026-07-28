@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import {
   acceptQuoteAction,
   completeServiceAction,
@@ -12,8 +12,8 @@ import {
   sendQuoteAction,
   submitReviewAction,
   reportProblemAction,
-  type ServiceRequestActionState,
-} from "@/actions/service-request.actions";
+} from "@/actions/service-request/status";
+import type { ServiceRequestActionState } from "@/actions/service-request/types";
 import { RequestTimeline } from "@/components/marketplace/request-timeline";
 import { InteractiveStarRating } from "@/components/reviews/interactive-star-rating";
 import { Button } from "@/components/ui/button";

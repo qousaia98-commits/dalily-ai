@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { Loader2 } from "lucide-react";
 import { loginAction, type AuthActionState } from "@/actions/auth.actions";
 import { sanitizeAppRedirect } from "@/lib/auth/safe-redirect";

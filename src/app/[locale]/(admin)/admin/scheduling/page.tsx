@@ -5,7 +5,7 @@ import { isAdminUser } from "@/lib/auth/roles";
 import { isAiSchedulingEnabled } from "@/lib/config/feature-flags";
 import { getAdminScheduleDashboard } from "@/lib/scheduling-engine/admin";
 import { AdminSchedulingCenterPanel } from "@/components/admin/admin-scheduling-center-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminSchedulingPage() {
   if (!isAiSchedulingEnabled()) redirect("/admin");

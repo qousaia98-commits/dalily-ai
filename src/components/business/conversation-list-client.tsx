@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import type { BusinessConversation } from "@/lib/business/conversations";
 import { filterConversations } from "@/lib/business/conversations";
 import { formatConversationListTime } from "@/domains/chat/client";

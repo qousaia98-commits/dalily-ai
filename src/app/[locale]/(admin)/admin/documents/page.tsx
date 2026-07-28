@@ -8,7 +8,7 @@ import {
 } from "@/lib/financial-documents";
 import { AdminFinancialDocumentsPanel } from "@/components/admin/admin-financial-documents-panel";
 import { CompanyBillingSettingsForm } from "@/components/admin/company-billing-settings-form";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminDocumentsPage() {
   await requireAdminUser();

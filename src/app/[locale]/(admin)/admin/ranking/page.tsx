@@ -3,7 +3,7 @@ import { requireAdminUser } from "@/lib/auth/session";
 import { getAdminRankingInspection } from "@/lib/admin/ranking-inspection";
 import { DALILY_SCORE_COMPONENT_KEYS } from "@/lib/dalily-ranking/weights";
 import type { Locale } from "@/lib/i18n/config";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminRankingPage() {
   await requireAdminUser();

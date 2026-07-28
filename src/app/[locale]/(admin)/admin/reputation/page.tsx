@@ -5,7 +5,7 @@ import { isPlatformAdmin } from "@/lib/auth/roles";
 import { isAiReputationEngineEnabled } from "@/lib/config/feature-flags";
 import { getAdminReputationDashboard } from "@/lib/reputation/admin";
 import { AdminReputationDashboardPanel } from "@/components/admin/admin-reputation-dashboard";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminReputationPage() {
   if (!isAiReputationEngineEnabled()) {

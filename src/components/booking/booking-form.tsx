@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { CalendarClock, Loader2, Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import {
   createBookingAction,
   fetchAvailableSlotsAction,

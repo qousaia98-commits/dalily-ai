@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { ReviewCard } from "@/components/reviews/review-card";
 import { RatingBreakdown } from "@/components/reviews/rating-breakdown";
 import { ReviewSortSelect } from "@/components/reviews/review-sort-select";

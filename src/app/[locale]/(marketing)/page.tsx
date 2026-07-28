@@ -35,7 +35,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <main className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col">
         <section className="relative overflow-hidden border-b border-border/60 px-4 pb-14 pt-10 sm:px-6 sm:pb-16 sm:pt-14">
           <div
             aria-hidden
@@ -94,7 +94,7 @@ export default async function HomePage() {
             <FeaturedProviders />
           </>
         )}
-      </main>
+      </div>
     </>
   );
 }

@@ -7,6 +7,7 @@ import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import {
   createOfferFromAssignment,
   selectOffer,
+  declineOffer,
 } from "@/domains/offer/create-offer";
 import {
   postClarification,
@@ -133,6 +134,20 @@ export async function selectOfferAction(offerId: string): Promise<OfferActionSta
   revalidateOrderSurfaces(result.serviceRequestId);
   revalidatePath("/business/unlock");
   return { success: true, selectionId: result.selectionId };
+}
+
+export async function declineOfferAction(offerId: string): Promise<OfferActionState> {
+  if (!isOffersV2Enabled()) return { success: false, error: "feature_disabled" };
+  const authUser = await getAuthUser();
+  if (!authUser) return { success: false, error: "login_required" };
+
+  const result = await declineOffer({ customerId: authUser.id, offerId });
+  if (!result.ok) return { success: false, error: result.error };
+
+  revalidateOrderSurfaces(result.serviceRequestId);
+  revalidatePath(`/request/${result.serviceRequestId}/waiting`);
+  revalidatePath(`/account/requests/${result.serviceRequestId}`);
+  return { success: true };
 }
 
 export async function postOfferClarificationAction(

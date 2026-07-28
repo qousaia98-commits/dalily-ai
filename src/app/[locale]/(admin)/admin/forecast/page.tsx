@@ -5,7 +5,7 @@ import { isAdminUser } from "@/lib/auth/roles";
 import { isForecastEngineEnabled } from "@/lib/config/feature-flags";
 import { getAdminForecastDashboard } from "@/domains/forecast";
 import { AdminForecastCenterPanel } from "@/components/admin/admin-forecast-center-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminForecastPage() {
   if (!isForecastEngineEnabled()) {

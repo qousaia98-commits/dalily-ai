@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useRouter as useLocaleRouter } from "@/lib/i18n/routing";
+import { useRouter as useLocaleRouter } from "@/lib/i18n/navigation";
 import {
   cancelSubscriptionAction,
   downgradeSubscriptionAction,

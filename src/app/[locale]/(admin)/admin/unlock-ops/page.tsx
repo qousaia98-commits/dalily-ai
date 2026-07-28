@@ -5,7 +5,7 @@ import { isPlatformAdmin } from "@/lib/auth/roles";
 import { isAdminMigrationV2Enabled } from "@/lib/config/feature-flags";
 import { getUnlockOpsOverview } from "@/domains/admin/unlock-ops";
 import { UnlockOpsPanel } from "@/components/admin/unlock-ops-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminUnlockOpsPage() {
   if (!isAdminMigrationV2Enabled()) redirect("/admin/payments");

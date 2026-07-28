@@ -11,9 +11,12 @@ function revalidateProviderNav() {
   revalidatePath("/", "layout");
   revalidatePath("/business", "layout");
   revalidatePath("/business/orders");
+  revalidatePath("/business/requests");
   revalidatePath("/business/opportunities");
   revalidatePath("/business/unlock");
+  revalidatePath("/business/payments");
   revalidatePath("/business/verification");
+  revalidatePath("/business/account");
   revalidatePath("/account/orders");
 }
 

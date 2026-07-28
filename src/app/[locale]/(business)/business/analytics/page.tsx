@@ -1,6 +1,6 @@
 import { Lock, Sparkles, Star, TrendingUp, MapPin, Search, BarChart3 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";

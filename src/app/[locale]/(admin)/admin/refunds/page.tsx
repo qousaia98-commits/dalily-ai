@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { requireAdminUser } from "@/lib/auth/session";
 import { getRefundStats, listDisputes, listRefunds } from "@/lib/refunds";
 import { AdminRefundsPanel } from "@/components/admin/admin-refunds-panel";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminRefundsPage() {
   await requireAdminUser();

@@ -16,7 +16,7 @@ import type {
 } from "@/lib/finance-analytics";
 import { FinanceChartsGrid } from "@/components/admin/finance-charts";
 import { formatDateTime } from "@/lib/format/datetime";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 function KpiCard({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (

@@ -1118,7 +1118,12 @@
       "title": "العروض",
       "subtitle": "قارن حتى 3 عروض ثم اختر واحداً. بيانات التواصل تبقى خاصة.",
       "noContactYet": "اختيار عرض لا يشارك رقمك ولا يفتح الدردشة بعد.",
-      "select": "اختر هذا العرض",
+      "select": "قبول الطلب",
+      "accept": "قبول الطلب",
+      "decline": "رفض",
+      "viewProfile": "عرض الملف",
+      "back": "رجوع",
+      "trustBarHint": "تبقى بيانات التواصل خاصة حتى تقبل ويكتمل فتح التواصل.",
       "compare": "مقارنة",
       "removeCompare": "إزالة من المقارنة",
       "business": "عمل",
@@ -1257,6 +1262,7 @@
       "offer_failed": "تعذر إنشاء العرض.",
       "offer_not_found": "العرض غير موجود.",
       "selection_failed": "تعذر اختيار العرض.",
+      "decline_failed": "تعذر رفض العرض.",
       "label_required": "اسم القالب مطلوب.",
       "template_failed": "تعذر حفظ القالب.",
       "use_offers": "استخدم مسار العروض لهذا الطلب."
@@ -1839,7 +1845,27 @@
       "availability": "التوفر",
       "open": "يستقبل",
       "paused": "متوقف"
-    }
+    },
+    "publicStats": {
+      "title": "إحصاءات عامة",
+      "completedJobs": "أعمال مكتملة",
+      "successRate": "معدل النجاح",
+      "repeatCustomers": "زبائن متكررون",
+      "responseRate": "معدل الرد",
+      "avgResponse": "متوسط زمن الرد",
+      "profileCompletion": "اكتمال الملف",
+      "yearsOnDalily": "سنوات على دليلي",
+      "pct": "{value}%",
+      "hours": "{hours} س",
+      "years": "{count, plural, one {# سنة} other {# سنوات}}",
+      "lessThanYear": "جديد"
+    },
+    "workingHours": "ساعات العمل",
+    "languages": "اللغات",
+    "certificates": "الشهادات",
+    "awards": "الجوائز والشارات",
+    "closedDay": "مغلق",
+    "trustOnlyNote": "الهاتف والبريد والعنوان الدقيق تبقى خاصة حتى تأكيد الحجز."
   },
   "publicVerification": {
     "eyebrow": "الثقة",

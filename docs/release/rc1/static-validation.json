@@ -1,0 +1,239 @@
+{
+  "generatedAt": "2026-07-28T03:25:34.596Z",
+  "release": "v3.0.0-RC1",
+  "sprint": "9.6",
+  "totals": {
+    "total": 32,
+    "passed": 31,
+    "failed": 1,
+    "failedCritical": 1
+  },
+  "results": [
+    {
+      "id": "typecheck",
+      "cmd": "npm run typecheck",
+      "critical": true,
+      "status": "pass",
+      "ms": 13263
+    },
+    {
+      "id": "lint",
+      "cmd": "npm run lint",
+      "critical": true,
+      "status": "pass",
+      "ms": 14467
+    },
+    {
+      "id": "build",
+      "cmd": "npm run build",
+      "critical": true,
+      "status": "fail",
+      "ms": 113547,
+      "stderr": "npm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.\n<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (106kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)\n<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (253kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)\n ⨯ Next.js build worker exited with code: 3221226505 and signal: null\n"
+    },
+    {
+      "id": "verify:foundation",
+      "cmd": "npm run verify:foundation",
+      "critical": true,
+      "status": "pass",
+      "ms": 1199
+    },
+    {
+      "id": "verify:mobile",
+      "cmd": "npm run verify:mobile",
+      "critical": true,
+      "status": "pass",
+      "ms": 928
+    },
+    {
+      "id": "verify:infra",
+      "cmd": "npm run verify:infra",
+      "critical": true,
+      "status": "pass",
+      "ms": 1317
+    },
+    {
+      "id": "verify:db:fresh",
+      "cmd": "npm run verify:db:fresh",
+      "critical": true,
+      "status": "pass",
+      "ms": 19669
+    },
+    {
+      "id": "verify:matching",
+      "cmd": "npm run verify:matching",
+      "critical": false,
+      "status": "pass",
+      "ms": 788
+    },
+    {
+      "id": "verify:offers",
+      "cmd": "npm run verify:offers",
+      "critical": false,
+      "status": "pass",
+      "ms": 881
+    },
+    {
+      "id": "verify:unlock",
+      "cmd": "npm run verify:unlock",
+      "critical": false,
+      "status": "pass",
+      "ms": 1084
+    },
+    {
+      "id": "verify:payments",
+      "cmd": "npm run verify:payments",
+      "critical": false,
+      "status": "pass",
+      "ms": 906
+    },
+    {
+      "id": "verify:stripe",
+      "cmd": "npm run verify:stripe",
+      "critical": false,
+      "status": "pass",
+      "ms": 800
+    },
+    {
+      "id": "verify:financial-documents",
+      "cmd": "npm run verify:financial-documents",
+      "critical": false,
+      "status": "pass",
+      "ms": 748
+    },
+    {
+      "id": "verify:refunds",
+      "cmd": "npm run verify:refunds",
+      "critical": false,
+      "status": "pass",
+      "ms": 902
+    },
+    {
+      "id": "verify:finance",
+      "cmd": "npm run verify:finance",
+      "critical": false,
+      "status": "pass",
+      "ms": 1221
+    },
+    {
+      "id": "verify:reviews",
+      "cmd": "npm run verify:reviews",
+      "critical": false,
+      "status": "pass",
+      "ms": 1016
+    },
+    {
+      "id": "verify:reputation",
+      "cmd": "npm run verify:reputation",
+      "critical": false,
+      "status": "pass",
+      "ms": 907
+    },
+    {
+      "id": "verify:quality",
+      "cmd": "npm run verify:quality",
+      "critical": false,
+      "status": "pass",
+      "ms": 814
+    },
+    {
+      "id": "verify:fraud",
+      "cmd": "npm run verify:fraud",
+      "critical": false,
+      "status": "pass",
+      "ms": 800
+    },
+    {
+      "id": "verify:ai-ops",
+      "cmd": "npm run verify:ai-ops",
+      "critical": false,
+      "status": "pass",
+      "ms": 770
+    },
+    {
+      "id": "verify:matching-engine",
+      "cmd": "npm run verify:matching-engine",
+      "critical": false,
+      "status": "pass",
+      "ms": 698
+    },
+    {
+      "id": "verify:pricing",
+      "cmd": "npm run verify:pricing",
+      "critical": false,
+      "status": "pass",
+      "ms": 769
+    },
+    {
+      "id": "verify:forecast",
+      "cmd": "npm run verify:forecast",
+      "critical": false,
+      "status": "pass",
+      "ms": 740
+    },
+    {
+      "id": "verify:scheduling",
+      "cmd": "npm run verify:scheduling",
+      "critical": false,
+      "status": "pass",
+      "ms": 722
+    },
+    {
+      "id": "verify:business-assistant",
+      "cmd": "npm run verify:business-assistant",
+      "critical": false,
+      "status": "pass",
+      "ms": 702
+    },
+    {
+      "id": "verify:marketplace-intelligence",
+      "cmd": "npm run verify:marketplace-intelligence",
+      "critical": false,
+      "status": "pass",
+      "ms": 775
+    },
+    {
+      "id": "verify:chat",
+      "cmd": "npm run verify:chat",
+      "critical": false,
+      "status": "pass",
+      "ms": 793
+    },
+    {
+      "id": "verify:provider-dashboard",
+      "cmd": "npm run verify:provider-dashboard",
+      "critical": false,
+      "status": "pass",
+      "ms": 731
+    },
+    {
+      "id": "verify:admin",
+      "cmd": "npm run verify:admin",
+      "critical": false,
+      "status": "pass",
+      "ms": 694
+    },
+    {
+      "id": "verify:mobile-production",
+      "cmd": "npm run verify:mobile-production",
+      "critical": false,
+      "status": "pass",
+      "ms": 749
+    },
+    {
+      "id": "mobile:typecheck",
+      "cmd": "npm run mobile:typecheck",
+      "critical": false,
+      "status": "pass",
+      "ms": 9536
+    },
+    {
+      "id": "validate:i18n",
+      "cmd": "npm run validate:i18n",
+      "critical": true,
+      "status": "pass",
+      "ms": 1704
+    }
+  ],
+  "verdict": "RC1_BLOCKED"
+}

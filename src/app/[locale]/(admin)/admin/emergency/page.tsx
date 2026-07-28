@@ -3,7 +3,7 @@ import { isEmergencyDispatchEnabled } from "@/lib/config/feature-flags";
 import { redirect } from "next/navigation";
 import { getEmergencyAdminDashboard } from "@/lib/ai/dispatch/emergency";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminEmergencyPage() {
   await requireAdminUser();

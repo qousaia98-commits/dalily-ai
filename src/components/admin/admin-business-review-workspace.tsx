@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter, Link } from "@/lib/i18n/routing";
+import { useRouter, Link } from "@/lib/i18n/navigation";
 import {
   Check,
   CheckCircle2,

@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { trackProviderEngagementAction } from "@/actions/engagement.actions";
 import { cn } from "@/lib/utils";
 

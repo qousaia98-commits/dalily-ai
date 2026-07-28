@@ -6,7 +6,7 @@ import {
   AlertTriangle,
   Settings,
 } from "lucide-react";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const ACTIONS = [

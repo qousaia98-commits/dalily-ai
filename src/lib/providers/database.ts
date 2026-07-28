@@ -189,13 +189,6 @@ export type PublicProviderProfile = {
   gallery: string[];
 };
 
-function parseAddressLineText(value: unknown): LocalizedText | null {
-  if (!value || typeof value !== "object") return null;
-  const obj = value as { ar?: string; en?: string };
-  if (!obj.ar && !obj.en) return null;
-  return { ar: obj.ar ?? "", en: obj.en ?? "" };
-}
-
 export async function getPublicProviderById(id: string): Promise<PublicProviderProfile | null> {
   const supabase = await createClient();
 
@@ -258,10 +251,8 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
 
   const planMap = await getActivePlanSlugsByProviderIds([provider.id]);
 
-  // Sprint 7 — hide public directory phone/WhatsApp when CHAT_AUTH_V2 (contact only via grant).
-  const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
-  const hidePublicContact = isChatAuthV2Enabled();
-
+  // Trust page / public directory: never expose phone, WhatsApp, exact address, or GPS.
+  // Contact unlock happens only after booking / unlock grant.
   return {
     id: provider.id,
     slug: provider.slug,
@@ -271,9 +262,9 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     categoryLabel: { ar: categoryName.ar, en: categoryName.en },
     city: cityLabel,
     citySlug: cityKey ?? null,
-    district: parseAddressLineText(provider.address_line),
-    latitude: provider.latitude,
-    longitude: provider.longitude,
+    district: null,
+    latitude: null,
+    longitude: null,
     rating: Number(provider.rating_avg),
     reviewCount: provider.review_count,
     trustScore: provider.trust_score,
@@ -283,8 +274,8 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     memberSince: provider.created_at,
     coverImage: cover ? getStoragePublicUrl(cover.path) : DEFAULT_COVER,
     avatarImage: avatar ? getStoragePublicUrl(avatar.path) : DEFAULT_AVATAR,
-    phone: hidePublicContact ? null : provider.phone,
-    whatsapp: hidePublicContact ? null : provider.whatsapp,
+    phone: null,
+    whatsapp: null,
     responseTimeHours: provider.response_time_hours,
     services: activeServices,
     gallery,

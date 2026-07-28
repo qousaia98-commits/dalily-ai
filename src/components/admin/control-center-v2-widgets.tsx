@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import type { ControlCenterV2Kpis } from "@/lib/admin/control-center-v2";
 import { cn } from "@/lib/utils";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 type Props = { kpis: ControlCenterV2Kpis };
 

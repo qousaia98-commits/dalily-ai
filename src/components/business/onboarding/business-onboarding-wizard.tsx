@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { Loader2 } from "lucide-react";
 import { submitVerificationAction } from "@/actions/verification.actions";
 import type { ManagedProvider } from "@/types/provider.types";

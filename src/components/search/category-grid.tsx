@@ -1,6 +1,6 @@
 import { getLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { CategoryIcon } from "@/components/categories/category-icon";
 import { localizedField } from "@/lib/categories/format";
 import { getCategoryGroups } from "@/lib/categories/queries";

@@ -2,10 +2,8 @@
 
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  saveProviderRequestSettingsAction,
-  type ServiceRequestActionState,
-} from "@/actions/service-request.actions";
+import { saveProviderRequestSettingsAction } from "@/actions/service-request/update";
+import type { ServiceRequestActionState } from "@/actions/service-request/types";
 import type { ProviderRequestSettings } from "@/lib/service-requests/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

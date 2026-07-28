@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { redirect } from "@/lib/i18n/routing";
+import { redirect } from "@/lib/i18n/navigation";
 import { getLocale } from "next-intl/server";
 import { getAuthUser } from "@/lib/auth/session";
 import { isBusinessUser } from "@/lib/auth/roles";

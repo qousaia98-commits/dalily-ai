@@ -13,7 +13,7 @@ import {
   ArrowLeft,
   ArrowRight,
 } from "lucide-react";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { getLocale } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";

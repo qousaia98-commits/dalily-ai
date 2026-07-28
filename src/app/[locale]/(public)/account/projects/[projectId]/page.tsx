@@ -4,7 +4,7 @@ import { requireAuthUser } from "@/lib/auth/session";
 import { isMultiServiceProjectsEnabled } from "@/lib/config/feature-flags";
 import { getProjectDashboard } from "@/lib/projects";
 import { ProjectDashboardPanel } from "@/components/customer/project-dashboard";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 type PageProps = {
   params: Promise<{ projectId: string; locale: string }>;

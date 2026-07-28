@@ -5,7 +5,7 @@ import { isPlatformAdmin } from "@/lib/auth/roles";
 import { isFinanceDashboardEnabled } from "@/lib/config/feature-flags";
 import { computeFinanceDashboardSnapshot } from "@/lib/finance-analytics";
 import { AdminFinanceDashboard } from "@/components/admin/admin-finance-dashboard";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { emitAiLearningEvent } from "@/lib/ai/learning/events";
 
 export default async function AdminFinancePage() {

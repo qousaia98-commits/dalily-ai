@@ -1,6 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
-import { redirect } from "@/lib/i18n/routing";
+import { redirect } from "@/lib/i18n/navigation";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";

@@ -14,7 +14,7 @@ import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
 import { JobPrepSummary } from "@/components/business/job-prep-summary";
 import { VoiceRequestPreview } from "@/components/business/voice-request-preview";
 import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { getProviderPrepForRequest } from "@/lib/ai/jobs/service";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isAiEngineV6Enabled } from "@/lib/config/feature-flags";
