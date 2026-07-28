@@ -1,4 +1,10 @@
-/** Sprint 8 Phase 3 — AI Demand Forecasting barrel */
+/**
+ * Forecast Engine — INTERNAL runtime (Sprint 8 Phase 3 demand forecasting).
+ *
+ * External consumers (UI, actions, pages) MUST import via `@/domains/forecast`.
+ *
+ * @see docs/architecture/forecast.md
+ */
 
 export { computeForecastFromSignals } from "@/lib/forecast-engine/engine";
 export {

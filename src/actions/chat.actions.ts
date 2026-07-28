@@ -3,20 +3,27 @@
 import { revalidatePath } from "next/cache";
 import { getAuthUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
-import { trackChatAnalytics } from "@/lib/chat/analytics";
-import { setConversationFlags, type ConversationViewer } from "@/lib/chat/conversation-service";
-import { insertTextMessage, searchMessages, softDeleteMessage, editMessage, setMessagePinned } from "@/lib/chat/message-service";
 import {
+  trackChatAnalytics,
+  setConversationFlags,
+  type ConversationViewer,
+  insertTextMessage,
+  searchMessages,
+  softDeleteMessage,
+  editMessage,
+  setMessagePinned,
   insertMessageAttachment,
   isAllowedChatAttachment,
   uploadChatAttachment,
-} from "@/lib/chat/attachment-service";
-import { markConversationReadServer, setTypingStatus } from "@/lib/chat/notification-service";
-import { upsertPresence } from "@/lib/chat/presence-service";
-import { markAllConversationsRead } from "@/lib/chat/scoped-conversations";
+  markConversationReadServer,
+  setTypingStatus,
+  upsertPresence,
+  markAllConversationsRead,
+  assertChatParticipants,
+} from "@/domains/chat";
 import { sendMessageSchema } from "@/lib/validations/service-request";
 import { emitAiLearningEvent } from "@/lib/ai/learning/events";
-import { isRealtimeChatEnabled } from "@/lib/config/feature-flags";
+import { isRealtimeEngineEnabled, isChatEngineEnabled } from "@/lib/config/feature-flags";
 
 function revalidateConversation(conversationId: string) {
   revalidatePath(`/messages/${conversationId}`);
@@ -27,10 +34,7 @@ function revalidateConversation(conversationId: string) {
 }
 
 async function assertParticipant(conversationId: string, userId: string) {
-  const { assertChatParticipants } = await import("@/domains/chat/authz");
-  const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
-
-  if (isChatAuthV2Enabled()) {
+  if (isChatEngineEnabled()) {
     const gate = await assertChatParticipants({ conversationId, userId });
     if (!gate.ok) {
       return {
@@ -219,7 +223,7 @@ export async function sendChatMessageAction(formData: FormData): Promise<{
     metadata: { messageType, reply: Boolean(replyToMessageId) },
   });
 
-  if (isRealtimeChatEnabled()) {
+  if (isRealtimeEngineEnabled()) {
     void emitAiLearningEvent({
       eventType: replyToMessageId ? "chat_reply_sent" : "chat_message_sent",
       customerId:
@@ -291,7 +295,7 @@ export async function markChatReadAction(
     conversationId,
     actorId: authUser.id,
   });
-  if (isRealtimeChatEnabled()) {
+  if (isRealtimeEngineEnabled()) {
     void emitAiLearningEvent({
       eventType: "chat_read",
       customerId: authUser.id,
@@ -366,7 +370,7 @@ export async function searchChatMessagesAction(input: {
     to: input.to,
     userId: authUser.id,
   });
-  if (isRealtimeChatEnabled()) {
+  if (isRealtimeEngineEnabled()) {
     void emitAiLearningEvent({
       eventType: "chat_search",
       customerId: authUser.id,
@@ -382,7 +386,7 @@ export async function softDeleteChatMessageAction(
   const authUser = await getAuthUser();
   if (!authUser) return { success: false };
   const result = await softDeleteMessage({ messageId, senderId: authUser.id });
-  if (result.success && isRealtimeChatEnabled()) {
+  if (result.success && isRealtimeEngineEnabled()) {
     void emitAiLearningEvent({
       eventType: "chat_message_deleted",
       customerId: authUser.id,
@@ -407,7 +411,7 @@ export async function editChatMessageAction(input: {
     bodyText: input.bodyText,
   });
   if (result.success) {
-    if (isRealtimeChatEnabled()) {
+    if (isRealtimeEngineEnabled()) {
       void emitAiLearningEvent({
         eventType: "chat_message_edited",
         customerId: authUser.id,
@@ -435,7 +439,7 @@ export async function pinChatMessageAction(input: {
     pinned: input.pinned,
   });
   if (result.success) {
-    if (isRealtimeChatEnabled()) {
+    if (isRealtimeEngineEnabled()) {
       void emitAiLearningEvent({
         eventType: input.pinned ? "chat_message_pinned" : "chat_message_unpinned",
         customerId: authUser.id,
@@ -474,7 +478,7 @@ export async function setPresenceAction(
   const authUser = await getAuthUser();
   if (!authUser) return { success: false };
   await upsertPresence(authUser.id, status);
-  if (isRealtimeChatEnabled()) {
+  if (isRealtimeEngineEnabled()) {
     void emitAiLearningEvent({
       eventType: "chat_presence",
       customerId: authUser.id,

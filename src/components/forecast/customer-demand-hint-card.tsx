@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import type { CustomerDemandHint } from "@/lib/forecast-engine/types";
+import type { CustomerDemandHint } from "@/domains/forecast/client";
 
 type Props = { hint: CustomerDemandHint };
 

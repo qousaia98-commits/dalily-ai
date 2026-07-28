@@ -18,7 +18,7 @@ import {
 } from "@/domains/offer/queries";
 import { getProviderRequestSettings } from "@/lib/service-requests/queries";
 import type { ProviderRequestSettings } from "@/lib/service-requests/types";
-import type { MatchReason } from "@/domains/matching/reasons";
+import type { MatchReason } from "@/domains/matching";
 
 export type ProviderDashboardQaItem = {
   offerId: string;

@@ -298,9 +298,7 @@ export async function createMultiServiceProject(input: {
         "@/lib/config/feature-flags"
       );
       if (isMatchingV2Enabled()) {
-        const { runMatchingForRequest } = await import(
-          "@/domains/matching/engine"
-        );
+        const { runMatchingForRequest } = await import("@/domains/matching");
         const { data: pkgs } = await admin
           .from("project_packages")
           .select("id, service_request_id, status")

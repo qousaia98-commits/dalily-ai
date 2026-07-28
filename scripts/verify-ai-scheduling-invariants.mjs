@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 8 Phase 4 — AI Scheduling invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ AI Scheduling invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727160000_sprint8_ai_scheduling.sql",
+  "supabase/migrations/archive/20260727160000_sprint8_ai_scheduling.sql",
   "src/lib/scheduling-engine/types.ts",
   "src/lib/scheduling-engine/signals.ts",
   "src/lib/scheduling-engine/weights.ts",
@@ -53,7 +54,7 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
-const mig = read("supabase/migrations/20260727160000_sprint8_ai_scheduling.sql");
+const mig = read("supabase/migrations/archive/20260727160000_sprint8_ai_scheduling.sql");
 for (const t of [
   "schedule_profiles",
   "schedule_history",
@@ -71,7 +72,7 @@ for (const t of [
   else fail(`schema missing ${t}`);
 }
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isAiSchedulingEnabled")) ok("feature flag");
 else fail("missing isAiSchedulingEnabled");
 

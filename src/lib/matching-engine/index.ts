@@ -1,4 +1,11 @@
-/** Sprint 8 Phase 1 — Smart Matching Engine barrel */
+/**
+ * Smart Matching Engine — INTERNAL runtime implementation.
+ *
+ * External consumers (UI, actions, pages) MUST import via `@/domains/matching`.
+ * Other lib modules may import this package when they are part of the matching stack.
+ *
+ * @see docs/architecture/matching.md
+ */
 
 export { computeMatchFromSignals } from "@/lib/matching-engine/engine";
 export { MATCH_SIGNAL_COLLECTORS, ML_RANKER_COLLECTOR } from "@/lib/matching-engine/signals";

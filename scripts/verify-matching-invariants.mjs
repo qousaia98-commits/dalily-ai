@@ -64,6 +64,7 @@ const migration = path.join(
   root,
   "supabase",
   "migrations",
+  "archive",
   "20260725180000_sprint3_matching_engine.sql",
 );
 if (!existsSync(migration)) {

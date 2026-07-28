@@ -2,7 +2,7 @@
 
 **Status:** Official  
 **Approach:** Strangler Migration  
-**Current sprint gate:** Sprint 0 complete → await approval before Sprint 1
+**Current sprint gate:** Sprint 9 complete · Sprint 9.5 Phase 1 hygiene applied · await approval before Sprint 10
 
 ## Immutable inputs
 
@@ -24,6 +24,7 @@ These documents are **FINAL**. Engineering must not change product philosophy or
 | [`verify-checklist.md`](./verify-checklist.md) | Minimum verify/smoke set |
 | [`legacy-inventory.md`](./legacy-inventory.md) | Modules marked LEGACY |
 | [`sprint-0-notes.md`](./sprint-0-notes.md) | What Sprint 0 changed |
+| [`sprint-9.5-cleanup-notes.md`](./sprint-9.5-cleanup-notes.md) | Low-risk hygiene (empty dirs, archive scripts) |
 
 ## Domain boundaries (code)
 

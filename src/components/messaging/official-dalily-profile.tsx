@@ -9,7 +9,7 @@ import { Link } from "@/lib/i18n/routing";
 import { OfficialDalilyAvatar } from "@/components/messaging/official-dalily-avatar";
 import { VerifiedBadge } from "@/components/messaging/verified-badge";
 import { Button } from "@/components/ui/button";
-import { OFFICIAL_ACCOUNTS } from "@/lib/dalily-messages/official-account";
+import { OFFICIAL_ACCOUNTS } from "@/domains/chat/client";
 
 export async function OfficialDalilyProfile({
   messagesPath = "/business/messages",

@@ -1,7 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import type { ProblemId, ProblemPriority } from "@/lib/search/engine/types";
-import type { ServiceAdvisorInsight } from "@/lib/search/smart-match/advisor";
+import type { ServiceAdvisorInsight } from "@/domains/matching";
 import type { CategorySlug } from "@/lib/categories/types";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedField } from "@/lib/categories/format";

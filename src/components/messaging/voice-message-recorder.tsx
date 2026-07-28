@@ -9,7 +9,7 @@ import {
   VoiceRecorder,
   VoiceRecorderError,
   MAX_CHAT_VOICE_RECORDING_MS,
-} from "@/lib/voice/recorder";
+} from "@/domains/speech/client";
 import { sendChatVoiceMessageAction } from "@/actions/chat-voice.actions";
 import { cn } from "@/lib/utils";
 

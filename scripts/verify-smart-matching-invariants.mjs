@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 8 Phase 1 — AI Smart Matching Engine invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ Smart Matching Engine invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727130000_sprint8_ai_smart_matching.sql",
+  "supabase/migrations/archive/20260727130000_sprint8_ai_smart_matching.sql",
   "src/lib/matching-engine/types.ts",
   "src/lib/matching-engine/signals.ts",
   "src/lib/matching-engine/weights.ts",
@@ -45,7 +46,7 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
-const mig = read("supabase/migrations/20260727130000_sprint8_ai_smart_matching.sql");
+const mig = read("supabase/migrations/archive/20260727130000_sprint8_ai_smart_matching.sql");
 for (const t of [
   "matching_weights",
   "matching_scores",
@@ -60,7 +61,7 @@ for (const t of [
   else fail(`schema missing ${t}`);
 }
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isSmartMatchingEngineEnabled")) ok("feature flag");
 else fail("missing isSmartMatchingEngineEnabled");
 

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getAuthUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getOwnedProvider } from "@/lib/providers/database";
-import { getOrCreateConversationForRequest } from "@/lib/chat/conversation-service";
+import { getOrCreateConversationForRequest } from "@/domains/chat";
 import { trackBookingAnalytics } from "@/lib/booking/analytics";
 import {
   createBooking,

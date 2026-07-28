@@ -5,6 +5,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const offerDir = path.join(root, "src", "domains", "offer");
@@ -36,10 +37,7 @@ if (createOffer.includes("from(\"conversations\")") || createOffer.includes("can
   violations.push("offer create/select must not open chat");
 }
 
-const flags = readFileSync(
-  path.join(root, "src", "lib", "config", "feature-flags.ts"),
-  "utf8",
-);
+const flags = readFeatureFlagsSource();
 if (!flags.includes("OFFERS_V2") || !flags.includes("isOffersV2Enabled")) {
   violations.push("OFFERS_V2 flag missing");
 }
@@ -48,6 +46,7 @@ const migration = path.join(
   root,
   "supabase",
   "migrations",
+  "archive",
   "20260725190000_sprint4_offer_system.sql",
 );
 if (!existsSync(migration)) {

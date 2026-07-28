@@ -41,6 +41,10 @@
     "mobile:lint": "npm --prefix mobile run lint",
     "mobile:verify": "npm --prefix mobile run verify && npm --prefix mobile run verify:production",
     "verify:chat": "node scripts/verify-chat-invariants.mjs",
+    "verify:infra": "node scripts/verify-infra-invariants.mjs",
+    "verify:db:fresh": "node scripts/verify-fresh-baseline.mjs",
+    "db:baseline:assemble": "node scripts/assemble-migration-baseline.mjs",
+    "docs:env-aliases": "node scripts/generate-env-alias-docs.mjs",
     "verify:provider-dashboard": "node scripts/verify-provider-dashboard-invariants.mjs",
     "verify:admin": "node scripts/verify-admin-invariants.mjs",
     "validate:sprint6": "node scripts/validate-sprint6-unlock-payments.mjs",
@@ -51,7 +55,6 @@
     "generate:brand": "node scripts/write-brand-svgs.mjs && node scripts/generate-brand-assets.mjs"
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-dropdown-menu": "^2.1.15",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-progress": "^1.1.7",

@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 6 Phase 5 — refunds & disputes invariants (static checks).
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ Refunds & disputes invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727050000_sprint6_refunds_disputes.sql",
+  "supabase/migrations/archive/20260727050000_sprint6_refunds_disputes.sql",
   "src/lib/refunds/service.ts",
   "src/lib/refunds/disputes.ts",
   "src/lib/refunds/types.ts",
@@ -39,7 +40,7 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
-const mig = read("supabase/migrations/20260727050000_sprint6_refunds_disputes.sql");
+const mig = read("supabase/migrations/archive/20260727050000_sprint6_refunds_disputes.sql");
 for (const t of [
   "refund_requests",
   "refund_history",
@@ -99,7 +100,7 @@ for (const e of [
   else fail(`missing webhook ${e}`);
 }
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isRefundsDisputesEnabled")) ok("feature flag");
 else fail("missing isRefundsDisputesEnabled");
 

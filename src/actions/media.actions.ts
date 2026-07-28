@@ -12,11 +12,12 @@ import {
   softDeleteMessageAttachment,
   attachmentKindForMime,
   isAllowedChatAttachment,
-} from "@/lib/chat/attachment-service";
-import { insertTextMessage } from "@/lib/chat/message-service";
-import { trackChatAnalytics } from "@/lib/chat/analytics";
+  insertTextMessage,
+  trackChatAnalytics,
+  assertChatParticipants,
+} from "@/domains/chat";
+import { isFileMediaSharingEnabled, isChatEngineEnabled } from "@/lib/config/feature-flags";
 import { emitAiLearningEvent } from "@/lib/ai/learning/events";
-import { isFileMediaSharingEnabled } from "@/lib/config/feature-flags";
 import {
   listProjectGallery,
   uploadProjectGalleryFile,
@@ -36,9 +37,7 @@ import { logger } from "@/lib/observability/logger";
 import { assertProjectAccess } from "@/lib/media/project-gallery";
 
 async function assertConversationParticipant(conversationId: string, userId: string) {
-  const { assertChatParticipants } = await import("@/domains/chat/authz");
-  const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
-  if (isChatAuthV2Enabled()) {
+  if (isChatEngineEnabled()) {
     return assertChatParticipants({ conversationId, userId });
   }
   const supabase = await createClient();

@@ -23,12 +23,12 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { canAccessFullChat } from "@/domains/chat/authz";
+import { canAccessFullChat } from "@/domains/chat";
 import {
   formatMessageTime,
   isValidMessageTimestamp,
   resolveLatestMessageAt,
-} from "@/lib/messaging/format-conversation-time";
+} from "@/domains/chat";
 import {
   businessFallbackLabel,
   customerFallbackLabel,

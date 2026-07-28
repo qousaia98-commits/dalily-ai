@@ -8,7 +8,7 @@ import {
   simulateMatchingAction,
   updateMatchingWeightAction,
 } from "@/actions/matching.actions";
-import type { AdminMatchingDashboard } from "@/lib/matching-engine/admin";
+import type { AdminMatchingDashboard } from "@/domains/matching/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatDateTime } from "@/lib/format/datetime";

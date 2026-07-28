@@ -1,15 +1,15 @@
 /**
- * Matching module facade (Phase 1+2).
- * Marketplace matching stays in domains/matching; AI ranking is additive.
+ * AI matching façade metadata only — no business logic.
+ * Runtime orchestration: domains/matching → matching-engine (or legacy score when flag off).
  */
 export const matchingModule = {
   id: "matching",
   status: "phase2" as const,
   impl: [
-    "src/domains/matching",
-    "src/lib/search/learning",
-    "src/lib/ai/provider",
-    "src/lib/ai/matching/score.ts",
+    "src/domains/matching (public API)",
+    "src/lib/matching-engine (runtime when SMART_MATCHING_ENGINE)",
+    "src/lib/ai/matching/score.ts (legacy path when flag off)",
   ],
-  future: ["travel ETA", "dialect-aware job routing"],
+  responsibilities: ["facade", "featureFlags", "mlRouting", "telemetry"] as const,
+  future: ["travel ETA", "dialect-aware job routing", "external ML ranker"],
 };

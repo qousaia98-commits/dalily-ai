@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 7 Phase 2 — Ratings, Reviews & AI Reputation invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ Reviews & AI Reputation invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727080000_sprint7_reviews_reputation.sql",
+  "supabase/migrations/archive/20260727080000_sprint7_reviews_reputation.sql",
   "src/lib/reviews/eligibility.ts",
   "src/lib/reviews/dimensions.ts",
   "src/lib/reviews/ai-analysis.ts",
@@ -41,7 +42,7 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
-const mig = read("supabase/migrations/20260727080000_sprint7_reviews_reputation.sql");
+const mig = read("supabase/migrations/archive/20260727080000_sprint7_reviews_reputation.sql");
 for (const t of [
   "provider_reviews",
   "review_ratings",
@@ -85,7 +86,7 @@ for (const fn of [
   else fail(`missing ${fn}`);
 }
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isReviewsReputationV2Enabled")) ok("feature flag");
 else fail("missing isReviewsReputationV2Enabled");
 

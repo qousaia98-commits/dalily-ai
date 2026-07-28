@@ -99,7 +99,7 @@ if (
   fail("PaymentProvider interface methods missing");
 }
 
-if (exists("supabase/migrations/20260727030000_sprint6_stripe_integration.sql")) {
+if (exists("supabase/migrations/archive/20260727030000_sprint6_stripe_integration.sql")) {
   ok("Stripe migration present");
 } else {
   fail("Stripe migration missing");

@@ -6,7 +6,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isAdminMigrationV2Enabled } from "@/lib/config/feature-flags";
 import { getCellPolicy, buildCellKey } from "@/domains/admin/cell-policies";
-import type { MatchReason } from "@/domains/matching/reasons";
+import type { MatchReason } from "@/domains/matching";
 import type { UnlockSessionView } from "@/domains/unlock/types";
 
 export type MarketplaceInspection = {

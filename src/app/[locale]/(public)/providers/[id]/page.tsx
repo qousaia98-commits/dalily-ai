@@ -13,7 +13,7 @@ import {
   parseReviewSort,
 } from "@/lib/reviews/queries";
 import { resolveTrustBadges } from "@/lib/reviews/trust-score";
-import { fetchCompletedJobsByProviderIds } from "@/lib/search/smart-match";
+import { fetchCompletedJobsByProviderIds } from "@/domains/matching";
 import { createClient } from "@/lib/supabase/server";
 
 type ProviderPageProps = {

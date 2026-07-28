@@ -1,11 +1,16 @@
 /**
- * OpenAI Vision service — returns structured JSON only (parsed + validated).
+ * Vision Engine — OpenAI Vision service (search / problem photo path).
+ * Returns structured JSON only (parsed + validated).
  * Images are ephemeral: base64 in the request body, never written to disk/Storage.
+ *
+ * HTTP transport: shared provider client (@/lib/ai/providers).
+ * Prompts and parsing stay owned by this engine — do not change for architecture moves.
  */
 
 import { VISION_REQUEST_TIMEOUT_MS } from "@/lib/vision/constants";
 import { parseVisionAnalysis } from "@/lib/vision/parser";
 import type { VisionAnalysisPayload } from "@/lib/vision/types";
+import { openaiChatCompletion } from "@/lib/ai/providers";
 
 function buildSystemPrompt(): string {
   return [
@@ -50,73 +55,41 @@ export type AnalyzeVisionImageResult =
 export async function analyzeVisionImage(
   input: AnalyzeVisionImageInput,
 ): Promise<AnalyzeVisionImageResult> {
-  const apiKey = process.env.SEARCH_LLM_API_KEY ?? process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return { success: false, error: "no_api_key" };
-  }
-
-  const apiUrl =
-    process.env.SEARCH_LLM_API_URL ?? "https://api.openai.com/v1/chat/completions";
-  const model = process.env.VISION_LLM_MODEL ?? process.env.SEARCH_LLM_MODEL ?? "gpt-4o-mini";
-
   const base64 = Buffer.from(input.bytes).toString("base64");
   const dataUrl = `data:${input.mimeType};base64,${base64}`;
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), VISION_REQUEST_TIMEOUT_MS);
-
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model,
-        temperature: 0,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: buildSystemPrompt() },
+  const completion = await openaiChatCompletion({
+    timeoutMs: VISION_REQUEST_TIMEOUT_MS,
+    temperature: 0,
+    responseFormat: { type: "json_object" },
+    logPrefix: "[vision]",
+    messages: [
+      { role: "system", content: buildSystemPrompt() },
+      {
+        role: "user",
+        content: [
           {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: "Analyze this photo for a local service problem and return the JSON object.",
-              },
-              {
-                type: "image_url",
-                image_url: { url: dataUrl, detail: "low" },
-              },
-            ],
+            type: "text",
+            text: "Analyze this photo for a local service problem and return the JSON object.",
+          },
+          {
+            type: "image_url",
+            image_url: { url: dataUrl, detail: "low" },
           },
         ],
-      }),
-      signal: controller.signal,
-    });
+      },
+    ],
+  });
 
-    if (!response.ok) {
-      const body = await response.text().catch(() => "");
-      console.error(`[vision] OpenAI failed (${response.status}):`, body.slice(0, 400));
-      return { success: false, error: "request_failed" };
-    }
-
-    const payload = (await response.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-    const content = payload.choices?.[0]?.message?.content;
-    const analysis = parseVisionAnalysis(content ?? "");
-    if (!analysis) {
-      console.error("[vision] failed to parse structured JSON from model");
-      return { success: false, error: "invalid_response" };
-    }
-
-    return { success: true, analysis };
-  } catch (error) {
-    console.error("[vision] analyzeVisionImage threw:", error);
-    return { success: false, error: "request_failed" };
-  } finally {
-    clearTimeout(timeout);
+  if (!completion.ok) {
+    return { success: false, error: completion.error };
   }
+
+  const analysis = parseVisionAnalysis(completion.content);
+  if (!analysis) {
+    console.error("[vision] failed to parse structured JSON from model");
+    return { success: false, error: "invalid_response" };
+  }
+
+  return { success: true, analysis };
 }

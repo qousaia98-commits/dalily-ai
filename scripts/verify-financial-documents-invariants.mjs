@@ -23,7 +23,7 @@ function read(rel) {
 console.log("══ Financial documents invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727040000_sprint6_financial_documents.sql",
+  "supabase/migrations/archive/20260727040000_sprint6_financial_documents.sql",
   "src/lib/financial-documents/generate.ts",
   "src/lib/financial-documents/pdf.ts",
   "src/lib/financial-documents/numbering.ts",
@@ -36,7 +36,7 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
-const mig = read("supabase/migrations/20260727040000_sprint6_financial_documents.sql");
+const mig = read("supabase/migrations/archive/20260727040000_sprint6_financial_documents.sql");
 for (const t of [
   "financial_documents",
   "invoice_metadata",

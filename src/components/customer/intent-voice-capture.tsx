@@ -13,7 +13,7 @@ import {
   VoiceRecorder,
   VoiceRecorderError,
   MAX_RECORDING_MS,
-} from "@/lib/voice/recorder";
+} from "@/domains/speech/client";
 import {
   analyzeIntentVoiceAction,
   confirmIntentVoiceAction,

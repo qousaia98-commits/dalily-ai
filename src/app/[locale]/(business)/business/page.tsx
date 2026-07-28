@@ -30,7 +30,7 @@ import { VerificationDashboardAlert } from "@/components/business/verification-d
 import { OnboardingDashboardCard } from "@/components/business/onboarding/onboarding-dashboard-card";
 import { ProviderDashboardHomeView } from "@/components/business/provider-dashboard-home";
 import { getProviderDashboardHome } from "@/domains/provider/dashboard";
-import { isProviderDashboardV2Enabled, isAiEngineV7Enabled, isAiEngineV8Enabled, isAiEngineV9Enabled } from "@/lib/config/feature-flags";
+import { isProviderDashboardV2Enabled, isAiEngineV7Enabled, isPredictiveEngineEnabled, isAiEngineV9Enabled } from "@/lib/config/feature-flags";
 import { buildPersonalizedGreeting } from "@/lib/greetings";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -131,16 +131,13 @@ export default async function BusinessDashboardPage() {
         ],
       });
 
-      if (isAiEngineV8Enabled()) {
-        const [
-          { forecastDemand },
-          { forecastProviderAvailability },
-          { buildProviderPredictiveNotifications, persistPredictiveNotifications },
-        ] = await Promise.all([
-          import("@/lib/ai/predictive/demand"),
-          import("@/lib/ai/predictive/availability"),
-          import("@/lib/ai/predictive/notifications"),
-        ]);
+      if (isPredictiveEngineEnabled()) {
+        const {
+          forecastDemand,
+          forecastProviderAvailability,
+          buildProviderPredictiveNotifications,
+          persistPredictiveNotifications,
+        } = await import("@/domains/forecast");
         const [demand, availability] = await Promise.all([
           forecastDemand({ horizonDays: 3 }),
           forecastProviderAvailability({
@@ -170,7 +167,7 @@ export default async function BusinessDashboardPage() {
           await Promise.all([
             import("@/lib/booking/booking-service"),
             import("@/domains/offer/queries"),
-            import("@/lib/ai/predictive/availability"),
+            import("@/domains/forecast"),
           ]);
         const [bookings, opportunities, availability] = await Promise.all([
           listProviderBookings(provider.id),

@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import type { VoiceProviderPreview } from "@/lib/ai/voice/types";
+import type { VoiceProviderPreview } from "@/domains/speech/client";
 
 /**
  * Provider-facing voice request preview (original audio + transcript + AI summary).

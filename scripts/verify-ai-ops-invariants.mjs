@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 7 Phase 6 — AI Operations & Platform Health invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ AI Ops / Platform Health invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727120000_sprint7_ai_ops_platform_health.sql",
+  "supabase/migrations/archive/20260727120000_sprint7_ai_ops_platform_health.sql",
   "src/lib/ai-ops/types.ts",
   "src/lib/ai-ops/collect.ts",
   "src/lib/ai-ops/health.ts",
@@ -44,7 +45,7 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
-const mig = read("supabase/migrations/20260727120000_sprint7_ai_ops_platform_health.sql");
+const mig = read("supabase/migrations/archive/20260727120000_sprint7_ai_ops_platform_health.sql");
 for (const t of [
   "platform_health_metrics",
   "platform_anomalies",
@@ -60,7 +61,7 @@ for (const t of [
 if (mig.toLowerCase().includes("enable row level security")) ok("RLS present");
 else fail("RLS missing");
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isAiOpsEnabled")) ok("feature flag");
 else fail("missing isAiOpsEnabled");
 

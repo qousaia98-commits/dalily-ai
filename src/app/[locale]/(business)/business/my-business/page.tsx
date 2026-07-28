@@ -1,4 +1,4 @@
-import { isQualityCasesEnabled, isAiDynamicPricingEnabled, isAiDemandForecastingEnabled, isAiSchedulingEnabled, isAiBusinessAssistantEnabled } from "@/lib/config/feature-flags";
+import { isQualityCasesEnabled, isAiDynamicPricingEnabled, isForecastEngineEnabled, isAiSchedulingEnabled, isAiBusinessAssistantEnabled } from "@/lib/config/feature-flags";
 import { getTranslations } from "next-intl/server";
 import { MobileHubLinks } from "@/components/layout/mobile-hub-links";
 import {
@@ -68,7 +68,7 @@ export default async function MyBusinessPage() {
           },
         ]
       : []),
-    ...(isAiDemandForecastingEnabled()
+    ...(isForecastEngineEnabled()
       ? [
           {
             href: "/business/forecast",

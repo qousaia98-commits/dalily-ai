@@ -10,7 +10,7 @@ import { trackBookingAnalytics } from "@/lib/booking/analytics";
 import { updateBookingStatus, getBookingById } from "@/lib/booking/booking-service";
 import type { Booking, BookingIssueReason } from "@/lib/booking/types";
 import { BOOKING_ISSUE_REASONS } from "@/lib/booking/types";
-import { setConversationFlags } from "@/lib/chat/conversation-service";
+import { setConversationFlags } from "@/domains/chat";
 
 async function notifyInApp(input: {
   userId: string;

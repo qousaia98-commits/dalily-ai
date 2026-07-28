@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireAdminUser, requireAuthUser } from "@/lib/auth/session";
 import { isAdminUser } from "@/lib/auth/roles";
-import { isAiDemandForecastingEnabled } from "@/lib/config/feature-flags";
+import { isForecastEngineEnabled } from "@/lib/config/feature-flags";
 import {
   getForecastHistoryReplay,
   getCustomerDemandHint,
@@ -12,8 +12,8 @@ import {
   simulateForecast,
   updateForecastWeight,
   acceptForecastInsight,
-} from "@/lib/forecast-engine";
-import type { ForecastHorizon } from "@/lib/forecast-engine/types";
+  type ForecastHorizon,
+} from "@/domains/forecast";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getOwnedProvider } from "@/lib/providers/database";
 
@@ -51,7 +51,7 @@ export async function updateForecastWeightAction(input: {
   weight: number;
   enabled?: boolean;
 }): Promise<ForecastActionState> {
-  if (!isAiDemandForecastingEnabled()) return disabled();
+  if (!isForecastEngineEnabled()) return disabled();
   await requireForecastAdmin();
   const ok = await updateForecastWeight(input);
   if (!ok) return { success: false, error: "update_failed" };
@@ -64,7 +64,7 @@ export async function simulateForecastAction(input: {
   regionKey?: string;
   horizon?: ForecastHorizon;
 }): Promise<ForecastActionState> {
-  if (!isAiDemandForecastingEnabled()) return disabled();
+  if (!isForecastEngineEnabled()) return disabled();
   await requireForecastAdmin();
   if (!input.categoryKey.trim()) {
     return { success: false, error: "validation_error" };
@@ -101,7 +101,7 @@ export async function setForecastExperimentAction(input: {
   active: boolean;
   trafficBPct: number;
 }): Promise<ForecastActionState> {
-  if (!isAiDemandForecastingEnabled()) return disabled();
+  if (!isForecastEngineEnabled()) return disabled();
   await requireForecastAdmin();
   try {
     const admin = createAdminClient();
@@ -121,7 +121,7 @@ export async function setForecastExperimentAction(input: {
 }
 
 export async function refreshForecastMarketAction(): Promise<ForecastActionState> {
-  if (!isAiDemandForecastingEnabled()) return disabled();
+  if (!isForecastEngineEnabled()) return disabled();
   await requireForecastAdmin();
   await refreshForecastMarketSnapshot({
     categoryKey: "general",
@@ -134,7 +134,7 @@ export async function refreshForecastMarketAction(): Promise<ForecastActionState
 export async function replayForecastHistoryAction(input: {
   historyId: string;
 }): Promise<ForecastActionState> {
-  if (!isAiDemandForecastingEnabled()) return disabled();
+  if (!isForecastEngineEnabled()) return disabled();
   await requireForecastAdmin();
   const replay = await getForecastHistoryReplay(input.historyId);
   if (!replay) return { success: false, error: "not_found" };
@@ -148,7 +148,7 @@ export async function evaluateForecastAccuracyAction(input: {
   actualDemand: number;
   modelKey?: string;
 }): Promise<ForecastActionState> {
-  if (!isAiDemandForecastingEnabled()) return disabled();
+  if (!isForecastEngineEnabled()) return disabled();
   await requireForecastAdmin();
   await recordForecastAccuracy(input);
   revalidatePath("/admin/forecast", "layout");
@@ -158,7 +158,7 @@ export async function evaluateForecastAccuracyAction(input: {
 export async function acceptProviderForecastAction(input: {
   horizon: ForecastHorizon;
 }): Promise<ForecastActionState> {
-  if (!isAiDemandForecastingEnabled()) return disabled();
+  if (!isForecastEngineEnabled()) return disabled();
   const user = await requireAuthUser();
   const provider = await getOwnedProvider(user.id);
   if (!provider) return { success: false, error: "no_provider" };
@@ -172,7 +172,7 @@ export async function acceptProviderForecastAction(input: {
 export async function getCustomerDemandHintAction(input?: {
   categoryKey?: string;
 }): Promise<ForecastActionState> {
-  if (!isAiDemandForecastingEnabled()) return disabled();
+  if (!isForecastEngineEnabled()) return disabled();
   await requireAuthUser();
   const hint = await getCustomerDemandHint({
     categoryKey: input?.categoryKey ?? "general",

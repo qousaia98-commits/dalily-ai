@@ -5,14 +5,12 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const violations = [];
 
-const flags = readFileSync(
-  path.join(root, "src", "lib", "config", "feature-flags.ts"),
-  "utf8",
-);
+const flags = readFeatureFlagsSource();
 if (!flags.includes("ADMIN_MIGRATION_V2") || !flags.includes("isAdminMigrationV2Enabled")) {
   violations.push("ADMIN_MIGRATION_V2 flag missing");
 }
@@ -59,11 +57,11 @@ if (!subActions.includes("subscription_writes_frozen")) {
   violations.push("subscription admin writes must freeze when ADMIN_MIGRATION_V2");
 }
 
-const migrations = readdirSync(path.join(root, "supabase", "migrations"));
+const migrations = readdirSync(path.join(root, "supabase", "migrations", "archive"));
 const sprint9 = migrations.find((f) => f.includes("sprint9_admin_migration"));
 if (!sprint9) violations.push("missing sprint9 admin migration");
 else {
-  const sql = readFileSync(path.join(root, "supabase", "migrations", sprint9), "utf8");
+  const sql = readFileSync(path.join(root, "supabase", "migrations", "archive", sprint9), "utf8");
   if (!sql.includes("cell_policies") || !sql.includes("frozen")) {
     violations.push("migration must create cell_policies");
   }

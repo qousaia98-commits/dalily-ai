@@ -4,36 +4,10 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DEFAULT_MATCHING_WEIGHTS } from "@/lib/matching-engine/weights";
-import type { MatchWeight } from "@/lib/matching-engine/types";
 import { MATCHING_MODEL_VERSION } from "@/lib/matching-engine/types";
+import type { AdminMatchingDashboard } from "@/domains/matching/view-types";
 
-export type AdminMatchingDashboard = {
-  weights: MatchWeight[];
-  recentHistory: Array<{
-    id: string;
-    requestId: string | null;
-    algorithmVersion: string;
-    latencyMs: number | null;
-    providerCount: number;
-    createdAt: string;
-  }>;
-  feedbackStats: {
-    total: number;
-    accepted: number;
-    completed: number;
-    complaints: number;
-    repeats: number;
-  };
-  avgLatencyMs: number | null;
-  experiment: {
-    key: string;
-    active: boolean;
-    algorithmA: string;
-    algorithmB: string;
-    trafficBPct: number;
-  } | null;
-  modelVersion: string;
-};
+export type { AdminMatchingDashboard } from "@/domains/matching/view-types";
 
 export async function getAdminMatchingDashboard(): Promise<AdminMatchingDashboard> {
   const admin = createAdminClient();

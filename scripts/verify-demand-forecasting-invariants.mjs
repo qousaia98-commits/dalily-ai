@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 8 Phase 3 — AI Demand Forecasting invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ Demand Forecasting invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727150000_sprint8_ai_demand_forecasting.sql",
+  "supabase/migrations/archive/20260727150000_sprint8_ai_demand_forecasting.sql",
   "src/lib/forecast-engine/types.ts",
   "src/lib/forecast-engine/signals.ts",
   "src/lib/forecast-engine/weights.ts",
@@ -51,7 +52,7 @@ for (const r of required) {
 }
 
 const mig = read(
-  "supabase/migrations/20260727150000_sprint8_ai_demand_forecasting.sql",
+  "supabase/migrations/archive/20260727150000_sprint8_ai_demand_forecasting.sql",
 );
 for (const t of [
   "forecast_models",
@@ -65,9 +66,10 @@ for (const t of [
   else fail(`schema missing ${t}`);
 }
 
-const flags = read("src/lib/config/feature-flags.ts");
-if (flags.includes("isAiDemandForecastingEnabled")) ok("feature flag");
-else fail("missing isAiDemandForecastingEnabled");
+const flags = readFeatureFlagsSource();
+if (flags.includes("isForecastEngineEnabled") || flags.includes("isAiDemandForecastingEnabled"))
+  ok("feature flag");
+else fail("missing forecast feature flag");
 
 const signals = read("src/lib/forecast-engine/signals.ts");
 for (const s of [
@@ -117,7 +119,8 @@ if (
   ok("public forecast API (advisory)");
 } else fail("public API incomplete");
 
-if (svc.includes("isAiDemandForecastingEnabled")) ok("flag-gated service");
+if (svc.includes("isForecastEngineEnabled") || svc.includes("isAiDemandForecastingEnabled"))
+  ok("flag-gated service");
 else fail("service gating incomplete");
 
 const bridge = read("src/lib/ai/forecasting/index.ts");

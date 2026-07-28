@@ -12,8 +12,8 @@ import {
   prepareVisionImage,
   revokeVisionPreview,
   type VisionLocalImage,
-} from "@/lib/vision/client-upload";
-import type { VisionPipelineDecision } from "@/lib/vision/types";
+  type VisionPipelineDecision,
+} from "@/domains/vision/client";
 import type { ProblemId } from "@/lib/search/engine/types";
 import { cn } from "@/lib/utils";
 

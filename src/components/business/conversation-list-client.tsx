@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/routing";
 import type { BusinessConversation } from "@/lib/business/conversations";
 import { filterConversations } from "@/lib/business/conversations";
-import { formatConversationListTime } from "@/lib/messaging/format-conversation-time";
+import { formatConversationListTime } from "@/domains/chat/client";
 import { useMarketplaceRealtime } from "@/hooks/use-marketplace-realtime";
 import { OfficialDalilyAvatar } from "@/components/messaging/official-dalily-avatar";
 import { VerifiedBadge } from "@/components/messaging/verified-badge";

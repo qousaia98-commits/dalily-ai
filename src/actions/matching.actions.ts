@@ -7,7 +7,7 @@ import { isSmartMatchingEngineEnabled } from "@/lib/config/feature-flags";
 import {
   simulateMatching,
   updateMatchingWeight,
-} from "@/lib/matching-engine/service";
+} from "@/domains/matching";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export type MatchingActionState = {

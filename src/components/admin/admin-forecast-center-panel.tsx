@@ -11,8 +11,7 @@ import {
   simulateForecastAction,
   updateForecastWeightAction,
 } from "@/actions/forecast.actions";
-import type { AdminForecastDashboard } from "@/lib/forecast-engine/admin";
-import type { ForecastHorizon } from "@/lib/forecast-engine/types";
+import type { AdminForecastDashboard, ForecastHorizon } from "@/domains/forecast/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatDateTime } from "@/lib/format/datetime";

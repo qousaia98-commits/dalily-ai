@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 7 Phase 4 — Quality Assurance & Case Management invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ Quality Cases invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727100000_sprint7_quality_cases.sql",
+  "supabase/migrations/archive/20260727100000_sprint7_quality_cases.sql",
   "src/lib/quality/types.ts",
   "src/lib/quality/service.ts",
   "src/lib/quality/ai-analysis.ts",
@@ -47,7 +48,7 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
-const mig = read("supabase/migrations/20260727100000_sprint7_quality_cases.sql");
+const mig = read("supabase/migrations/archive/20260727100000_sprint7_quality_cases.sql");
 for (const t of [
   "quality_cases",
   "quality_case_messages",
@@ -117,7 +118,7 @@ for (const k of ["sentiment", "severity", "urgency", "riskLevel", "suggestedCate
   else fail(`AI missing ${k}`);
 }
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isQualityCasesEnabled")) ok("feature flag");
 else fail("missing isQualityCasesEnabled");
 

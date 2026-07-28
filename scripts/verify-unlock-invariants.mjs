@@ -5,6 +5,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const unlockDir = path.join(root, "src", "domains", "unlock");
@@ -69,10 +70,7 @@ if (!port.includes("payment_integration_pending")) {
   violations.push("payment port must fail closed until Sprint 6");
 }
 
-const flags = readFileSync(
-  path.join(root, "src", "lib", "config", "feature-flags.ts"),
-  "utf8",
-);
+const flags = readFeatureFlagsSource();
 if (!flags.includes("UNLOCK_V2") || !flags.includes("isUnlockV2Enabled")) {
   violations.push("UNLOCK_V2 flag missing");
 }
@@ -84,6 +82,7 @@ const migration = path.join(
   root,
   "supabase",
   "migrations",
+  "archive",
   "20260725210000_sprint5_unlock_service.sql",
 );
 if (!existsSync(migration)) {

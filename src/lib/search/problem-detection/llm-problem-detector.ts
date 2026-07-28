@@ -1,3 +1,4 @@
+import { fetchWithTimeout, jsonContentHeaders } from "@/lib/api";
 import { normalizeSearchText } from "@/lib/search/engine/normalize";
 import { categoryForProblem, priorityForProblem } from "@/lib/search/engine/problem-catalog";
 import type { DetectedProblem, ParsedUserQuery, ProblemId } from "@/lib/search/engine/types";
@@ -76,30 +77,24 @@ export class LlmProblemDetector implements ProblemDetector {
       process.env.SEARCH_LLM_API_URL ?? "https://api.openai.com/v1/chat/completions";
     const model = process.env.SEARCH_LLM_MODEL ?? "gpt-4o-mini";
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    const result = await fetchWithTimeout(apiUrl, {
+      method: "POST",
+      timeoutMs: REQUEST_TIMEOUT_MS,
+      headers: jsonContentHeaders(apiKey),
+      body: JSON.stringify({
+        model,
+        temperature: 0,
+        messages: [
+          { role: "system", content: buildSystemPrompt() },
+          { role: "user", content: text },
+        ],
+      }),
+    });
+
+    if (!result.ok) return null;
 
     try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model,
-          temperature: 0,
-          messages: [
-            { role: "system", content: buildSystemPrompt() },
-            { role: "user", content: text },
-          ],
-        }),
-        signal: controller.signal,
-      });
-
-      if (!response.ok) return null;
-
-      const payload = (await response.json()) as {
+      const payload = (await result.response.json()) as {
         choices?: Array<{ message?: { content?: string } }>;
       };
       const problemId = parseModelReply(payload.choices?.[0]?.message?.content);
@@ -113,8 +108,6 @@ export class LlmProblemDetector implements ProblemDetector {
       };
     } catch {
       return null;
-    } finally {
-      clearTimeout(timeout);
     }
   }
 }

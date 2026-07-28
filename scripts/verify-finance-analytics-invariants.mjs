@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 6 Phase 6 — finance analytics invariants (static checks).
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ Finance analytics invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727060000_sprint6_finance_analytics.sql",
+  "supabase/migrations/archive/20260727060000_sprint6_finance_analytics.sql",
   "src/lib/finance-analytics/snapshot.ts",
   "src/lib/finance-analytics/types.ts",
   "src/actions/finance-analytics.actions.ts",
@@ -37,7 +38,7 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
-const mig = read("supabase/migrations/20260727060000_sprint6_finance_analytics.sql");
+const mig = read("supabase/migrations/archive/20260727060000_sprint6_finance_analytics.sql");
 for (const t of [
   "finance_paid_payments_v",
   "finance_daily_revenue_v",
@@ -58,7 +59,7 @@ for (const k of ["mrr", "arr", "arpp", "conversionRate", "churnRate", "financeRe
   else fail(`snapshot missing ${k}`);
 }
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isFinanceDashboardEnabled")) ok("feature flag");
 else fail("missing isFinanceDashboardEnabled");
 

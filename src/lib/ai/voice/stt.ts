@@ -1,10 +1,10 @@
 /**
- * Speech-to-text via OpenAI Whisper (verbose_json for language).
+ * Speech Engine STT — Whisper via shared provider client.
  */
 
-import {
-  VOICE_STT_TIMEOUT_MS,
-} from "./validate";
+import { VOICE_STT_TIMEOUT_MS } from "./validate";
+import { openaiAudioTranscription } from "@/lib/ai/providers";
+import { resolveWhisperModel } from "@/lib/ai/providers/openai-env";
 
 export type SpeechToTextResult =
   | {
@@ -21,62 +21,31 @@ export async function speechToText(input: {
   bytes: ArrayBuffer;
   mimeType: string;
   fileName?: string;
+  /** Override timeout (search voice action uses 15s; default engine uses 20s). */
+  timeoutMs?: number;
+  /** Override model (search voice hardcodes whisper-1). */
+  model?: string;
+  logPrefix?: string;
 }): Promise<SpeechToTextResult> {
-  const apiKey = process.env.SEARCH_LLM_API_KEY ?? process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return { success: false, error: "no_api_key" };
+  const blob = new Blob([input.bytes], { type: input.mimeType });
+  const result = await openaiAudioTranscription({
+    file: blob,
+    fileName: input.fileName || guessFileName(input.mimeType),
+    timeoutMs: input.timeoutMs ?? VOICE_STT_TIMEOUT_MS,
+    model: input.model ?? resolveWhisperModel("whisper-1"),
+    responseFormat: "verbose_json",
+    logPrefix: input.logPrefix ?? "[ai.voice.stt]",
+  });
+
+  if (!result.ok) {
+    return { success: false, error: result.error };
   }
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), VOICE_STT_TIMEOUT_MS);
-
-  try {
-    const blob = new Blob([input.bytes], { type: input.mimeType });
-    const openaiForm = new FormData();
-    openaiForm.set(
-      "file",
-      blob,
-      input.fileName || guessFileName(input.mimeType),
-    );
-    openaiForm.set("model", process.env.VOICE_STT_MODEL ?? "whisper-1");
-    openaiForm.set("response_format", "verbose_json");
-
-    const response = await fetch(
-      "https://api.openai.com/v1/audio/transcriptions",
-      {
-        method: "POST",
-        headers: { Authorization: `Bearer ${apiKey}` },
-        body: openaiForm,
-        signal: controller.signal,
-      },
-    );
-
-    if (!response.ok) {
-      const body = await response.text().catch(() => "");
-      console.error(`[ai.voice.stt] Whisper failed (${response.status}):`, body.slice(0, 400));
-      return { success: false, error: "request_failed" };
-    }
-
-    const payload = (await response.json()) as {
-      text?: string;
-      language?: string;
-    };
-    const text = payload.text?.trim();
-    if (!text) {
-      return { success: false, error: "empty_transcript" };
-    }
-
-    return {
-      success: true,
-      text,
-      language: payload.language ?? null,
-    };
-  } catch (error) {
-    console.error("[ai.voice.stt] threw:", error);
-    return { success: false, error: "request_failed" };
-  } finally {
-    clearTimeout(timeout);
-  }
+  return {
+    success: true,
+    text: result.text,
+    language: result.language,
+  };
 }
 
 function guessFileName(mime: string): string {

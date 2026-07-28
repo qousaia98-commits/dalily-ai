@@ -3,6 +3,7 @@
  */
 
 import { VISION_REQUEST_TIMEOUT_MS } from "@/lib/vision/constants";
+import { openaiChatCompletion } from "@/lib/ai/providers";
 import { filterHighConfidenceDamages, riskFromDamages } from "./damage";
 import { filterHighConfidenceObjects } from "./objects";
 import type {
@@ -211,72 +212,40 @@ export async function analyzeIntentVisionImage(input: {
   mimeType: string;
   intentText?: string;
 }): Promise<AnalyzeIntentVisionResult> {
-  const apiKey = process.env.SEARCH_LLM_API_KEY ?? process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return { success: false, error: "no_api_key" };
-  }
-
-  const apiUrl =
-    process.env.SEARCH_LLM_API_URL ?? "https://api.openai.com/v1/chat/completions";
-  const model = process.env.VISION_LLM_MODEL ?? process.env.SEARCH_LLM_MODEL ?? "gpt-4o-mini";
-
   const base64 = Buffer.from(input.bytes).toString("base64");
   const dataUrl = `data:${input.mimeType};base64,${base64}`;
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), VISION_REQUEST_TIMEOUT_MS);
 
   const userText = input.intentText?.trim()
     ? `Customer description (for context only — trust the photo for visible facts):\n"${input.intentText.trim()}"\n\nAnalyze the photo and return the JSON object.`
     : "Analyze this photo for a local service problem and return the JSON object.";
 
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model,
-        temperature: 0,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: buildPhase5SystemPrompt() },
+  const completion = await openaiChatCompletion({
+    timeoutMs: VISION_REQUEST_TIMEOUT_MS,
+    temperature: 0,
+    responseFormat: { type: "json_object" },
+    logPrefix: "[ai.vision]",
+    messages: [
+      { role: "system", content: buildPhase5SystemPrompt() },
+      {
+        role: "user",
+        content: [
+          { type: "text", text: userText },
           {
-            role: "user",
-            content: [
-              { type: "text", text: userText },
-              {
-                type: "image_url",
-                image_url: { url: dataUrl, detail: "low" },
-              },
-            ],
+            type: "image_url",
+            image_url: { url: dataUrl, detail: "low" },
           },
         ],
-      }),
-      signal: controller.signal,
-    });
+      },
+    ],
+  });
 
-    if (!response.ok) {
-      const body = await response.text().catch(() => "");
-      console.error(`[ai.vision] OpenAI failed (${response.status}):`, body.slice(0, 400));
-      return { success: false, error: "request_failed" };
-    }
-
-    const payload = (await response.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-    const content = payload.choices?.[0]?.message?.content;
-    const analysis = parseIntentVisionAnalysis(content ?? "");
-    if (!analysis) {
-      return { success: false, error: "invalid_response" };
-    }
-    return { success: true, analysis };
-  } catch (error) {
-    console.error("[ai.vision] analyzeIntentVisionImage threw:", error);
-    return { success: false, error: "request_failed" };
-  } finally {
-    clearTimeout(timeout);
+  if (!completion.ok) {
+    return { success: false, error: completion.error };
   }
+
+  const analysis = parseIntentVisionAnalysis(completion.content);
+  if (!analysis) {
+    return { success: false, error: "invalid_response" };
+  }
+  return { success: true, analysis };
 }

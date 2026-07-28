@@ -1,21 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import type { MatchReason } from "@/domains/matching/reasons";
+import type {
+  MatchAssignmentView,
+  MatchPoolSummary,
+} from "@/domains/matching/view-types";
 
-export type MatchPoolSummary = {
-  poolId: string;
-  status: string;
-  assignedCount: number;
-  expandCount: number;
-  initialCandidateCount: number;
-};
-
-export type MatchAssignmentView = {
-  providerId: string;
-  rank: number;
-  source: string;
-  reasons: MatchReason[];
-  assignedAt: string;
-};
+export type { MatchPoolSummary, MatchAssignmentView } from "@/domains/matching/view-types";
 
 export async function getMatchPoolSummaryForRequest(
   requestId: string,

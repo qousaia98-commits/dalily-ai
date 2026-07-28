@@ -8,7 +8,7 @@ import {
 } from "@/lib/config/feature-flags";
 import { getAuthUser } from "@/lib/auth/session";
 import { getRequestDetail } from "@/lib/service-requests/queries";
-import { getMatchPoolSummaryForRequest } from "@/domains/matching/queries";
+import { getMatchPoolSummaryForRequest } from "@/domains/matching";
 import {
   listOffersForRequest,
   getActiveSelectionForRequest,
@@ -23,12 +23,12 @@ import { WaitingRoom } from "@/components/customer/waiting-room";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
 import {
   isAiEngineV7Enabled,
-  isAiEngineV8Enabled,
+  isPredictiveEngineEnabled,
   isAiEngineV9Enabled,
   isEmergencyDispatchEnabled,
   isMultiServiceProjectsEnabled,
 } from "@/lib/config/feature-flags";
-import type { WaitTimeEstimate, PredictiveNotification } from "@/lib/ai/predictive/types";
+import type { WaitTimeEstimate, PredictiveNotification } from "@/domains/forecast";
 import type { AutomationSuggestion } from "@/lib/ai/automation/types";
 import { EmergencyStatusPanel } from "@/components/customer/emergency-status";
 import type { EmergencyDispatchView } from "@/lib/ai/dispatch/emergency";
@@ -134,7 +134,7 @@ export default async function RequestWaitingPage({
     });
   }
 
-  if (isAiEngineV8Enabled()) {
+  if (isPredictiveEngineEnabled()) {
     const catSlug =
       assistant?.context.confirmedFacts.categorySlug ??
       null;
@@ -150,17 +150,13 @@ export default async function RequestWaitingPage({
     }
     resolvedSlug = resolvedSlug || "electrical";
 
-    const [
-      { estimateWaitTime },
-      { forecastDemand },
-      { detectMarketplaceBalances },
-      { buildCustomerPredictiveNotifications, persistPredictiveNotifications },
-    ] = await Promise.all([
-      import("@/lib/ai/predictive/wait-time"),
-      import("@/lib/ai/predictive/demand"),
-      import("@/lib/ai/predictive/balancer"),
-      import("@/lib/ai/predictive/notifications"),
-    ]);
+    const {
+      estimateWaitTime,
+      forecastDemand,
+      detectMarketplaceBalances,
+      buildCustomerPredictiveNotifications,
+      persistPredictiveNotifications,
+    } = await import("@/domains/forecast");
 
     waitEstimate = await estimateWaitTime({
       categorySlug: resolvedSlug,

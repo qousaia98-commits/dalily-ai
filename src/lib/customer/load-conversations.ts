@@ -1,13 +1,12 @@
 import { cache } from "react";
 import { cookies } from "next/headers";
-import { loadConversationsForCustomer } from "@/lib/messaging/queries";
+import { loadConversationsForCustomer, listDalilyInboxMessages } from "@/domains/chat";
 import { MSG_READ_COOKIE, parseMsgReadCookie } from "@/lib/business/message-read-state";
 import {
   applyConversationReadState,
   buildBusinessConversations,
   compareConversationsByLatestMessage,
 } from "@/lib/business/conversations";
-import { listDalilyInboxMessages } from "@/lib/dalily-messages/inbox";
 
 export const loadCustomerConversations = cache(async function loadCustomerConversations(
   userId: string | null,

@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 7 Phase 5 — Fraud Detection invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ Fraud Detection invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727110000_sprint7_fraud_detection.sql",
+  "supabase/migrations/archive/20260727110000_sprint7_fraud_detection.sql",
   "src/lib/fraud/types.ts",
   "src/lib/fraud/engine.ts",
   "src/lib/fraud/signals.ts",
@@ -45,7 +46,7 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
-const mig = read("supabase/migrations/20260727110000_sprint7_fraud_detection.sql");
+const mig = read("supabase/migrations/archive/20260727110000_sprint7_fraud_detection.sql");
 for (const t of [
   "fraud_events",
   "risk_scores",
@@ -88,7 +89,7 @@ for (const k of [
   else fail(`missing signal ${k}`);
 }
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isFraudDetectionEnabled")) ok("feature flag");
 else fail("missing isFraudDetectionEnabled");
 

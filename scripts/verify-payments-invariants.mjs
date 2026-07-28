@@ -5,6 +5,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const paymentDir = path.join(root, "src", "domains", "payment");
@@ -30,10 +31,7 @@ const session = readFileSync(
   path.join(root, "src", "domains", "unlock", "session.ts"),
   "utf8",
 );
-const flags = readFileSync(
-  path.join(root, "src", "lib", "config", "feature-flags.ts"),
-  "utf8",
-);
+const flags = readFeatureFlagsSource();
 const adminActions = readFileSync(
   path.join(root, "src", "actions", "admin-payment.actions.ts"),
   "utf8",
@@ -66,6 +64,7 @@ const migration = path.join(
   root,
   "supabase",
   "migrations",
+  "archive",
   "20260725220000_sprint6_unlock_payments.sql",
 );
 if (!existsSync(migration)) {

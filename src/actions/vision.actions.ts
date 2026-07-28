@@ -6,14 +6,14 @@
  * then discarded. Never written to Supabase Storage or disk.
  */
 
-import { analyzeVisionImage } from "@/lib/vision/service";
-import { buildVisionPipelineDecision } from "@/lib/vision/summary";
-import { trackVisionAnalytics } from "@/lib/vision/analytics";
+import { analyzeVisionImage } from "@/domains/vision";
+import { buildVisionPipelineDecision } from "@/domains/vision";
+import { trackVisionAnalytics } from "@/domains/vision";
 import {
   VISION_ALLOWED_MIME,
   VISION_MAX_IMAGE_BYTES,
-} from "@/lib/vision/constants";
-import type { VisionAnalysisPayload, VisionPipelineDecision } from "@/lib/vision/types";
+} from "@/domains/vision";
+import type { VisionAnalysisPayload, VisionPipelineDecision } from "@/domains/vision";
 import { detectDiagnosisAction } from "@/actions/diagnosis.actions";
 import type { ProblemId } from "@/lib/search/engine/types";
 

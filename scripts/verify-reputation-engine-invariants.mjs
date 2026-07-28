@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 7 Phase 3 — AI Reputation Engine invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ AI Reputation Engine invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727090000_sprint7_ai_reputation_engine.sql",
+  "supabase/migrations/archive/20260727090000_sprint7_ai_reputation_engine.sql",
   "src/lib/reputation/engine.ts",
   "src/lib/reputation/signals.ts",
   "src/lib/reputation/weights.ts",
@@ -45,7 +46,7 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
-const mig = read("supabase/migrations/20260727090000_sprint7_ai_reputation_engine.sql");
+const mig = read("supabase/migrations/archive/20260727090000_sprint7_ai_reputation_engine.sql");
 for (const t of [
   "provider_reputation_scores",
   "provider_reputation_history",
@@ -76,7 +77,7 @@ if (pub.includes("internalScore") || pub.includes("internal_score")) {
   fail("public module must not expose internal scores");
 } else ok("public view has no internal score");
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isAiReputationEngineEnabled")) ok("feature flag");
 else fail("missing isAiReputationEngineEnabled");
 

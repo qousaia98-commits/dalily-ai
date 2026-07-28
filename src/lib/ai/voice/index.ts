@@ -1,5 +1,10 @@
 /**
- * AI Engine Phase 6 — Voice Intelligence.
+ * AI Speech / Voice Bridge (thin) — INTERNAL.
+ *
+ * Speech Engine runtime: `src/lib/speech-engine` (re-exports modules here).
+ * External consumers MUST use `@/domains/speech`.
+ *
+ * @see docs/architecture/speech.md
  */
 
 export type {
@@ -38,9 +43,15 @@ export const voiceModule = {
   id: "voice",
   status: "phase6" as const,
   impl: [
-    "src/lib/ai/voice/pipeline.ts",
-    "src/lib/ai/voice/stt.ts",
-    "src/lib/voice/recorder.ts",
+    "src/domains/speech (public API)",
+    "src/lib/speech-engine (runtime engine)",
+    "src/lib/ai/voice (bridge modules)",
+    "src/lib/ai/providers (shared Whisper client)",
+    "src/lib/voice/recorder.ts (browser capture)",
   ],
-  future: ["on-device STT", "realtime streaming transcription"],
+  responsibilities: ["facade", "featureFlags", "providerRouting", "telemetry"] as const,
+  future: ["on-device STT", "realtime streaming transcription", "multi-provider STT"],
 };
+
+/** Alias for architecture docs — same façade as voiceModule. */
+export const speechModule = voiceModule;

@@ -30,6 +30,19 @@ Each listed path must contain a `LEGACY.md` marker file.
 | `src/components/search/` | Directory + long diagnosis UX | Rewrite/salvage intake widgets |
 | `src/components/business/subscription-*` | Subscription UI | Delete |
 
+## Removed in Sprint 9.5 Phase 1 (hygiene — confirmed empty / unreferenced)
+
+| Path | Notes |
+| --- | --- |
+| `src/lib/mock/` | Empty directory removed |
+| `src/lib/search/rule-engine/` | Empty directory removed |
+| `src/app/[locale]/(public)/favorites/` | Empty directory removed |
+| `src/app/[locale]/(business)/business/gallery/` | Empty directory removed |
+| `src/app/[locale]/(user)/` | Only empty `.gitkeep` — removed |
+| `supabase/_schema_baseline_candidate.sql` | Empty placeholder — removed |
+| `mobile/types/`, `mobile/utils/` | Unused barrels — removed |
+| Orphan scripts | Moved to `scripts/archive/` (see README there) |
+
 ## Schema truth
 
 - **Source of truth:** `supabase/migrations/*`

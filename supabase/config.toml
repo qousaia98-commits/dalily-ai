@@ -1,0 +1,33 @@
+# A string used to distinguish different Supabase projects on the same host.
+project_id = "dalily-ai"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 17
+
+[db.migrations]
+# Historical chain: supabase/migrations/archive/
+# Active CLI files: top-level supabase/migrations/*.sql (baseline + future)
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"

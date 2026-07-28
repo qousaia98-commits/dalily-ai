@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
-import { isAiDemandForecastingEnabled } from "@/lib/config/feature-flags";
-import { getCustomerDemandHint } from "@/lib/forecast-engine/service";
+import { isForecastEngineEnabled } from "@/lib/config/feature-flags";
+import { getCustomerDemandHint } from "@/domains/forecast";
 import { CustomerDemandHintCard } from "@/components/forecast/customer-demand-hint-card";
 
 export default async function AccountForecastPage() {
-  if (!isAiDemandForecastingEnabled()) {
+  if (!isForecastEngineEnabled()) {
     redirect("/account");
   }
 

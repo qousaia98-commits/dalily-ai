@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
 import { afterLegacyMarketplaceWrite } from "@/domains/marketplace/repository";
 import { syncMarketplaceRequestProjection } from "@/domains/marketplace/projection";
-import { runMatchingForRequest } from "@/domains/matching/engine";
+import { runMatchingForRequest } from "@/domains/matching";
 import {
   isAiEngineV1Enabled,
   isAiEngineV4Enabled,

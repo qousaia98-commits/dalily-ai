@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import {
   suggestRequestImprovements,
   type RequestOptimizerSuggestion,
-} from "@/lib/search/smart-match/request-optimizer";
+} from "@/domains/matching/client";
 import { cn } from "@/lib/utils";
 
 type Props = {

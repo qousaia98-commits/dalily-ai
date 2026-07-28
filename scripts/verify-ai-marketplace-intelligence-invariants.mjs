@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 8 Phase 6 — AI Marketplace Intelligence Platform invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ AI Marketplace Intelligence invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727180000_sprint8_ai_marketplace_intelligence.sql",
+  "supabase/migrations/archive/20260727180000_sprint8_ai_marketplace_intelligence.sql",
   "src/lib/marketplace-intelligence/types.ts",
   "src/lib/marketplace-intelligence/modules.ts",
   "src/lib/marketplace-intelligence/collect.ts",
@@ -46,7 +47,7 @@ for (const r of required) {
 }
 
 const mig = read(
-  "supabase/migrations/20260727180000_sprint8_ai_marketplace_intelligence.sql",
+  "supabase/migrations/archive/20260727180000_sprint8_ai_marketplace_intelligence.sql",
 );
 for (const t of [
   "marketplace_intelligence",
@@ -72,7 +73,7 @@ else fail("missing simulation isolation constraint");
 if (mig.includes("internal_only")) ok("knowledge graph internal");
 else fail("kg not internal");
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isAiMarketplaceIntelligenceEnabled")) ok("feature flag");
 else fail("missing flag");
 

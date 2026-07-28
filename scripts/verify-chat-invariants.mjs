@@ -5,6 +5,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const chatDir = path.join(root, "src", "domains", "chat");
@@ -26,10 +27,7 @@ const chatActions = readFileSync(
   path.join(root, "src", "actions", "chat.actions.ts"),
   "utf8",
 );
-const flags = readFileSync(
-  path.join(root, "src", "lib", "config", "feature-flags.ts"),
-  "utf8",
-);
+const flags = readFeatureFlagsSource();
 const violations = [];
 
 if (!flags.includes("CHAT_AUTH_V2") || !flags.includes("isChatAuthV2Enabled")) {
@@ -54,12 +52,12 @@ if (!unlockSession.includes("ensureFullChatSessionForGrant")) {
   violations.push("unlock success must ensure full chat session when CHAT_AUTH_V2");
 }
 
-const migrations = readdirSync(path.join(root, "supabase", "migrations"));
+const migrations = readdirSync(path.join(root, "supabase", "migrations", "archive"));
 const sprint7 = migrations.find((f) => f.includes("sprint7_chat_authorization"));
 if (!sprint7) {
   violations.push("missing sprint7 chat authorization migration");
 } else {
-  const sql = readFileSync(path.join(root, "supabase", "migrations", sprint7), "utf8");
+  const sql = readFileSync(path.join(root, "supabase", "migrations", "archive", sprint7), "utf8");
   if (!sql.includes("has_chat_release_grant") || !sql.includes("conversation_allows_message_insert")) {
     violations.push("migration must add grant-aware RLS helpers");
   }

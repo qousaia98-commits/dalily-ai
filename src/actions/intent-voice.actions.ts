@@ -5,14 +5,15 @@
  */
 
 import { getAuthUser } from "@/lib/auth/session";
-import { isAiEngineV6Enabled } from "@/lib/config/feature-flags";
-import { runVoiceIntelligencePipeline } from "@/lib/ai/voice/pipeline";
-import { confirmVoiceTranscript } from "@/lib/ai/voice/cache";
+import { isSpeechEngineEnabled } from "@/lib/config/feature-flags";
 import {
+  runVoiceIntelligencePipeline,
+  confirmVoiceTranscript,
   isAllowedVoiceMime,
   VOICE_MAX_AUDIO_BYTES,
-} from "@/lib/ai/voice/validate";
-import type { MultimodalFusionResult, VoiceLanguageDetection } from "@/lib/ai/voice/types";
+  type MultimodalFusionResult,
+  type VoiceLanguageDetection,
+} from "@/domains/speech";
 
 export type AnalyzeIntentVoiceActionResult =
   | {
@@ -45,7 +46,7 @@ export type AnalyzeIntentVoiceActionResult =
 export async function analyzeIntentVoiceAction(
   formData: FormData,
 ): Promise<AnalyzeIntentVoiceActionResult> {
-  if (!isAiEngineV6Enabled()) {
+  if (!isSpeechEngineEnabled()) {
     return { success: false, error: "feature_disabled" };
   }
 
@@ -114,7 +115,7 @@ export async function confirmIntentVoiceAction(input: {
   correction?: string;
   finalCategorySlug?: string;
 }): Promise<{ success: boolean }> {
-  if (!isAiEngineV6Enabled()) return { success: false };
+  if (!isSpeechEngineEnabled()) return { success: false };
   if (!input.transcriptId) return { success: false };
 
   const authUser = await getAuthUser();

@@ -1,6 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
-import type { WaitTimeEstimate } from "@/lib/ai/predictive/types";
-import type { PredictiveNotification } from "@/lib/ai/predictive/types";
+import type { WaitTimeEstimate, PredictiveNotification } from "@/domains/forecast";
 
 export async function WaitTimeCard({ estimate }: { estimate: WaitTimeEstimate }) {
   const t = await getTranslations("predictive.wait");

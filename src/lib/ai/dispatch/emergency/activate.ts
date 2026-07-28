@@ -136,7 +136,7 @@ export async function activateEmergencyDispatch(input: {
 
     // Run / expand matching with emergency priority
     const { runMatchingForRequest, expandMatchPool } = await import(
-      "@/domains/matching/engine"
+      "@/domains/matching"
     );
     const match = await runMatchingForRequest(input.serviceRequestId);
     if (match.assignedCount < 3 && match.poolId) {

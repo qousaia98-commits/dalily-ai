@@ -1,13 +1,13 @@
 import { getTranslations } from "next-intl/server";
 import { requireAdminUser } from "@/lib/auth/session";
-import { isAiEngineV8Enabled } from "@/lib/config/feature-flags";
+import { isPredictiveEngineEnabled } from "@/lib/config/feature-flags";
 import { redirect } from "next/navigation";
-import { buildAdminPredictiveDashboard } from "@/lib/ai/predictive/dashboard";
+import { buildAdminPredictiveDashboard } from "@/domains/forecast";
 import { Link } from "@/lib/i18n/routing";
 
 export default async function AdminAiPredictionsPage() {
   await requireAdminUser();
-  if (!isAiEngineV8Enabled()) {
+  if (!isPredictiveEngineEnabled()) {
     redirect("/admin/analytics");
   }
 

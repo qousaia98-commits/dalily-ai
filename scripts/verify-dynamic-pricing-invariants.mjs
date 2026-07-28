@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 8 Phase 2 — AI Dynamic Pricing & Market Intelligence invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ Dynamic Pricing invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727140000_sprint8_ai_dynamic_pricing.sql",
+  "supabase/migrations/archive/20260727140000_sprint8_ai_dynamic_pricing.sql",
   "src/lib/pricing-engine/types.ts",
   "src/lib/pricing-engine/signals.ts",
   "src/lib/pricing-engine/weights.ts",
@@ -51,7 +52,7 @@ for (const r of required) {
 }
 
 const mig = read(
-  "supabase/migrations/20260727140000_sprint8_ai_dynamic_pricing.sql",
+  "supabase/migrations/archive/20260727140000_sprint8_ai_dynamic_pricing.sql",
 );
 for (const t of [
   "pricing_weights",
@@ -65,7 +66,7 @@ for (const t of [
   else fail(`schema missing ${t}`);
 }
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isAiDynamicPricingEnabled")) ok("feature flag");
 else fail("missing isAiDynamicPricingEnabled");
 

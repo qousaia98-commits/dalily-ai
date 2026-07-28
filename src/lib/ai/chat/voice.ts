@@ -5,7 +5,7 @@
  */
 
 import { createClient } from "@/lib/supabase/server";
-import { speechToText } from "@/lib/ai/voice/stt";
+import { speechToText } from "@/domains/speech";
 import { scrubAiText } from "@/lib/ai/privacy/scrub";
 import { chatAiComplete, parseJsonObject } from "@/lib/ai/chat/llm";
 import { emitAiLearningEvent } from "@/lib/ai/learning/events";

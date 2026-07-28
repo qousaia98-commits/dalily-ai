@@ -4,7 +4,7 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { isChatAuthV2Enabled } from "@/lib/config/feature-flags";
+import { isChatEngineEnabled } from "@/lib/config/feature-flags";
 import { canChat as canChatLegacyStatus } from "@/lib/service-requests/status-machine";
 import type { ServiceRequestStatus } from "@/lib/service-requests/status-machine";
 
@@ -27,7 +27,7 @@ export async function canAccessFullChat(input: {
 }): Promise<boolean> {
   if (!input.serviceRequestId) return true; // non-request threads (e.g. official)
 
-  if (!isChatAuthV2Enabled()) {
+  if (!isChatEngineEnabled()) {
     if (!input.status) return false;
     return canChatLegacyStatus(input.status);
   }

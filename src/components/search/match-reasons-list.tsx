@@ -2,7 +2,7 @@
 
 import { CheckCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { MatchReason } from "@/lib/search/smart-match/reasons";
+import type { DirectoryMatchReason as MatchReason } from "@/domains/matching/client";
 import { cn } from "@/lib/utils";
 
 type Props = {

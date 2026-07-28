@@ -3,7 +3,7 @@ import { Link } from "@/lib/i18n/routing";
 import { Loader2, Inbox, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
-import type { MatchPoolSummary } from "@/domains/matching/queries";
+import type { MatchPoolSummary } from "@/domains/matching";
 import type { MarketplaceOfferView, OfferClarificationView } from "@/domains/offer/types";
 import type { ReleasedContact, UnlockSessionView } from "@/domains/unlock/types";
 import { CustomerOfferBoard } from "@/components/customer/customer-offer-board";
@@ -17,7 +17,7 @@ import {
 import type {
   WaitTimeEstimate,
   PredictiveNotification,
-} from "@/lib/ai/predictive/types";
+} from "@/domains/forecast";
 import { AutomationSuggestionsList } from "@/components/automation/automation-widgets";
 import type { AutomationSuggestion } from "@/lib/ai/automation/types";
 import { WorkflowSwitchHint } from "@/components/customer/workflow-switch-hint";

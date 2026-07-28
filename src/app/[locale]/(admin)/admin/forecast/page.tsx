@@ -2,13 +2,13 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { requireAdminUser } from "@/lib/auth/session";
 import { isAdminUser } from "@/lib/auth/roles";
-import { isAiDemandForecastingEnabled } from "@/lib/config/feature-flags";
-import { getAdminForecastDashboard } from "@/lib/forecast-engine/admin";
+import { isForecastEngineEnabled } from "@/lib/config/feature-flags";
+import { getAdminForecastDashboard } from "@/domains/forecast";
 import { AdminForecastCenterPanel } from "@/components/admin/admin-forecast-center-panel";
 import { Link } from "@/lib/i18n/routing";
 
 export default async function AdminForecastPage() {
-  if (!isAiDemandForecastingEnabled()) {
+  if (!isForecastEngineEnabled()) {
     redirect("/admin");
   }
 

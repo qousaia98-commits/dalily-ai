@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import type { ProviderForecastInsights } from "@/lib/forecast-engine/types";
+import type { ProviderForecastInsights } from "@/domains/forecast/client";
 import { acceptProviderForecastAction } from "@/actions/forecast.actions";
 import { Button } from "@/components/ui/button";
 

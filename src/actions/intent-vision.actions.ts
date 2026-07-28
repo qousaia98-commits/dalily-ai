@@ -5,14 +5,14 @@
  */
 
 import { getAuthUser } from "@/lib/auth/session";
-import { isAiEngineV5Enabled } from "@/lib/config/feature-flags";
-import { runVisionIntelligencePipeline } from "@/lib/ai/vision/pipeline";
-import { confirmVisionAnalysis } from "@/lib/ai/vision/cache";
+import { isVisionEngineEnabled } from "@/lib/config/feature-flags";
+import { runVisionIntelligencePipeline } from "@/domains/vision";
+import { confirmVisionAnalysis } from "@/domains/vision";
 import {
   VISION_ALLOWED_MIME,
   VISION_MAX_IMAGE_BYTES,
-} from "@/lib/vision/constants";
-import type { VisionTextFusionResult } from "@/lib/ai/vision/types";
+} from "@/domains/vision";
+import type { VisionTextFusionResult } from "@/domains/vision";
 
 export type AnalyzeIntentVisionActionResult =
   | {
@@ -43,7 +43,7 @@ export type AnalyzeIntentVisionActionResult =
 export async function analyzeIntentVisionAction(
   formData: FormData,
 ): Promise<AnalyzeIntentVisionActionResult> {
-  if (!isAiEngineV5Enabled()) {
+  if (!isVisionEngineEnabled()) {
     return { success: false, error: "feature_disabled" };
   }
 
@@ -105,7 +105,7 @@ export async function confirmIntentVisionAction(input: {
   confirmed: boolean;
   correction?: string;
 }): Promise<{ success: boolean }> {
-  if (!isAiEngineV5Enabled()) return { success: false };
+  if (!isVisionEngineEnabled()) return { success: false };
   if (!input.analysisId) return { success: false };
 
   const authUser = await getAuthUser();

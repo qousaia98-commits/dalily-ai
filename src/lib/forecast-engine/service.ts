@@ -16,7 +16,7 @@ import {
   DEFAULT_FORECAST_WEIGHTS,
   mergeForecastWeights,
 } from "@/lib/forecast-engine/weights";
-import { isAiDemandForecastingEnabled } from "@/lib/config/feature-flags";
+import { isForecastEngineEnabled } from "@/lib/config/feature-flags";
 import {
   FORECAST_MODEL_VERSION,
   type CustomerDemandHint,
@@ -102,7 +102,7 @@ export async function generateForecast(
     persist?: boolean;
   },
 ): Promise<ForecastComputation | null> {
-  if (!isAiDemandForecastingEnabled()) return null;
+  if (!isForecastEngineEnabled()) return null;
   const started = Date.now();
   const weights = await loadWeights();
   const experiment = await resolveExperiment(
@@ -230,7 +230,7 @@ export async function generateMultiHorizonForecast(input: {
   providerId?: string | null;
   persist?: boolean;
 }): Promise<ForecastComputation[]> {
-  if (!isAiDemandForecastingEnabled()) return [];
+  if (!isForecastEngineEnabled()) return [];
   const results: ForecastComputation[] = [];
   for (const horizon of ALL_HORIZONS) {
     const c = await generateForecast({
@@ -258,7 +258,7 @@ export async function getProviderForecastInsights(input: {
     suggestedVacationWindows: [],
     currency: "SYP",
   };
-  if (!isAiDemandForecastingEnabled()) return empty;
+  if (!isForecastEngineEnabled()) return empty;
 
   const computations = await generateMultiHorizonForecast({
     categoryKey: input.categoryKey ?? "general",
@@ -283,7 +283,7 @@ export async function getCustomerDemandHint(input: {
   categoryKey?: string;
   regionKey?: string | null;
 }): Promise<CustomerDemandHint | null> {
-  if (!isAiDemandForecastingEnabled()) return null;
+  if (!isForecastEngineEnabled()) return null;
   const c = await generateForecast({
     categoryKey: input.categoryKey ?? "general",
     regionKey: input.regionKey,
@@ -318,7 +318,7 @@ export async function getMarketIntelligence(): Promise<MarketIntelligenceSummary
     bookingVelocity: null,
     seasonalNote: null,
   };
-  if (!isAiDemandForecastingEnabled()) return empty;
+  if (!isForecastEngineEnabled()) return empty;
 
   try {
     const admin = createAdminClient();
@@ -358,7 +358,7 @@ export async function updateForecastWeight(input: {
   weight: number;
   enabled?: boolean;
 }): Promise<boolean> {
-  if (!isAiDemandForecastingEnabled()) return false;
+  if (!isForecastEngineEnabled()) return false;
   try {
     const admin = createAdminClient();
     const { error } = await admin
@@ -382,7 +382,7 @@ export async function recordForecastAccuracy(input: {
   predictedDemand: number;
   actualDemand: number;
 }): Promise<void> {
-  if (!isAiDemandForecastingEnabled()) return;
+  if (!isForecastEngineEnabled()) return;
   try {
     const abs = Math.abs(input.actualDemand - input.predictedDemand);
     const pct =
@@ -414,7 +414,7 @@ export async function refreshForecastMarketSnapshot(input?: {
   categoryKey?: string;
   regionKey?: string;
 }): Promise<void> {
-  if (!isAiDemandForecastingEnabled()) return;
+  if (!isForecastEngineEnabled()) return;
   try {
     const admin = createAdminClient();
     const since = new Date();

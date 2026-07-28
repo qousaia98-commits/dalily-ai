@@ -11,7 +11,7 @@ import {
   listClarifications,
 } from "@/domains/offer";
 import { CustomerOfferBoard } from "@/components/customer/customer-offer-board";
-import { canAccessFullChat } from "@/domains/chat/authz";
+import { canAccessFullChat } from "@/domains/chat";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isChatAuthV2Enabled } from "@/lib/config/feature-flags";
 

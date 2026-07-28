@@ -10,7 +10,7 @@ import {
 } from "@/actions/service-request.actions";
 import { PendingRequestActions } from "@/components/business/pending-request-actions";
 import { isOffersV2Enabled } from "@/lib/config/feature-flags";
-import { canAccessFullChat } from "@/domains/chat/authz";
+import { canAccessFullChat } from "@/domains/chat";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isChatAuthV2Enabled } from "@/lib/config/feature-flags";
 

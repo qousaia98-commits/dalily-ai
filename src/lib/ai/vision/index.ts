@@ -1,5 +1,12 @@
 /**
- * AI Engine Phase 5 — Vision Intelligence.
+ * AI Vision Bridge (thin) — INTERNAL.
+ *
+ * Responsibilities: façade metadata, feature-flag routing (via callers),
+ * telemetry hooks, future ML/provider routing.
+ * Image prompts/parsing live in engines (`lib/vision`, analyze modules).
+ * External consumers MUST use `@/domains/vision`.
+ *
+ * @see docs/architecture/vision.md
  */
 
 export type {
@@ -38,14 +45,17 @@ export {
   suggestToolsFromVision,
   suggestMaterialsFromVision,
 } from "./suggestions";
+export { optimizeVisionImage, contentHashFromBytes } from "./optimize";
 
 export const visionModule = {
   id: "vision",
   status: "phase5" as const,
   impl: [
-    "src/lib/ai/vision/pipeline.ts",
-    "src/lib/ai/vision/fusion.ts",
-    "src/lib/vision (search facade)",
+    "src/domains/vision (public API)",
+    "src/lib/vision (search vision engine)",
+    "src/lib/ai/vision (intent vision bridge)",
+    "src/lib/ai/providers (shared OpenAI client)",
   ],
-  future: ["bounding-box UI overlays", "multi-image consensus"],
+  responsibilities: ["facade", "featureFlags", "providerRouting", "telemetry"] as const,
+  future: ["bounding-box UI overlays", "multi-image consensus", "multi-provider vision"],
 };

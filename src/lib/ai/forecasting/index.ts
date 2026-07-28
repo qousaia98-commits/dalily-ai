@@ -1,8 +1,14 @@
 /**
- * Demand forecasting bridge — Sprint 8 Phase 3.
- * Legacy predictive/demand.ts remains for AI Engine Phase 8 dashboards.
+ * AI Forecast Bridge (thin) — INTERNAL.
+ *
+ * Responsibilities: façade metadata, feature-flag gating, re-export of engine
+ * public helpers for AI module registry. Forecasting math lives in forecast-engine.
+ *
+ * External consumers MUST use `@/domains/forecast`.
+ *
+ * @see docs/architecture/forecast.md
  */
-import { isAiDemandForecastingEnabled } from "@/lib/config/feature-flags";
+import { isForecastEngineEnabled } from "@/lib/config/feature-flags";
 import {
   generateMultiHorizonForecast,
   getCustomerDemandHint,
@@ -16,7 +22,12 @@ import {
 export const forecastingModule = {
   id: "demand-forecasting",
   status: "sprint8-phase3" as const,
-  impl: ["src/lib/forecast-engine/", "src/lib/ai/predictive/demand.ts"],
+  impl: [
+    "src/domains/forecast (public API)",
+    "src/lib/forecast-engine/ (runtime engine)",
+    "src/lib/ai/predictive/demand.ts (legacy predictive demand model)",
+  ],
+  responsibilities: ["facade", "featureFlags", "providerRouting", "telemetry"] as const,
   future: ["weather API", "economic indicators feed", "full ML time-series"],
 };
 
@@ -24,7 +35,7 @@ export async function getPublicDemandForecasts(input: {
   categoryKey: string;
   regionKey?: string | null;
 }): Promise<PublicDemandForecast[]> {
-  if (!isAiDemandForecastingEnabled()) return [];
+  if (!isForecastEngineEnabled()) return [];
   const comps = await generateMultiHorizonForecast({
     categoryKey: input.categoryKey,
     regionKey: input.regionKey,

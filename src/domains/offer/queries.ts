@@ -6,6 +6,7 @@ import {
   type OfferClarificationView,
   type OfferTemplateView,
 } from "@/domains/offer/types";
+import type { MatchReason } from "@/domains/matching";
 
 export type ProviderOpportunity = {
   assignmentId: string;
@@ -20,7 +21,7 @@ export type ProviderOpportunity = {
   hasOffer: boolean;
   offerId: string | null;
   /** Matching explainability — never includes subscription codes */
-  reasons: import("@/domains/matching/reasons").MatchReason[];
+  reasons: MatchReason[];
   aiMatchScore: number | null;
   aiExplanation: Array<{
     code: string;
@@ -156,7 +157,7 @@ export async function listProviderOpportunities(
       hasOffer: Boolean(offer),
       offerId: offer ? (offer.id as string) : null,
       reasons: Array.isArray(a.reason_codes)
-        ? (a.reason_codes as import("@/domains/matching/reasons").MatchReason[])
+        ? (a.reason_codes as MatchReason[])
         : [],
       aiMatchScore:
         a.ai_match_score == null ? null : Number(a.ai_match_score),
@@ -189,7 +190,7 @@ export async function getOpportunityDetail(input: {
   urgency: string | null;
   locationText: string | null;
   existingOfferId: string | null;
-  reasons: import("@/domains/matching/reasons").MatchReason[];
+  reasons: MatchReason[];
   aiMatchScore: number | null;
   aiExplanation: ProviderOpportunity["aiExplanation"];
 } | null> {
@@ -231,7 +232,7 @@ export async function getOpportunityDetail(input: {
     locationText: (request.location_text as string) || null,
     existingOfferId: offer ? (offer.id as string) : null,
     reasons: Array.isArray(assignment.reason_codes)
-      ? (assignment.reason_codes as import("@/domains/matching/reasons").MatchReason[])
+      ? (assignment.reason_codes as MatchReason[])
       : [],
     aiMatchScore:
       assignment.ai_match_score == null

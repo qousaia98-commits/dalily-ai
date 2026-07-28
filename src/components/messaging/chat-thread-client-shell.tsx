@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useChatRealtime } from "@/hooks/use-chat-realtime";
+import { useChatRealtime } from "@/domains/chat/client";
 import { TypingIndicator } from "@/components/messaging/typing-indicator";
 import { MessageComposer } from "@/components/messaging/message-composer";
 import { SmartReplyChips } from "@/components/messaging/smart-reply-chips";

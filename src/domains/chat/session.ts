@@ -3,7 +3,7 @@
  */
 
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isChatAuthV2Enabled } from "@/lib/config/feature-flags";
+import { isChatEngineEnabled } from "@/lib/config/feature-flags";
 
 /**
  * Ensures a grant-gated conversation exists for the unlocked request.
@@ -14,7 +14,7 @@ export async function ensureFullChatSessionForGrant(input: {
   providerId: string;
   customerId: string;
 }): Promise<{ ok: true; conversationId: string; created: boolean } | { ok: false; error: string }> {
-  if (!isChatAuthV2Enabled()) {
+  if (!isChatEngineEnabled()) {
     return { ok: false, error: "feature_disabled" };
   }
 

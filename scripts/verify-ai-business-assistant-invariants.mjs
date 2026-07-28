@@ -1,3 +1,4 @@
+import { readFeatureFlagsSource } from "./lib/read-feature-flags.mjs";
 /**
  * Sprint 8 Phase 5 — AI Business Assistant invariants.
  */
@@ -24,7 +25,7 @@ function read(rel) {
 console.log("══ AI Business Assistant invariants ══\n");
 
 const required = [
-  "supabase/migrations/20260727170000_sprint8_ai_business_assistant.sql",
+  "supabase/migrations/archive/20260727170000_sprint8_ai_business_assistant.sql",
   "src/lib/business-assistant/types.ts",
   "src/lib/business-assistant/collect.ts",
   "src/lib/business-assistant/insights.ts",
@@ -46,7 +47,7 @@ for (const r of required) {
 }
 
 const mig = read(
-  "supabase/migrations/20260727170000_sprint8_ai_business_assistant.sql",
+  "supabase/migrations/archive/20260727170000_sprint8_ai_business_assistant.sql",
 );
 for (const t of [
   "business_insights",
@@ -61,7 +62,7 @@ for (const t of [
   else fail(`schema missing ${t}`);
 }
 
-const flags = read("src/lib/config/feature-flags.ts");
+const flags = readFeatureFlagsSource();
 if (flags.includes("isAiBusinessAssistantEnabled")) ok("feature flag");
 else fail("missing flag");
 

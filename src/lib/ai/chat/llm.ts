@@ -1,7 +1,10 @@
 /**
  * Lightweight chat-completions helper for Sprint 5 Phase 3.
  * Soft-fails (returns null) — never throws into the UI path.
+ * Uses shared `@/lib/api` timeout fetch (Sprint 9.5 Phase 6).
  */
+
+import { fetchWithTimeout, jsonContentHeaders } from "@/lib/api";
 
 const TIMEOUT_MS = 8000;
 
@@ -23,35 +26,29 @@ export async function chatAiComplete(input: {
   const model =
     process.env.CHAT_AI_MODEL ?? process.env.SEARCH_LLM_MODEL ?? "gpt-4o-mini";
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  const result = await fetchWithTimeout(apiUrl, {
+    method: "POST",
+    timeoutMs: TIMEOUT_MS,
+    headers: jsonContentHeaders(apiKey),
+    body: JSON.stringify({
+      model,
+      temperature: input.temperature ?? 0.3,
+      messages: [
+        { role: "system", content: input.system },
+        { role: "user", content: input.user },
+      ],
+    }),
+  });
+
+  if (!result.ok) return null;
 
   try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model,
-        temperature: input.temperature ?? 0.3,
-        messages: [
-          { role: "system", content: input.system },
-          { role: "user", content: input.user },
-        ],
-      }),
-      signal: controller.signal,
-    });
-    if (!response.ok) return null;
-    const payload = (await response.json()) as {
+    const payload = (await result.response.json()) as {
       choices?: Array<{ message?: { content?: string } }>;
     };
     return payload.choices?.[0]?.message?.content?.trim() || null;
   } catch {
     return null;
-  } finally {
-    clearTimeout(timeout);
   }
 }
 

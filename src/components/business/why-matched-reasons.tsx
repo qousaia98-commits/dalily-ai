@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
-import type { MatchReason, MatchReasonCode } from "@/domains/matching/reasons";
-import { MATCH_REASON_CODES } from "@/domains/matching/reasons";
+import type { MatchReason, MatchReasonCode } from "@/domains/matching";
+import { MATCH_REASON_CODES } from "@/domains/matching";
 
 type AiBullet = {
   code: string;

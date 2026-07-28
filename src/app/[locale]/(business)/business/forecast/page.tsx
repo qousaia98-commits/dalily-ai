@@ -2,13 +2,13 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
-import { isAiDemandForecastingEnabled } from "@/lib/config/feature-flags";
-import { getProviderForecastInsights } from "@/lib/forecast-engine/service";
+import { isForecastEngineEnabled } from "@/lib/config/feature-flags";
+import { getProviderForecastInsights } from "@/domains/forecast";
 import { ProviderForecastInsightsPanel } from "@/components/forecast/provider-forecast-insights-panel";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 
 export default async function BusinessForecastPage() {
-  if (!isAiDemandForecastingEnabled()) {
+  if (!isForecastEngineEnabled()) {
     redirect("/business");
   }
 
