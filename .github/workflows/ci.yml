@@ -8,7 +8,7 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,6 +25,9 @@ jobs:
       - name: Foundation structure (Sprint 0+)
         run: npm run verify:foundation
 
+      - name: Infra verify
+        run: npm run verify:infra
+
       - name: Translation validation (i18n)
         run: npm run validate:i18n
 
@@ -34,14 +37,43 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Mobile verify
+        run: npm run verify:mobile
+
       - name: Mobile production release checklist
         run: npm run verify:mobile-production
+
+      - name: Payment smoke (structural)
+        run: npm run verify:payments
+
+      - name: Chat smoke (structural)
+        run: npm run verify:chat
+
+      - name: RC2.1 security invariants
+        run: npm run verify:rc21-security
+
+      - name: RC2.1 authorization / security tests
+        run: npm run test:rc21-p0
 
       - name: Build
         run: npm run build
         env:
-          # Build must not require real secrets; placeholders keep Next from hard-failing on missing public env where referenced at build time.
           NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: example-anon-key
           NEXT_PUBLIC_APP_URL: http://localhost:3000
           DALILY_CLOSED_BETA: "true"
+          # Fail-closed cron: secret present so e2e cron checks exercise 401 path
+          CRON_SECRET: ci-cron-secret-not-for-production
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E (incl. payment / chat / auth smoke)
+        run: npm run test:e2e
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: example-anon-key
+          NEXT_PUBLIC_APP_URL: http://127.0.0.1:3011
+          DALILY_CLOSED_BETA: "true"
+          CRON_SECRET: ci-cron-secret-not-for-production
+          CI: "true"

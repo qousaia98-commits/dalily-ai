@@ -1,7 +1,13 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type UserStatus = "active" | "suspended" | "banned";
-export type AppRole = "user" | "business" | "admin" | "moderator";
+export type AppRole =
+  | "user"
+  | "business"
+  | "admin"
+  | "moderator"
+  | "finance"
+  | "support";
 export type ProviderStatus =
   | "draft"
   | "pending_review"

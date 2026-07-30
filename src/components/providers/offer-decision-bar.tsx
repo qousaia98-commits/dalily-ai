@@ -16,7 +16,7 @@ type Props = {
   backHref?: string;
 };
 
-/** Sticky Accept / Decline / Back bar for the public trust profile offer context. */
+/** Sticky Accept / Decline / Gallery / Reviews bar for trust profile offer context. */
 export function OfferDecisionBar({
   offerId,
   requestId,
@@ -58,33 +58,46 @@ export function OfferDecisionBar({
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p className="text-xs text-muted-foreground sm:max-w-xs">{t("trustBarHint")}</p>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button asChild variant="ghost" className="rounded-xl" disabled={pending}>
-            <Link href={returnTo}>{t("back")}</Link>
-          </Button>
-          {canDecide ? (
-            <>
-              <Button
-                type="button"
-                variant="outline"
-                className="rounded-xl"
-                disabled={pending}
-                onClick={decline}
-              >
-                {t("decline")}
-              </Button>
-              <Button
-                type="button"
-                className="rounded-xl"
-                disabled={pending}
-                onClick={accept}
-              >
-                {t("accept")}
-              </Button>
-            </>
-          ) : null}
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-2 px-4 py-3 sm:px-6">
+        <p className="text-xs text-muted-foreground sm:hidden">{t("trustBarHint")}</p>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="ghost" size="sm" className="rounded-xl">
+              <a href="#provider-gallery">{t("viewGallery")}</a>
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="rounded-xl">
+              <a href="#provider-reviews">{t("viewReviews")}</a>
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="rounded-xl hidden sm:inline-flex">
+              <Link href={returnTo}>{t("back")}</Link>
+            </Button>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button asChild variant="outline" size="sm" className="rounded-xl sm:hidden">
+              <Link href={returnTo}>{t("back")}</Link>
+            </Button>
+            {canDecide ? (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="rounded-xl"
+                  disabled={pending}
+                  onClick={decline}
+                >
+                  {t("decline")}
+                </Button>
+                <Button
+                  type="button"
+                  className="rounded-xl"
+                  disabled={pending}
+                  onClick={accept}
+                >
+                  {t("accept")}
+                </Button>
+              </>
+            ) : null}
+          </div>
         </div>
       </div>
       {error ? (

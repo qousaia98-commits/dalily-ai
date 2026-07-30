@@ -103,6 +103,13 @@ function buildGroups(opts: {
       adminOnly: true,
     },
     {
+      id: "wallet",
+      href: "/admin/wallet",
+      icon: Banknote,
+      key: "wallet",
+      adminOnly: true,
+    },
+    {
       id: "refunds",
       href: "/admin/refunds",
       icon: RotateCcw,
@@ -198,6 +205,13 @@ function buildGroups(opts: {
       href: "/admin/ai-ops",
       icon: Brain,
       key: "aiOps",
+      adminOnly: true,
+    },
+    {
+      id: "aiPlatform",
+      href: "/admin/ai-platform",
+      icon: Brain,
+      key: "aiPlatform",
       adminOnly: true,
     },
     {

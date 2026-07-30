@@ -4,6 +4,7 @@ import { loadBusinessConversations } from "@/lib/business/load-conversations";
 import { countUnreadConversations } from "@/lib/business/conversations";
 import { ConversationList } from "@/components/business/conversation-list";
 import { MessagesInboxTools } from "@/components/messaging/messages-inbox-tools";
+import { CommunicationCenterHeader } from "@/components/messaging/communication-center-header";
 import { PlanBadge } from "@/components/shared/plan-badge";
 
 export default async function BusinessMessagesPage() {
@@ -32,6 +33,8 @@ export default async function BusinessMessagesPage() {
         </div>
         <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </header>
+
+      <CommunicationCenterHeader unread={unread} viewer="business" />
 
       <MessagesInboxTools messagesBasePath="/business/messages" />
 

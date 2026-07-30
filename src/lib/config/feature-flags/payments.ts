@@ -81,3 +81,47 @@ export function isFinanceDashboardEnabled(): boolean {
     isPaymentInfrastructureEnabled()
   );
 }
+
+/**
+ * Sprint 10 Phase 4 — Enterprise Payment & Wallet Platform.
+ * Canonical umbrella: PAYMENTS_V2 (or PAYMENT_INFRASTRUCTURE cascade).
+ */
+export function isPaymentsV2Enabled(): boolean {
+  return (
+    envFlag("PAYMENTS_V2") ||
+    envFlag("PAYMENTS_V2_ENABLED") ||
+    isPaymentInfrastructureEnabled()
+  );
+}
+
+/**
+ * Sprint 10 Phase 4 — User wallets (balances, ledger, top-up).
+ * Requires PAYMENTS_V2 / payment infrastructure.
+ */
+export function isPaymentWalletEnabled(): boolean {
+  return (
+    isPaymentsV2Enabled() &&
+    (envFlag("PAYMENT_WALLET") || envFlag("PAYMENT_WALLET_V1") || envFlag("WALLET_V1"))
+  );
+}
+
+/**
+ * Sprint 10 Phase 4 — Marketplace escrow (reserve → release / dispute hold).
+ * Requires PAYMENTS_V2.
+ */
+export function isEscrowEngineEnabled(): boolean {
+  return (
+    isPaymentsV2Enabled() &&
+    (envFlag("ESCROW_ENGINE") || envFlag("ESCROW_ENGINE_V1") || envFlag("ESCROW_V1"))
+  );
+}
+
+/**
+ * Sprint 10 Phase 4 — Provider payouts (bank / wallet).
+ */
+export function isPayoutsEnabled(): boolean {
+  return (
+    isPaymentsV2Enabled() &&
+    (envFlag("PAYOUTS_V1") || envFlag("PAYMENT_PAYOUTS") || isEscrowEngineEnabled())
+  );
+}

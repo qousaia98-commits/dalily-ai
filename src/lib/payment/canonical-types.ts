@@ -11,16 +11,27 @@ export type PaymentPurpose =
   | "refund"
   | "credit"
   | "wallet"
-  | "invoice";
+  | "invoice"
+  | "escrow"
+  | "payout"
+  | "marketplace_job"
+  | "fee";
 
 export type PaymentLifecycleStatus =
   | "pending"
   | "pending_review"
+  | "authorized"
+  | "captured"
+  | "reserved"
+  | "released"
   | "paid"
+  | "refunded"
+  | "partially_refunded"
   | "failed"
   | "cancelled"
   | "rejected"
-  | "expired";
+  | "expired"
+  | "disputed";
 
 /** Events reported BY payment providers — no business logic. */
 export type CanonicalPaymentEventType =
@@ -28,10 +39,17 @@ export type CanonicalPaymentEventType =
   | "payment_failed"
   | "payment_cancelled"
   | "payment_expired"
+  | "payment_authorized"
+  | "payment_captured"
+  | "payment_released"
   | "subscription_renewed"
   | "subscription_cancelled"
   | "refund_succeeded"
-  | "refund_failed";
+  | "refund_failed"
+  | "payout_succeeded"
+  | "payout_failed"
+  | "dispute_opened"
+  | "dispute_resolved";
 
 export type PaymentRecord = {
   id: string;

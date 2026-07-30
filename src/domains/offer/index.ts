@@ -50,3 +50,20 @@ export {
   getActiveSelectionForRequest,
   type ProviderOpportunity,
 } from "@/domains/offer/queries";
+
+export {
+  loadOfferDecisionBoardForCustomer,
+  filterAndSortDecisions,
+  OFFER_DECISION_SORTS,
+  OFFER_DECISION_FILTERS,
+  buildProviderVisibilityTips,
+  loadProviderVisibilityTips,
+  type PublicOfferDecision,
+  type PublicOfferDecisionBoard,
+  type OfferDecisionSort,
+  type OfferDecisionFilter,
+  type OfferInsightCode,
+  type OfferRiskCode,
+  type OfferHighlightBadge,
+  type ProviderVisibilityTip,
+} from "@/domains/offer/recommendation";

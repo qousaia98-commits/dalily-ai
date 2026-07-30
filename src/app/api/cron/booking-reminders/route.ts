@@ -1,20 +1,19 @@
 import { NextResponse } from "next/server";
 import { processSmartBookingReminders } from "@/lib/booking/smart/reminders";
 import { processCompletionPrompts } from "@/lib/booking/completion-service";
+import {
+  assertCronAuthorized,
+  cronUnauthorizedResponse,
+} from "@/lib/security/cron-auth";
 
 /**
  * Cron entry for smart booking reminders (24h / 2h / on-the-way)
  * and optional completion prompts in one pass.
- * Protect with CRON_SECRET: Authorization: Bearer <secret>
+ * Auth: Authorization: Bearer <CRON_SECRET> (fail-closed).
  */
 export async function POST(request: Request) {
-  const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = request.headers.get("authorization") ?? "";
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-    }
-  }
+  const auth = assertCronAuthorized(request);
+  if (!auth.ok) return cronUnauthorizedResponse(auth);
 
   const reminders = await processSmartBookingReminders();
   const includeCompletion =

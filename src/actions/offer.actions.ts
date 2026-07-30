@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
-import { isOffersV2Enabled } from "@/lib/config/feature-flags";
+import { isOffersV2Enabled, isOfferDecisionEngineEnabled } from "@/lib/config/feature-flags";
 import {
   createOfferFromAssignment,
   selectOffer,
@@ -13,8 +13,10 @@ import {
   postClarification,
   saveOfferTemplate,
 } from "@/domains/offer/queries";
+import { toggleHiringShortlist } from "@/domains/offer/recommendation";
 import { OFFER_PRICE_MODELS, type OfferPriceModel } from "@/domains/offer/types";
 import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
+import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
 
 export type OfferActionState = {
   success: boolean;
@@ -203,4 +205,44 @@ export async function saveOfferTemplateAction(
   if (!result.ok) return { success: false, error: result.error };
   revalidatePath("/business/opportunities");
   return { success: true };
+}
+
+export type ShortlistActionState = {
+  success: boolean;
+  error?: string;
+  shortlisted?: boolean;
+  ids?: string[];
+};
+
+export async function toggleHiringShortlistAction(input: {
+  requestId: string;
+  providerId: string;
+}): Promise<ShortlistActionState> {
+  if (!isOfferDecisionEngineEnabled()) {
+    return { success: false, error: "feature_disabled" };
+  }
+  const authUser = await getAuthUser();
+  if (!authUser) return { success: false, error: "login_required" };
+
+  const rate = checkRateLimit(rateLimitKey("hiring_shortlist", authUser.id), {
+    max: 40,
+    windowMs: 60_000,
+  });
+  if (!rate.ok) return { success: false, error: "rate_limited" };
+
+  const result = await toggleHiringShortlist({
+    customerId: authUser.id,
+    requestId: input.requestId,
+    providerId: input.providerId,
+  });
+
+  if (!result.ok) return { success: false, error: result.error };
+
+  revalidatePath(`/request/${input.requestId}/waiting`);
+  revalidatePath(`/account/requests/${input.requestId}`);
+  return {
+    success: true,
+    shortlisted: result.shortlisted,
+    ids: result.ids,
+  };
 }

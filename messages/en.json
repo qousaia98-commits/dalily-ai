@@ -593,7 +593,11 @@
         "forecast": "Demand outlook",
         "forecastDesc": "High demand days and booking tips",
         "scheduling": "Availability windows",
-        "schedulingDesc": "Appointment windows and arrival estimates"
+        "schedulingDesc": "Appointment windows and arrival estimates",
+        "wallet": "Wallet",
+        "walletDesc": "Balances, refunds, and history",
+        "assistant": "AI Assistant",
+        "assistantDesc": "Suggestions to improve your request"
       }
     },
     "myBusiness": {
@@ -1124,6 +1128,9 @@
       "viewProfile": "View profile",
       "back": "Back",
       "trustBarHint": "Contact details stay private until you accept and unlock completes.",
+      "viewGallery": "Gallery",
+      "viewReviews": "Reviews",
+      "completedJobs": "{count, plural, =0 {No jobs yet} one {# completed job} other {# completed jobs}}",
       "compare": "Compare",
       "removeCompare": "Remove from compare",
       "business": "Business",
@@ -1132,6 +1139,112 @@
       "comparing": "Comparing",
       "rating": "{rating}★",
       "selectedPendingUnlock": "Offer selected. Unlock and contact release come in the next step — nothing is shared yet."
+    },
+    "decision": {
+      "recommendedBadge": "Recommended provider",
+      "recommendedAria": "Recommended provider",
+      "trustScore": "Trust {score}%",
+      "sortLabel": "Sort",
+      "filtersLabel": "Filters",
+      "shortlist": "Shortlist",
+      "addShortlist": "Save to shortlist",
+      "removeShortlist": "Remove from shortlist",
+      "shortlistedBadge": "Shortlisted",
+      "details": "Insights",
+      "emptyTitle": "No offers yet",
+      "emptyBody": "When businesses send offers, you’ll compare them here.",
+      "noMatches": "No offers match these filters.",
+      "clearFilters": "Clear filters",
+      "assistantTitle": "Why this provider stands out",
+      "insightsTitle": "Offer insights",
+      "risksTitle": "Things to consider",
+      "sorts": {
+        "recommended": "Recommended",
+        "rating": "Highest rating",
+        "trust": "Best trust score",
+        "completed_jobs": "Most experienced",
+        "response_time": "Fastest response",
+        "price": "Lowest price",
+        "newest": "Newest",
+        "alphabetical": "Alphabetical"
+      },
+      "filters": {
+        "verified_only": "Verified only",
+        "available_now": "Available now",
+        "shortlisted": "Shortlisted"
+      },
+      "summaries": {
+        "satisfaction_and_speed": "High customer satisfaction and fast response time.",
+        "reliability_and_jobs": "Excellent reliability and many successful jobs.",
+        "verified_and_completion": "Verified business with a strong completion record.",
+        "fast_response": "Responds quickly to customers.",
+        "high_satisfaction": "Highly rated by customers.",
+        "strong_reliability": "Strong reliability signals.",
+        "highly_rated": "Highly rated by customers.",
+        "category_specialist": "Specialized in this category.",
+        "frequently_hired": "Frequently hired.",
+        "new_provider": "Newer provider on Dalily.",
+        "excellent_completion": "Excellent completion history.",
+        "similar_experience": "Experienced in similar jobs.",
+        "verified_business": "Verified business.",
+        "good_value": "Competitive offer value."
+      },
+      "insights": {
+        "fast_response": "Responds very quickly",
+        "highly_rated": "Highly rated by customers",
+        "category_specialist": "Specialized in this category",
+        "frequently_hired": "Frequently hired",
+        "new_provider": "New provider",
+        "excellent_completion": "Excellent completion history",
+        "similar_experience": "Experienced in similar jobs",
+        "verified_business": "Verified business",
+        "strong_reliability": "Strong reliability",
+        "good_value": "Good value"
+      },
+      "risks": {
+        "new_provider": "Newer on the platform — fewer completed jobs so far.",
+        "limited_history": "Limited work history on Dalily.",
+        "slow_response": "Typically slower to respond.",
+        "recent_cancellations": "Some recent cancellations on record.",
+        "incomplete_profile": "Profile is still incomplete.",
+        "temporarily_unavailable": "May be temporarily unavailable."
+      },
+      "badges": {
+        "top_rated": "Top Rated",
+        "fast_responder": "Fast Responder",
+        "highly_recommended": "Highly Recommended",
+        "verified": "Verified",
+        "reliable": "Reliable",
+        "experienced": "Experienced",
+        "popular": "Popular",
+        "community_favorite": "Community Favorite"
+      },
+      "assistant": {
+        "excellent_reviews": "Excellent reviews",
+        "fast_communication": "Fast communication",
+        "verified_business": "Verified business",
+        "strong_reliability": "Strong reliability",
+        "category_fit": "Strong category fit",
+        "strong_demand": "Frequently chosen by customers",
+        "emerging_talent": "Promising newer provider",
+        "strong_completion": "Strong job completion",
+        "relevant_experience": "Relevant experience",
+        "good_value": "Competitive value"
+      },
+      "compare": {
+        "title": "Provider comparison",
+        "metric": "Metric",
+        "rating": "Rating",
+        "trust": "Trust score",
+        "jobs": "Completed jobs",
+        "response": "Response (hours)",
+        "acceptance": "Acceptance %",
+        "price": "Price",
+        "verified": "Verified",
+        "portfolio": "Portfolio",
+        "yes": "Yes",
+        "no": "No"
+      }
     },
     "provider": {
       "eyebrow": "New requests",
@@ -1265,7 +1378,11 @@
       "decline_failed": "Could not decline offer.",
       "label_required": "Template name required.",
       "template_failed": "Could not save template.",
-      "use_offers": "Use the offers flow for this request."
+      "use_offers": "Use the offers flow for this request.",
+      "rate_limited": "Too many actions — please wait a moment.",
+      "shortlist_full": "Shortlist is full for this request.",
+      "save_failed": "Could not update shortlist.",
+      "validation_error": "Invalid request."
     }
   },
   "unlockFlow": {
@@ -1848,9 +1965,11 @@
       "title": "Public statistics",
       "completedJobs": "Completed jobs",
       "successRate": "Success rate",
+      "acceptanceRate": "Acceptance rate",
       "repeatCustomers": "Repeat customers",
       "responseRate": "Response rate",
       "avgResponse": "Avg. response time",
+      "reliability": "Reliability",
       "profileCompletion": "Profile completion",
       "yearsOnDalily": "Years on Dalily",
       "pct": "{value}%",
@@ -1864,6 +1983,30 @@
     "awards": "Awards & badges",
     "closedDay": "Closed",
     "trustOnlyNote": "Phone, email, and exact address stay private until a booking is confirmed.",
+    "completedJobsShort": "{count, plural, one {# job} other {# jobs}}",
+    "fromPrice": "From {price} {currency}",
+    "availability": {
+      "available": "Available",
+      "limited": "Limited hours",
+      "paused": "Not accepting"
+    },
+    "galleryEmptyTitle": "No portfolio yet",
+    "galleryEmptyBody": "This business has not published gallery photos.",
+    "galleryFullscreen": "Portfolio preview",
+    "galleryClose": "Close",
+    "portfolioKind": {
+      "gallery": "Gallery",
+      "before": "Before",
+      "after": "After",
+      "video": "Video",
+      "videoSoon": "Video coming soon"
+    },
+    "errors": {
+      "title": "Could not load this profile",
+      "body": "Please try again or return to search.",
+      "retry": "Try again",
+      "backSearch": "Back to search"
+    },
     "healthShort": "Health",
     "featured": "Featured"
   },
@@ -2176,6 +2319,56 @@
       "cancel": "Cancel",
       "edited": "Edited",
       "forward": "Forward"
+    },
+    "timeline": {
+      "aria": "Job progress timeline",
+      "offer": "Offer",
+      "acceptance": "Accepted",
+      "appointment": "Appointment",
+      "arrival": "Arrival",
+      "completion": "Done",
+      "review": "Review",
+      "payment": "Payment"
+    },
+    "reactions": {
+      "aria": "Message reactions",
+      "add": "React with {emoji}"
+    },
+    "safety": {
+      "mute": "Mute conversation",
+      "unmute": "Unmute conversation",
+      "block": "Block user",
+      "unblock": "Unblock user",
+      "report": "Report conversation",
+      "reportTitle": "Report this conversation",
+      "reason": "Reason",
+      "submitReport": "Submit report",
+      "cancel": "Cancel",
+      "reasons": {
+        "spam": "Spam",
+        "harassment": "Harassment",
+        "fraud": "Fraud / scam",
+        "inappropriate": "Inappropriate content",
+        "other": "Other"
+      },
+      "errors": {
+        "failed": "Something went wrong.",
+        "feature_disabled": "Not available.",
+        "login_required": "Please sign in.",
+        "forbidden": "Not allowed.",
+        "rate_limited": "Too many attempts.",
+        "update_failed": "Could not update.",
+        "report_failed": "Could not submit report.",
+        "validation_error": "Invalid request.",
+        "chat_locked": "Chat is locked.",
+        "not_found": "Not found."
+      }
+    },
+    "center": {
+      "title": "Communication center",
+      "unread": "{count, plural, =0 {No unread} one {# unread} other {# unread}}",
+      "customerHint": "Current jobs and past conversations stay inside Dalily.",
+      "businessHint": "Coordinate bookings here — no need for WhatsApp before acceptance."
     }
   },
   "marketplace": {
@@ -2711,6 +2904,23 @@
       "handlesEmergency": "Handle emergency requests",
       "handlesEmergencyHint": "When off, emergency matches skip your business. Be honest — unlock trust depends on it."
     },
+    "publicVisibility": {
+      "title": "Public profile privacy",
+      "subtitle": "Choose what customers see on your public trust profile before booking.",
+      "save": "Save visibility",
+      "saving": "Saving…",
+      "saved": "Visibility saved.",
+      "error": "Could not save visibility settings.",
+      "flags": {
+        "showLogo": "Show profile photo / logo",
+        "showGallery": "Show portfolio gallery",
+        "showCompletedJobs": "Show completed jobs count",
+        "showServiceArea": "Show service area / cities",
+        "showStatistics": "Show public statistics",
+        "showLanguages": "Show languages",
+        "showCertificates": "Show certificates"
+      }
+    },
     "paymentsHub": {
       "title": "Payments",
       "subtitle": "Unlocks, subscriptions, and payment history in one place.",
@@ -2725,7 +2935,9 @@
         "history": "Payment history",
         "historyDesc": "Subscriptions, lead unlocks, and receipts",
         "monetization": "Plans & unlocks",
-        "monetizationDesc": "Business plan and included unlocks"
+        "monetizationDesc": "Business plan and included unlocks",
+        "wallet": "Wallet & payouts",
+        "walletDesc": "Available balance, escrow, and payout status"
       }
     },
     "dashboard": {
@@ -4249,7 +4461,9 @@
       "forecast": "Demand forecast",
       "scheduling": "AI scheduling",
       "businessAssistant": "Business assistant",
-      "marketplaceIntelligence": "Marketplace intelligence"
+      "marketplaceIntelligence": "Marketplace intelligence",
+      "wallet": "Wallet & escrow",
+      "aiPlatform": "AI Platform"
     },
     "learning": {
       "eyebrow": "Internal · Learning AI",
@@ -4925,6 +5139,33 @@
         "popularity": "Popularity",
         "response": "Response"
       }
+    },
+    "offerDecision": {
+      "title": "Offer decision ops",
+      "subtitle": "Feature override, fraud suspend, and request ranking diagnostics. Weights are never shown.",
+      "feature": "Mark featured",
+      "unfeature": "Remove featured",
+      "featuredBadge": "Featured",
+      "suspendFraud": "Suspend (fraud)",
+      "reactivate": "Reactivate",
+      "diagnosticsTitle": "Ranking diagnostics",
+      "requestIdPlaceholder": "Service request UUID",
+      "runDiagnostics": "Run diagnostics",
+      "generatedAt": "Generated {at}",
+      "signals": "Active signals",
+      "score": "Score {score}",
+      "recommended": "Recommended"
+    },
+    "chatModeration": {
+      "title": "Conversation moderation",
+      "subtitle": "Review reported chats, suspend abusive threads, and keep the marketplace safe.",
+      "empty": "No open conversation reports.",
+      "enableHint": "Enable ENTERPRISE_COMMUNICATION to open the moderation queue.",
+      "conversation": "Conversation",
+      "resolve": "Resolve",
+      "dismiss": "Dismiss",
+      "resolveAndSuspend": "Resolve & suspend",
+      "suspendOnly": "Suspend conversation"
     },
     "controlCenterV2": {
       "title": "Platform health",
@@ -6028,6 +6269,69 @@
         "forecast": "Demand forecast",
         "pricing": "Dynamic pricing"
       }
+    },
+    "enterprisePayments": {
+      "eyebrow": "Enterprise payments",
+      "title": "Wallet, escrow & payouts",
+      "subtitle": "Manage wallets, escrow holds, payouts, fees, and marketplace disputes.",
+      "toPayments": "Payments →",
+      "toRefunds": "Refunds →",
+      "toFinance": "Finance →",
+      "escrowTitle": "Escrow holds",
+      "payoutTitle": "Payouts",
+      "feesTitle": "Fee rules",
+      "disputesTitle": "Marketplace disputes",
+      "empty": "Nothing here yet.",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "stats": {
+        "wallets": "Active wallets",
+        "balance": "Wallet balance",
+        "escrowReserved": "Escrow reserved",
+        "escrowDisputed": "Escrow disputed",
+        "payoutsPending": "Payouts pending",
+        "payoutsPaid": "Payouts paid",
+        "disputes": "Open disputes",
+        "feeRules": "Fee rules"
+      },
+      "cols": {
+        "status": "Status",
+        "amount": "Amount",
+        "created": "Created",
+        "actions": "Actions",
+        "method": "Method"
+      },
+      "actions": {
+        "release": "Release",
+        "refund": "Refund",
+        "retry": "Retry",
+        "process": "Process"
+      }
+    },
+    "aiPlatform": {
+      "eyebrow": "Enterprise AI",
+      "title": "AI Platform Center",
+      "subtitle": "Insights, usage, and risk — recommendations only, never auto-ban.",
+      "toOps": "AI Ops →",
+      "toFraud": "Fraud →",
+      "stats": {
+        "requests": "Requests 24h",
+        "errors": "Errors",
+        "latency": "Avg latency",
+        "fallbacks": "Fallbacks",
+        "fraud": "Fraud alerts",
+        "moderation": "Moderation reports"
+      },
+      "providersTitle": "Providers",
+      "providersBody": "Primary: {primary} · Fallback: {fallback}",
+      "centersTitle": "Linked centers",
+      "usageTitle": "Recent usage",
+      "moderationTitle": "Moderation recommendations",
+      "empty": "Nothing here yet.",
+      "on": "On",
+      "off": "Off",
+      "ok": "OK",
+      "fail": "Fail"
     }
   },
   "pricing": {
@@ -6591,6 +6895,41 @@
       "title": "Unlock reliability (last 30 days)",
       "body": "Declined: {declined} · Timed out: {timedOut}"
     },
+    "visibility": {
+      "title": "Improve your visibility",
+      "subtitle": "Practical tips to help customers choose you — we never share ranking formulas.",
+      "cta": "Improve",
+      "tips": {
+        "complete_profile": {
+          "title": "Complete your profile",
+          "body": "A fuller profile builds trust before customers open your offer."
+        },
+        "get_verified": {
+          "title": "Get verified",
+          "body": "Verification badges help customers feel confident hiring you."
+        },
+        "collect_reviews": {
+          "title": "Collect more reviews",
+          "body": "Ask happy customers to leave a review after completed jobs."
+        },
+        "improve_response": {
+          "title": "Respond faster",
+          "body": "Faster replies make your offers stand out in the waiting room."
+        },
+        "reduce_cancellations": {
+          "title": "Reduce cancellations",
+          "body": "Keeping commitments improves how reliable you appear."
+        },
+        "add_portfolio": {
+          "title": "Add portfolio photos",
+          "body": "Show real work so customers can judge quality at a glance."
+        },
+        "stay_available": {
+          "title": "Stay available",
+          "body": "Turn off vacation mode when you can take new work."
+        }
+      }
+    },
     "matchReasons": {
       "label": "Why this opportunity matched you",
       "category_fit": "Category fit",
@@ -6825,6 +7164,51 @@
         "resolutionRate": "Resolution rate",
         "avgHours": "Avg. resolution time"
       }
+    }
+  },
+  "wallet": {
+    "eyebrow": "Wallet",
+    "title": "My wallet",
+    "subtitle": "Balances, ledger, and payment history.",
+    "businessTitle": "Business wallet",
+    "businessSubtitle": "Payouts, reserved funds, and transaction history.",
+    "loading": "Loading wallet…",
+    "errorTitle": "Could not load wallet",
+    "errorBody": "Please try again in a moment.",
+    "empty": "No wallet yet.",
+    "ledgerTitle": "Ledger",
+    "ledgerEmpty": "No ledger entries yet.",
+    "historyTitle": "Payment history",
+    "historyEmpty": "No transactions yet.",
+    "balances": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "pendingPayout": "Pending payout",
+      "refund": "Refunds",
+      "bonus": "Bonus"
+    }
+  },
+  "aiPlatform": {
+    "assistant": {
+      "eyebrow": "AI Assistant",
+      "pageTitle": "Dalily Assistant",
+      "pageSubtitle": "Recommendations only — you always decide.",
+      "providerPageTitle": "Business Assistant",
+      "providerPageSubtitle": "Drafts and tips — never auto-sent.",
+      "title": "Assistant",
+      "subtitle": "Improve requests and offers without auto-actions.",
+      "controlNote": "The assistant never submits requests or sends messages for you.",
+      "capability": "Capability",
+      "prompt": "Your input",
+      "promptPlaceholder": "Describe what you need…",
+      "generate": "Generate suggestion",
+      "regenerate": "Regenerate",
+      "copy": "Copy",
+      "loading": "Generating…",
+      "error": "Could not generate a suggestion.",
+      "confidence": "Confidence {value}%",
+      "feedbackUp": "Helpful",
+      "feedbackDown": "Not helpful"
     }
   }
 }

@@ -4,11 +4,12 @@ import { redirect } from "@/lib/i18n/navigation";
 import { getAuthUser } from "@/lib/auth/session";
 import { getRequestDetail } from "@/lib/service-requests/queries";
 import { RequestWorkflowPanel } from "@/components/marketplace/request-workflow-panel";
-import { isOffersV2Enabled } from "@/lib/config/feature-flags";
+import { isOffersV2Enabled, isOfferDecisionEngineEnabled } from "@/lib/config/feature-flags";
 import {
   listOffersForRequest,
   getActiveSelectionForRequest,
   listClarifications,
+  loadOfferDecisionBoardForCustomer,
 } from "@/domains/offer";
 import { CustomerOfferBoard } from "@/components/customer/customer-offer-board";
 import { canAccessFullChat } from "@/domains/chat";
@@ -49,6 +50,15 @@ export default async function CustomerRequestDetailPage({ params }: PageProps) {
     );
   }
 
+  const decisionBoard =
+    marketplaceNative && isOfferDecisionEngineEnabled() && offers.length > 0
+      ? await loadOfferDecisionBoardForCustomer({
+          requestId,
+          customerId: authUser.id,
+          offers,
+        })
+      : null;
+
   // Ensure conversationId for unlocked marketplace requests
   let requestForPanel = request;
   if (isChatAuthV2Enabled() && !request.conversationId) {
@@ -77,6 +87,7 @@ export default async function CustomerRequestDetailPage({ params }: PageProps) {
           offers={offers}
           selectionOfferId={selection?.offerId ?? null}
           clarificationsByOffer={clarificationsByOffer}
+          decisionBoard={decisionBoard}
         />
       ) : null}
       <RequestWorkflowPanel

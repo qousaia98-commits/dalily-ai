@@ -128,10 +128,18 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
     languages: provider.languages,
     headline: provider.headline,
     displayName: provider.displayName,
+    experience: provider.experience,
+    specializations: provider.specializations,
+    skills: provider.skills,
     certificates: provider.certificates,
     awards: provider.awards,
     stats: provider.stats,
     serviceCities: provider.serviceCities,
+    serviceItems: provider.serviceItems,
+    portfolio: provider.portfolio,
+    availabilityStatus: provider.availabilityStatus,
+    publicTrustScorePct: provider.publicTrustScorePct,
+    visibility: provider.visibility,
   };
 
   const offerDecisionMode = Boolean(offerContext);

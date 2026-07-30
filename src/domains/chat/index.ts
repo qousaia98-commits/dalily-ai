@@ -104,3 +104,31 @@ export type {
   OfficialAccountProfile,
   ConversationTimeLabels,
 } from "@/domains/chat/types";
+
+/* —— Sprint 10 Phase 3: Enterprise Communication —— */
+export {
+  postCommunicationSystemEvent,
+  buildCommunicationTimeline,
+  loadConversationTimeline,
+  scrubContactLeaks,
+  assertPostUnlockContactSharing,
+  listReactionsForMessages,
+  toggleMessageReaction,
+  setConversationMuted,
+  getConversationSafetySettings,
+  blockChatUser,
+  unblockChatUser,
+  isMessagingBlocked,
+  reportConversation,
+  listOpenConversationReports,
+  setConversationModerationStatus,
+  resolveConversationReport,
+  resolveMessageTranslation,
+  COMMUNICATION_SYSTEM_EVENTS,
+  COMMUNICATION_TIMELINE_STEPS,
+  type CommunicationSystemEvent,
+  type CommunicationTimelineItem,
+  type MessageReactionSummary,
+  type ChatReportReason,
+  type ConversationSafetySettings,
+} from "@/domains/chat/communication";

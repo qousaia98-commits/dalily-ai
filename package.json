@@ -41,6 +41,8 @@
     "mobile:lint": "npm --prefix mobile run lint",
     "mobile:verify": "npm --prefix mobile run verify && npm --prefix mobile run verify:production",
     "verify:chat": "node scripts/verify-chat-invariants.mjs",
+    "verify:rc21-security": "node scripts/verify-rc21-security.mjs",
+    "test:rc21-p0": "node scripts/test-rc21-p0.mjs",
     "verify:infra": "node scripts/verify-infra-invariants.mjs",
     "verify:db:fresh": "node scripts/verify-fresh-baseline.mjs",
     "db:baseline:assemble": "node scripts/assemble-migration-baseline.mjs",

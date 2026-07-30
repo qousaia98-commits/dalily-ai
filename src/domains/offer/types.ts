@@ -23,10 +23,12 @@ export type MarketplaceOfferView = {
   matchAssignmentId: string;
   providerId: string;
   providerName: string | null;
+  providerDisplayName: string | null;
   providerAvatarUrl: string | null;
   verificationStatus: string | null;
   ratingAvg: number | null;
   reviewCount: number | null;
+  completedJobs: number | null;
   price: number;
   currency: string;
   priceModel: OfferPriceModel;

@@ -23,12 +23,14 @@ import { getLocalizedField } from "@/types/provider.types";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { AdminProviderSubscriptionCard } from "@/components/admin/admin-provider-subscription-card";
 import { AdminVerificationFeedbackDialog } from "@/components/admin/admin-verification-feedback-dialog";
+import { AdminOfferDecisionPanel } from "@/components/admin/admin-offer-decision-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/format/datetime";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { VerificationAdminFeedback } from "@/lib/verification/feedback";
+import { isOfferDecisionEngineEnabled } from "@/lib/config/feature-flags";
 
 type Props = { provider: AdminProviderReview };
 type DialogMode = "changes" | "reject" | null;
@@ -181,6 +183,14 @@ export function AdminBusinessReviewWorkspace({ provider }: Props) {
               ))}
             </ul>
           </div>
+
+          {isOfferDecisionEngineEnabled() ? (
+            <AdminOfferDecisionPanel
+              providerId={provider.id}
+              isFeatured={provider.isFeatured}
+              status={provider.status}
+            />
+          ) : null}
         </section>
 
         {/* CENTER — assets */}

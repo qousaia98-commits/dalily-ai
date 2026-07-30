@@ -12,10 +12,12 @@ export {
   isCustomerIntentFlowV2Enabled,
   isMatchingV2Enabled,
   isOffersV2Enabled,
+  isOfferDecisionEngineEnabled,
   isUnlockV2Enabled,
   isChatAuthV2Enabled,
   isChatEngineEnabled,
   isMessagingEngineEnabled,
+  isEnterpriseCommunicationEnabled,
   isProviderDashboardV2Enabled,
   isAdminMigrationV2Enabled,
   isDualMarketplaceEnabled,
@@ -40,6 +42,10 @@ export {
   isFinancialDocumentsEnabled,
   isRefundsDisputesEnabled,
   isFinanceDashboardEnabled,
+  isPaymentsV2Enabled,
+  isPaymentWalletEnabled,
+  isEscrowEngineEnabled,
+  isPayoutsEnabled,
 } from "./payments";
 
 export {
@@ -71,6 +77,13 @@ export {
   isPredictiveEngineEnabled,
   isAiEngineV9Enabled,
   isAiChatAssistantEnabled,
+  isAiPlatformEnabled,
+  isAiAssistantEnabled,
+  isAiTranslationEnabled,
+  isAiPricingEnabled,
+  isAiAnalyticsEnabled,
+  isAiFraudEnabled,
+  isAiModerationEnabled,
 } from "./ai";
 
 export { isSprint55Stabilization } from "./experimental";

@@ -37,6 +37,18 @@ export function isOffersV2Enabled(): boolean {
 }
 
 /**
+ * Sprint 10 Phase 2 — Smart Hiring & Offer Decision Engine.
+ * Ranking, insights, comparison helpers, shortlist (server-side only).
+ * Requires OFFERS_V2. When false: classic offer board without recommendations.
+ */
+export function isOfferDecisionEngineEnabled(): boolean {
+  return (
+    isOffersV2Enabled() &&
+    (envFlag("OFFER_DECISION_ENGINE") || envFlag("OFFER_DECISION_ENGINE_V1"))
+  );
+}
+
+/**
  * Sprint 5 — Unlock sessions, SLA, contact-release grants.
  * When false: selection stays pending_unlock with no session/grant.
  * Grant without a payment event only when UNLOCK_DEV_BYPASS is on (never for prod).
@@ -72,6 +84,19 @@ export function isChatEngineEnabled(): boolean {
  */
 export function isMessagingEngineEnabled(): boolean {
   return envFlag("MESSAGING_ENGINE") || isChatEngineEnabled();
+}
+
+/**
+ * Sprint 10 Phase 3 — Enterprise Communication Platform.
+ * Reactions, mute/block/report, booking timeline, REST APIs, admin moderation.
+ * Requires chat engine. When false: existing chat UX unchanged.
+ */
+export function isEnterpriseCommunicationEnabled(): boolean {
+  return (
+    isChatEngineEnabled() &&
+    (envFlag("ENTERPRISE_COMMUNICATION") ||
+      envFlag("ENTERPRISE_COMMUNICATION_V1"))
+  );
 }
 
 /**

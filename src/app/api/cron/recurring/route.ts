@@ -5,19 +5,18 @@ import {
   processRecurringSchedules,
   optimizeRecurringRoutes,
 } from "@/lib/recurring";
+import {
+  assertCronAuthorized,
+  cronUnauthorizedResponse,
+} from "@/lib/security/cron-auth";
 
 /**
  * Cron: generate upcoming recurring visits + send plan reminders + route hints.
- * Protect with CRON_SECRET: Authorization: Bearer <secret>
+ * Auth: Authorization: Bearer <CRON_SECRET> (fail-closed).
  */
 export async function POST(request: Request) {
-  const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = request.headers.get("authorization") ?? "";
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-    }
-  }
+  const auth = assertCronAuthorized(request);
+  if (!auth.ok) return cronUnauthorizedResponse(auth);
 
   if (!isRecurringServicesEnabled()) {
     return NextResponse.json({ ok: true, skipped: true, reason: "flag_off" });

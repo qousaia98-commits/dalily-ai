@@ -7,12 +7,14 @@ import {
   Settings,
   ShieldAlert,
   UserPlus,
+  Wallet,
+  Sparkles,
 } from "lucide-react";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getAuthUser } from "@/lib/auth/session";
 import { isBusinessUser, canAccessAdminPanel } from "@/lib/auth/roles";
-import { isQualityCasesEnabled, isAiDynamicPricingEnabled, isForecastEngineEnabled, isAiSchedulingEnabled } from "@/lib/config/feature-flags";
+import { isQualityCasesEnabled, isAiDynamicPricingEnabled, isForecastEngineEnabled, isAiSchedulingEnabled, isPaymentWalletEnabled, isAiAssistantEnabled } from "@/lib/config/feature-flags";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -52,6 +54,26 @@ export default async function AccountPage() {
           description: t("links.myBookingsDesc"),
           icon: CalendarClock,
         },
+        ...(isPaymentWalletEnabled()
+          ? [
+              {
+                href: "/account/wallet",
+                title: t("links.wallet"),
+                description: t("links.walletDesc"),
+                icon: Wallet,
+              },
+            ]
+          : []),
+        ...(isAiAssistantEnabled()
+          ? [
+              {
+                href: "/account/assistant",
+                title: t("links.assistant"),
+                description: t("links.assistantDesc"),
+                icon: Sparkles,
+              },
+            ]
+          : []),
         ...(isQualityCasesEnabled()
           ? [
               {

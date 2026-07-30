@@ -38,6 +38,9 @@ export default async function AdminAiOpsPage() {
           <Link href="/admin/reputation" className="text-[var(--dalily-gold)] hover:underline">
             {t("links.reputation")}
           </Link>
+          <Link href="/admin/ai-platform" className="text-[var(--dalily-gold)] hover:underline">
+            AI Platform
+          </Link>
         </div>
       </header>
 

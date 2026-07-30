@@ -30,7 +30,7 @@ import { VerificationDashboardAlert } from "@/components/business/verification-d
 import { OnboardingDashboardCard } from "@/components/business/onboarding/onboarding-dashboard-card";
 import { ProviderDashboardHomeView } from "@/components/business/provider-dashboard-home";
 import { getProviderDashboardHome } from "@/domains/provider/dashboard";
-import { isProviderDashboardV2Enabled, isAiEngineV7Enabled, isPredictiveEngineEnabled, isAiEngineV9Enabled } from "@/lib/config/feature-flags";
+import { isProviderDashboardV2Enabled, isAiEngineV7Enabled, isPredictiveEngineEnabled, isAiEngineV9Enabled, isOfferDecisionEngineEnabled } from "@/lib/config/feature-flags";
 import { buildPersonalizedGreeting } from "@/lib/greetings";
 import type { PlanSlug } from "@/lib/subscription/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -38,6 +38,8 @@ import { ProviderAssistantPanel } from "@/components/assistant/provider-assistan
 import { PredictiveNotificationsList } from "@/components/predictive/predictive-widgets";
 import { AutomationSuggestionsList } from "@/components/automation/automation-widgets";
 import type { AutomationSuggestion } from "@/lib/ai/automation/types";
+import { ProviderVisibilityTipsCard } from "@/components/business/provider-visibility-tips";
+import { loadProviderVisibilityTips } from "@/domains/offer/recommendation";
 
 /**
  * Provider home — Sprint 8 unlock-first stack when PROVIDER_DASHBOARD_V2;
@@ -90,6 +92,10 @@ export default async function BusinessDashboardPage() {
       locale,
       userId: authUser.id,
     });
+
+    const visibilityTips = isOfferDecisionEngineEnabled()
+      ? await loadProviderVisibilityTips(provider.id)
+      : [];
 
     let providerAssistant = null;
     let providerPredictive = null;
@@ -201,6 +207,9 @@ export default async function BusinessDashboardPage() {
         ) : null}
         {providerAutomation.length > 0 ? (
           <AutomationSuggestionsList items={providerAutomation} />
+        ) : null}
+        {visibilityTips.length > 0 ? (
+          <ProviderVisibilityTipsCard tips={visibilityTips} />
         ) : null}
         <ProviderDashboardHomeView data={marketplaceHome} greeting={greeting} />
       </div>

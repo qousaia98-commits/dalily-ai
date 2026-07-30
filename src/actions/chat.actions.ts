@@ -23,7 +23,13 @@ import {
 } from "@/domains/chat";
 import { sendMessageSchema } from "@/lib/validations/service-request";
 import { emitAiLearningEvent } from "@/lib/ai/learning/events";
-import { isRealtimeEngineEnabled, isChatEngineEnabled } from "@/lib/config/feature-flags";
+import { isRealtimeEngineEnabled, isChatEngineEnabled, isEnterpriseCommunicationEnabled } from "@/lib/config/feature-flags";
+import { checkRateLimit, rateLimitKey } from "@/lib/security/rate-limit";
+import {
+  scrubContactLeaks,
+  isMessagingBlocked,
+  getConversationSafetySettings,
+} from "@/domains/chat/communication";
 
 function revalidateConversation(conversationId: string) {
   revalidatePath(`/messages/${conversationId}`);
@@ -163,6 +169,34 @@ export async function sendChatMessageAction(formData: FormData): Promise<{
   const gate = await assertParticipant(conversationId, authUser.id);
   if (!gate.ok) return { success: false, error: gate.error };
 
+  const rate = checkRateLimit(rateLimitKey("chat_send", authUser.id), {
+    max: 60,
+    windowMs: 60_000,
+  });
+  if (!rate.ok) return { success: false, error: "rate_limited" };
+
+  if (isEnterpriseCommunicationEnabled() && gate.conv) {
+    const peerId =
+      authUser.id === gate.conv.customer_id
+        ? (gate.providerRow?.owner_id as string | undefined) ?? null
+        : gate.conv.customer_id;
+    if (peerId) {
+      const blocked = await isMessagingBlocked({
+        senderId: authUser.id,
+        recipientId: peerId,
+      });
+      if (blocked) return { success: false, error: "blocked" };
+    }
+    const safety = await getConversationSafetySettings({
+      conversationId,
+      userId: authUser.id,
+      peerUserId: peerId,
+    });
+    if (safety.moderationStatus === "suspended") {
+      return { success: false, error: "conversation_suspended" };
+    }
+  }
+
   let messageType: "text" | "image" | "document" | "location" = "text";
   if (hasLocation) messageType = "location";
   if (hasFile && file instanceof File) {
@@ -170,11 +204,32 @@ export async function sendChatMessageAction(formData: FormData): Promise<{
     messageType = file.type.startsWith("image/") ? "image" : "document";
   }
 
-  const body =
+  let body =
     bodyText ||
     (hasLocation ? locationLabel || "Shared a location" : "") ||
     (hasFile && file instanceof File ? file.name : "") ||
     " ";
+
+  if (isEnterpriseCommunicationEnabled() && gate.conv.service_request_id) {
+    const { canAccessFullChat } = await import("@/domains/chat");
+    const supabase = await createClient();
+    const { data: req } = await supabase
+      .from("service_requests")
+      .select("status, lifecycle_version")
+      .eq("id", gate.conv.service_request_id)
+      .maybeSingle();
+    const open = await canAccessFullChat({
+      serviceRequestId: gate.conv.service_request_id,
+      status: (req?.status as import("@/lib/service-requests/status-machine").ServiceRequestStatus | null) ?? null,
+      lifecycleVersion: (req?.lifecycle_version as number | null) ?? 2,
+    }).catch(() => false);
+    if (!open) {
+      body = scrubContactLeaks(body).text;
+      if (hasLocation) {
+        return { success: false, error: "chat_locked" };
+      }
+    }
+  }
 
   const inserted = await insertTextMessage({
     conversationId,

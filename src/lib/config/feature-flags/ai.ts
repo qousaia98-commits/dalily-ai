@@ -344,6 +344,92 @@ export function isAiChatAssistantEnabled(): boolean {
   return (
     envFlag("AI_CHAT_ASSISTANT") ||
     envFlag("AI_CHAT_ASSISTANT_V1") ||
+    envFlag("CHAT_AI_V1") ||
+    isAiAssistantEnabled()
+  );
+}
+
+/**
+ * Sprint 10 Phase 5 — Enterprise AI Platform umbrella.
+ * Canonical: AI_PLATFORM. Cascades from AI_ENGINE_V7+ / AI_OPS when unset.
+ */
+export function isAiPlatformEnabled(): boolean {
+  return (
+    envFlag("AI_PLATFORM") ||
+    envFlag("AI_PLATFORM_V1") ||
+    envFlag("ENTERPRISE_AI") ||
+    isAiEngineV7Enabled() ||
+    isAiOpsEnabled()
+  );
+}
+
+/** Sprint 10 Phase 5 — Customer/Provider assistants (recommendations only). */
+export function isAiAssistantEnabled(): boolean {
+  return (
+    isAiPlatformEnabled() &&
+    (envFlag("AI_ASSISTANT") ||
+      envFlag("AI_ASSISTANT_V1") ||
+      isAiChatAssistantEnabledRaw() ||
+      isAiBusinessAssistantEnabled() ||
+      isAiEngineV7Enabled())
+  );
+}
+
+/** Raw chat-assistant env without AI_ASSISTANT cascade (avoids recursion). */
+function isAiChatAssistantEnabledRaw(): boolean {
+  return (
+    envFlag("AI_CHAT_ASSISTANT") ||
+    envFlag("AI_CHAT_ASSISTANT_V1") ||
     envFlag("CHAT_AI_V1")
+  );
+}
+
+/** Sprint 10 Phase 5 — Translation overlays (never overwrite originals). */
+export function isAiTranslationEnabled(): boolean {
+  return (
+    isAiPlatformEnabled() &&
+    (envFlag("AI_TRANSLATION") ||
+      envFlag("AI_TRANSLATION_V1") ||
+      isAiChatAssistantEnabledRaw())
+  );
+}
+
+/** Sprint 10 Phase 5 — Pricing recommendations (never force prices). */
+export function isAiPricingEnabled(): boolean {
+  return (
+    isAiPlatformEnabled() &&
+    (envFlag("AI_PRICING") ||
+      envFlag("AI_PRICING_V1") ||
+      isAiDynamicPricingEnabled())
+  );
+}
+
+/** Sprint 10 Phase 5 — Marketplace analytics / forecasts (advisory). */
+export function isAiAnalyticsEnabled(): boolean {
+  return (
+    isAiPlatformEnabled() &&
+    (envFlag("AI_ANALYTICS") ||
+      envFlag("AI_ANALYTICS_V1") ||
+      isForecastEngineEnabled() ||
+      isAiMarketplaceIntelligenceEnabled() ||
+      isAiOpsEnabled())
+  );
+}
+
+/** Sprint 10 Phase 5 — Fraud analysis (never auto-ban). */
+export function isAiFraudEnabled(): boolean {
+  return (
+    isAiPlatformEnabled() &&
+    (envFlag("AI_FRAUD") || envFlag("AI_FRAUD_V1") || isFraudDetectionEnabled())
+  );
+}
+
+/** Sprint 10 Phase 5 — Content moderation recommendations only. */
+export function isAiModerationEnabled(): boolean {
+  return (
+    isAiPlatformEnabled() &&
+    (envFlag("AI_MODERATION") ||
+      envFlag("AI_MODERATION_V1") ||
+      isAiFraudEnabled())
   );
 }

@@ -593,7 +593,11 @@
         "forecast": "نظرة على الطلب",
         "forecastDesc": "أيام الطلب المرتفع ونصائح الحجز",
         "scheduling": "نوافذ التوافر",
-        "schedulingDesc": "نوافذ المواعيد وتقدير الوصول"
+        "schedulingDesc": "نوافذ المواعيد وتقدير الوصول",
+        "wallet": "المحفظة",
+        "walletDesc": "الأرصدة والمرتجعات والسجل",
+        "assistant": "المساعد",
+        "assistantDesc": "اقتراحات لتحسين طلبك"
       }
     },
     "myBusiness": {
@@ -1124,6 +1128,9 @@
       "viewProfile": "عرض الملف",
       "back": "رجوع",
       "trustBarHint": "تبقى بيانات التواصل خاصة حتى تقبل ويكتمل فتح التواصل.",
+      "viewGallery": "المعرض",
+      "viewReviews": "التقييمات",
+      "completedJobs": "{count, plural, =0 {لا أعمال بعد} one {# عمل مكتمل} other {# أعمال مكتملة}}",
       "compare": "مقارنة",
       "removeCompare": "إزالة من المقارنة",
       "business": "عمل",
@@ -1132,6 +1139,112 @@
       "comparing": "قيد المقارنة",
       "rating": "{rating}★",
       "selectedPendingUnlock": "تم اختيار العرض. فتح التواصل يأتي لاحقاً — لم يُشارك شيء بعد."
+    },
+    "decision": {
+      "recommendedBadge": "مزود موصى به",
+      "recommendedAria": "المزود الموصى به",
+      "trustScore": "الثقة {score}%",
+      "sortLabel": "ترتيب",
+      "filtersLabel": "تصفية",
+      "shortlist": "قائمة مختصرة",
+      "addShortlist": "حفظ في القائمة المختصرة",
+      "removeShortlist": "إزالة من القائمة المختصرة",
+      "shortlistedBadge": "مختصر",
+      "details": "رؤى",
+      "emptyTitle": "لا عروض بعد",
+      "emptyBody": "عندما يرسل المزودون عروضاً، ستقارنها هنا.",
+      "noMatches": "لا عروض تطابق هذه التصفية.",
+      "clearFilters": "مسح التصفية",
+      "assistantTitle": "لماذا يتميّز هذا المزود",
+      "insightsTitle": "رؤى العرض",
+      "risksTitle": "نقاط للانتباه",
+      "sorts": {
+        "recommended": "موصى به",
+        "rating": "أعلى تقييم",
+        "trust": "أفضل درجة ثقة",
+        "completed_jobs": "الأكثر خبرة",
+        "response_time": "الأسرع رداً",
+        "price": "أقل سعر",
+        "newest": "الأحدث",
+        "alphabetical": "أبجدياً"
+      },
+      "filters": {
+        "verified_only": "موثّق فقط",
+        "available_now": "متاح الآن",
+        "shortlisted": "القائمة المختصرة"
+      },
+      "summaries": {
+        "satisfaction_and_speed": "رضا عالٍ من العملاء ورد سريع.",
+        "reliability_and_jobs": "موثوقية ممتازة والعديد من الأعمال الناجحة.",
+        "verified_and_completion": "نشاط موثّق مع سجل إنجاز قوي.",
+        "fast_response": "يرد بسرعة على العملاء.",
+        "high_satisfaction": "تقييم مرتفع من العملاء.",
+        "strong_reliability": "مؤشرات موثوقية قوية.",
+        "highly_rated": "تقييم مرتفع من العملاء.",
+        "category_specialist": "متخصص في هذه الفئة.",
+        "frequently_hired": "يُطلب كثيراً.",
+        "new_provider": "مزود أحدث على دليلي.",
+        "excellent_completion": "سجل إنجاز ممتاز.",
+        "similar_experience": "خبرة في أعمال مشابهة.",
+        "verified_business": "نشاط موثّق.",
+        "good_value": "قيمة عرض تنافسية."
+      },
+      "insights": {
+        "fast_response": "يرد بسرعة كبيرة",
+        "highly_rated": "تقييم مرتفع من العملاء",
+        "category_specialist": "متخصص في هذه الفئة",
+        "frequently_hired": "يُطلب كثيراً",
+        "new_provider": "مزود جديد",
+        "excellent_completion": "سجل إنجاز ممتاز",
+        "similar_experience": "خبرة في أعمال مشابهة",
+        "verified_business": "نشاط موثّق",
+        "strong_reliability": "موثوقية قوية",
+        "good_value": "قيمة جيدة"
+      },
+      "risks": {
+        "new_provider": "أحدث على المنصة — أعمال مكتملة أقل حتى الآن.",
+        "limited_history": "سجل عمل محدود على دليلي.",
+        "slow_response": "عادة أبطأ في الرد.",
+        "recent_cancellations": "بعض الإلغاءات الأخيرة مسجّلة.",
+        "incomplete_profile": "الملف الشخصي غير مكتمل بعد.",
+        "temporarily_unavailable": "قد يكون غير متاح مؤقتاً."
+      },
+      "badges": {
+        "top_rated": "الأعلى تقييماً",
+        "fast_responder": "سريع الرد",
+        "highly_recommended": "موصى به بشدة",
+        "verified": "موثّق",
+        "reliable": "موثوق",
+        "experienced": "ذو خبرة",
+        "popular": "شائع",
+        "community_favorite": "مفضل المجتمع"
+      },
+      "assistant": {
+        "excellent_reviews": "تقييمات ممتازة",
+        "fast_communication": "تواصل سريع",
+        "verified_business": "نشاط موثّق",
+        "strong_reliability": "موثوقية قوية",
+        "category_fit": "ملاءمة قوية للفئة",
+        "strong_demand": "يختاره العملاء كثيراً",
+        "emerging_talent": "مزود واعد وأحدث",
+        "strong_completion": "إنجاز قوي للأعمال",
+        "relevant_experience": "خبرة ذات صلة",
+        "good_value": "قيمة تنافسية"
+      },
+      "compare": {
+        "title": "مقارنة المزودين",
+        "metric": "المعيار",
+        "rating": "التقييم",
+        "trust": "درجة الثقة",
+        "jobs": "أعمال مكتملة",
+        "response": "الرد (ساعات)",
+        "acceptance": "نسبة القبول",
+        "price": "السعر",
+        "verified": "موثّق",
+        "portfolio": "المعرض",
+        "yes": "نعم",
+        "no": "لا"
+      }
     },
     "provider": {
       "eyebrow": "الطلبات الجديدة",
@@ -1265,7 +1378,11 @@
       "decline_failed": "تعذر رفض العرض.",
       "label_required": "اسم القالب مطلوب.",
       "template_failed": "تعذر حفظ القالب.",
-      "use_offers": "استخدم مسار العروض لهذا الطلب."
+      "use_offers": "استخدم مسار العروض لهذا الطلب.",
+      "rate_limited": "محاولات كثيرة — يرجى الانتظار قليلاً.",
+      "shortlist_full": "القائمة المختصرة ممتلئة لهذا الطلب.",
+      "save_failed": "تعذر تحديث القائمة المختصرة.",
+      "validation_error": "طلب غير صالح."
     }
   },
   "unlockFlow": {
@@ -1850,9 +1967,11 @@
       "title": "إحصاءات عامة",
       "completedJobs": "أعمال مكتملة",
       "successRate": "معدل النجاح",
+      "acceptanceRate": "معدل القبول",
       "repeatCustomers": "زبائن متكررون",
       "responseRate": "معدل الرد",
       "avgResponse": "متوسط زمن الرد",
+      "reliability": "الموثوقية",
       "profileCompletion": "اكتمال الملف",
       "yearsOnDalily": "سنوات على دليلي",
       "pct": "{value}%",
@@ -1865,7 +1984,31 @@
     "certificates": "الشهادات",
     "awards": "الجوائز والشارات",
     "closedDay": "مغلق",
-    "trustOnlyNote": "الهاتف والبريد والعنوان الدقيق تبقى خاصة حتى تأكيد الحجز."
+    "trustOnlyNote": "الهاتف والبريد والعنوان الدقيق تبقى خاصة حتى تأكيد الحجز.",
+    "completedJobsShort": "{count, plural, one {# عمل} other {# أعمال}}",
+    "fromPrice": "من {price} {currency}",
+    "availability": {
+      "available": "متاح",
+      "limited": "ساعات محدودة",
+      "paused": "لا يستقبل حالياً"
+    },
+    "galleryEmptyTitle": "لا معرض بعد",
+    "galleryEmptyBody": "هذا العمل لم ينشر صور معرض بعد.",
+    "galleryFullscreen": "معاينة المعرض",
+    "galleryClose": "إغلاق",
+    "portfolioKind": {
+      "gallery": "معرض",
+      "before": "قبل",
+      "after": "بعد",
+      "video": "فيديو",
+      "videoSoon": "الفيديو قريباً"
+    },
+    "errors": {
+      "title": "تعذر تحميل هذا الملف",
+      "body": "حاول مرة أخرى أو عد إلى البحث.",
+      "retry": "إعادة المحاولة",
+      "backSearch": "العودة للبحث"
+    }
   },
   "publicVerification": {
     "eyebrow": "الثقة",
@@ -2176,6 +2319,56 @@
       "cancel": "إلغاء",
       "edited": "معدّلة",
       "forward": "إعادة توجيه"
+    },
+    "timeline": {
+      "aria": "خط زمني لتقدّم العمل",
+      "offer": "عرض",
+      "acceptance": "قبول",
+      "appointment": "موعد",
+      "arrival": "وصول",
+      "completion": "إنجاز",
+      "review": "تقييم",
+      "payment": "دفع"
+    },
+    "reactions": {
+      "aria": "تفاعلات الرسالة",
+      "add": "تفاعل بـ {emoji}"
+    },
+    "safety": {
+      "mute": "كتم المحادثة",
+      "unmute": "إلغاء الكتم",
+      "block": "حظر المستخدم",
+      "unblock": "إلغاء الحظر",
+      "report": "الإبلاغ عن المحادثة",
+      "reportTitle": "الإبلاغ عن هذه المحادثة",
+      "reason": "السبب",
+      "submitReport": "إرسال البلاغ",
+      "cancel": "إلغاء",
+      "reasons": {
+        "spam": "رسائل مزعجة",
+        "harassment": "تحرش",
+        "fraud": "احتيال",
+        "inappropriate": "محتوى غير لائق",
+        "other": "أخرى"
+      },
+      "errors": {
+        "failed": "حدث خطأ.",
+        "feature_disabled": "غير متاح.",
+        "login_required": "يرجى تسجيل الدخول.",
+        "forbidden": "غير مسموح.",
+        "rate_limited": "محاولات كثيرة.",
+        "update_failed": "تعذر التحديث.",
+        "report_failed": "تعذر إرسال البلاغ.",
+        "validation_error": "طلب غير صالح.",
+        "chat_locked": "المحادثة مقفلة.",
+        "not_found": "غير موجود."
+      }
+    },
+    "center": {
+      "title": "مركز التواصل",
+      "unread": "{count, plural, =0 {لا غير مقروء} one {# غير مقروء} other {# غير مقروء}}",
+      "customerHint": "الأعمال الحالية والمحادثات السابقة تبقى داخل دليلي.",
+      "businessHint": "نسّق الحجوزات هنا — لا حاجة لواتساب قبل القبول."
     }
   },
   "footer": {
@@ -2340,7 +2533,9 @@
         "history": "سجل المدفوعات",
         "historyDesc": "الاشتراكات وفتح العملاء والإيصالات",
         "monetization": "الخطط والفتحات",
-        "monetizationDesc": "خطة الأعمال والفتحات المشمولة"
+        "monetizationDesc": "خطة الأعمال والفتحات المشمولة",
+        "wallet": "المحفظة والتحويلات",
+        "walletDesc": "الرصيد المتاح والضمان وحالة التحويل"
       }
     },
     "dashboard": {
@@ -3575,6 +3770,23 @@
       "handlesEmergency": "استقبال طلبات الطوارئ",
       "handlesEmergencyHint": "عند الإيقاف تُستبعد من مطابقات الطوارئ. كن صادقاً — الثقة تعتمد على ذلك."
     },
+    "publicVisibility": {
+      "title": "خصوصية الملف العام",
+      "subtitle": "اختر ما يراه الزبائن في ملف الثقة العام قبل الحجز.",
+      "save": "حفظ الخصوصية",
+      "saving": "جاري الحفظ…",
+      "saved": "تم حفظ الخصوصية.",
+      "error": "تعذر حفظ إعدادات الخصوصية.",
+      "flags": {
+        "showLogo": "إظهار الصورة / الشعار",
+        "showGallery": "إظهار معرض الأعمال",
+        "showCompletedJobs": "إظهار عدد الأعمال المكتملة",
+        "showServiceArea": "إظهار منطقة الخدمة / المدن",
+        "showStatistics": "إظهار الإحصاءات العامة",
+        "showLanguages": "إظهار اللغات",
+        "showCertificates": "إظهار الشهادات"
+      }
+    },
     "success": {
       "kpis": {
         "title": "نظرة على عملك",
@@ -3890,7 +4102,9 @@
       "forecast": "توقّع الطلب",
       "scheduling": "الجدولة الذكية",
       "businessAssistant": "مساعد الأعمال",
-      "marketplaceIntelligence": "ذكاء السوق"
+      "marketplaceIntelligence": "ذكاء السوق",
+      "wallet": "المحفظة والضمان",
+      "aiPlatform": "منصة الذكاء الاصطناعي"
     },
     "learning": {
       "eyebrow": "داخلي · Learning AI",
@@ -4566,6 +4780,33 @@
         "popularity": "الشعبية",
         "response": "الاستجابة"
       }
+    },
+    "offerDecision": {
+      "title": "عمليات قرار العروض",
+      "subtitle": "تمييز مميز، إيقاف احتيال، وتشخيص ترتيب الطلب. الأوزان لا تُعرض أبداً.",
+      "feature": "تمييز كمميز",
+      "unfeature": "إزالة التمييز",
+      "featuredBadge": "مميز",
+      "suspendFraud": "إيقاف (احتيال)",
+      "reactivate": "إعادة تفعيل",
+      "diagnosticsTitle": "تشخيص الترتيب",
+      "requestIdPlaceholder": "معرّف طلب الخدمة",
+      "runDiagnostics": "تشغيل التشخيص",
+      "generatedAt": "أُنشئ {at}",
+      "signals": "الإشارات النشطة",
+      "score": "الدرجة {score}",
+      "recommended": "موصى به"
+    },
+    "chatModeration": {
+      "title": "إشراف المحادثات",
+      "subtitle": "راجع البلاغات، أوقف المحادثات المسيئة، واحفظ أمان السوق.",
+      "empty": "لا بلاغات محادثات مفتوحة.",
+      "enableHint": "فعّل ENTERPRISE_COMMUNICATION لفتح طابور الإشراف.",
+      "conversation": "المحادثة",
+      "resolve": "حل",
+      "dismiss": "رفض",
+      "resolveAndSuspend": "حل وإيقاف",
+      "suspendOnly": "إيقاف المحادثة فقط"
     },
     "controlCenterV2": {
       "title": "صحة المنصة",
@@ -5669,6 +5910,69 @@
         "forecast": "توقّع الطلب",
         "pricing": "التسعير الديناميكي"
       }
+    },
+    "enterprisePayments": {
+      "eyebrow": "مدفوعات المؤسسات",
+      "title": "المحفظة والضمان والمدفوعات",
+      "subtitle": "إدارة المحافظ والضمان والمدفوعات والرسوم والنزاعات.",
+      "toPayments": "المدفوعات ←",
+      "toRefunds": "المرتجعات ←",
+      "toFinance": "المالية ←",
+      "escrowTitle": "عمليات الضمان",
+      "payoutTitle": "التحويلات",
+      "feesTitle": "قواعد الرسوم",
+      "disputesTitle": "نزاعات السوق",
+      "empty": "لا يوجد شيء هنا بعد.",
+      "enabled": "مفعّل",
+      "disabled": "معطّل",
+      "stats": {
+        "wallets": "محافظ نشطة",
+        "balance": "رصيد المحافظ",
+        "escrowReserved": "ضمان محجوز",
+        "escrowDisputed": "ضمان متنازع",
+        "payoutsPending": "تحويلات معلقة",
+        "payoutsPaid": "تحويلات مدفوعة",
+        "disputes": "نزاعات مفتوحة",
+        "feeRules": "قواعد الرسوم"
+      },
+      "cols": {
+        "status": "الحالة",
+        "amount": "المبلغ",
+        "created": "الإنشاء",
+        "actions": "إجراءات",
+        "method": "الطريقة"
+      },
+      "actions": {
+        "release": "تحرير",
+        "refund": "استرداد",
+        "retry": "إعادة",
+        "process": "معالجة"
+      }
+    },
+    "aiPlatform": {
+      "eyebrow": "منصة الذكاء الاصطناعي",
+      "title": "مركز الذكاء الاصطناعي",
+      "subtitle": "الرؤى والاستخدام والمخاطر — التوصيات فقط دون حظر تلقائي.",
+      "toOps": "عمليات الذكاء ←",
+      "toFraud": "الاحتيال ←",
+      "stats": {
+        "requests": "طلبات 24س",
+        "errors": "أخطاء",
+        "latency": "متوسط الكمون",
+        "fallbacks": "احتياطي",
+        "fraud": "تنبيهات احتيال",
+        "moderation": "تقارير الإشراف"
+      },
+      "providersTitle": "المزوّدون",
+      "providersBody": "الأساسي: {primary} · الاحتياطي: {fallback}",
+      "centersTitle": "مراكز مرتبطة",
+      "usageTitle": "الاستخدام الأخير",
+      "moderationTitle": "توصيات الإشراف",
+      "empty": "لا بيانات بعد.",
+      "on": "مفعّل",
+      "off": "معطّل",
+      "ok": "نجاح",
+      "fail": "فشل"
     }
   },
   "pricing": {
@@ -6591,6 +6895,41 @@
       "title": "موثوقية الفتح (آخر 30 يوماً)",
       "body": "رفض: {declined} · انتهاء المهلة: {timedOut}"
     },
+    "visibility": {
+      "title": "حسّن ظهورك",
+      "subtitle": "نصائح عملية لمساعدة العملاء على اختيارك — دون كشف معادلات الترتيب.",
+      "cta": "تحسين",
+      "tips": {
+        "complete_profile": {
+          "title": "أكمل ملفك",
+          "body": "ملف أوضح يبني الثقة قبل فتح عرضك."
+        },
+        "get_verified": {
+          "title": "احصل على التوثيق",
+          "body": "شارة التوثيق تزيد ثقة العملاء عند التعيين."
+        },
+        "collect_reviews": {
+          "title": "اجمع المزيد من التقييمات",
+          "body": "اطلب من العملاء الراضين ترك تقييم بعد إنجاز العمل."
+        },
+        "improve_response": {
+          "title": "ردّ بشكل أسرع",
+          "body": "الرد السريع يجعل عروضك أكثر بروزاً."
+        },
+        "reduce_cancellations": {
+          "title": "قلّل الإلغاءات",
+          "body": "الالتزام بالمواعيد يحسّن صورة موثوقيتك."
+        },
+        "add_portfolio": {
+          "title": "أضف صور أعمال",
+          "body": "اعرض أعمالاً حقيقية ليقيّم العملاء الجودة بسرعة."
+        },
+        "stay_available": {
+          "title": "ابقَ متاحاً",
+          "body": "أوقف وضع الإجازة عندما تستطيع قبول عمل جديد."
+        }
+      }
+    },
     "matchReasons": {
       "label": "لماذا ظهرت لك هذه الفرصة",
       "category_fit": "ملاءمة الفئة",
@@ -6825,6 +7164,51 @@
         "resolutionRate": "معدل الحل",
         "avgHours": "متوسط وقت الحل"
       }
+    }
+  },
+  "wallet": {
+    "eyebrow": "المحفظة",
+    "title": "محفظتي",
+    "subtitle": "الأرصدة والسجل وسجل المدفوعات.",
+    "businessTitle": "محفظة الأعمال",
+    "businessSubtitle": "المدفوعات والأموال المحجوزة وسجل المعاملات.",
+    "loading": "جاري تحميل المحفظة…",
+    "errorTitle": "تعذر تحميل المحفظة",
+    "errorBody": "يرجى المحاولة مرة أخرى بعد لحظات.",
+    "empty": "لا توجد محفظة بعد.",
+    "ledgerTitle": "السجل",
+    "ledgerEmpty": "لا توجد قيود بعد.",
+    "historyTitle": "سجل المدفوعات",
+    "historyEmpty": "لا توجد معاملات بعد.",
+    "balances": {
+      "available": "المتاح",
+      "reserved": "محجوز",
+      "pendingPayout": "قيد التحويل",
+      "refund": "المرتجعات",
+      "bonus": "مكافآت"
+    }
+  },
+  "aiPlatform": {
+    "assistant": {
+      "eyebrow": "مساعد ذكي",
+      "pageTitle": "مساعد دليلي",
+      "pageSubtitle": "اقتراحات فقط — أنت تقرر دائماً.",
+      "providerPageTitle": "مساعد الأعمال",
+      "providerPageSubtitle": "مسودات واقتراحات — لا إرسال تلقائي.",
+      "title": "المساعد",
+      "subtitle": "حسّن الطلبات والعروض دون تنفيذ تلقائي.",
+      "controlNote": "لن يُرسل المساعد طلبات أو رسائل نيابةً عنك.",
+      "capability": "القدرة",
+      "prompt": "الوصف",
+      "promptPlaceholder": "صف ما تحتاجه…",
+      "generate": "إنشاء اقتراح",
+      "regenerate": "إعادة التوليد",
+      "copy": "نسخ",
+      "loading": "جاري التوليد…",
+      "error": "تعذر إنشاء الاقتراح.",
+      "confidence": "الثقة {value}%",
+      "feedbackUp": "مفيد",
+      "feedbackDown": "غير مفيد"
     }
   }
 }

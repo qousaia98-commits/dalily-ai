@@ -52,6 +52,7 @@ scripts/_final/
 # supabase temp dumps (baseline is committed under migrations/)
 supabase/_dump_*.sql
 supabase/_dump_attempt.sql
+supabase/.branches/
 scripts/_tmp_*.mjs
 scripts/_debug_*.mjs
 docs/database/reports/_*.sql

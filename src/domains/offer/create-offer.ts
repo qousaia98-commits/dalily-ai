@@ -148,6 +148,8 @@ function mapOfferRow(row: Record<string, unknown>, provider?: {
   rating_avg?: number | null;
   review_count?: number | null;
   avatarUrl?: string | null;
+  displayName?: string | null;
+  completedJobs?: number | null;
 }): MarketplaceOfferView {
   const nameJson = provider?.name as { ar?: string; en?: string } | string | null | undefined;
   let providerName: string | null = null;
@@ -165,10 +167,12 @@ function mapOfferRow(row: Record<string, unknown>, provider?: {
     matchAssignmentId: row.match_assignment_id as string,
     providerId: row.provider_id as string,
     providerName,
+    providerDisplayName: provider?.displayName ?? null,
     providerAvatarUrl: provider?.avatarUrl ?? null,
     verificationStatus: provider?.verification_status ?? null,
     ratingAvg: provider?.rating_avg ?? null,
     reviewCount: provider?.review_count ?? null,
+    completedJobs: provider?.completedJobs ?? null,
     price: Number(row.price),
     currency: row.currency as string,
     priceModel: row.price_model as MarketplaceOfferView["priceModel"],
@@ -215,7 +219,7 @@ export async function listOffersForRequest(
   const providerIds = [...new Set(rows.map((r) => r.provider_id as string))];
   const { data: providers } = await supabase
     .from("providers")
-    .select("id, name, verification_status, rating_avg, review_count, avatar_image_id")
+    .select("id, name, verification_status, rating_avg, review_count, avatar_image_id, metadata")
     .in("id", providerIds);
 
   const avatarIds = (providers ?? [])
@@ -235,16 +239,27 @@ export async function listOffersForRequest(
   }
 
   const { getStoragePublicUrl } = await import("@/lib/providers/storage");
+  const { fetchCompletedJobsByProviderIds } = await import("@/domains/matching");
+  const jobsMap = await fetchCompletedJobsByProviderIds(providerIds);
 
   const pmap = new Map(
     (providers ?? []).map((p) => {
       const avatarId = p.avatar_image_id as string | null;
       const path = avatarId ? avatarPathById.get(avatarId) : null;
+      const metadata = p.metadata as Record<string, unknown> | null;
+      const displayName =
+        typeof metadata?.display_name === "string"
+          ? metadata.display_name.trim() || null
+          : typeof metadata?.public_display_name === "string"
+            ? metadata.public_display_name.trim() || null
+            : null;
       return [
         p.id as string,
         {
           ...p,
           avatarUrl: path ? getStoragePublicUrl(path) : null,
+          displayName,
+          completedJobs: jobsMap.get(p.id as string) ?? 0,
         },
       ];
     }),

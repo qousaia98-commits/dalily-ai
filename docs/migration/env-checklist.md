@@ -40,7 +40,7 @@ Use before local work and before declaring a sprint done.
 | `UNLOCK_PAYMENTS_V2` | Sprint 6 Unlock fee capture + subscription upgrade freeze (default off) |
 | `PAYMENT_WEBHOOK_SECRET` | Required in production for `/api/webhooks/payments/*` |
 | `PAYMENT_WEBHOOK_ALLOW_INSECURE` | Local-only when secret unset |
-| `CRON_SECRET` | Optional bearer for `/api/cron/unlock-sla` |
+| `CRON_SECRET` | **Required** in all deployed environments. Bearer for `/api/cron/*`. Missing → fail-closed HTTP 500 (no cron execution). |
 | `CHAT_AUTH_V2` | Sprint 7 grant-gated full chat + hide public directory phone (default off) |
 | `PROVIDER_DASHBOARD_V2` | Sprint 8 unlock-first provider home + why-matched (default off) |
 | `ADMIN_MIGRATION_V2` | Sprint 9 cell policies, unlock ops, inspection, audited comps (default off) |

@@ -236,8 +236,32 @@ export async function transitionPaymentStatus(input: {
   note?: string | null;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   try {
+    const { canTransitionPaymentStatus } = await import(
+      "@/lib/payment/state-machine"
+    );
+    const { logFinancialAudit } = await import("@/domains/payment/audit");
+
     const current = await getPaymentById(input.paymentId);
     if (!current) return { ok: false, error: "not_found" };
+
+    if (!canTransitionPaymentStatus(current.status, input.toStatus)) {
+      await logFinancialAudit({
+        actorId: input.actorUserId ?? null,
+        action: "payment_transition",
+        objectType: "payment",
+        objectId: input.paymentId,
+        oldState: { status: current.status },
+        newState: { status: input.toStatus },
+        result: "rejected",
+        metadata: { reason: "invalid_transition", source: input.source },
+      });
+      return { ok: false, error: "invalid_transition" };
+    }
+
+    // Duplicate / no-op transition — idempotent success
+    if (current.status === input.toStatus) {
+      return { ok: true };
+    }
 
     const patch: Record<string, unknown> = {
       payment_status: input.toStatus,
@@ -251,11 +275,20 @@ export async function transitionPaymentStatus(input: {
     if (input.toStatus === "rejected")
       patch.rejected_at = new Date().toISOString();
 
-    const { error } = await db()
+    const { data, error } = await db()
       .from("payments")
       .update(patch)
-      .eq("id", input.paymentId);
+      .eq("id", input.paymentId)
+      .eq("payment_status", current.status)
+      .select("id")
+      .maybeSingle();
     if (error) return { ok: false, error: error.message };
+    if (!data) {
+      // Concurrent transition — re-check
+      const again = await getPaymentById(input.paymentId);
+      if (again?.status === input.toStatus) return { ok: true };
+      return { ok: false, error: "concurrent_transition" };
+    }
 
     await snapshotPaymentStatus({
       paymentId: input.paymentId,
@@ -265,6 +298,18 @@ export async function transitionPaymentStatus(input: {
       source: input.source,
       note: input.note,
     });
+
+    await logFinancialAudit({
+      actorId: input.actorUserId ?? null,
+      action: "payment_transition",
+      objectType: "payment",
+      objectId: input.paymentId,
+      oldState: { status: current.status },
+      newState: { status: input.toStatus },
+      result: "success",
+      metadata: { source: input.source, note: input.note ?? null },
+    });
+
     return { ok: true };
   } catch (e) {
     return {

@@ -7,6 +7,7 @@ import { rankProviders } from "@/lib/search/ranking/rank-providers";
 import { getActivePlanSlugsByProviderIds } from "@/lib/subscription/repository";
 import { fetchActiveProviders, fetchImagePaths } from "@/lib/search/repository/provider-search.repository";
 import { mapProviderRowsToListItems } from "@/lib/search/mapper/provider-list-mapper";
+import { isChatAuthV2Enabled } from "@/lib/config/feature-flags";
 import type { CategorySlug } from "@/lib/categories/types";
 import type { ProviderListItem } from "@/types/search.types";
 import type { LocalizedText } from "@/types/domain.types";
@@ -252,7 +253,8 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
   const planMap = await getActivePlanSlugsByProviderIds([provider.id]);
 
   // Trust page / public directory: never expose phone, WhatsApp, exact address, or GPS.
-  // Contact unlock happens only after booking / unlock grant.
+  // Contact unlock happens only after booking / unlock grant (CHAT_AUTH_V2).
+  const hidePublicContact = isChatAuthV2Enabled();
   return {
     id: provider.id,
     slug: provider.slug,
@@ -274,8 +276,8 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     memberSince: provider.created_at,
     coverImage: cover ? getStoragePublicUrl(cover.path) : DEFAULT_COVER,
     avatarImage: avatar ? getStoragePublicUrl(avatar.path) : DEFAULT_AVATAR,
-    phone: null,
-    whatsapp: null,
+    phone: hidePublicContact ? null : provider.phone,
+    whatsapp: hidePublicContact ? null : provider.whatsapp,
     responseTimeHours: provider.response_time_hours,
     services: activeServices,
     gallery,

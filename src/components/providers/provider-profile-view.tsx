@@ -6,6 +6,7 @@ import type { Locale } from "@/lib/i18n/config";
 import type { PublicProviderProfile } from "@/lib/providers/database";
 import type { PublicProviderTrustExtras } from "@/lib/providers/public-profile";
 import { StarRating } from "@/components/providers/star-rating";
+import { TrustScore } from "@/components/providers/trust-score";
 import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { Badge } from "@/components/ui/badge";
 import { PlanBadge } from "@/components/shared/plan-badge";
@@ -41,7 +42,6 @@ type ProviderProfileViewProps = {
   canReplyReviews?: boolean;
   bookingServices?: { id: string; name: string }[];
   publicTrust: PublicTrustView;
-  /** When viewing from an incoming offer — hide outbound CTAs; sticky bar is separate. */
   offerDecisionMode?: boolean;
 };
 
@@ -73,16 +73,19 @@ export async function ProviderProfileView({
   const displayName = trustExtras?.displayName?.trim() || businessName;
   const headline = trustExtras?.headline?.trim() || null;
   const stats = trustExtras?.stats;
+  const visibility = trustExtras?.visibility;
   const weekdayFormatter = new Intl.DateTimeFormat(locale === "ar" ? "ar" : "en", {
     weekday: "long",
   });
-  // Use a known Sunday-based reference week (2024-01-07 = Sunday).
   const weekdayLabel = (dayOfWeek: number) =>
     weekdayFormatter.format(new Date(Date.UTC(2024, 0, 7 + dayOfWeek)));
 
+  const trustPct =
+    trustExtras?.publicTrustScorePct ??
+    Math.max(1, Math.min(99, Math.round(provider.trustScore)));
 
   return (
-    <div className={`animate-fade-in ${offerDecisionMode ? "pb-24" : ""}`}>
+    <div className={`animate-fade-in ${offerDecisionMode ? "pb-28" : ""}`}>
       <TrackProfileView providerId={provider.id} />
       <div className="relative h-48 overflow-hidden sm:h-64 md:h-72">
         <Image
@@ -137,41 +140,148 @@ export async function ProviderProfileView({
                 </p>
               )}
             </div>
+
+            <div className="flex flex-wrap items-center gap-4">
+              <TrustScore score={trustPct} verified={provider.verified} size="lg" showBar />
+            </div>
+
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <StarRating rating={provider.rating} size="md" />
               <span>
                 {provider.reviewCount} {t("reviews")}
               </span>
+              {visibility?.showCompletedJobs !== false && stats ? (
+                <span>
+                  {t("completedJobsShort", { count: stats.completedJobs })}
+                </span>
+              ) : null}
               <TrustBadgeList badges={trustBadges.slice(0, 3)} />
-              <span className="flex items-center gap-1">
-                <MapPin className="size-4" />
-                {cityLabel}
-              </span>
+              {visibility?.showServiceArea !== false ? (
+                <span className="flex items-center gap-1">
+                  <MapPin className="size-4" />
+                  {cityLabel}
+                </span>
+              ) : null}
               {provider.responseTimeHours != null ? (
                 <span className="flex items-center gap-1">
                   <Clock className="size-4" />
                   {t("respondsIn", { hours: provider.responseTimeHours })}
                 </span>
               ) : null}
-              <span>{t("memberSince", { date: new Date(provider.memberSince).getFullYear() })}</span>
+              {stats ? (
+                <span>
+                  {t("memberSince", { date: new Date(provider.memberSince).getFullYear() })}
+                </span>
+              ) : null}
+              {trustExtras?.availabilityStatus ? (
+                <Badge variant="secondary">
+                  {t(`availability.${trustExtras.availabilityStatus}`)}
+                </Badge>
+              ) : null}
             </div>
+
+            {visibility?.showLanguages !== false &&
+            trustExtras &&
+            trustExtras.languages.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5">
+                {trustExtras.languages.map((lang) => (
+                  <Badge key={lang} variant="outline">
+                    {lang}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+
             <p className="text-xs text-muted-foreground">{t("trustOnlyNote")}</p>
           </div>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
-            {provider.about ? (
-              <section>
+            {provider.about || trustExtras?.experience ? (
+              <section id="provider-about">
                 <h2 className="mb-3 text-lg font-semibold">{t("about")}</h2>
-                <p className="leading-relaxed text-muted-foreground">
-                  {getLocalizedText(provider.about, locale)}
-                </p>
+                {provider.about ? (
+                  <p className="leading-relaxed text-muted-foreground">
+                    {getLocalizedText(provider.about, locale)}
+                  </p>
+                ) : null}
+                {trustExtras?.experience ? (
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {trustExtras.experience}
+                  </p>
+                ) : null}
+                {trustExtras && trustExtras.specializations.length > 0 ? (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {trustExtras.specializations.map((s) => (
+                      <Badge key={s} variant="secondary">
+                        {s}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
+                {trustExtras && trustExtras.skills.length > 0 ? (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {trustExtras.skills.map((s) => (
+                      <Badge key={s} variant="outline">
+                        {s}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
               </section>
             ) : null}
 
-            {provider.services.length > 0 ? (
-              <section>
+            {trustExtras && trustExtras.serviceItems.length > 0 ? (
+              <section id="provider-services">
+                <h2 className="mb-3 text-lg font-semibold">{t("services")}</h2>
+                <ul className="space-y-3">
+                  {trustExtras.serviceItems.map((service) => (
+                    <li
+                      key={service.id}
+                      className="rounded-2xl border border-border/70 px-3.5 py-3"
+                    >
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <p className="font-medium">
+                          {getLocalizedText(service.name, locale)}
+                        </p>
+                        {service.startingPrice != null ? (
+                          <span className="text-sm font-semibold text-[var(--dalily-navy)] dark:text-[var(--dalily-gold)]">
+                            {t("fromPrice", {
+                              price: service.startingPrice,
+                              currency: service.currency ?? "SYP",
+                            })}
+                          </span>
+                        ) : null}
+                      </div>
+                      {service.description ? (
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {getLocalizedText(service.description, locale)}
+                        </p>
+                      ) : null}
+                      {service.estimatedResponseHours != null ? (
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {t("respondsIn", {
+                            hours: service.estimatedResponseHours,
+                          })}
+                        </p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Badge variant="outline">
+                    {getLocalizedText(provider.categoryLabel, locale)}
+                  </Badge>
+                  {(trustExtras.serviceCities ?? []).map((city) => (
+                    <Badge key={city} variant="outline">
+                      {city}
+                    </Badge>
+                  ))}
+                </div>
+              </section>
+            ) : provider.services.length > 0 ? (
+              <section id="provider-services">
                 <h2 className="mb-3 text-lg font-semibold">{t("services")}</h2>
                 <div className="flex flex-wrap gap-2">
                   {provider.services.map((service) => (
@@ -187,18 +297,15 @@ export async function ProviderProfileView({
               </section>
             ) : null}
 
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="outline">{getLocalizedText(provider.categoryLabel, locale)}</Badge>
-              {(trustExtras?.serviceCities ?? []).map((city) => (
-                <Badge key={city} variant="outline">
-                  {city}
-                </Badge>
-              ))}
-            </div>
+            {visibility?.showStatistics !== false && stats ? (
+              <ProviderPublicStatsGrid
+                stats={stats}
+                showCompletedJobs={visibility?.showCompletedJobs !== false}
+              />
+            ) : null}
 
-            {stats ? <ProviderPublicStatsGrid stats={stats} /> : null}
-
-            {trustExtras && trustExtras.workingHours.some((h) => h.opensAt || h.isClosed) ? (
+            {trustExtras &&
+            trustExtras.workingHours.some((h) => h.opensAt || h.isClosed) ? (
               <section>
                 <h2 className="mb-3 text-lg font-semibold">{t("workingHours")}</h2>
                 <ul className="space-y-1.5 text-sm">
@@ -219,20 +326,9 @@ export async function ProviderProfileView({
               </section>
             ) : null}
 
-            {trustExtras && trustExtras.languages.length > 0 ? (
-              <section>
-                <h2 className="mb-3 text-lg font-semibold">{t("languages")}</h2>
-                <div className="flex flex-wrap gap-2">
-                  {trustExtras.languages.map((lang) => (
-                    <Badge key={lang} variant="secondary">
-                      {lang}
-                    </Badge>
-                  ))}
-                </div>
-              </section>
-            ) : null}
-
-            {trustExtras && trustExtras.certificates.length > 0 ? (
+            {visibility?.showCertificates !== false &&
+            trustExtras &&
+            trustExtras.certificates.length > 0 ? (
               <section>
                 <h2 className="mb-3 text-lg font-semibold">{t("certificates")}</h2>
                 <div className="flex flex-wrap gap-2">
@@ -258,20 +354,27 @@ export async function ProviderProfileView({
               </section>
             ) : null}
 
-            <ProviderGalleryLazy images={provider.gallery} alt={businessName} />
+            {visibility?.showGallery !== false ? (
+              <ProviderGalleryLazy
+                items={trustExtras?.portfolio ?? []}
+                alt={businessName}
+              />
+            ) : null}
 
-            <ProviderReviewsSection
-              providerId={provider.id}
-              stats={reviewStats}
-              reviews={reviews}
-              total={reviewTotal}
-              hasMore={reviewHasMore}
-              page={reviewPage}
-              sort={reviewSort}
-              badges={trustBadges}
-              canVote={canVoteReviews}
-              canReply={canReplyReviews}
-            />
+            <div id="provider-reviews">
+              <ProviderReviewsSection
+                providerId={provider.id}
+                stats={reviewStats}
+                reviews={reviews}
+                total={reviewTotal}
+                hasMore={reviewHasMore}
+                page={reviewPage}
+                sort={reviewSort}
+                badges={trustBadges}
+                canVote={canVoteReviews}
+                canReply={canReplyReviews}
+              />
+            </div>
           </div>
 
           <div className="space-y-4">

@@ -253,3 +253,32 @@ export async function changeUserRoleAction(
   revalidatePath("/admin/users");
   return { success: true };
 }
+
+export async function setProviderFeaturedAction(
+  providerId: string,
+  featured: boolean,
+): Promise<AdminActionState> {
+  const authUser = await requireAdminUser();
+  if (!isPlatformAdmin(authUser.roles)) return forbidden();
+
+  const parsedId = providerIdSchema.safeParse(providerId);
+  if (!parsedId.success) return { success: false, error: "validation_error" };
+
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("providers")
+    .update({
+      is_featured: featured,
+      featured_until: featured
+        ? new Date(Date.now() + 30 * 86_400_000).toISOString()
+        : null,
+      updated_by: authUser.id,
+    })
+    .eq("id", parsedId.data);
+
+  if (error) return { success: false, error: "update_failed" };
+
+  revalidateAdmin();
+  revalidatePath(`/admin/providers/${parsedId.data}`);
+  return { success: true };
+}

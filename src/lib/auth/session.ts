@@ -67,3 +67,18 @@ export async function requireAdminUser(): Promise<AuthUser> {
   }
   return user;
 }
+
+/**
+ * Financial mutations — Finance or Super Admin only (not moderators).
+ * For Server Actions: returns null instead of redirect when forbidden.
+ */
+export async function requireFinanceUser(): Promise<AuthUser> {
+  const user = await requireAuthUser();
+  const { canManageFinance } = await import("@/lib/auth/roles");
+  if (!canManageFinance(user.roles)) {
+    const locale = (await getLocale()) as Locale;
+    redirect({ href: "/admin", locale });
+    throw new Error("FORBIDDEN");
+  }
+  return user;
+}

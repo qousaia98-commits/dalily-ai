@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
 import type { MatchPoolSummary } from "@/domains/matching";
 import type { MarketplaceOfferView, OfferClarificationView } from "@/domains/offer/types";
+import type { PublicOfferDecisionBoard } from "@/domains/offer/recommendation";
 import type { ReleasedContact, UnlockSessionView } from "@/domains/unlock/types";
 import { CustomerOfferBoard } from "@/components/customer/customer-offer-board";
 import { CustomerUnlockStatus } from "@/components/customer/customer-unlock-status";
@@ -30,6 +31,7 @@ export async function WaitingRoom({
   offers = [],
   selectionOfferId = null,
   clarificationsByOffer = {},
+  decisionBoard = null,
   unlockSession = null,
   releasedContact = null,
   conversationId = null,
@@ -44,6 +46,7 @@ export async function WaitingRoom({
   offers?: MarketplaceOfferView[];
   selectionOfferId?: string | null;
   clarificationsByOffer?: Record<string, OfferClarificationView[]>;
+  decisionBoard?: PublicOfferDecisionBoard | null;
   unlockSession?: UnlockSessionView | null;
   releasedContact?: ReleasedContact | null;
   conversationId?: string | null;
@@ -123,6 +126,7 @@ export async function WaitingRoom({
           offers={offers}
           selectionOfferId={selectionOfferId}
           clarificationsByOffer={clarificationsByOffer}
+          decisionBoard={decisionBoard}
         />
       ) : assignedCount > 0 ? (
         <div className="rounded-2xl border border-border px-5 py-8 text-center">

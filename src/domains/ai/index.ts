@@ -1,7 +1,7 @@
 /**
- * SAD AI domain facade.
- * Phase 1 foundation lives in src/lib/ai (memory, knowledge, learning, intent resolve).
- * Advisory modules remain behind product guardrails.
+ * SAD AI domain — Enterprise AI Platform (Sprint 10 Phase 5).
+ * Runtime engines remain in src/lib/ai and specialized domains;
+ * this facade orchestrates provider-agnostic access.
  */
 
 export const AI_DOMAIN = {
@@ -31,35 +31,90 @@ export const AI_DOMAIN = {
     "ai_automation_actions",
     "ai_automation_approvals",
     "ai_automation_feedback",
+    "ai_platform_usage",
+    "ai_platform_cache",
+    "ai_prompt_templates",
+    "ai_moderation_reports",
+    "ai_analytics_snapshots",
     "learning_events",
-    "suggestion_artifacts",
-    "model_run_logs_scrubbed",
   ],
   impl: [
+    "src/domains/ai",
     "src/domains/chat",
     "src/domains/vision",
     "src/domains/speech",
     "src/domains/forecast",
+    "src/domains/matching",
+    "src/domains/offer/recommendation",
     "src/lib/ai",
-    "src/lib/ai/dispatch",
-    "src/lib/ai/jobs",
-    "src/lib/ai/vision",
-    "src/lib/ai/voice",
-    "src/lib/ai/providers",
-    "src/lib/speech-engine",
+    "src/lib/fraud",
+    "src/lib/ai-ops",
+    "src/lib/pricing-engine",
+    "src/lib/matching-engine",
     "src/lib/forecast-engine",
-    "src/lib/ai/forecasting",
-    "src/lib/ai/predictive",
-    "src/lib/ai/assistant",
-    "src/lib/ai/automation",
-    "src/lib/vision",
-    "src/lib/voice",
-    "src/lib/diagnosis",
-    "src/lib/search/problem-detection",
-    "src/lib/search/learning",
+    "src/lib/scheduling-engine",
   ],
-  status: "phase9_autonomous_actions",
+  status: "active",
+  sprint: 10,
+  featureFlag: "AI_PLATFORM",
+  flags: [
+    "AI_PLATFORM",
+    "AI_ASSISTANT",
+    "AI_TRANSLATION",
+    "AI_PRICING",
+    "AI_ANALYTICS",
+    "AI_FRAUD",
+    "AI_MODERATION",
+  ],
 } as const;
 
 /** Stable pointers for intake / vision / voice orchestration. */
 export const AI_IMPL_PATHS = AI_DOMAIN.impl;
+
+export type {
+  LlmProviderId,
+  AiPlatformFeature,
+  AiPriceEstimateView,
+  AiTranslationView,
+  AiSummaryView,
+  AiFraudAnalysisView,
+  AiModerationView,
+  AiAssistantCapability,
+  AiAssistantResponseView,
+  AiPlatformHealthView,
+  AiCompletionResult,
+} from "@/domains/ai/shared/types";
+
+export {
+  resolveLlmProviderId,
+  resolveFallbackLlmProviderId,
+  getLlmProvider,
+  listRegisteredLlmProviders,
+  completeWithFallback,
+} from "@/domains/ai/providers";
+
+export {
+  aiPlatformEngine,
+  getAiPlatformStatus,
+  getAiPlatformHealth,
+} from "@/domains/ai/engine/platform-engine";
+
+export {
+  runCustomerAssistant,
+  runProviderAssistant,
+  buildCustomerAssistant,
+  buildProviderAssistant,
+} from "@/domains/ai/assistant/service";
+
+export { estimatePriceRange } from "@/domains/ai/pricing/service";
+export { translateText } from "@/domains/ai/translation/service";
+export { analyzeEntityFraud } from "@/domains/ai/fraud/service";
+export { recommendModeration } from "@/domains/ai/moderation/service";
+export {
+  summarizeConversation,
+  summarizeArbitrary,
+} from "@/domains/ai/analytics/summaries";
+export { getMarketplaceInsightsOverview } from "@/domains/ai/analytics/insights";
+export { queryKnowledge } from "@/domains/ai/knowledge/service";
+export { suggestScheduleHints } from "@/domains/ai/scheduler/service";
+export { getAiAdminCenterOverview } from "@/domains/ai/admin/overview";

@@ -74,5 +74,19 @@ export async function ensureFullChatSessionForGrant(input: {
     return { ok: false, error: error?.message ?? "conversation_create_failed" };
   }
 
+  try {
+    const { postCommunicationSystemEvent } = await import(
+      "@/domains/chat/communication"
+    );
+    await postCommunicationSystemEvent({
+      conversationId: created.id as string,
+      actorId: input.customerId,
+      event: "chat_opened",
+      useAdmin: true,
+    });
+  } catch {
+    /* soft */
+  }
+
   return { ok: true, conversationId: created.id as string, created: true };
 }

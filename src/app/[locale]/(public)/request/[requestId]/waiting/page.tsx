@@ -1,19 +1,21 @@
 import { redirect } from "next/navigation";
 import {
+  listOffersForRequest,
+  getActiveSelectionForRequest,
+  listClarifications,
+  loadOfferDecisionBoardForCustomer,
+} from "@/domains/offer";
+import {
   isCustomerIntentFlowV2Enabled,
   isMatchingV2Enabled,
   isOffersV2Enabled,
+  isOfferDecisionEngineEnabled,
   isUnlockV2Enabled,
   isChatAuthV2Enabled,
 } from "@/lib/config/feature-flags";
 import { getAuthUser } from "@/lib/auth/session";
 import { getRequestDetail } from "@/lib/service-requests/queries";
 import { getMatchPoolSummaryForRequest } from "@/domains/matching";
-import {
-  listOffersForRequest,
-  getActiveSelectionForRequest,
-  listClarifications,
-} from "@/domains/offer";
 import {
   getUnlockSessionForSelection,
   getReleasedContactForCustomer,
@@ -76,6 +78,15 @@ export default async function RequestWaitingPage({
       }),
     );
   }
+
+  const decisionBoard =
+    offersEnabled && isOfferDecisionEngineEnabled() && offers.length > 0
+      ? await loadOfferDecisionBoardForCustomer({
+          requestId,
+          customerId: authUser.id,
+          offers,
+        })
+      : null;
 
   const unlockEnabled = isUnlockV2Enabled();
   const unlockSession =
@@ -257,6 +268,7 @@ export default async function RequestWaitingPage({
         offers={offers}
         selectionOfferId={selection?.offerId ?? null}
         clarificationsByOffer={clarificationsByOffer}
+        decisionBoard={decisionBoard}
         unlockSession={unlockSession}
         releasedContact={releasedContact}
         conversationId={conversationId}

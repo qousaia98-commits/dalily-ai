@@ -2,7 +2,11 @@ import { KeyRound, Star, Wallet } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
-import { isUnlockV2Enabled, isProviderMonetizationEnabled } from "@/lib/config/feature-flags";
+import {
+  isUnlockV2Enabled,
+  isProviderMonetizationEnabled,
+  isPaymentWalletEnabled,
+} from "@/lib/config/feature-flags";
 import { listProviderUnlockSessions } from "@/domains/unlock/session";
 import { MobileHubLinks } from "@/components/layout/mobile-hub-links";
 import { NavCountBadge } from "@/components/shared/nav-count-badge";
@@ -58,6 +62,16 @@ export default async function BusinessPaymentsPage() {
       description: t("links.historyDesc"),
       icon: Wallet,
     },
+    ...(isPaymentWalletEnabled()
+      ? [
+          {
+            href: "/business/payments/wallet",
+            title: t("links.wallet"),
+            description: t("links.walletDesc"),
+            icon: Wallet,
+          },
+        ]
+      : []),
     ...(isProviderMonetizationEnabled()
       ? [
           {

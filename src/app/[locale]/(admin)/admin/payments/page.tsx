@@ -53,9 +53,15 @@ export default async function AdminPaymentsPage({ searchParams }: PageProps) {
         </Link>
         <Link
           href="/admin/finance"
-          className="mt-2 inline-block text-sm font-medium text-[var(--dalily-gold)] hover:underline"
+          className="mt-2 me-4 inline-block text-sm font-medium text-[var(--dalily-gold)] hover:underline"
         >
           Finance analytics →
+        </Link>
+        <Link
+          href="/admin/wallet"
+          className="mt-2 inline-block text-sm font-medium text-[var(--dalily-gold)] hover:underline"
+        >
+          Wallet & escrow →
         </Link>
       </div>
 

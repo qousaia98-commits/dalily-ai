@@ -17,12 +17,20 @@ import { AiChatPanel } from "@/components/messaging/ai-chat-panel";
 import { MessageTranslateToggle } from "@/components/messaging/message-translate-toggle";
 import { VoiceTranscriptPanel } from "@/components/messaging/voice-transcript-panel";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
-import { isAiChatAssistantEnabled, isChatVoiceMessagingEnabled } from "@/lib/config/feature-flags";
+import { isAiChatAssistantEnabled, isChatVoiceMessagingEnabled, isEnterpriseCommunicationEnabled } from "@/lib/config/feature-flags";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { canAccessFullChat } from "@/domains/chat";
+import {
+  canAccessFullChat,
+  loadConversationTimeline,
+  listReactionsForMessages,
+  getConversationSafetySettings,
+} from "@/domains/chat";
+import { BookingTimeline } from "@/components/messaging/booking-timeline";
+import { MessageReactions } from "@/components/messaging/message-reactions";
+import { ConversationSafetyMenu } from "@/components/messaging/conversation-safety-menu";
 import {
   formatMessageTime,
   isValidMessageTimestamp,
@@ -88,6 +96,32 @@ export async function ConversationThread({
         lifecycleVersion: request.lifecycle_version ?? 1,
       })
     : Boolean(conversation.kind === "dalily" || conversation.official || conversation.kind === "customer");
+
+  const enterprise = isEnterpriseCommunicationEnabled();
+  const timeline =
+    enterprise && conversation.kind === "customer" && userId
+      ? await loadConversationTimeline({
+          conversationId: conversation.id,
+          serviceRequestId: request?.id ?? conversation.serviceRequestId ?? null,
+        })
+      : [];
+
+  const reactionsByMessage =
+    enterprise && conversation.kind === "customer" && userId
+      ? await listReactionsForMessages({
+          messageIds: conversation.messages.map((m) => m.id),
+          userId,
+        })
+      : new Map();
+
+  const safety =
+    enterprise && conversation.kind === "customer" && userId
+      ? await getConversationSafetySettings({
+          conversationId: conversation.id,
+          userId,
+          peerUserId: conversation.peerUserId ?? null,
+        })
+      : null;
 
   return (
     <div className="flex min-h-[28rem] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
@@ -168,12 +202,22 @@ export async function ConversationThread({
             </>
           )}
           {conversation.kind === "customer" ? (
-            <ConversationQuickActions
-              conversationId={conversation.id}
-              viewer={viewer === "customer" ? "customer" : "business"}
-              pinned={conversation.pinned}
-              archived={conversation.archived || conversation.state === "archived"}
-            />
+            <div className="flex shrink-0 items-center gap-0.5">
+              <ConversationQuickActions
+                conversationId={conversation.id}
+                viewer={viewer === "customer" ? "customer" : "business"}
+                pinned={conversation.pinned}
+                archived={conversation.archived || conversation.state === "archived"}
+              />
+              {enterprise && safety ? (
+                <ConversationSafetyMenu
+                  conversationId={conversation.id}
+                  peerUserId={conversation.peerUserId ?? null}
+                  muted={safety.muted}
+                  blocked={safety.blockedPeer}
+                />
+              ) : null}
+            </div>
           ) : null}
         </div>
         {request ? (
@@ -212,6 +256,8 @@ export async function ConversationThread({
           </div>
         ) : null}
       </header>
+
+      {timeline.length > 0 ? <BookingTimeline items={timeline} /> : null}
 
       {conversation.kind === "customer" ? (
         <AiChatPanel
@@ -365,6 +411,13 @@ export async function ConversationThread({
                     bodyText={msg.bodyText}
                     mine={mine}
                     isPinned={msg.isPinned}
+                  />
+                ) : null}
+                {enterprise && !msg.isSystem && conversation.kind === "customer" ? (
+                  <MessageReactions
+                    messageId={msg.id}
+                    conversationId={conversation.id}
+                    reactions={reactionsByMessage.get(msg.id) ?? []}
                   />
                 ) : null}
               </div>

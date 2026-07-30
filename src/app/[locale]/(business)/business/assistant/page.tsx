@@ -1,45 +1,34 @@
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
 import { requireAuthUser } from "@/lib/auth/session";
-import { getOwnedProvider } from "@/lib/providers/database";
-import { isAiBusinessAssistantEnabled } from "@/lib/config/feature-flags";
-import { getProviderBusinessAssistant } from "@/lib/business-assistant/service";
-import { ProviderBusinessAssistantPanel } from "@/components/business-assistant/provider-business-assistant-panel";
-import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
+import {
+  isAiAssistantEnabled,
+  isAiPlatformEnabled,
+} from "@/lib/config/feature-flags";
+import { AiAssistantPanel } from "@/components/ai/ai-assistant-panel";
 
-export default async function BusinessAssistantPage() {
-  if (!isAiBusinessAssistantEnabled()) redirect("/business");
-
-  const authUser = await requireAuthUser();
-  const provider = await getOwnedProvider(authUser.id);
-  const t = await getTranslations("businessAssistant.provider");
-
-  if (!provider) {
-    return (
-      <div className="space-y-6 animate-fade-in">
-        <div>
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
-          <p className="mt-1 text-muted-foreground">{t("subtitle")}</p>
-        </div>
-        <ProviderCreateFormLoader />
-      </div>
-    );
+export default async function BusinessAiAssistantPage() {
+  await requireAuthUser();
+  if (!isAiPlatformEnabled() || !isAiAssistantEnabled()) {
+    redirect("/business");
   }
 
-  const data = await getProviderBusinessAssistant({
-    providerId: provider.id,
-    persist: true,
-  });
-
-  if (!data) redirect("/business");
+  const t = await getTranslations("aiPlatform.assistant");
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="mx-auto w-full max-w-lg space-y-6 animate-fade-in">
       <header className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
-        <p className="max-w-2xl text-sm text-muted-foreground">{t("subtitle")}</p>
+        <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--dalily-gold)]">
+          {t("eyebrow")}
+        </p>
+        <h1 className="text-2xl font-bold tracking-tight">
+          {t("providerPageTitle")}
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          {t("providerPageSubtitle")}
+        </p>
       </header>
-      <ProviderBusinessAssistantPanel data={data} />
+      <AiAssistantPanel role="provider" />
     </div>
   );
 }
