@@ -8,6 +8,12 @@ import type { WalletBalances, WalletLedgerEntry } from "@/domains/payment/shared
 import { isPaymentWalletEnabled } from "@/lib/config/feature-flags";
 import { logFinancialAudit } from "@/domains/payment/audit";
 
+export { computeWalletBalancesAfterEntry } from "@/domains/payment/wallet/ledger-math";
+export type {
+  WalletBalanceSnapshot,
+  LedgerEntryType,
+} from "@/domains/payment/wallet/ledger-math";
+
 function mapWallet(row: Record<string, unknown>): WalletBalances {
   return {
     walletId: row.id as string,

@@ -13,10 +13,31 @@ import { transitionPaymentStatus } from "@/lib/payment/orchestration";
 import { canTransitionEscrowStatus } from "@/lib/payment/state-machine";
 import { assertEscrowActorAllowed } from "@/domains/payment/authz";
 import { logFinancialAudit } from "@/domains/payment/audit";
+import {
+  escrowCasExpectedStatuses,
+  fundedViaFromMetadata,
+  mergeEscrowMetadata,
+} from "@/domains/payment/escrow/cas";
 import type { AppRole } from "@/types/database.types";
 import type { EscrowHoldView, EscrowStatus } from "@/domains/payment/shared/types";
 
-function db() {
+export {
+  escrowCasExpectedStatuses,
+  evaluateEscrowCasTransition,
+  fundedViaFromMetadata,
+  mergeEscrowMetadata,
+} from "@/domains/payment/escrow/cas";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type EscrowDbClient = any;
+
+export type EscrowEngineDeps = {
+  /** Injected admin client for tests; defaults to createAdminClient(). */
+  db?: EscrowDbClient;
+};
+
+function db(deps?: EscrowEngineDeps) {
+  if (deps?.db) return deps.db;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return createAdminClient() as any;
 }
@@ -42,33 +63,28 @@ function mapEscrow(row: Record<string, unknown>): EscrowHoldView {
   };
 }
 
-function fundedViaFromMetadata(metadata: unknown): "external" | "wallet" {
-  if (metadata && typeof metadata === "object") {
-    const v = (metadata as Record<string, unknown>).fundedVia;
-    if (v === "wallet") return "wallet";
-  }
-  return "external";
-}
-
-function mergeEscrowMetadata(
-  existing: unknown,
-  patch: Record<string, unknown>,
-): Record<string, unknown> {
-  const base =
-    existing && typeof existing === "object"
-      ? { ...(existing as Record<string, unknown>) }
-      : {};
-  return { ...base, ...patch };
-}
-
-export async function getEscrowById(id: string): Promise<EscrowHoldView | null> {
+export async function getEscrowById(
+  id: string,
+  deps?: EscrowEngineDeps,
+): Promise<EscrowHoldView | null> {
   if (!isEscrowEngineEnabled()) return null;
-  const { data } = await db().from("escrow_holds").select("*").eq("id", id).maybeSingle();
+  const { data } = await db(deps)
+    .from("escrow_holds")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
   return data ? mapEscrow(data) : null;
 }
 
-async function getEscrowRow(id: string): Promise<Record<string, unknown> | null> {
-  const { data } = await db().from("escrow_holds").select("*").eq("id", id).maybeSingle();
+async function getEscrowRow(
+  id: string,
+  deps?: EscrowEngineDeps,
+): Promise<Record<string, unknown> | null> {
+  const { data } = await db(deps)
+    .from("escrow_holds")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
   return data ?? null;
 }
 
@@ -219,15 +235,18 @@ export async function createEscrowHold(input: {
 /**
  * Release escrow on booking completion → provider payout.
  */
-export async function releaseEscrow(input: {
-  escrowId: string;
-  actorId: string;
-  actorRoles?: AppRole[];
-  emergencyAdmin?: boolean;
-}): Promise<{ ok: true; escrow: EscrowHoldView } | { ok: false; error: string }> {
+export async function releaseEscrow(
+  input: {
+    escrowId: string;
+    actorId: string;
+    actorRoles?: AppRole[];
+    emergencyAdmin?: boolean;
+  },
+  deps?: EscrowEngineDeps,
+): Promise<{ ok: true; escrow: EscrowHoldView } | { ok: false; error: string }> {
   if (!isEscrowEngineEnabled()) return { ok: false, error: "feature_disabled" };
 
-  const row = await getEscrowRow(input.escrowId);
+  const row = await getEscrowRow(input.escrowId, deps);
   if (!row) return { ok: false, error: "not_found" };
   const escrow = mapEscrow(row);
 
@@ -251,7 +270,7 @@ export async function releaseEscrow(input: {
 
   const fundedVia = fundedViaFromMetadata(row.metadata);
   const now = new Date().toISOString();
-  const { data, error } = await db()
+  const { data, error } = await db(deps)
     .from("escrow_holds")
     .update({
       status: "released",
@@ -263,7 +282,7 @@ export async function releaseEscrow(input: {
       }),
     })
     .eq("id", input.escrowId)
-    .in("status", ["reserved", "disputed"])
+    .in("status", escrowCasExpectedStatuses("released"))
     .select("*")
     .maybeSingle();
 
@@ -367,16 +386,19 @@ export async function releaseEscrow(input: {
  * Refund escrow. Never both release-to-provider and refund.
  * Preserves immutable fundedVia in metadata; clears reserve then credits refund for wallet rails.
  */
-export async function refundEscrow(input: {
-  escrowId: string;
-  actorId: string;
-  actorRoles?: AppRole[];
-  amount?: number;
-  reason?: string;
-  requireFinance?: boolean;
-}): Promise<{ ok: true; escrow: EscrowHoldView } | { ok: false; error: string }> {
+export async function refundEscrow(
+  input: {
+    escrowId: string;
+    actorId: string;
+    actorRoles?: AppRole[];
+    amount?: number;
+    reason?: string;
+    requireFinance?: boolean;
+  },
+  deps?: EscrowEngineDeps,
+): Promise<{ ok: true; escrow: EscrowHoldView } | { ok: false; error: string }> {
   if (!isEscrowEngineEnabled()) return { ok: false, error: "feature_disabled" };
-  const row = await getEscrowRow(input.escrowId);
+  const row = await getEscrowRow(input.escrowId, deps);
   if (!row) return { ok: false, error: "not_found" };
   const escrow = mapEscrow(row);
 
@@ -457,7 +479,7 @@ export async function refundEscrow(input: {
   }
 
   const now = new Date().toISOString();
-  const { data, error } = await db()
+  const { data, error } = await db(deps)
     .from("escrow_holds")
     .update({
       status: toStatus,
@@ -473,7 +495,7 @@ export async function refundEscrow(input: {
       }),
     })
     .eq("id", input.escrowId)
-    .in("status", ["reserved", "disputed"])
+    .in("status", escrowCasExpectedStatuses(toStatus))
     .select("*")
     .maybeSingle();
 

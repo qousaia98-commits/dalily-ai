@@ -5,7 +5,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { FeeBreakdown } from "@/domains/payment/shared/types";
 
-type FeeRule = {
+export type FeeRule = {
   code: string;
   feeType: string;
   calculation: string;
@@ -24,6 +24,10 @@ const DEFAULT_RULES: FeeRule[] = [
     enabled: true,
   },
 ];
+
+export function getDefaultFeeRules(): FeeRule[] {
+  return DEFAULT_RULES.map((r) => ({ ...r }));
+}
 
 async function loadRules(): Promise<FeeRule[]> {
   try {
@@ -48,22 +52,29 @@ async function loadRules(): Promise<FeeRule[]> {
   }
 }
 
-function applyRule(amount: number, rule: FeeRule): number {
+/** Pure fee amount for a single rule (before cent rounding). */
+export function applyFeeRule(amount: number, rule: FeeRule): number {
   const pct = (amount * rule.percentBps) / 10_000;
   if (rule.calculation === "fixed") return rule.fixedAmount;
   if (rule.calculation === "hybrid") return pct + rule.fixedAmount;
   return pct;
 }
 
-export async function calculateFeeBreakdown(input: {
-  amount: number;
-  currency?: string;
-  discountAmount?: number;
-}): Promise<FeeBreakdown> {
+/**
+ * Pure fee breakdown from an explicit rule set (no DB).
+ * Rounding: each fee component rounded to 2 decimals; totals likewise.
+ */
+export function calculateFeeBreakdownFromRules(
+  input: {
+    amount: number;
+    currency?: string;
+    discountAmount?: number;
+  },
+  rules: FeeRule[],
+): FeeBreakdown {
   const currency = input.currency ?? "SYP";
   const discount = Math.max(0, input.discountAmount ?? 0);
   const gross = Math.max(0, input.amount - discount);
-  const rules = await loadRules();
 
   let platformFee = 0;
   let providerFee = 0;
@@ -73,7 +84,7 @@ export async function calculateFeeBreakdown(input: {
 
   for (const rule of rules) {
     if (!rule.enabled) continue;
-    const fee = Math.round(applyRule(gross, rule) * 100) / 100;
+    const fee = Math.round(applyFeeRule(gross, rule) * 100) / 100;
     applied.push(rule.code);
     switch (rule.feeType) {
       case "platform":
@@ -89,7 +100,6 @@ export async function calculateFeeBreakdown(input: {
         tax += fee;
         break;
       case "promotion":
-        // promotions reduce platform fee
         platformFee = Math.max(0, platformFee - fee);
         break;
       default:
@@ -111,4 +121,13 @@ export async function calculateFeeBreakdown(input: {
     currency,
     appliedRuleCodes: applied,
   };
+}
+
+export async function calculateFeeBreakdown(input: {
+  amount: number;
+  currency?: string;
+  discountAmount?: number;
+}): Promise<FeeBreakdown> {
+  const rules = await loadRules();
+  return calculateFeeBreakdownFromRules(input, rules);
 }

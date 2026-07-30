@@ -10,19 +10,25 @@ export type LedgerResult = {
   eventId: string;
 };
 
-export async function recordVerifiedPaymentEvent(input: {
-  provider: string;
-  externalEventId: string;
-  eventType: string;
-  paymentId?: string | null;
-  payload?: Record<string, unknown>;
-  forceStatus?: "received" | "processed" | "ignored" | "failed";
-  errorMessage?: string | null;
-}): Promise<LedgerResult> {
-  const admin = createAdminClient();
+/** Minimal Supabase-like client surface used by the webhook ledger. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type WebhookLedgerClient = any;
+
+export async function recordVerifiedPaymentEvent(
+  input: {
+    provider: string;
+    externalEventId: string;
+    eventType: string;
+    paymentId?: string | null;
+    payload?: Record<string, unknown>;
+    forceStatus?: "received" | "processed" | "ignored" | "failed";
+    errorMessage?: string | null;
+  },
+  client: WebhookLedgerClient = createAdminClient(),
+): Promise<LedgerResult> {
   const payloadJson = (input.payload ?? {}) as Json;
 
-  const { data: existing } = await admin
+  const { data: existing } = await client
     .from("payment_webhook_events")
     .select("id, processing_status")
     .eq("provider", input.provider)
@@ -31,7 +37,7 @@ export async function recordVerifiedPaymentEvent(input: {
 
   if (existing) {
     if (input.forceStatus) {
-      await admin
+      await client
         .from("payment_webhook_events")
         .update({
           processing_status: input.forceStatus,
@@ -52,7 +58,7 @@ export async function recordVerifiedPaymentEvent(input: {
     return { status: "duplicate_received", eventId: existing.id as string };
   }
 
-  const { data: inserted, error } = await admin
+  const { data: inserted, error } = await client
     .from("payment_webhook_events")
     .insert({
       provider: input.provider,
@@ -72,7 +78,7 @@ export async function recordVerifiedPaymentEvent(input: {
 
   if (error || !inserted) {
     // Unique race — re-read
-    const { data: again } = await admin
+    const { data: again } = await client
       .from("payment_webhook_events")
       .select("id, processing_status")
       .eq("provider", input.provider)
