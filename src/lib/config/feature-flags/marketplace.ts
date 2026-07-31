@@ -236,3 +236,12 @@ export function isSmartNotificationCenterEnabled(): boolean {
     envFlag("NOTIFICATION_CENTER_V1")
   );
 }
+
+/**
+ * Sprint 10 — Find a specific business (direct search → targeted match assignment).
+ * When false: /find redirects home; provider-profile CTA hidden.
+ * Requires CUSTOMER_INTENT_FLOW_V2 + MATCHING_V2 for the publish path to work.
+ */
+export function isDirectSearchV1Enabled(): boolean {
+  return envFlag("DIRECT_SEARCH_V1") || envFlag("DIRECT_SEARCH");
+}

@@ -455,3 +455,116 @@ export async function expandMatchPool(requestId: string): Promise<MatchRunResult
     status,
   };
 }
+
+export type DirectAssignResult =
+  | { ok: true; poolId: string; assignmentId?: string }
+  | { ok: false; error: string };
+
+/**
+ * Targeted assignment for "find this business" — one provider, no eligibility pool search.
+ * Creates match_pool + single match_assignments row with source = direct_search.
+ */
+export async function assignDirectProviderForRequest(input: {
+  requestId: string;
+  providerId: string;
+  categoryId: string;
+  cityId: string;
+}): Promise<DirectAssignResult> {
+  if (!isMatchingV2Enabled()) {
+    return { ok: false, error: "feature_disabled" };
+  }
+
+  const admin = createAdminClient();
+
+  const { data: provider } = await admin
+    .from("providers")
+    .select("id, owner_id, category_id, status, deleted_at, verification_status")
+    .eq("id", input.providerId)
+    .maybeSingle();
+
+  if (!provider || provider.deleted_at) {
+    return { ok: false, error: "provider_not_found" };
+  }
+  if (provider.status !== "active") {
+    return { ok: false, error: "provider_unavailable" };
+  }
+  if (provider.category_id !== input.categoryId) {
+    return { ok: false, error: "provider_category_mismatch" };
+  }
+
+  const { data: settings } = await admin
+    .from("provider_request_settings")
+    .select("accepting_requests, vacation_mode")
+    .eq("provider_id", provider.id)
+    .maybeSingle();
+
+  const accepting =
+    settings?.accepting_requests === undefined || settings?.accepting_requests === null
+      ? true
+      : Boolean(settings.accepting_requests);
+  const vacation = Boolean(settings?.vacation_mode);
+  if (!accepting || vacation) {
+    return { ok: false, error: "provider_unavailable" };
+  }
+
+  const { data: existingPool } = await admin
+    .from("match_pools")
+    .select("id")
+    .eq("service_request_id", input.requestId)
+    .maybeSingle();
+  if (existingPool) {
+    return { ok: false, error: "already_matched" };
+  }
+
+  const cellKey = `${input.cityId}:${input.categoryId}`;
+  const reasons = [
+    { code: "category_fit" as const },
+    { code: "active_accepting" as const },
+  ];
+
+  const { data: pool, error: poolError } = await admin
+    .from("match_pools")
+    .insert({
+      service_request_id: input.requestId,
+      cell_key: cellKey,
+      status: "open",
+      expand_count: 0,
+      initial_candidate_count: 1,
+      assigned_count: 1,
+      policy_snapshot: {
+        ...policySnapshot(),
+        directSearch: true,
+      } as MatchingPolicySnapshot & { directSearch: boolean },
+      updated_at: new Date().toISOString(),
+    })
+    .select("id")
+    .single();
+
+  if (poolError || !pool) {
+    return { ok: false, error: poolError?.message ?? "pool_insert_failed" };
+  }
+
+  const { data: assignment, error: assignError } = await admin
+    .from("match_assignments")
+    .insert({
+      pool_id: pool.id,
+      service_request_id: input.requestId,
+      provider_id: provider.id,
+      reason_codes: reasons,
+      rank_in_pool: 1,
+      source: "direct_search",
+    })
+    .select("id")
+    .single();
+
+  if (assignError || !assignment) {
+    return { ok: false, error: assignError?.message ?? "assignment_failed" };
+  }
+
+  const ownerId = provider.owner_id as string | null;
+  if (ownerId) {
+    await notifyAssignees(input.requestId, [ownerId]);
+  }
+
+  return { ok: true, poolId: pool.id, assignmentId: assignment.id as string };
+}

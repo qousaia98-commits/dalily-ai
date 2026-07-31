@@ -2,13 +2,14 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
 import { afterLegacyMarketplaceWrite } from "@/domains/marketplace/repository";
 import { syncMarketplaceRequestProjection } from "@/domains/marketplace/projection";
-import { runMatchingForRequest } from "@/domains/matching";
+import { runMatchingForRequest, assignDirectProviderForRequest } from "@/domains/matching";
 import { logger } from "@/lib/observability/logger";
 import {
   isAiEngineV1Enabled,
   isAiEngineV4Enabled,
   isAiEngineV5Enabled,
   isAiEngineV6Enabled,
+  isDirectSearchV1Enabled,
   isEmergencyDispatchEnabled,
   isMatchingV2Enabled,
   isMultiServiceProjectsEnabled,
@@ -175,7 +176,8 @@ export async function publishIntentRequest(input: {
 
   if (
     isEmergencyDispatchEnabled() &&
-    input.data.urgency === "emergency"
+    input.data.urgency === "emergency" &&
+    !input.data.targetProviderId
   ) {
     try {
       const { activateEmergencyDispatch } = await import(
@@ -193,6 +195,25 @@ export async function publishIntentRequest(input: {
           /* best-effort */
         }
       }
+    }
+  } else if (
+    input.data.targetProviderId &&
+    isDirectSearchV1Enabled() &&
+    isMatchingV2Enabled()
+  ) {
+    const assigned = await assignDirectProviderForRequest({
+      requestId: request.id,
+      providerId: input.data.targetProviderId,
+      categoryId: input.data.categoryId,
+      cityId: input.data.cityId,
+    });
+    if (!assigned.ok) {
+      logger.error("customer.publish-intent", "assignDirectProviderForRequest failed", {
+        requestId: request.id,
+        providerId: input.data.targetProviderId,
+        error: assigned.error,
+      });
+      return { ok: false, error: assigned.error };
     }
   } else if (!multiProjectCreated && isMatchingV2Enabled()) {
     try {

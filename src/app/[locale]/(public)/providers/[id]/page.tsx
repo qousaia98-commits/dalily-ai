@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { redirect } from "@/lib/i18n/navigation";
 import { getOwnedProvider } from "@/lib/providers/database";
 import {
   getPublicProviderTrustProfile,
@@ -21,6 +20,7 @@ import {
 import { resolveTrustBadges } from "@/lib/reviews/trust-score";
 import { createClient } from "@/lib/supabase/server";
 import { getCustomerOfferContext } from "@/domains/offer";
+import { redirect } from "@/lib/i18n/navigation";
 
 type ProviderPageProps = {
   params: Promise<{ id: string; locale: string }>;
@@ -51,7 +51,8 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
   const authUser = await getAuthUser();
   const locale = (await getLocale()) as Locale;
 
-  if (!authUser) {
+  // Offer-decision deep links still require login (customer action on an offer).
+  if (!authUser && sp.offerId) {
     const qs = new URLSearchParams();
     if (sp.offerId) qs.set("offerId", sp.offerId);
     if (sp.requestId) qs.set("requestId", sp.requestId);
@@ -70,7 +71,7 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
   const reviewPage = Math.max(1, Number(sp.reviewPage) || 1);
 
   let offerContext: Awaited<ReturnType<typeof getCustomerOfferContext>> = null;
-  if (sp.offerId) {
+  if (authUser && sp.offerId) {
     offerContext = await getCustomerOfferContext({
       customerId: authUser.id,
       offerId: sp.offerId,
@@ -81,18 +82,18 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
   const supabase = await createClient();
   const [pending, settings, reviewStats, reviewPageData, owned, servicesResult, publicTrust] =
     await Promise.all([
-      hasPendingRequest(authUser.id, provider.id),
+      authUser ? hasPendingRequest(authUser.id, provider.id) : Promise.resolve(false),
       getProviderRequestSettings(provider.id),
       getProviderReviewStats(provider.id, locale),
       listProviderReviews({
         providerId: provider.id,
         sort: reviewSort,
         page: reviewPage,
-        viewerId: authUser.id,
+        viewerId: authUser?.id,
         language: reviewSort === "language" ? locale : null,
         recommendOnly: reviewSort === "recommended",
       }),
-      getOwnedProvider(authUser.id),
+      authUser ? getOwnedProvider(authUser.id) : Promise.resolve(null),
       supabase
         .from("provider_services")
         .select("id, name")
@@ -149,7 +150,7 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
       <ProviderProfileView
         provider={provider}
         trustExtras={trustExtras}
-        isLoggedIn
+        isLoggedIn={Boolean(authUser)}
         hasPendingRequest={pending}
         acceptingRequests={settings.accepting_requests && !settings.vacation_mode}
         estimatedResponseHours={settings.estimated_response_hours}
@@ -160,7 +161,7 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
         reviewPage={reviewPage}
         reviewSort={reviewSort}
         trustBadges={trustBadges}
-        canVoteReviews
+        canVoteReviews={Boolean(authUser)}
         canReplyReviews={Boolean(owned && owned.id === provider.id)}
         bookingServices={bookingServices}
         offerDecisionMode={offerDecisionMode}

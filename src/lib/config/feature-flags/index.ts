@@ -21,6 +21,7 @@ export {
   isProviderDashboardV2Enabled,
   isAdminMigrationV2Enabled,
   isDualMarketplaceEnabled,
+  isDirectSearchV1Enabled,
   isSmartBookingEnabled,
   isEmergencyDispatchEnabled,
   isMultiServiceProjectsEnabled,

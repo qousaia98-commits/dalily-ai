@@ -84,6 +84,8 @@ export async function publishIntentRequestAction(
       cityId: String(formData.get("cityId") ?? ""),
       urgency,
       locationText: String(formData.get("locationText") ?? "") || undefined,
+      targetProviderId:
+        String(formData.get("targetProviderId") ?? "").trim() || undefined,
       suggestedCategoryId:
         String(formData.get("suggestedCategoryId") ?? "") || undefined,
       suggestedCategorySlug:

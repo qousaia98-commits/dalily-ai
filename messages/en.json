@@ -467,6 +467,7 @@
   },
   "nav": {
     "search": "New request",
+    "find": "Find a business",
     "forBusiness": "For Business",
     "dashboard": "Dashboard",
     "orders": "My Jobs",
@@ -833,6 +834,12 @@
   "intentFlow": {
     "pageTitle": "Tell us what you need",
     "pageSubtitle": "Usually under a minute — then we notify matching businesses.",
+    "targeted": {
+      "pageTitle": "Send a request to this business",
+      "pageSubtitle": "Describe the job — we notify only this business.",
+      "banner": "Requesting: {name}",
+      "bannerHint": "Other businesses will not be notified. Category is already set."
+    },
     "hero": {
       "placeholder": "What do you need?",
       "cta": "Continue",
@@ -1112,7 +1119,36 @@
       "location_invalid": "That city is not available.",
       "urgency_required": "Please confirm urgency.",
       "publish_failed": "Could not publish your request. Try again.",
-      "contact_info_blocked": "Don't share phone numbers or emails here. Contact details unlock after the unlock fee is paid."
+      "contact_info_blocked": "Don't share phone numbers or emails here. Contact details unlock after the unlock fee is paid.",
+      "provider_not_found": "That business is not available.",
+      "provider_unavailable": "This business is not accepting requests right now.",
+      "provider_category_mismatch": "This business category does not match your request.",
+      "already_matched": "Providers were already assigned to this request.",
+      "pool_insert_failed": "Could not create the assignment. Try again.",
+      "assignment_failed": "Could not assign this business. Try again."
+    }
+  },
+  "findFlow": {
+    "title": "Find a specific business",
+    "subtitle": "Search by name, category, or city — no phone numbers or exact addresses.",
+    "placeholder": "Business name or what you need…",
+    "submit": "Search",
+    "emptyPrompt": "Enter a name or pick a category/city to start.",
+    "noResults": "No matching businesses. Try different filters.",
+    "resultsLabel": "Results",
+    "resultsCount": "{count} results",
+    "distanceKm": "~{km} km",
+    "broadcastHint": "Not sure which business?",
+    "broadcastCta": "Post a marketplace request",
+    "sendRequestCta": "Send this business a request",
+    "filters": {
+      "category": "Category",
+      "city": "City",
+      "anyCategory": "Any category",
+      "anyCity": "Any city"
+    },
+    "errors": {
+      "searchFailed": "Search failed. Please try again."
     }
   },
   "offerFlow": {
@@ -2737,6 +2773,7 @@
     "legal": "Legal",
     "links": {
       "search": "New request",
+      "find": "Find a business",
       "forBusiness": "For Business",
       "login": "Log in",
       "register": "Sign up",

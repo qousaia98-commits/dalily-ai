@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SendRequestButton } from "@/components/providers/send-request-button";
+import { DirectRequestCta } from "@/components/providers/direct-request-cta";
 import { TrackProfileView } from "@/components/providers/track-profile-view";
 import { ProviderReviewsSection } from "@/components/reviews/provider-reviews-section";
 import { TrustBadgeList } from "@/components/reviews/trust-badge-list";
@@ -395,12 +396,18 @@ export async function ProviderProfileView({
                       {t("notAccepting")}
                     </p>
                   ) : (
-                    <SendRequestButton
-                      providerId={provider.id}
-                      providerName={businessName}
-                      isLoggedIn={isLoggedIn}
-                      hasPendingRequest={hasPendingRequest}
-                    />
+                    <div className="space-y-2">
+                      <DirectRequestCta
+                        providerId={provider.id}
+                        acceptingRequests={acceptingRequests}
+                      />
+                      <SendRequestButton
+                        providerId={provider.id}
+                        providerName={businessName}
+                        isLoggedIn={isLoggedIn}
+                        hasPendingRequest={hasPendingRequest}
+                      />
+                    </div>
                   )}
                 </CardContent>
               </Card>

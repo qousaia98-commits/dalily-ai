@@ -6,6 +6,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 const PUBLIC_PATHS = [
   "",
   "/request/new",
+  "/find",
   "/privacy",
   "/terms",
   "/login",
@@ -21,7 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${APP_URL}/${locale}${path}`,
       lastModified,
       changeFrequency: path === "" ? ("daily" as const) : ("weekly" as const),
-      priority: path === "" ? 1 : path === "/request/new" ? 0.9 : 0.6,
+      priority:
+        path === "" ? 1 : path === "/request/new" || path === "/find" ? 0.9 : 0.6,
     })),
   );
 }

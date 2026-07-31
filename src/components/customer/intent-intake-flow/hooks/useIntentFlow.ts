@@ -32,6 +32,7 @@ export function useIntentFlow({
   isAuthenticated,
   visionEnabled = false,
   voiceEnabled = false,
+  targetProvider = null,
 }: IntentIntakeFlowProps) {
   const t = useTranslations("intentFlow");
   const locale = useLocale();
@@ -41,14 +42,28 @@ export function useIntentFlow({
     t as (key: string, values?: Record<string, string | number>) => string,
   );
 
+  const targeted = Boolean(targetProvider?.id && targetProvider.categoryId);
+
   const [step, setStep] = useState<Step>("intent");
   const [intentText, setIntentText] = useState(initialIntent);
   const [suggestion, setSuggestion] = useState<CategorySuggestion | null>(null);
-  const [categories, setCategories] = useState<CategoryOption[]>([]);
-  const [categoryId, setCategoryId] = useState("");
+  const [categories, setCategories] = useState<CategoryOption[]>(() =>
+    targeted && targetProvider
+      ? [
+          {
+            id: targetProvider.categoryId,
+            slug: targetProvider.categorySlug,
+            label: targetProvider.categoryLabel,
+          },
+        ]
+      : [],
+  );
+  const [categoryId, setCategoryId] = useState(targeted ? targetProvider!.categoryId : "");
   /** First AI suggestion for this intent (feedback loop — not overwritten on manual change). */
   const [suggestedCategoryId, setSuggestedCategoryId] = useState("");
-  const [suggestedCategorySlug, setSuggestedCategorySlug] = useState("");
+  const [suggestedCategorySlug, setSuggestedCategorySlug] = useState(
+    targeted ? targetProvider!.categorySlug : "",
+  );
   const [suggestedConfidence, setSuggestedConfidence] = useState<number | null>(null);
   const [photos, setPhotos] = useState<File[]>([]);
   const [visionInsight, setVisionInsight] = useState<VisionInsightState | null>(null);
@@ -57,7 +72,9 @@ export function useIntentFlow({
   const [showVisionCorrection, setShowVisionCorrection] = useState(false);
   const [visionCorrection, setVisionCorrection] = useState("");
   const [voiceInsight, setVoiceInsight] = useState<IntentVoiceInsight | null>(null);
-  const [cityId, setCityId] = useState(cities[0]?.id ?? "");
+  const [cityId, setCityId] = useState(
+    (targeted && targetProvider?.cityId) || cities[0]?.id || "",
+  );
   const [locationText, setLocationText] = useState("");
   const [urgency, setUrgency] = useState<IntentUrgency>("normal");
   const [needsUrgencyConfirm, setNeedsUrgencyConfirm] = useState(false);
@@ -71,7 +88,9 @@ export function useIntentFlow({
   const [completenessScore, setCompletenessScore] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   /** Live category from existing suggestIntentCategoryAction (debounced). */
-  const [liveCategorySlug, setLiveCategorySlug] = useState<string | null>(null);
+  const [liveCategorySlug, setLiveCategorySlug] = useState<string | null>(
+    targeted ? targetProvider!.categorySlug : null,
+  );
 
   const resolvedCategorySlug =
     liveCategorySlug ??
@@ -85,6 +104,7 @@ export function useIntentFlow({
   }, [resolvedCategorySlug, t]);
 
   useEffect(() => {
+    if (targeted) return;
     const text = intentText.trim();
     if (text.length < 8) {
       setLiveCategorySlug(null);
@@ -104,7 +124,7 @@ export function useIntentFlow({
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [intentText]);
+  }, [intentText, targeted]);
 
   const selectedCategory = categories.find((c) => c.id === categoryId);
   const categoryLabel =
@@ -153,6 +173,21 @@ export function useIntentFlow({
       setError(resolveError("intent_too_short"));
       return;
     }
+
+    // Direct-search: category locked to the chosen provider — skip AI suggest.
+    if (targeted && targetProvider) {
+      setCategoryId(targetProvider.categoryId);
+      setSuggestedCategorySlug(targetProvider.categorySlug);
+      setLiveCategorySlug(targetProvider.categorySlug);
+      loadClarifyForCategory(targetProvider.categorySlug);
+      if (CLARIFY_BY_SLUG[targetProvider.categorySlug]?.length) {
+        setStep("clarify");
+      } else {
+        setStep("photos");
+      }
+      return;
+    }
+
     startTransition(async () => {
       const result = await suggestIntentCategoryAction(text);
       if (!result.success) {
@@ -312,6 +347,7 @@ export function useIntentFlow({
       fd.set("categoryId", categoryId);
       fd.set("cityId", cityId);
       fd.set("urgency", urgency);
+      if (targetProvider?.id) fd.set("targetProviderId", targetProvider.id);
       if (suggestedCategoryId) fd.set("suggestedCategoryId", suggestedCategoryId);
       if (suggestedCategorySlug) fd.set("suggestedCategorySlug", suggestedCategorySlug);
       if (suggestedConfidence != null) {
@@ -387,12 +423,17 @@ export function useIntentFlow({
     ["intent", "confirm", "category", "clarify", "photos", "location", "urgency", "publish"] as Step[]
   ).indexOf(step);
 
-  const clarifyBackStep: Step =
-    suggestion?.confidence && suggestion.confidence >= HIGH_CONFIDENCE
+  const clarifyBackStep: Step = targeted
+    ? "intent"
+    : suggestion?.confidence && suggestion.confidence >= HIGH_CONFIDENCE
       ? "confirm"
       : "category";
 
-  const photosBackStep: Step = clarifyNotes.length ? "clarify" : "category";
+  const photosBackStep: Step = clarifyNotes.length
+    ? "clarify"
+    : targeted
+      ? "intent"
+      : "category";
 
   return {
     t,
@@ -408,6 +449,8 @@ export function useIntentFlow({
     categories,
     categoryId,
     suggestedCategorySlug,
+    targetProvider,
+    targeted,
     photos,
     visionInsight,
     visionPending,

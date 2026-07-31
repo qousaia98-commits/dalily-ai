@@ -22,6 +22,16 @@ export type VisionInsightState = {
   confirmed: boolean | null;
 };
 
+export type TargetProviderContext = {
+  id: string;
+  name: string;
+  categoryId: string;
+  categorySlug: string;
+  categoryLabel: string;
+  /** Prefill city when available (customer can still change). */
+  cityId?: string | null;
+};
+
 export type IntentIntakeFlowProps = {
   initialIntent?: string;
   cities: CityOption[];
@@ -29,6 +39,8 @@ export type IntentIntakeFlowProps = {
   isAuthenticated: boolean;
   visionEnabled?: boolean;
   voiceEnabled?: boolean;
+  /** Direct-search: skip category AI; lock category to this provider. */
+  targetProvider?: TargetProviderContext | null;
 };
 
 export type DecisionQuestions = {

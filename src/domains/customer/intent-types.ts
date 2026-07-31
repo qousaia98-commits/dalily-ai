@@ -22,4 +22,9 @@ export type PublishIntentInput = {
   suggestedConfidence?: number;
   suggestedUrgency?: "critical" | "high" | "medium" | "low";
   suggestedWorkflow?: string;
+  /**
+   * Direct-search: assign only this provider (skip broadcast matching).
+   * Requires DIRECT_SEARCH_V1 + MATCHING_V2.
+   */
+  targetProviderId?: string;
 };

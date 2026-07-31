@@ -42,7 +42,9 @@ export {
 export {
   runMatchingForRequest,
   expandMatchPool,
+  assignDirectProviderForRequest,
   type MatchRunResult,
+  type DirectAssignResult,
 } from "@/domains/matching/engine";
 export {
   getMatchPoolSummaryForRequest,

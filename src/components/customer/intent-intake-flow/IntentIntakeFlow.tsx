@@ -19,6 +19,7 @@ export function IntentIntakeFlow({
   isAuthenticated,
   visionEnabled = false,
   voiceEnabled = false,
+  targetProvider = null,
 }: IntentIntakeFlowProps) {
   const flow = useIntentFlow({
     initialIntent,
@@ -27,6 +28,7 @@ export function IntentIntakeFlow({
     isAuthenticated,
     visionEnabled,
     voiceEnabled,
+    targetProvider,
   });
 
   const t = flow.t as (key: string, values?: Record<string, string | number>) => string;
@@ -37,6 +39,15 @@ export function IntentIntakeFlow({
         <ShieldCheck className="mt-0.5 size-4 shrink-0 text-[var(--dalily-gold)]" aria-hidden />
         <p>{flow.t("trust.privacy")}</p>
       </div>
+
+      {flow.targetProvider ? (
+        <div className="rounded-2xl border border-[var(--dalily-gold)]/30 bg-[color-mix(in_oklab,var(--dalily-gold)_8%,transparent)] px-3.5 py-3 text-sm">
+          <p className="font-medium text-foreground">
+            {flow.t("targeted.banner", { name: flow.targetProvider.name })}
+          </p>
+          <p className="mt-1 text-muted-foreground">{flow.t("targeted.bannerHint")}</p>
+        </div>
+      ) : null}
 
       <div
         className="h-1.5 overflow-hidden rounded-full bg-muted"
@@ -69,7 +80,7 @@ export function IntentIntakeFlow({
         />
       )}
 
-      {flow.step === "confirm" && flow.suggestion && (
+      {flow.step === "confirm" && flow.suggestion && !flow.targeted && (
         <ConfirmationStep
           t={t}
           pending={flow.pending}
@@ -81,7 +92,7 @@ export function IntentIntakeFlow({
         />
       )}
 
-      {flow.step === "category" && (
+      {flow.step === "category" && !flow.targeted && (
         <CategoryStep
           t={t}
           locale={flow.locale}
