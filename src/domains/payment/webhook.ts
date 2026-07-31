@@ -10,6 +10,7 @@ import {
   applyCanonicalPaymentEvent,
   normalizePaymentEventType,
 } from "@/lib/payment/event-handler";
+import { safeEqualString } from "@/lib/security/timing-safe";
 
 export type WebhookIngestResult =
   | { ok: true; duplicate: boolean; paymentId?: string; grantId?: string }
@@ -28,7 +29,10 @@ function verifyWebhookSecret(request: Request): boolean {
   }
   const auth = request.headers.get("authorization") ?? "";
   const headerSecret = request.headers.get("x-dalily-webhook-secret") ?? "";
-  return auth === `Bearer ${secret}` || headerSecret === secret;
+  return (
+    safeEqualString(auth, `Bearer ${secret}`) ||
+    safeEqualString(headerSecret, secret)
+  );
 }
 
 /**

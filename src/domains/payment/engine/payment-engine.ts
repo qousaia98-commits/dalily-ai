@@ -1,6 +1,19 @@
 /**
  * Enterprise payment engine — init / auth / capture / release / refund / cancel / retry.
  * Talks only through PaymentProvider adapters + domain engines (never PSP SDKs).
+ *
+ * ---------------------------------------------------------------------------
+ * UNWIRED / DEAD CODE PATH (pending product decision) — DO NOT DELETE YET
+ * ---------------------------------------------------------------------------
+ * Gated by isPaymentsV2Enabled(). Re-exported from `@/domains/payment` and
+ * `@/domains/payment/refunds`, but as of RC2.1 there are **no call sites**
+ * under `src/` that invoke initializePayment / authorizePayment / capturePayment /
+ * reserveInEscrow / releaseEscrowFunds / refundPayment / cancelPaymentEngine /
+ * retryFailedPayment (only the barrel re-exports themselves).
+ *
+ * Keep until we deliberately: (a) wire marketplace flows to this engine,
+ * (b) archive it under docs/legacy, or (c) remove after a money-path review.
+ * ---------------------------------------------------------------------------
  */
 
 import {

@@ -3,31 +3,15 @@
  * Never execute cron work without a configured, valid CRON_SECRET.
  */
 
-import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { logger } from "@/lib/observability/logger";
+import { safeEqualString } from "@/lib/security/timing-safe";
 
 export type CronAuthFailure =
   | { ok: false; status: 500; error: "cron_secret_missing" }
   | { ok: false; status: 401; error: "unauthorized" };
 
 export type CronAuthSuccess = { ok: true };
-
-function safeEqualString(a: string, b: string): boolean {
-  const aBuf = Buffer.from(a, "utf8");
-  const bBuf = Buffer.from(b, "utf8");
-  if (aBuf.length !== bBuf.length) {
-    // Still compare to reduce trivial timing oracle on length; pad shorter side.
-    const max = Math.max(aBuf.length, bBuf.length);
-    const aPad = Buffer.alloc(max);
-    const bPad = Buffer.alloc(max);
-    aBuf.copy(aPad);
-    bBuf.copy(bPad);
-    timingSafeEqual(aPad, bPad);
-    return false;
-  }
-  return timingSafeEqual(aBuf, bBuf);
-}
 
 /**
  * Validates Authorization: Bearer <CRON_SECRET>.

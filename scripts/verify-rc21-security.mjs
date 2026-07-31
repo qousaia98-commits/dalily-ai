@@ -39,8 +39,13 @@ if (cronRoutes.length < 5) {
 
 mustInclude(
   "src/lib/security/cron-auth.ts",
-  ["timingSafeEqual", "CRON_SECRET", "cron_secret_missing", "Bearer "],
+  ["CRON_SECRET", "cron_secret_missing", "Bearer ", "safeEqualString"],
   "cron-auth",
+);
+mustInclude(
+  "src/lib/security/timing-safe.ts",
+  ["timingSafeEqual", "safeEqualString"],
+  "timing-safe",
 );
 
 for (const route of cronRoutes) {
