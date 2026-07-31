@@ -261,7 +261,7 @@ export function BookingForm({
         ) : grouped.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t("noSlots")}</p>
         ) : (
-          <div className="max-h-64 space-y-3 overflow-y-auto pr-1">
+          <div className="max-h-64 space-y-3 overflow-y-auto pe-1">
             {grouped.map(([day, daySlots]) => (
               <div key={day} className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">

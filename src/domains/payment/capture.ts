@@ -13,6 +13,23 @@ import { recordVerifiedPaymentEvent } from "@/domains/payment/webhook-ledger";
 
 export type CaptureSource = "admin_approval" | "webhook";
 
+const UNLOCK_GRANT_RETRY_DELAY_MS = 250;
+
+/**
+ * Run an attempt; on `{ ok: false }` wait briefly and retry exactly once.
+ * Used only for the post-paid unlock grant so a transient failure can heal in-process.
+ * @internal Exported for unit tests.
+ */
+export async function withOneRetryOnFailure<T extends { ok: boolean }>(
+  attempt: () => Promise<T>,
+  delayMs: number = UNLOCK_GRANT_RETRY_DELAY_MS,
+): Promise<T> {
+  const first = await attempt();
+  if (first.ok) return first;
+  await new Promise<void>((resolve) => setTimeout(resolve, delayMs));
+  return attempt();
+}
+
 /**
  * Mark unlock_fee payment paid and open contact grant.
  * Idempotent: re-entry after paid+grant returns success.
@@ -171,12 +188,14 @@ export async function captureUnlockFeePayment(input: {
     // soft — never block unlock grant
   }
 
-  const grant = await completeUnlockSuccess({
-    sessionId: payment.unlock_session_id as string,
-    actorUserId: input.actorId,
-    mode: "payment_capture",
-    paymentId: payment.id as string,
-  });
+  const grant = await withOneRetryOnFailure(() =>
+    completeUnlockSuccess({
+      sessionId: payment.unlock_session_id as string,
+      actorUserId: input.actorId,
+      mode: "payment_capture",
+      paymentId: payment.id as string,
+    }),
+  );
 
   if (!grant.ok) {
     await recordVerifiedPaymentEvent({
