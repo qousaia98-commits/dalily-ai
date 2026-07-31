@@ -51,7 +51,6 @@ const requiredPaths = [
   "src/lib/booking/LEGACY.md",
   "src/app/[locale]/(public)/search/LEGACY.md",
   "src/app/[locale]/(public)/providers/LEGACY.md",
-  "src/app/[locale]/(business)/business/subscription/LEGACY.md",
   "src/components/search/LEGACY.md",
   "src/components/business/LEGACY.md",
   ".github/workflows/ci.yml",

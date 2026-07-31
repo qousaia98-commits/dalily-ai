@@ -1,9 +1,7 @@
 import { Crown, Sparkles, TrendingUp } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/navigation";
 import type { GrowthPotentialResult } from "@/lib/business/analytics-database";
 import type { PlanSlug } from "@/lib/subscription/types";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 /**
@@ -77,21 +75,14 @@ export async function DashboardGrowthPotential({
       className="space-y-4 rounded-3xl border border-border bg-card px-5 py-6 shadow-sm"
       aria-labelledby="growth-potential-title"
     >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <TrendingUp className="size-5 text-[var(--dalily-gold)]" aria-hidden />
-            <h2 id="growth-potential-title" className="text-lg font-bold text-foreground">
-              {t("title")}
-            </h2>
-          </div>
-          <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
+      <div>
+        <div className="flex items-center gap-2">
+          <TrendingUp className="size-5 text-[var(--dalily-gold)]" aria-hidden />
+          <h2 id="growth-potential-title" className="text-lg font-bold text-foreground">
+            {t("title")}
+          </h2>
         </div>
-        <Button asChild className="rounded-2xl">
-          <Link href="/business/subscription">
-            {planSlug === "pro" ? t("ctaPremium") : t("ctaPro")}
-          </Link>
-        </Button>
+        <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       <dl className="grid gap-3 sm:grid-cols-2">

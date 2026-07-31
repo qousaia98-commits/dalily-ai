@@ -1,5 +1,6 @@
-# LEGACY (subscription UI)
+# LEGACY (subscription UI remnants)
 
-Subscription-related business components in this folder (e.g. `subscription-*.tsx`, plan cards, upgrade panels) are LEGACY under Dalily 2.0 Unlock Fee economics.
+Sprint 10 removed the `/business/subscription` product path and its upgrade panels.
+`subscription-payment-panel.tsx` remains for monetization/manual payment UX that still shares receipt upload flows.
 
-Do not extend subscription upsell as the primary monetization path.
+Do not reintroduce subscription upsell as the primary monetization path.

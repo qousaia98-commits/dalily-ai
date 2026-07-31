@@ -15,11 +15,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { markNavChannelNotificationsRead } from "@/lib/orders/notifications";
 
 /**
- * Payments hub — unlocks, subscription payments, and earnings entry points.
- * Reuses existing unlock + subscription routes (no duplicated payment logic).
- *
- * Opening this hub clears the Payments nav unread badge (unlock notification channel).
- * The gold priority count remains session-based (open unlocks still needing action).
+ * Payments hub — unlocks, payment history, and earnings entry points.
  */
 export default async function BusinessPaymentsPage() {
   const t = await getTranslations("business.paymentsHub");
@@ -50,12 +46,6 @@ export default async function BusinessPaymentsPage() {
           },
         ]
       : []),
-    {
-      href: "/business/subscription",
-      title: t("links.subscription"),
-      description: t("links.subscriptionDesc"),
-      icon: Star,
-    },
     {
       href: "/business/payments/history",
       title: t("links.history"),

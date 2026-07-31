@@ -662,8 +662,6 @@
         "bookingsDesc": "Appointments with customers",
         "analytics": "Analytics",
         "analyticsDesc": "Performance and growth",
-        "subscription": "Subscription",
-        "subscriptionDesc": "Plan and upgrade options",
         "payments": "Payments",
         "paymentsDesc": "Unlocks, payments, and history"
       }
@@ -673,7 +671,6 @@
       "subtitle": "Insights, health, and tips to grow your business.",
       "lockedTitle": "Premium statistics",
       "lockedSubtitle": "Upgrade to unlock deeper insights. Starter still gets your core Growth dashboard above.",
-      "upgradeCta": "View plans",
       "locked": {
         "competitors": {
           "title": "Competitor pulse",
@@ -2930,8 +2927,6 @@
       "links": {
         "unlock": "Contact unlock",
         "unlockDesc": "Complete payment to release customer contact",
-        "subscription": "Subscription & plan",
-        "subscriptionDesc": "Manage your plan and upgrades",
         "history": "Payment history",
         "historyDesc": "Subscriptions, lead unlocks, and receipts",
         "monetization": "Plans & unlocks",
@@ -3767,133 +3762,6 @@
       }
     },
     "subscription": {
-      "title": "Grow your business with Dalily",
-      "eyebrow": "Growth",
-      "subtitle": "Choose the plan that helps you reach more customers.",
-      "currentPlan": "Your plan",
-      "expiresAt": "Expires on {date}",
-      "noExpiration": "No expiration date",
-      "renew": "Renew",
-      "downgrade": "Downgrade to Starter",
-      "cancel": "Cancel subscription",
-      "upgrade": "Upgrade",
-      "current": "Current plan",
-      "freePrice": "FREE",
-      "perMonth": "Month",
-      "paymentHistory": "Payment history",
-      "noPayments": "No payments yet.",
-      "errors": {
-        "upgradeFailed": "Could not start the upgrade. Please try again.",
-        "notApproved": "Plans unlock after your business is approved.",
-        "paymentPending": "You already have a payment under review.",
-        "paymentNotConfigured": "Paid upgrades are temporarily unavailable. Please try again later or contact support.",
-        "upgradesFrozen": "New subscription upgrades are frozen while Unlock Fee payments roll out.",
-        "downgradeFailed": "Could not switch to Starter. Please try again."
-      },
-      "freezeBanner": {
-        "title": "Subscription upgrades paused",
-        "body": "Dalily 2.0 monetization is moving to Unlock Fees after customer select. Existing plans stay active; new PRO/PREMIUM checkouts are disabled."
-      },
-      "lowerPlanHint": "Included in your higher plan",
-      "paymentPendingHint": "Finish your pending payment first",
-      "downgradeConfirm": {
-        "eyebrow": "Downgrade",
-        "title": "Switch back to Starter?",
-        "body": "This is a downgrade. You will lose Pro/Premium visibility benefits immediately and return to the free Starter plan.",
-        "cta": "Switch to Starter",
-        "confirm": "Yes, switch to Starter",
-        "cancel": "Keep my plan",
-        "working": "Switching…"
-      },
-      "locked": {
-        "pendingTitle": "Waiting for approval",
-        "pendingBody": "Subscription plans unlock after an admin approves your business. We will email you when that happens.",
-        "draftTitle": "Finish your profile first",
-        "draftBody": "Upload logo, cover, gallery and ID, then submit for approval. Plans appear only after approval.",
-        "completeProfile": "Complete profile",
-        "uploadId": "Upload ID"
-      },
-      "plans": {
-        "starter": {
-          "name": "Starter",
-          "price": "FREE",
-          "headline": "Start your business on Dalily.",
-          "subtitle": "Build trust. Get discovered.",
-          "description": "A complete presence so customers can find and contact you — free forever.",
-          "why": "Build trust, appear in search, and let customers reach you.",
-          "cta": "Continue with Starter",
-          "includes": {
-            "profile": "Complete business profile",
-            "photos": "Photos that show your work",
-            "reviews": "Customer reviews that build trust",
-            "contact": "WhatsApp & phone — customers can reach you",
-            "search": "Appear in search results",
-            "reach": "Customers can contact you directly",
-            "info": "Business information"
-          }
-        },
-        "pro": {
-          "name": "PRO",
-          "price": "13 USD",
-          "badge": "Most Popular",
-          "headline": "Get More Customers",
-          "subtitle": "Increase your visibility and receive more opportunities.",
-          "description": "Higher search visibility so more customers discover your business.",
-          "why": "More businesses discover you. More opportunities. Measurable growth.",
-          "cta": "Upgrade to PRO",
-          "includes": {
-            "ranking": "Higher search visibility",
-            "badge": "PRO badge that builds trust",
-            "insights": "Understand how your business grows",
-            "visibility": "See how many customers discovered you",
-            "contacts": "Contact statistics that show real interest",
-            "priority": "Priority visibility where people search",
-            "support": "Priority support when you need help",
-            "stats": "Understand how your business grows",
-            "ai": "Smarter profile guidance"
-          }
-        },
-        "premium": {
-          "name": "PREMIUM",
-          "price": "20 USD",
-          "headline": "Become the First Choice",
-          "subtitle": "Maximum visibility for businesses ready to lead.",
-          "description": "Everything from PRO — plus homepage features and deeper growth insights.",
-          "why": "Stand out first — maximum reach, premium trust, and room to expand.",
-          "cta": "Become Premium",
-          "includes": {
-            "everything": "Everything from PRO",
-            "homepage": "Featured on the homepage",
-            "badge": "Premium badge",
-            "maxVisibility": "Maximum visibility in search",
-            "insights": "Search trends & visitor cities",
-            "campaigns": "Future Premium campaigns",
-            "branches": "Multiple branches",
-            "top": "Top search placement",
-            "locations": "Visitor cities",
-            "support": "Priority support",
-            "early": "New features first"
-          }
-        },
-        "free": "Starter",
-        "proLegacy": "PRO",
-        "premiumLegacy": "PREMIUM"
-      },
-      "status": {
-        "trial": "Trial",
-        "active": "Active",
-        "pending_payment": "Waiting for payment",
-        "expired": "Expired",
-        "cancelled": "Cancelled"
-      },
-      "paymentStatus": {
-        "pending": "Awaiting transfer",
-        "pending_review": "Pending payment review",
-        "paid": "Paid",
-        "failed": "Failed",
-        "cancelled": "Cancelled",
-        "rejected": "Rejected"
-      },
       "payment": {
         "stepLabel": "Payment",
         "title": "Complete your payment",
@@ -3941,60 +3809,6 @@
         },
         "uploadProgress": "Upload progress",
         "uploading": "Uploading…"
-      },
-      "features": {
-        "maxServices": "Up to {value} services",
-        "maxImages": "Up to {value} images",
-        "verifiedBadge": "Verified badge",
-        "advancedAnalytics": "Advanced analytics",
-        "featuredSection": "Featured section",
-        "premiumBadge": "Premium badge",
-        "unlimitedServices": "Unlimited services"
-      },
-      "intro": "No pressure. Pick what fits your business today — upgrade when you are ready to grow.",
-      "hero": {
-        "title": "Grow your business with Dalily.",
-        "subtitle": "Choose the plan that helps you reach more customers."
-      },
-      "summary": {
-        "eyebrow": "Upgrade summary",
-        "continue": "Continue",
-        "back": "Back",
-        "blurb": {
-          "pro": "More customers will discover your business and reach out with confidence.",
-          "premium": "Become the first choice in your city with maximum visibility on Dalily."
-        }
-      },
-      "faq": {
-        "title": "Questions",
-        "subtitle": "Clear answers before you upgrade.",
-        "items": {
-          "active": {
-            "q": "When will my subscription become active?",
-            "a": "After you transfer and upload your receipt, our team reviews it. Your plan activates only after admin approval — never automatically."
-          },
-          "pay": {
-            "q": "How do I pay?",
-            "a": "You transfer the monthly amount manually using the bank details we show, then upload a clear receipt for verification."
-          },
-          "upgrade": {
-            "q": "Can I upgrade later?",
-            "a": "Yes. Start with Starter for free, then move to PRO or PREMIUM whenever you want more customers to find you."
-          },
-          "cancel": {
-            "q": "Can I cancel?",
-            "a": "Yes. You can cancel or move back to Starter from your plan settings. There are no automatic charges."
-          }
-        }
-      },
-      "trust": {
-        "title": "Trusted by local businesses",
-        "items": {
-          "secure": "Secure manual verification",
-          "noAuto": "No automatic charges",
-          "transparent": "Transparent pricing",
-          "support": "Friendly support"
-        }
       }
     },
     "messages": {
@@ -4136,8 +3950,6 @@
       "withPro": "⭐ With PRO",
       "withPremium": "👑 With PREMIUM",
       "impressions": "Impressions",
-      "ctaPro": "Get more customers with PRO",
-      "ctaPremium": "Become the first choice",
       "premiumTitle": "You already use Dalily’s highest plan",
       "premiumBody": "This week’s real visibility from PREMIUM.",
       "emptyTitle": "No growth data yet",

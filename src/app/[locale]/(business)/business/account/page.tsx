@@ -9,7 +9,6 @@ import {
   Settings,
   User,
   Wrench,
-  Star,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
@@ -111,12 +110,6 @@ export default async function BusinessAccountPage() {
       title: t("links.analytics"),
       description: t("links.analyticsDesc"),
       icon: BarChart3,
-    },
-    {
-      href: "/business/subscription",
-      title: t("links.subscription"),
-      description: t("links.subscriptionDesc"),
-      icon: Star,
     },
   ];
 

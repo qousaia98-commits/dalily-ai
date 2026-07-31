@@ -104,7 +104,6 @@ export const BUSINESS_NAV_ITEMS: readonly MobileNavItemConfig[] = [
       "/business/analytics",
       "/business/payments",
       "/business/unlock",
-      "/business/subscription",
       "/business/my-business",
     ],
   },
