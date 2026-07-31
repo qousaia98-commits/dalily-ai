@@ -13,6 +13,11 @@
  *
  * Keep until we deliberately: (a) wire marketplace flows to this engine,
  * (b) archive it under docs/legacy, or (c) remove after a money-path review.
+ *
+ * ARCHIVED 2026-07-31 → docs/legacy/payment-engine-v2/
+ * Deliberate archive (not automated cleanup). Pending a future decision to
+ * wire this into marketplace payment flows or permanently delete it.
+ * Imports below are historical; this file is no longer part of the live domain.
  * ---------------------------------------------------------------------------
  */
 

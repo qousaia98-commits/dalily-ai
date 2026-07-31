@@ -16,4 +16,3 @@ export {
 } from "@/lib/refunds";
 
 export { refundEscrow } from "@/domains/payment/escrow/engine";
-export { refundPayment } from "@/domains/payment/engine/payment-engine";

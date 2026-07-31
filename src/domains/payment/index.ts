@@ -116,17 +116,6 @@ export {
 } from "@/domains/payment/payouts/engine";
 
 export {
-  initializePayment,
-  authorizePayment,
-  capturePayment,
-  reserveInEscrow,
-  releaseEscrowFunds,
-  refundPayment,
-  cancelPaymentEngine,
-  retryFailedPayment,
-} from "@/domains/payment/engine/payment-engine";
-
-export {
   getPaymentStatus,
   listUserPaymentHistory,
 } from "@/domains/payment/transactions/service";
