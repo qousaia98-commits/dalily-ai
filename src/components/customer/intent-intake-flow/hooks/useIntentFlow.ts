@@ -100,7 +100,9 @@ export function useIntentFlow({
 
   const suggestions = useMemo(() => {
     const keys = getContextualSuggestionKeys(resolvedCategorySlug);
-    return keys.map((key) => t(key as "suggestions.contextual.general.g1"));
+    return keys.map((key) =>
+      t(`suggestions.${key}` as "suggestions.contextual.general.g1"),
+    );
   }, [resolvedCategorySlug, t]);
 
   useEffect(() => {
