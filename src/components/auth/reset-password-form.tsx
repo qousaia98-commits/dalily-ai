@@ -15,18 +15,43 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 const initialState: AuthActionState = { success: false };
 
-export function ResetPasswordForm() {
+export type ResetPasswordFormMode = "recovery" | "change" | "anonymous";
+
+export function ResetPasswordForm({
+  mode,
+}: {
+  mode: ResetPasswordFormMode;
+}) {
   const t = useTranslations("auth.resetPassword");
   const [state, formAction, isPending] = useActionState(updatePasswordAction, initialState);
+
+  const requireCurrentPassword =
+    mode === "change" || state.error === "reauth_required";
 
   return (
     <Card className="w-full max-w-md animate-fade-in-up border-border/80 shadow-sm">
       <CardHeader className="space-y-2 text-center">
-        <CardTitle className="text-2xl tracking-tight">{t("title")}</CardTitle>
-        <CardDescription className="text-balance">{t("subtitle")}</CardDescription>
+        <CardTitle className="text-2xl tracking-tight">
+          {requireCurrentPassword ? t("changeTitle") : t("title")}
+        </CardTitle>
+        <CardDescription className="text-balance">
+          {requireCurrentPassword ? t("changeSubtitle") : t("subtitle")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        {state.success ? (
+        {mode === "anonymous" && !state.success ? (
+          <div className="space-y-4 text-center">
+            <p className="text-sm leading-relaxed text-muted-foreground" role="alert">
+              {t("errors.session_required")}
+            </p>
+            <Button asChild className="w-full min-h-11" variant="outline">
+              <Link href="/forgot-password">{t("toForgot")}</Link>
+            </Button>
+            <Button asChild className="w-full min-h-11">
+              <Link href="/login">{t("toLogin")}</Link>
+            </Button>
+          </div>
+        ) : state.success ? (
           <div className="space-y-4 text-center" role="status">
             <p className="text-sm leading-relaxed text-muted-foreground">{t("success")}</p>
             <Button asChild className="w-full min-h-11">
@@ -35,6 +60,21 @@ export function ResetPasswordForm() {
           </div>
         ) : (
           <form action={formAction} className="space-y-4">
+            {requireCurrentPassword ? (
+              <div className="space-y-2">
+                <Label htmlFor="currentPassword">{t("currentPassword")}</Label>
+                <PasswordInput
+                  id="currentPassword"
+                  name="currentPassword"
+                  autoComplete="current-password"
+                  required
+                  disabled={isPending}
+                  className="min-h-11"
+                  toggleLabelShow={t("showPassword")}
+                  toggleLabelHide={t("hidePassword")}
+                />
+              </div>
+            ) : null}
             <div className="space-y-2">
               <Label htmlFor="password">{t("password")}</Label>
               <PasswordInput
@@ -66,6 +106,13 @@ export function ResetPasswordForm() {
             {state.error ? (
               <p className="text-sm text-destructive" role="alert">
                 {t(`errors.${state.error}` as "errors.unknown")}
+              </p>
+            ) : null}
+            {state.error === "reauth_required" ? (
+              <p className="text-sm text-muted-foreground">
+                <Link href="/forgot-password" className="underline underline-offset-4">
+                  {t("toForgot")}
+                </Link>
               </p>
             ) : null}
             <Button type="submit" className="w-full min-h-11" size="lg" disabled={isPending}>

@@ -74,6 +74,13 @@ export async function enforceRouteAuth(
   const roles = (roleRows ?? []).map((row) => row.role as AppRole);
 
   if (isAuthRoute(pathname)) {
+    // Allow /reset-password for authenticated users: recovery link lands here
+    // after exchangeCodeForSession, and logged-in users may change password
+    // with current_password verification.
+    if (pathname === "/reset-password" || pathname.startsWith("/reset-password/")) {
+      return response;
+    }
+
     const isBusinessRegistrationRoute =
       pathname === "/register/business" || pathname.startsWith("/register/business/");
     if (isBusinessRegistrationRoute && !isBusinessUser(roles)) {

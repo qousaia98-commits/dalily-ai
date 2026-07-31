@@ -11,12 +11,14 @@ import {
   registerBusinessSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  changePasswordSchema,
 } from "@/lib/validations/auth";
 import { generateProviderSlug, mapAuthErrorCode } from "@/lib/auth/utils";
 import { resolveLocalizedField } from "@/lib/business/resolve-localized-fields";
 import { resolveAuthUserAfterSignUp } from "@/lib/auth/resolve-signup-user";
 import { getPostLoginPath } from "@/lib/auth/roles";
 import { sanitizeAppRedirect, stripLocaleFromPath, buildAuthCallbackUrl } from "@/lib/auth/safe-redirect";
+import { isPasswordRecoverySession } from "@/lib/auth/password-recovery";
 import { resolveCategorySlugToId } from "@/lib/categories/queries";
 import { CITY_IDS, MODULE_SERVICES_ID } from "@/lib/constants/reference-data";
 import {
@@ -704,10 +706,21 @@ export async function updatePasswordAction(
   _prevState: AuthActionState,
   formData: FormData,
 ): Promise<AuthActionState> {
-  const parsed = resetPasswordSchema.safeParse({
-    password: formData.get("password"),
-    confirmPassword: formData.get("confirmPassword"),
-  });
+  const currentPasswordRaw = formData.get("currentPassword");
+  const hasCurrentPasswordField =
+    typeof currentPasswordRaw === "string" && currentPasswordRaw.length > 0;
+
+  const parsed = hasCurrentPasswordField
+    ? changePasswordSchema.safeParse({
+        currentPassword: currentPasswordRaw,
+        password: formData.get("password"),
+        confirmPassword: formData.get("confirmPassword"),
+      })
+    : resetPasswordSchema.safeParse({
+        password: formData.get("password"),
+        confirmPassword: formData.get("confirmPassword"),
+      });
+
   if (!parsed.success) {
     const mismatch = parsed.error.issues.some((i) => i.message === "password_mismatch");
     return {
@@ -724,11 +737,33 @@ export async function updatePasswordAction(
     return { success: false, error: "session_required" };
   }
 
-  const { error } = await supabase.auth.updateUser({
-    password: parsed.data.password,
-  });
+  const isRecovery = await isPasswordRecoverySession(supabase);
+
+  if (!isRecovery && !hasCurrentPasswordField) {
+    // Ordinary login session — refuse passwordless change (shared/hijacked session).
+    return { success: false, error: "reauth_required" };
+  }
+
+  const newPassword = parsed.data.password;
+  const { error } = isRecovery
+    ? await supabase.auth.updateUser({ password: newPassword })
+    : await supabase.auth.updateUser({
+        password: newPassword,
+        current_password: String(
+          (parsed.data as { currentPassword: string }).currentPassword,
+        ),
+      });
   if (error) {
-    return { success: false, error: mapAuthErrorCode(error.message) };
+    const mapped = mapAuthErrorCode(error.message);
+    const lower = error.message.toLowerCase();
+    if (
+      lower.includes("current password") ||
+      lower.includes("reauthentication") ||
+      lower.includes("reauthenticate")
+    ) {
+      return { success: false, error: "reauth_required" };
+    }
+    return { success: false, error: mapped };
   }
 
   return { success: true, message: "password_updated" };

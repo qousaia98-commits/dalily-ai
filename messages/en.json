@@ -6412,6 +6412,9 @@
     "resetPassword": {
       "title": "New password",
       "subtitle": "Choose a strong password for your account.",
+      "changeTitle": "Change password",
+      "changeSubtitle": "Enter your current password, then choose a new one.",
+      "currentPassword": "Current password",
       "password": "New password",
       "confirmPassword": "Confirm password",
       "showPassword": "Show password",
@@ -6419,10 +6422,12 @@
       "submit": "Save password",
       "success": "Password updated. You can log in now.",
       "toLogin": "Log in",
+      "toForgot": "Request a reset email instead",
       "errors": {
         "validation_error": "Password must be at least 6 characters",
         "password_mismatch": "Passwords do not match",
         "session_required": "Open the reset link from your email first",
+        "reauth_required": "Confirm your current password to change it, or request a reset email.",
         "unknown": "Something went wrong. Please try again."
       }
     },
