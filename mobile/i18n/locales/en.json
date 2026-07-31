@@ -41,7 +41,16 @@
       "recommended": "Recommended services",
       "recentlyViewed": "Recently viewed",
       "trending": "Trending providers",
-      "nearby": "Nearby services"
+      "nearby": "Nearby services",
+      "postRequest": "Post a request"
+    },
+    "webRequest": {
+      "title": "New request",
+      "close": "Close",
+      "loading": "Opening secure session…",
+      "error": "Could not open the request flow. Please try again.",
+      "noSession": "Please sign in again to continue.",
+      "loadFailed": "The page failed to load. Please try again."
     },
     "search": {
       "label": "Search",

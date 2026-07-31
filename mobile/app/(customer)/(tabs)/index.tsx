@@ -10,7 +10,7 @@ import {
 import { router } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Text, Card, Skeleton, Badge } from '@/components/ui';
+import { Text, Card, Skeleton, Badge, Button } from '@/components/ui';
 import { ProviderCard, CategoryChip, SectionHeader } from '@/features/customer';
 import { fetchHomeFeed } from '@/features/customer/services';
 import { useAuthStore } from '@/store/auth';
@@ -74,10 +74,35 @@ export default function CustomerHomeScreen() {
         <Text muted>{t('customer.home.searchPlaceholder')}</Text>
       </Pressable>
 
+      {featureFlags.webRequestFlow ? (
+        <Button
+          title={t('customer.home.postRequest')}
+          onPress={() =>
+            router.push({
+              pathname: '/(customer)/web-request',
+              params: { target: '/request/new' },
+            })
+          }
+        />
+      ) : null}
+
       <SectionHeader
         title={t('customer.home.quickActions')}
       />
       <View style={styles.quickRow}>
+        {featureFlags.webRequestFlow ? (
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: '/(customer)/web-request',
+                params: { target: '/request/new' },
+              })
+            }
+            style={[styles.quick, { backgroundColor: colors.surfaceMuted }]}
+          >
+            <Text variant="caption">{t('customer.home.postRequest')}</Text>
+          </Pressable>
+        ) : null}
         {data.quickActions.map((a) => (
           <Pressable
             key={a.id}

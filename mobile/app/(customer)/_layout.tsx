@@ -39,6 +39,7 @@ export default function CustomerLayout() {
       <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
       <Stack.Screen name="native" options={{ title: 'Native features' }} />
       <Stack.Screen name="privacy" options={{ title: 'Privacy' }} />
+      <Stack.Screen name="web-request" options={{ title: 'Request' }} />
     </Stack>
   );
 }

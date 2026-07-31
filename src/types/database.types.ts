@@ -6215,6 +6215,39 @@ export type Database = {
         Update: { id?: string; node_type?: string; node_key?: string; label?: string | null; properties?: Json; edges?: Json; internal_only?: boolean; algorithm_version?: string; updated_at?: string; created_at?: string };
         Relationships: [];
       };
+      mobile_bridge_codes: {
+        Row: {
+          id: string;
+          code: string;
+          user_id: string;
+          access_token: string;
+          refresh_token: string;
+          expires_at: string;
+          used_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          user_id: string;
+          access_token: string;
+          refresh_token: string;
+          expires_at: string;
+          used_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          code?: string;
+          user_id?: string;
+          access_token?: string;
+          refresh_token?: string;
+          expires_at?: string;
+          used_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
