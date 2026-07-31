@@ -11,7 +11,7 @@ import {
   isOffersV2Enabled,
   isOfferDecisionEngineEnabled,
   isUnlockV2Enabled,
-  isChatAuthV2Enabled,
+  isChatEngineEnabled,
 } from "@/lib/config/feature-flags";
 import { getAuthUser } from "@/lib/auth/session";
 import { getRequestDetail } from "@/lib/service-requests/queries";
@@ -101,7 +101,7 @@ export default async function RequestWaitingPage({
     : null;
 
   let conversationId: string | null = request.conversationId ?? null;
-  if (isChatAuthV2Enabled() && releasedContact && !conversationId) {
+  if (isChatEngineEnabled() && releasedContact && !conversationId) {
     const admin = createAdminClient();
     const { data: conv } = await admin
       .from("conversations")

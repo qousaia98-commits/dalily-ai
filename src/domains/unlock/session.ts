@@ -265,8 +265,8 @@ export async function completeUnlockSuccess(input: {
       .eq("unlock_session_id", session.id)
       .maybeSingle();
     if (grant) {
-      const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
-      if (isChatAuthV2Enabled()) {
+      const { isChatEngineEnabled } = await import("@/lib/config/feature-flags");
+      if (isChatEngineEnabled()) {
         const { ensureFullChatSessionForGrant } = await import("@/domains/chat/session");
         await ensureFullChatSessionForGrant({
           serviceRequestId: grant.service_request_id as string,
@@ -328,8 +328,8 @@ export async function completeUnlockSuccess(input: {
         .eq("unlock_session_id", session.id)
         .maybeSingle();
       if (existingGrant) {
-        const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
-        if (isChatAuthV2Enabled()) {
+        const { isChatEngineEnabled } = await import("@/lib/config/feature-flags");
+        if (isChatEngineEnabled()) {
           const { ensureFullChatSessionForGrant } = await import("@/domains/chat/session");
           await ensureFullChatSessionForGrant({
             serviceRequestId: session.service_request_id as string,
@@ -383,8 +383,8 @@ export async function completeUnlockSuccess(input: {
     phase: "in_progress",
   });
 
-  const { isChatAuthV2Enabled } = await import("@/lib/config/feature-flags");
-  if (isChatAuthV2Enabled()) {
+  const { isChatEngineEnabled } = await import("@/lib/config/feature-flags");
+  if (isChatEngineEnabled()) {
     const { ensureFullChatSessionForGrant } = await import("@/domains/chat/session");
     await ensureFullChatSessionForGrant({
       serviceRequestId: session.service_request_id as string,

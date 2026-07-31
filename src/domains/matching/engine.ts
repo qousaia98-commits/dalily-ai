@@ -8,6 +8,7 @@ import {
   isAiEngineV3Enabled,
   isMatchingV2Enabled,
 } from "@/lib/config/feature-flags";
+import { logger } from "@/lib/observability/logger";
 import type { RankedAssignment } from "@/domains/matching/rank";
 import type { AiRankedAssignment } from "@/lib/ai/matching/rank-with-ai";
 import type { DispatchRankedAssignment } from "@/lib/ai/dispatch/select";
@@ -161,7 +162,7 @@ async function notifyAssignees(
   ownerIds: string[],
 ): Promise<void> {
   if (ownerIds.length === 0) return;
-  await deliverMarketplaceNotificationsBatch(
+  const diagnostics = await deliverMarketplaceNotificationsBatch(
     [...new Set(ownerIds)],
     {
       type: "match_assignment",
@@ -173,6 +174,13 @@ async function notifyAssignees(
     },
     { max: MATCHING_POLICY.expandedMaxAssignments },
   );
+  if (diagnostics.deliveryFailures > 0) {
+    logger.warn("matching.engine", "match assignment notification delivery failures", {
+      requestId,
+      deliveryFailures: diagnostics.deliveryFailures,
+      failedUserIds: diagnostics.failedUserIds,
+    });
+  }
 }
 
 /**

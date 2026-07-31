@@ -3,6 +3,7 @@ import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
 import { afterLegacyMarketplaceWrite } from "@/domains/marketplace/repository";
 import { syncMarketplaceRequestProjection } from "@/domains/marketplace/projection";
 import { runMatchingForRequest } from "@/domains/matching";
+import { logger } from "@/lib/observability/logger";
 import {
   isAiEngineV1Enabled,
   isAiEngineV4Enabled,
@@ -189,8 +190,12 @@ export async function publishIntentRequest(input: {
   } else if (!multiProjectCreated && isMatchingV2Enabled()) {
     try {
       await runMatchingForRequest(request.id);
-    } catch {
+    } catch (error) {
       // best-effort — pool/assignments can be retried via expandMatchPool later
+      logger.error("customer.publish-intent", "runMatchingForRequest failed", {
+        requestId: request.id,
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 

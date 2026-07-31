@@ -14,7 +14,7 @@ import {
 import { CustomerOfferBoard } from "@/components/customer/customer-offer-board";
 import { canAccessFullChat } from "@/domains/chat";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isChatAuthV2Enabled } from "@/lib/config/feature-flags";
+import { isChatEngineEnabled } from "@/lib/config/feature-flags";
 
 type PageProps = { params: Promise<{ requestId: string }> };
 
@@ -61,7 +61,7 @@ export default async function CustomerRequestDetailPage({ params }: PageProps) {
 
   // Ensure conversationId for unlocked marketplace requests
   let requestForPanel = request;
-  if (isChatAuthV2Enabled() && !request.conversationId) {
+  if (isChatEngineEnabled() && !request.conversationId) {
     const admin = createAdminClient();
     const { data: conv } = await admin
       .from("conversations")
