@@ -1111,7 +1111,8 @@
       "location_required": "Please choose a city.",
       "location_invalid": "That city is not available.",
       "urgency_required": "Please confirm urgency.",
-      "publish_failed": "Could not publish your request. Try again."
+      "publish_failed": "Could not publish your request. Try again.",
+      "contact_info_blocked": "Don't share phone numbers or emails here. Contact details unlock after the unlock fee is paid."
     }
   },
   "offerFlow": {
@@ -1354,7 +1355,8 @@
         "offer_closed": "This offer is closed.",
         "clarification_limit": "Question limit reached.",
         "forbidden": "Not allowed.",
-        "clarification_failed": "Could not send."
+        "clarification_failed": "Could not send.",
+        "contact_info_blocked": "Don't share phone numbers or emails here. Contact details unlock after the unlock fee is paid."
       }
     },
     "errors": {
@@ -1379,7 +1381,8 @@
       "rate_limited": "Too many actions — please wait a moment.",
       "shortlist_full": "Shortlist is full for this request.",
       "save_failed": "Could not update shortlist.",
-      "validation_error": "Invalid request."
+      "validation_error": "Invalid request.",
+      "contact_info_blocked": "Don't share phone numbers or emails in the offer. Contact details unlock after the unlock fee is paid."
     }
   },
   "unlockFlow": {

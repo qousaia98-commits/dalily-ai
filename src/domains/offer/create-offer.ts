@@ -7,6 +7,10 @@ import { syncMarketplaceRequestProjection } from "@/domains/marketplace/projecti
 import { openUnlockSessionForSelection } from "@/domains/unlock/session";
 import { deliverMarketplaceNotification } from "@/lib/notifications/deliver";
 import { safeLocalizedText, safeMarketplaceCopy } from "@/lib/translation/guard";
+import {
+  CONTACT_INFO_BLOCKED_ERROR,
+  containsContactInfo,
+} from "@/lib/security/contact-info-guard";
 
 export type CreateOfferResult =
   | { ok: true; offerId: string; qualityFlags: string[] }
@@ -25,6 +29,11 @@ export async function createOfferFromAssignment(input: {
 
   const price = input.data.price;
   if (!Number.isFinite(price) || price <= 0) return { ok: false, error: "price_invalid" };
+
+  const offerMessage = input.data.message?.trim() || "";
+  if (offerMessage && containsContactInfo(offerMessage)) {
+    return { ok: false, error: CONTACT_INFO_BLOCKED_ERROR };
+  }
 
   const supabase = await createClient();
   const { data: assignment } = await supabase
@@ -82,7 +91,7 @@ export async function createOfferFromAssignment(input: {
       price_model: input.data.priceModel,
       inclusions: input.data.inclusions?.trim() || null,
       eta_text: input.data.etaText?.trim() || null,
-      message: input.data.message?.trim() || null,
+      message: offerMessage || null,
       expires_at: expiresAt,
       status: "sent",
       quality_flags: qualityFlags,

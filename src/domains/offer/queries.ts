@@ -2,6 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isOffersV2Enabled } from "@/lib/config/feature-flags";
 import {
+  CONTACT_INFO_BLOCKED_ERROR,
+  containsContactInfo,
+} from "@/lib/security/contact-info-guard";
+import {
   OFFER_CLARIFICATION_MAX,
   type OfferClarificationView,
   type OfferTemplateView,
@@ -332,6 +336,9 @@ export async function postClarification(input: {
   if (!isOffersV2Enabled()) return { ok: false, error: "feature_disabled" };
   const body = input.body.trim();
   if (body.length < 1 || body.length > 500) return { ok: false, error: "body_invalid" };
+  if (containsContactInfo(body)) {
+    return { ok: false, error: CONTACT_INFO_BLOCKED_ERROR };
+  }
 
   const supabase = await createClient();
   const { data: offer } = await supabase

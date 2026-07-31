@@ -32,6 +32,10 @@ import {
 import { urgencyToMarketplace } from "@/lib/ai/urgency/detect";
 import type { AiUrgencyLevel } from "@/lib/ai/decision/types";
 import { getLocalizedText } from "@/types/domain.types";
+import {
+  CONTACT_INFO_BLOCKED_ERROR,
+  containsContactInfo,
+} from "@/lib/security/contact-info-guard";
 
 export type PublishIntentResult =
   | { ok: true; requestId: string }
@@ -51,6 +55,9 @@ export async function publishIntentRequest(input: {
 }): Promise<PublishIntentResult> {
   const intentText = input.data.intentText.trim();
   if (intentText.length < 8) return { ok: false, error: "intent_too_short" };
+  if (containsContactInfo(intentText)) {
+    return { ok: false, error: CONTACT_INFO_BLOCKED_ERROR };
+  }
   if (!input.data.categoryId) return { ok: false, error: "category_required" };
   if (!input.data.cityId) return { ok: false, error: "location_required" };
   if (input.data.urgency !== "emergency" && input.data.urgency !== "normal") {
