@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import {
   isCustomerIntentFlowV2Enabled,
@@ -15,6 +16,11 @@ import { createClient } from "@/lib/supabase/server";
 import { categorySlugFromId } from "@/lib/providers/reference";
 import { getCategoryNameMap } from "@/lib/categories/queries";
 import type { TargetProviderContext } from "@/components/customer/intent-intake-flow/types";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("intentFlow");
+  return { title: t("pageTitle") };
+}
 
 export default async function NewIntentRequestPage({
   params,
