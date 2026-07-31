@@ -47,7 +47,7 @@ src/domains/
 | matching | `src/domains/matching` (+ salvage ideas from smart-match) | Active (Sprint 3, flag `MATCHING_V2`) |
 | offer | `src/domains/offer` (quotes dual-run legacy) | Active (Sprint 4, flag `OFFERS_V2`) |
 | unlock | `src/domains/unlock` | Active (Sprint 5, flag `UNLOCK_V2`) |
-| payment | `src/domains/payment` + `src/lib/payment` | Active (Sprint 6 + Sprint 10 Phase 4, flags `PAYMENTS_V2` / `PAYMENT_WALLET` / `ESCROW_ENGINE`) |
+| payment | `src/domains/payment` + `src/lib/payment` — see [`payment-domain-boundaries.md`](./payment-domain-boundaries.md) | Active (Sprint 6 + Sprint 10 Phase 4, flags `PAYMENTS_V2` / `PAYMENT_WALLET` / `ESCROW_ENGINE`) |
 | notification | `src/lib/notifications`, business notification inbox | Facade re-export |
 | chat | `src/domains/chat` + `src/lib/chat`, `src/lib/messaging` | Active (Sprint 7, flag `CHAT_AUTH_V2`) |
 | review | `src/lib/reviews` | Facade re-export |
