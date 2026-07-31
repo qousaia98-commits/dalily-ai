@@ -25,7 +25,7 @@ export async function CategoryGrid({ className }: { className?: string }) {
           return (
             <Link
               key={group.id}
-              href={`/search?group=${group.slug}`}
+              href="/request/new"
               className="group flex flex-col items-center gap-2 rounded-2xl border border-border/60 bg-card p-4 text-center transition-all hover:border-primary/30 hover:bg-accent/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-5"
               aria-label={t("categorySearchLabel", { category: label })}
             >

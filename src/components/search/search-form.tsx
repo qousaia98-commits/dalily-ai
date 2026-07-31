@@ -83,7 +83,7 @@ export function SearchForm({
     } else {
       params.delete(URGENCY_PARAM);
     }
-    router.push(`/search?${params.toString()}`);
+    router.push(`/request/new?${params.toString()}`);
   }
 
   function enterPipeline(trimmed: string, options?: { skipDiagnosis?: boolean; urgency?: string }) {

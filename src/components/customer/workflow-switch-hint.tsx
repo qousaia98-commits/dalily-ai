@@ -14,7 +14,7 @@ export async function WorkflowSwitchHint({
   const toPublish = from === "find";
   const href = toPublish
     ? "/request/new?mode=publish&from=switch"
-    : "/search?from=switch";
+    : "/request/new?from=switch";
   const title = toPublish ? t("toPublishTitle") : t("toFindTitle");
   const body = toPublish ? t("toPublishBody") : t("toFindBody");
   const cta = toPublish ? t("toPublishCta") : t("toFindCta");

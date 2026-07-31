@@ -27,7 +27,7 @@ export default function ProviderProfileError({
           {t("retry")}
         </Button>
         <Button asChild variant="outline" className="rounded-xl">
-          <Link href="/search">{t("backSearch")}</Link>
+          <Link href="/request/new">{t("backSearch")}</Link>
         </Button>
       </div>
     </main>

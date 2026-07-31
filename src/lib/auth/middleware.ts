@@ -32,6 +32,7 @@ function isAdminRoute(path: string): boolean {
 function isCustomerMarketplaceRoute(path: string): boolean {
   if (path === "/" || path === "/search" || path === "/ai") return true;
   if (path.startsWith("/search/") || path.startsWith("/ai/")) return true;
+  if (path === "/request/new" || path.startsWith("/request/")) return true;
   return false;
 }
 

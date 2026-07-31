@@ -62,7 +62,7 @@ export async function AppHeader({
           ) : (
             <>
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/search">{tNav("search")}</Link>
+                <Link href="/request/new">{tNav("search")}</Link>
               </Button>
               {platformAdmin ? (
                 <Button variant="ghost" size="sm" asChild>

@@ -466,7 +466,7 @@
     }
   },
   "nav": {
-    "search": "البحث",
+    "search": "طلب جديد",
     "forBusiness": "للأعمال",
     "dashboard": "لوحة التحكم",
     "orders": "طلباتي",
@@ -486,7 +486,7 @@
       "home": "الرئيسية",
       "aiAssistant": "المساعد الذكي",
       "messages": "الرسائل",
-      "search": "بحث",
+      "search": "طلب جديد",
       "orders": "طلباتي",
       "favorites": "المفضلة",
       "account": "الحساب"
@@ -2377,7 +2377,7 @@
     "account": "الحساب",
     "legal": "قانوني",
     "links": {
-      "search": "البحث",
+      "search": "طلب جديد",
       "forBusiness": "للأعمال",
       "login": "تسجيل الدخول",
       "register": "إنشاء حساب",

@@ -81,8 +81,8 @@ export function DualJourneyChooser({ className }: { className?: string }) {
       } else {
         router.push(
           q.length >= 2
-            ? `/search?q=${encodeURIComponent(q)}&sort=relevant&from=dual`
-            : "/search?from=dual",
+            ? `/request/new?q=${encodeURIComponent(q)}&from=dual`
+            : "/request/new?from=dual",
         );
       }
     });

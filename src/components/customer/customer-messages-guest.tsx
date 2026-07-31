@@ -23,7 +23,7 @@ export async function CustomerMessagesGuest() {
           </Link>
         </Button>
         <Button variant="outline" asChild>
-          <Link href="/search">{t("browseCta")}</Link>
+          <Link href="/request/new">{t("browseCta")}</Link>
         </Button>
       </div>
     </div>

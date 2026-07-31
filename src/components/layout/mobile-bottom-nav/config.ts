@@ -6,7 +6,6 @@ import {
   Home,
   LayoutDashboard,
   MessageCircle,
-  Search,
   Sparkles,
   UserRound,
 } from "lucide-react";
@@ -20,7 +19,13 @@ import {
 /** Customer (and guest) — marketplace discovery + own orders. */
 export const CUSTOMER_NAV_ITEMS: readonly MobileNavItemConfig[] = [
   { id: "home", href: "/", icon: Home, labelKey: "home", exact: true },
-  { id: "search", href: "/search", icon: Search, labelKey: "search" },
+  {
+    id: "search",
+    href: "/request/new",
+    icon: Sparkles,
+    labelKey: "search",
+    matchPrefixes: ["/request/new"],
+  },
   {
     id: "orders",
     href: "/account/orders",

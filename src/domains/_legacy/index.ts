@@ -10,7 +10,6 @@ export const LEGACY_MODULES = [
   "src/lib/smart-map",
   "src/lib/service-requests",
   "src/lib/booking",
-  "src/app/[locale]/(public)/search",
   "src/app/[locale]/(public)/providers",
   "src/components/search",
 ] as const;

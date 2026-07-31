@@ -20,7 +20,7 @@ export async function AppFooter({ className }: { className?: string } = {}) {
             <h3 className="mb-3 text-sm font-semibold">{t("platform")}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link href="/search" className="transition-colors hover:text-foreground">
+                <Link href="/request/new" className="transition-colors hover:text-foreground">
                   {t("links.search")}
                 </Link>
               </li>

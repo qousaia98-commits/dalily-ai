@@ -28,7 +28,7 @@ export async function ConversationList({
 
   if (conversations.length === 0) {
     const isBusiness = messagesPath.includes("business");
-    const primaryHref = isBusiness ? "/business/requests" : "/search";
+    const primaryHref = isBusiness ? "/business/requests" : "/request/new";
     const ctaLabel = isBusiness ? t("viewAll") : t("browseCta");
     return (
       <EmptyState

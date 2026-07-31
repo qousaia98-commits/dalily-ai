@@ -466,7 +466,7 @@
     }
   },
   "nav": {
-    "search": "Search",
+    "search": "New request",
     "forBusiness": "For Business",
     "dashboard": "Dashboard",
     "orders": "My Jobs",
@@ -486,7 +486,7 @@
       "home": "Home",
       "aiAssistant": "AI Assistant",
       "messages": "Messages",
-      "search": "Search",
+      "search": "New request",
       "orders": "My Orders",
       "favorites": "Favorites",
       "account": "Account"
@@ -2736,7 +2736,7 @@
     "account": "Account",
     "legal": "Legal",
     "links": {
-      "search": "Search",
+      "search": "New request",
       "forBusiness": "For Business",
       "login": "Log in",
       "register": "Sign up",

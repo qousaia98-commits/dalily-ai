@@ -12,13 +12,12 @@ Each listed path must contain a `LEGACY.md` marker file.
 | `src/lib/subscription/` | Pay-for-visibility / plan ranking benefits | Keep until ranking/admin dependents removed |
 | `src/lib/search/` (browse/engine ranking host) | Directory discovery primary | Rewrite customer spine; salvage AI pieces |
 | `src/lib/search/smart-match/` | Useful ideas, wrong host problem | Salvage into Matching (Sprint 3) |
-| `src/lib/dalily-ranking/` | Directory score / blend for browse | Rewrite/remove from request allocation |
-| `src/lib/smart-map/` | Directory map UX | Remove from customer core |
+| `src/lib/dalily-ranking/` | Directory score / blend for browse | Keep for now — admin ranking inspection + provider-success Dalily Score |
+| `src/lib/smart-map/` | Directory map UX | Keep for now — navigation helpers used outside search (e.g. open-route, provider-success) |
 | `src/lib/service-requests/` (accept→chat machine) | Wrong contact economics | Rewrite Marketplace lifecycle |
 | `src/lib/booking/` (heavy scheduling) | Heavier than PSD job checkpoints | Shrink / demote |
-| `src/app/[locale]/(public)/search/` | Directory UI | Replace as primary (Sprint 2/10) |
-| `src/app/[locale]/(public)/providers/` | Public browse profiles | Delete browse path |
-| `src/components/search/` | Directory + long diagnosis UX | Rewrite/salvage intake widgets |
+| `src/app/[locale]/(public)/providers/` | Public browse profiles | Keep for now — live `/providers/[id]` trust profiles still linked |
+| `src/components/search/` | Directory + diagnosis UX remnants | Keep shared widgets (hero/form/category/match badges/waveform); route-only pieces removed in Sprint 10 |
 
 ## Removed in Sprint 10
 
@@ -28,6 +27,9 @@ Each listed path must contain a `LEGACY.md` marker file.
 | `src/components/business/business-subscription-panel.tsx` | Upgrade / plan selection UI |
 | `src/components/business/subscription-{hero,faq,trust,locked-state,plan-cards,upgrade-summary}.tsx` | Page-only subscription marketing UI |
 | Business hub CTAs to `/business/subscription` | Payments hub, account hub, analytics upgrade CTA, growth CTA |
+| `src/app/[locale]/(public)/search/` | Directory UI removed; thin redirect → `/request/new` (preserves `?q=`) |
+| `src/components/search/search-results.tsx` (+ empty/error/insight/filters/nearby) | Route-only search results UI |
+| `src/components/search/smart-map/*` | Search-layout map UI only (lib/smart-map kept) |
 
 ## Removed in Sprint 10A (LOW risk only)
 

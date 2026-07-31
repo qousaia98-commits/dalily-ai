@@ -49,7 +49,6 @@ const requiredPaths = [
   "src/lib/smart-map/LEGACY.md",
   "src/lib/service-requests/LEGACY.md",
   "src/lib/booking/LEGACY.md",
-  "src/app/[locale]/(public)/search/LEGACY.md",
   "src/app/[locale]/(public)/providers/LEGACY.md",
   "src/components/search/LEGACY.md",
   "src/components/business/LEGACY.md",
