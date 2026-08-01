@@ -76,7 +76,7 @@ Archived manual/orphan scripts live under [`scripts/archive/`](./scripts/archive
 - `mobile` — Expo Customer / Provider apps
 - `messages` — Arabic and English translations
 - `docs/migration` — official migration plan and checklists
-- `supabase/migrations` — **schema source of truth** (not root `schema.sql`)
+- `supabase/migrations` — **schema source of truth**
 - `scripts/archive` — low-risk archived verify/scratch tooling (Sprint 9.5)
 
 ## Immutable docs
