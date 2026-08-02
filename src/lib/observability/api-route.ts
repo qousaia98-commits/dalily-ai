@@ -4,6 +4,7 @@
 
 import { NextResponse } from "next/server";
 import { logger } from "@/lib/observability/logger";
+import { captureException } from "@/lib/observability/capture";
 
 /**
  * Runs an API handler and converts unexpected throws into a logged JSON 500.
@@ -18,6 +19,11 @@ export async function handleApiRoute(
   } catch (error) {
     logger.error(scope, "unhandled_error", {
       error: error instanceof Error ? error.message : "unknown",
+    });
+    captureException(error, {
+      scope,
+      tags: { kind: "api_route" },
+      extra: { event: "unhandled_error" },
     });
     return NextResponse.json({ error: "internal_error" }, { status: 500 });
   }

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 import { BRAND } from "@/lib/brand/tokens";
 
 export default function GlobalError({
@@ -13,6 +14,8 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     console.error("[global-error]", error);
+    // Capture React render errors when Sentry is configured; no-op without DSN.
+    Sentry.captureException(error);
   }, [error]);
 
   return (
