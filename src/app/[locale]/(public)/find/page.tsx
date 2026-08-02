@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import {
   isDirectSearchV1Enabled,
@@ -12,6 +13,14 @@ import { findProvidersForDirectSearch } from "@/domains/customer/find-providers"
 import { FindSearchForm } from "@/components/customer/find-search-form";
 import { FindProviderResultCard } from "@/components/customer/find-provider-result-card";
 import { Link } from "@/lib/i18n/navigation";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("findFlow");
+  return {
+    title: t("title"),
+    description: t("metaDescription"),
+  };
+}
 
 export default async function FindBusinessPage({
   params,

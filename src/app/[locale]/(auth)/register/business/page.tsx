@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("auth.businessWizard");
-  return { title: t("title") };
+  return { title: t("title"), description: t("metaDescription") };
 }
 
 export default async function RegisterBusinessPage() {

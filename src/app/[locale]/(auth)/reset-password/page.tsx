@@ -6,7 +6,7 @@ import { isPasswordRecoverySession } from "@/lib/auth/password-recovery";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("auth.resetPassword");
-  return { title: t("title") };
+  return { title: t("title"), description: t("metaDescription") };
 }
 
 export default async function ResetPasswordPage() {

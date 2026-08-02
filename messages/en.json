@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Dalily — Find trusted local experts in Syria",
-    "description": "AI platform that helps you describe a problem and find the right trusted local expert."
+    "title": "Dalily — From problem to trusted local help",
+    "description": "Describe what you need, compare offers from matched businesses, unlock contact when you choose, then chat — closed beta in Syria."
   },
   "common": {
     "brand": "Dalily",
@@ -834,6 +834,7 @@
   "intentFlow": {
     "pageTitle": "Tell us what you need",
     "pageSubtitle": "Usually under a minute — then we notify matching businesses.",
+    "metaDescription": "Describe your problem, get offers from matched businesses, unlock contact when you choose, then chat.",
     "targeted": {
       "pageTitle": "Send a request to this business",
       "pageSubtitle": "Describe the job — we notify only this business.",
@@ -1130,6 +1131,7 @@
   },
   "findFlow": {
     "title": "Find a specific business",
+    "metaDescription": "Browse matched businesses by name, category, or city — contact stays hidden until you send a request and unlock.",
     "subtitle": "Search by name, category, or city — no phone numbers or exact addresses.",
     "placeholder": "Business name or what you need…",
     "submit": "Search",
@@ -2786,51 +2788,51 @@
   "legal": {
     "privacy": {
       "metaTitle": "Privacy Policy — Dalily",
-      "metaDescription": "How Dalily collects and uses your information.",
+      "metaDescription": "How Dalily handles your data during the closed beta marketplace flow.",
       "title": "Privacy Policy",
-      "updated": "Last updated: July 2026",
-      "intro": "Dalily helps people find trusted local service providers. This policy explains what information we collect during the beta and how we use it.",
+      "updated": "Last updated: August 2026",
+      "intro": "Dalily is a closed-beta marketplace: you describe a need, matched businesses send offers, you choose one and may pay an unlock fee to reveal contact details, then chat opens. This policy explains what we collect and how we use it during the beta. Operated by [Company legal name].",
       "sections": {
         "collect": {
           "title": "Information we collect",
-          "body": "We collect account details (such as email and name), business profile information you submit, search queries, and basic usage data needed to operate the platform."
+          "body": "We collect account details (such as email and name), the problem description and details you submit in a request, location or city preferences you share for matching, offers and messages exchanged on the platform, unlock-fee payment records (processed via our payment providers), and basic usage data needed to operate and secure the service."
         },
         "use": {
           "title": "How we use information",
-          "body": "We use your information to provide search results, manage business accounts, improve the service, and keep the platform secure. Search queries may be logged to improve matching quality."
+          "body": "We use your information to match requests with relevant businesses, deliver offers, process unlock fees when you choose to reveal contact details, open and operate chat after unlock, improve matching quality during the beta, and keep the platform secure. We do not use your data to publish open “search result” directories that expose contact information before unlock."
         },
         "sharing": {
           "title": "Sharing",
-          "body": "We do not sell your personal data. Provider contact details you choose to publish may be visible to users. We use infrastructure providers (such as Supabase) to host the service."
+          "body": "We do not sell your personal data. Before unlock, businesses typically see request context without your private contact details. After you unlock, the selected parties can see the contact information needed to continue. We use infrastructure and payment providers (such as Supabase and our configured payment processor) to host and operate the service. Legal entity details for formal notices: [Company legal name], [registered address]."
         },
         "contact": {
           "title": "Contact",
-          "body": "For privacy questions during the beta, contact the Dalily team through your account email or business support channel."
+          "body": "For privacy questions during the closed beta, contact us at [privacy contact email] or through your account support channel. Formal correspondence: [Company legal name], [registered address]."
         }
       }
     },
     "terms": {
       "metaTitle": "Terms of Service — Dalily",
-      "metaDescription": "Terms for using Dalily during the beta.",
+      "metaDescription": "Terms for using Dalily’s closed-beta request, offer, unlock, and chat marketplace.",
       "title": "Terms of Service",
-      "updated": "Last updated: July 2026",
-      "intro": "By using Dalily during the beta, you agree to these terms. The service connects users with independent service providers.",
+      "updated": "Last updated: August 2026",
+      "intro": "By using Dalily during the closed beta, you agree to these terms. Dalily is operated by [Company legal name] and connects customers with independent local businesses through requests, offers, optional unlock fees, and chat.",
       "sections": {
         "service": {
           "title": "The service",
-          "body": "Dalily is a discovery platform. We help you find providers but do not perform the services ourselves. Features may change during the beta."
+          "body": "Dalily is a marketplace platform, not a directory of public contact lists. Customers describe a problem; matched businesses may send offers; the customer selects an offer and may pay an unlock fee to reveal contact information; chat then opens between the parties. Dalily does not perform the underlying services. Features, fees, and availability may change during the closed beta."
         },
         "accounts": {
           "title": "Accounts",
-          "body": "You are responsible for your account credentials and for information you submit. Business accounts must provide accurate profile details."
+          "body": "You are responsible for your account credentials and for information you submit. Business accounts must provide accurate profile and service details. Misuse of the request, offer, unlock, or chat flows may result in suspension during the beta."
         },
         "providers": {
-          "title": "Providers",
-          "body": "Providers listed on Dalily are independent businesses. Users should verify details and agree terms directly with the provider before work begins."
+          "title": "Providers and unlock fees",
+          "body": "Providers on Dalily are independent businesses. Offers are invitations to continue; customers should verify details and agree the job terms directly with the provider. Unlock fees grant access to contact information and chat for that selection — they are not payment for the provider’s service work unless we clearly state otherwise. Users should not expect contact details before a successful unlock."
         },
         "liability": {
           "title": "Limitation of liability",
-          "body": "Dalily is provided during the beta on an as-is basis. We are not liable for disputes, damages, or service quality between users and providers."
+          "body": "Dalily is provided during the closed beta on an as-is basis. We are not liable for disputes, damages, service quality, or agreements between customers and providers. Governing notices: [Company legal name], [registered address]."
         }
       }
     }
@@ -6377,6 +6379,7 @@
     },
     "login": {
       "title": "Log in",
+      "metaDescription": "Log in to Dalily to manage requests, offers, unlocks, and chat.",
       "subtitle": "Welcome back to Dalily",
       "email": "Email",
       "password": "Password",
@@ -6399,6 +6402,7 @@
     },
     "forgotPassword": {
       "title": "Reset password",
+      "metaDescription": "Request a password reset email for your Dalily account.",
       "subtitle": "Enter your email and we’ll send a reset link.",
       "email": "Email",
       "submit": "Send reset link",
@@ -6411,6 +6415,7 @@
     },
     "resetPassword": {
       "title": "New password",
+      "metaDescription": "Set a new password for your Dalily account.",
       "subtitle": "Choose a strong password for your account.",
       "changeTitle": "Change password",
       "changeSubtitle": "Enter your current password, then choose a new one.",
@@ -6433,6 +6438,7 @@
     },
     "register": {
       "title": "Create account",
+      "metaDescription": "Create a Dalily customer account to post requests and compare offers.",
       "subtitle": "Join Dalily and find trusted services",
       "name": "Full name",
       "email": "Email",
@@ -6457,6 +6463,7 @@
     },
     "businessWizard": {
       "title": "Register your business",
+      "metaDescription": "Register your business on Dalily to receive matched customer requests and send offers.",
       "subtitle": "Complete the steps to appear on Dalily",
       "step": "Step {current} of {total}",
       "steps": {

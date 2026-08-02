@@ -1,4 +1,5 @@
 import { ShieldCheck } from "lucide-react";
+import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { SearchHero } from "@/components/search/search-hero";
 import { IntentHero } from "@/components/customer/intent-hero";
@@ -13,6 +14,17 @@ import {
 import { getAuthUser } from "@/lib/auth/session";
 import { buildPersonalizedGreeting, resolveGreetingRole } from "@/lib/greetings";
 import type { Locale } from "@/lib/i18n/config";
+import { buildSiteMetadata } from "@/lib/brand/metadata";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  const locale = await getLocale();
+  return buildSiteMetadata({
+    title: t("title"),
+    description: t("description"),
+    locale,
+  });
+}
 
 export default async function HomePage() {
   const t = await getTranslations("home");

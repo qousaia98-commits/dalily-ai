@@ -19,7 +19,10 @@ import type { TargetProviderContext } from "@/components/customer/intent-intake-
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("intentFlow");
-  return { title: t("pageTitle") };
+  return {
+    title: t("pageTitle"),
+    description: t("metaDescription"),
+  };
 }
 
 export default async function NewIntentRequestPage({
