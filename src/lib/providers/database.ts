@@ -284,6 +284,23 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
   };
 }
 
+/** Public landing trust signal — active + fully verified providers only. */
+export async function countActiveVerifiedProviders(): Promise<number> {
+  const supabase = await createClient();
+  const { count, error } = await supabase
+    .from("providers")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "active")
+    .eq("verification_status", "verified")
+    .is("deleted_at", null);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return count ?? 0;
+}
+
 export async function getFeaturedProviders(limit = 3): Promise<ProviderListItem[]> {
   const rows = await fetchActiveProviders({ limit: 50 });
   const planSlugsByProviderId = await getActivePlanSlugsByProviderIds(rows.map((row) => row.id));

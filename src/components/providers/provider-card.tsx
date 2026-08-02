@@ -51,7 +51,7 @@ export async function ProviderCard({
     >
       <Card
         className={cn(
-          "overflow-hidden py-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+          "overflow-hidden py-0 transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0",
           benefits.showPremiumSearchAppearance && "ring-1 ring-[var(--dalily-gold)]/40",
         )}
       >
@@ -60,7 +60,7 @@ export async function ProviderCard({
             src={provider.coverImage}
             alt={providerName}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+            className="object-cover transition-transform duration-200 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
           <div className="absolute start-3 top-3 flex flex-wrap gap-1.5">
@@ -96,7 +96,9 @@ export async function ProviderCard({
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <h3 className="truncate font-semibold group-hover:text-primary">{providerName}</h3>
+                <h3 className="truncate font-semibold transition-colors duration-200 group-hover:text-primary">
+                  {providerName}
+                </h3>
                 <PlanBadge planSlug={planSlug} />
               </div>
               <p className="text-sm text-muted-foreground">

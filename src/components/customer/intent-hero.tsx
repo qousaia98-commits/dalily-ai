@@ -31,7 +31,7 @@ export function IntentHero({ className }: { className?: string }) {
       <form
         onSubmit={onSubmit}
         className={cn(
-          "relative mx-auto max-w-3xl space-y-3 rounded-3xl border bg-card/80 p-4 shadow-sm backdrop-blur-sm transition-all duration-300 sm:p-5",
+          "relative mx-auto max-w-3xl space-y-3 rounded-3xl border bg-card/80 p-4 shadow-sm backdrop-blur-sm transition-[border-color,box-shadow] duration-200 ease-out sm:p-5",
           focused
             ? "border-[var(--dalily-gold)]/45 shadow-[0_12px_40px_-20px_rgba(0,0,0,0.35)]"
             : "border-border/80",
@@ -42,7 +42,7 @@ export function IntentHero({ className }: { className?: string }) {
           <div
             aria-hidden
             className={cn(
-              "pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center px-3 text-center transition-all duration-300 ease-out",
+              "pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center px-3 text-center transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none",
               showOverlay
                 ? "translate-y-0 opacity-100"
                 : "pointer-events-none -translate-y-1 opacity-0",
@@ -67,7 +67,7 @@ export function IntentHero({ className }: { className?: string }) {
             placeholder=""
             dir={locale === "ar" ? "rtl" : "ltr"}
             className={cn(
-              "relative z-0 min-h-[8.5rem] resize-y border-0 bg-transparent text-base leading-relaxed shadow-none transition-[color,opacity] duration-300 focus-visible:ring-0 sm:min-h-[9.5rem]",
+              "relative z-0 min-h-[8.5rem] resize-y border-0 bg-transparent text-base leading-relaxed shadow-none transition-[color,opacity] duration-200 focus-visible:ring-0 motion-reduce:transition-none sm:min-h-[9.5rem]",
               locale === "ar" ? "text-right" : "text-left",
               // Hide typed text under the overlay only while empty; keep caret visible when focused
               showOverlay
@@ -88,7 +88,10 @@ export function IntentHero({ className }: { className?: string }) {
             <ShieldCheck className="size-3.5 text-[var(--dalily-gold)]" aria-hidden />
             {t("trust.privacy")}
           </p>
-          <Button type="submit" className="min-h-11 rounded-xl sm:min-w-40">
+          <Button
+            type="submit"
+            className="min-h-11 rounded-xl font-semibold shadow-sm shadow-primary/15 hover:shadow-md hover:shadow-primary/20 sm:min-w-40"
+          >
             {t("hero.cta")}
           </Button>
         </div>

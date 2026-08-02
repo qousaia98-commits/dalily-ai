@@ -7,6 +7,7 @@ import { DualJourneyChooser } from "@/components/customer/dual-journey-chooser";
 import { CategoryGrid } from "@/components/search/category-grid";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { FeaturedProviders } from "@/components/landing/featured-providers";
+import { TrustStatsStrip } from "@/components/landing/trust-stats-strip";
 import {
   isCustomerIntentFlowV2Enabled,
   isDualMarketplaceEnabled,
@@ -94,12 +95,15 @@ export default async function HomePage() {
           </div>
         </section>
 
+        <TrustStatsStrip />
+
         <HowItWorks />
 
         {(dualMarketplace || !intentFlow) && (
           <>
-            <section className="border-y border-border/60 bg-muted/20 px-4 py-14 sm:px-6 sm:py-16">
-              <div className="mx-auto max-w-5xl">
+            <section className="relative overflow-hidden border-y border-border/60 bg-muted/20 px-4 py-14 sm:px-6 sm:py-16">
+              <div aria-hidden className="pointer-events-none absolute inset-0 dalily-section-wash" />
+              <div className="relative mx-auto max-w-5xl">
                 <CategoryGrid />
               </div>
             </section>

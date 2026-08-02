@@ -41,7 +41,7 @@ export async function AppHeader({
       <div className="mx-auto grid h-16 max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:h-[4.5rem] sm:px-6">
         <Link
           href={authUser && businessUser && !platformAdmin ? "/business" : "/"}
-          className="justify-self-start rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
+          className="justify-self-start rounded-lg outline-none transition-[opacity,transform] duration-200 ease-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
           aria-label={t("brand")}
         >
           <DalilyLogo variant="horizontal" className="hidden lg:inline-flex" />

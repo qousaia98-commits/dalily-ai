@@ -30,6 +30,12 @@ export const getCategoryGroups = cache(async (): Promise<CategoryRecord[]> => {
   return categories.filter((category) => category.depth === 0);
 });
 
+/** Public landing trust signal — active top-level service groups. */
+export const countActiveCategoryGroups = cache(async (): Promise<number> => {
+  const groups = await getCategoryGroups();
+  return groups.length;
+});
+
 export const getLeafCategories = cache(async (): Promise<CategoryRecord[]> => {
   const categories = await getActiveServiceCategories();
   return categories.filter((category) => category.depth === 1);

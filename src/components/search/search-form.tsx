@@ -240,7 +240,7 @@ export function SearchForm({
             type="submit"
             size="lg"
             disabled={checking}
-            className="min-h-12 flex-1 gap-2 rounded-2xl px-8 font-semibold shadow-lg shadow-primary/20 sm:flex-none"
+            className="min-h-12 flex-1 gap-2 rounded-2xl px-8 font-semibold shadow-lg shadow-primary/20 transition-[box-shadow,transform] duration-200 hover:shadow-xl hover:shadow-primary/25 sm:flex-none"
           >
             {checking ? (
               <Loader2 className="size-5 animate-spin" aria-hidden />

@@ -32,12 +32,12 @@ export function DalilyLogo({
   const showTagline = variant === "horizontal";
 
   return (
-    <span className={cn("inline-flex items-center gap-3", className)}>
-      <DalilyMark size={size} color={onDark ? "light" : undefined} />
-      <span className="flex min-w-0 flex-col leading-none">
+    <span className={cn("inline-flex items-center gap-2.5", className)}>
+      <DalilyMark size={size} color={onDark ? "light" : undefined} className="shrink-0" />
+      <span className="flex min-w-0 flex-col justify-center gap-0.5 leading-none">
         <span
           className={cn(
-            "font-sans text-lg font-bold tracking-tight sm:text-xl",
+            "font-sans text-[1.0625rem] font-bold tracking-tight sm:text-xl",
             titleClass,
           )}
         >
@@ -45,8 +45,9 @@ export function DalilyLogo({
         </span>
         {showArabic ? (
           <span
-            className="mt-0.5 font-arabic text-sm font-medium text-[var(--dalily-gold)]"
+            className="font-arabic text-[0.8125rem] font-semibold tracking-wide text-[var(--dalily-gold)] sm:text-sm"
             dir="rtl"
+            lang="ar"
           >
             {BRAND.nameAr}
           </span>

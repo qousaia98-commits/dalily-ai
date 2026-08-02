@@ -21,9 +21,10 @@ export async function FeaturedProviders({ className }: { className?: string }) {
   }
 
   return (
-    <section className={cn("bg-muted/30 px-4 py-16 sm:px-6 sm:py-20", className)}>
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-10 text-center sm:text-start">
+    <section className={cn("relative overflow-hidden bg-muted/30 px-4 py-16 sm:px-6 sm:py-20", className)}>
+      <div aria-hidden className="pointer-events-none absolute inset-0 dalily-section-wash" />
+      <div className="relative mx-auto max-w-5xl">
+        <div className="mb-10 animate-fade-in-up text-center sm:text-start">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("title")}</h2>
           <p className="mt-3 text-muted-foreground">{t("subtitle")}</p>
         </div>

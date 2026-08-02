@@ -829,6 +829,13 @@
     "featured": {
       "title": "أعمال مميزة",
       "subtitle": "خدمات محلية موثوقة في سوريا"
+    },
+    "trustStats": {
+      "ariaLabel": "مؤشرات ثقة السوق",
+      "providers": "مزودون موثّقون",
+      "categories": "فئات خدمات",
+      "closedBeta": "الوصول",
+      "closedBetaValue": "نسخة تجريبية مغلقة"
     }
   },
   "intentFlow": {

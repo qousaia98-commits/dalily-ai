@@ -10,9 +10,10 @@ export async function HowItWorks({ className }: { className?: string }) {
   const steps = ["search", "connect", "trust"] as const;
 
   return (
-    <section className={cn("px-4 py-16 sm:px-6 sm:py-20", className)}>
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-12 text-center">
+    <section className={cn("relative overflow-hidden px-4 py-16 sm:px-6 sm:py-20", className)}>
+      <div aria-hidden className="pointer-events-none absolute inset-0 dalily-section-wash opacity-70" />
+      <div className="relative mx-auto max-w-5xl">
+        <div className="mb-12 animate-fade-in-up text-center">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("title")}</h2>
           <p className="mt-3 text-muted-foreground">{t("subtitle")}</p>
         </div>
@@ -23,11 +24,11 @@ export async function HowItWorks({ className }: { className?: string }) {
               <div
                 key={step}
                 className={cn(
-                  "animate-fade-in-up relative flex flex-col items-center rounded-2xl border bg-card p-6 text-center shadow-sm",
+                  "animate-fade-in-up relative flex flex-col items-center rounded-2xl border border-border/70 bg-card p-6 text-center shadow-sm transition-[border-color,box-shadow,transform] duration-200 ease-out hover:border-[var(--dalily-gold)]/35 hover:shadow-md motion-reduce:transition-none",
                   `stagger-${index + 1}`,
                 )}
               >
-                <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-[color-mix(in_oklab,var(--dalily-gold)_12%,transparent)] text-[var(--dalily-gold)]">
                   <Icon className="size-7" />
                 </div>
                 <span className="mb-2 text-xs font-bold tracking-wider text-primary uppercase">

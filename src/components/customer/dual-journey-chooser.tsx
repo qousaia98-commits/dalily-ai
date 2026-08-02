@@ -171,9 +171,11 @@ function PathCard({
       disabled={pending}
       onClick={onClick}
       className={cn(
-        "group flex flex-col gap-3 rounded-3xl border bg-card p-5 text-start transition-all",
+        "group flex flex-col gap-3 rounded-3xl border bg-card p-5 text-start",
+        "transition-[border-color,box-shadow,transform,opacity] duration-200 ease-out",
         "hover:border-[var(--dalily-gold)]/50 hover:shadow-md",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dalily-gold)]/60",
+        "active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100",
         recommended
           ? "border-[var(--dalily-gold)]/55 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.35)]"
           : "border-border/80",
@@ -196,7 +198,7 @@ function PathCard({
       </div>
       <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
         {cta}
-        <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5 rtl:rotate-180 rtl:group-hover:-translate-x-0.5" />
+        <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 rtl:rotate-180 rtl:group-hover:-translate-x-0.5 motion-reduce:transition-none" />
       </span>
     </button>
   );

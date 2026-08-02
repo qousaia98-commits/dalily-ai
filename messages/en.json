@@ -829,6 +829,13 @@
     "featured": {
       "title": "Featured businesses",
       "subtitle": "Trusted local services across Syria"
+    },
+    "trustStats": {
+      "ariaLabel": "Marketplace trust signals",
+      "providers": "Verified providers",
+      "categories": "Service categories",
+      "closedBeta": "Access",
+      "closedBetaValue": "Closed beta"
     }
   },
   "intentFlow": {
