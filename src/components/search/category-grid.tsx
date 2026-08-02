@@ -4,6 +4,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { CategoryIcon } from "@/components/categories/category-icon";
 import { localizedField } from "@/lib/categories/format";
 import { getCategoryGroups } from "@/lib/categories/queries";
+import { logger } from "@/lib/observability/logger";
 import type { Locale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
 
@@ -11,7 +12,19 @@ import { cn } from "@/lib/utils";
 export async function CategoryGrid({ className }: { className?: string }) {
   const t = await getTranslations("home");
   const locale = (await getLocale()) as Locale;
-  const groups = await getCategoryGroups();
+
+  let groups: Awaited<ReturnType<typeof getCategoryGroups>> = [];
+  try {
+    groups = await getCategoryGroups();
+  } catch (error) {
+    logger.error("search.category-grid", "getCategoryGroups failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+
+  if (groups.length === 0) {
+    return null;
+  }
 
   return (
     <section className={cn("w-full", className)}>

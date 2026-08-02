@@ -1,11 +1,20 @@
 import { getTranslations } from "next-intl/server";
 import { getFeaturedProviders } from "@/lib/providers/database";
 import { ProviderCard } from "@/components/providers/provider-card";
+import { logger } from "@/lib/observability/logger";
 import { cn } from "@/lib/utils";
 
 export async function FeaturedProviders({ className }: { className?: string }) {
   const t = await getTranslations("home.featured");
-  const providers = await getFeaturedProviders(3);
+
+  let providers: Awaited<ReturnType<typeof getFeaturedProviders>> = [];
+  try {
+    providers = await getFeaturedProviders(3);
+  } catch (error) {
+    logger.error("landing.featured-providers", "getFeaturedProviders failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
 
   if (providers.length === 0) {
     return null;
