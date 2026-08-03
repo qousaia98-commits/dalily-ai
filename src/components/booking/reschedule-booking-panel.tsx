@@ -9,6 +9,7 @@ import {
 } from "@/actions/booking.actions";
 import type { Booking, TimeSlot } from "@/lib/booking/types";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate, formatTime } from "@/lib/format/datetime";
 
 export function RescheduleBookingPanel({ booking }: { booking: Booking }) {
@@ -54,7 +55,14 @@ export function RescheduleBookingPanel({ booking }: { booking: Booking }) {
         <div className="space-y-2 rounded-2xl border border-border/70 bg-muted/20 p-3">
           <p className="text-xs text-muted-foreground">{t("hint")}</p>
           {loading ? (
-            <p className="text-sm text-muted-foreground">{t("loading")}</p>
+            <div className="space-y-2" aria-busy="true">
+              <p className="sr-only">{t("loading")}</p>
+              <div className="flex flex-wrap gap-2">
+                <Skeleton className="h-8 w-28 rounded-lg" />
+                <Skeleton className="h-8 w-32 rounded-lg" />
+                <Skeleton className="h-8 w-24 rounded-lg" />
+              </div>
+            </div>
           ) : slots.length === 0 ? (
             <p className="text-sm text-muted-foreground">{t("empty")}</p>
           ) : (

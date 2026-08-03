@@ -9,6 +9,7 @@ import { HowItWorks } from "@/components/landing/how-it-works";
 import { FeaturedProviders } from "@/components/landing/featured-providers";
 import { TrustStatsStrip } from "@/components/landing/trust-stats-strip";
 import { PatternBackdrop } from "@/components/brand/pattern-backdrop";
+import { RevealOnScroll } from "@/components/motion/reveal-on-scroll";
 import {
   isCustomerIntentFlowV2Enabled,
   isDualMarketplaceEnabled,
@@ -97,19 +98,27 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <TrustStatsStrip />
+        <RevealOnScroll>
+          <TrustStatsStrip />
+        </RevealOnScroll>
 
-        <HowItWorks />
+        <RevealOnScroll>
+          <HowItWorks />
+        </RevealOnScroll>
 
         {(dualMarketplace || !intentFlow) && (
           <>
-            <section className="relative overflow-hidden border-y border-border/60 bg-muted/20 px-4 py-14 sm:px-6 sm:py-16">
-              <PatternBackdrop patternOpacity={0.05} density="sparse" />
-              <div className="relative mx-auto max-w-5xl">
-                <CategoryGrid />
-              </div>
-            </section>
-            <FeaturedProviders />
+            <RevealOnScroll>
+              <section className="relative overflow-hidden border-y border-border/60 bg-muted/20 px-4 py-14 sm:px-6 sm:py-16">
+                <PatternBackdrop patternOpacity={0.05} density="sparse" />
+                <div className="relative mx-auto max-w-5xl">
+                  <CategoryGrid />
+                </div>
+              </section>
+            </RevealOnScroll>
+            <RevealOnScroll>
+              <FeaturedProviders />
+            </RevealOnScroll>
           </>
         )}
       </div>

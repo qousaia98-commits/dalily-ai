@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Link } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { InlinePanelSkeleton } from "@/components/shared/skeletons";
 import type {
   GroupedFeedItem,
   NotifDigestKind,
@@ -470,7 +471,7 @@ export function NotificationCenterBell() {
             </div>
           ) : null}
           {tab === "prefs" && !prefs ? (
-            <p className="p-3 text-sm text-muted-foreground">{t("loading")}</p>
+            <InlinePanelSkeleton className="p-3" rows={4} />
           ) : null}
         </div>
       ) : null}

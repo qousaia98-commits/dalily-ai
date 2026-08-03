@@ -4,6 +4,7 @@ import {
   STROKE_WIDTH,
   type BrandIllustrationProps,
 } from "./shared";
+import { cn } from "@/lib/utils";
 
 /**
  * Unlock / offer accepted — two interlocking rings with a gold node.
@@ -13,8 +14,13 @@ export function UnlockSuccessIllustration({
   className,
   ...props
 }: BrandIllustrationProps) {
+  const base = brandIllustrationProps(className);
   return (
-    <svg {...brandIllustrationProps(className)} {...props}>
+    <svg
+      {...base}
+      {...props}
+      className={cn(base.className, "animate-success-enter")}
+    >
       <circle
         cx="46"
         cy="50"
@@ -24,6 +30,7 @@ export function UnlockSuccessIllustration({
         strokeWidth={STROKE_WIDTH}
       />
       <circle
+        className="animate-success-soft-pop"
         cx="74"
         cy="50"
         r="22"
@@ -40,6 +47,8 @@ export function UnlockSuccessIllustration({
         strokeWidth={STROKE_WIDTH}
       />
       <path
+        className="animate-draw-check"
+        pathLength={1}
         d="M56 50l2.8 2.8L66 46"
         stroke={ILLUSTRATION_STROKE.accent}
         strokeWidth={2}

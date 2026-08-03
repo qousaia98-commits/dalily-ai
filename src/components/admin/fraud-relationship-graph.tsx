@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { listEntityRelationshipsAction } from "@/actions/fraud.actions";
 import type { RiskEntityType } from "@/lib/fraud/types";
+import { InlinePanelSkeleton } from "@/components/shared/skeletons";
 
 type Rel = {
   id: string;
@@ -41,7 +42,7 @@ export function FraudRelationshipGraph({ entityType, entityId }: Props) {
   }, [entityType, entityId]);
 
   if (!loaded) {
-    return <p className="mt-2 text-xs text-muted-foreground">{t("loading")}</p>;
+    return <InlinePanelSkeleton className="mt-2" rows={2} />;
   }
 
   if (rels.length === 0) {

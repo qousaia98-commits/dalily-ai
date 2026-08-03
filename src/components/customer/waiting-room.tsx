@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
-import { Loader2, Bell } from "lucide-react";
+import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
 import type { MatchPoolSummary } from "@/domains/matching";
@@ -28,6 +28,7 @@ import {
   RequestPublishedIllustration,
 } from "@/components/illustrations";
 import { GeometricPattern } from "@/components/brand/geometric-pattern";
+import { WaitingRoomSkeleton } from "@/components/shared/skeletons";
 
 export async function WaitingRoom({
   request,
@@ -63,12 +64,7 @@ export async function WaitingRoom({
   const t = await getTranslations("intentFlow.waiting");
 
   if (state === "loading") {
-    return (
-      <div className="mx-auto flex max-w-lg flex-col items-center gap-3 py-16 text-center">
-        <Loader2 className="size-8 animate-spin text-muted-foreground" aria-hidden />
-        <p className="text-sm text-muted-foreground">{t("loading")}</p>
-      </div>
-    );
+    return <WaitingRoomSkeleton label={t("loading")} />;
   }
 
   if (state === "error" || !request) {

@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { getPublicVerificationSummaryAction } from "@/actions/public-verification.actions";
 import type { PublicVerificationSummary } from "@/lib/verification/public-types";
 import { formatDateTime } from "@/lib/format/datetime";
+import { InlinePanelSkeleton } from "@/components/shared/skeletons";
 import { cn } from "@/lib/utils";
 
 const ACCENT: Record<string, string> = {
@@ -184,7 +185,7 @@ function PublicVerificationPanel({
         <p className="mt-2 text-sm text-muted-foreground">{t("trustOptional")}</p>
 
         {loading ? (
-          <p className="mt-6 text-sm text-muted-foreground">{t("loading")}</p>
+          <InlinePanelSkeleton className="mt-6" rows={4} />
         ) : !summary || summary.levels.length === 0 ? (
           <p className="mt-6 text-sm text-muted-foreground">{t("empty")}</p>
         ) : (

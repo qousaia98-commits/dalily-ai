@@ -4,14 +4,20 @@ import {
   STROKE_WIDTH,
   type BrandIllustrationProps,
 } from "./shared";
+import { cn } from "@/lib/utils";
 
 /** Request published — document + centered check. Fully symmetric success cue. */
 export function RequestPublishedIllustration({
   className,
   ...props
 }: BrandIllustrationProps) {
+  const base = brandIllustrationProps(className);
   return (
-    <svg {...brandIllustrationProps(className)} {...props}>
+    <svg
+      {...base}
+      {...props}
+      className={cn(base.className, "animate-success-enter")}
+    >
       <rect
         x="36"
         y="14"
@@ -30,6 +36,7 @@ export function RequestPublishedIllustration({
         opacity={0.45}
       />
       <circle
+        className="animate-success-soft-pop"
         cx="60"
         cy="72"
         r="16"
@@ -38,13 +45,14 @@ export function RequestPublishedIllustration({
         strokeWidth={STROKE_WIDTH}
       />
       <path
+        className="animate-draw-check"
+        pathLength={1}
         d="M52 72l5.5 5.5L70 65"
         stroke={ILLUSTRATION_STROKE.accent}
         strokeWidth={2.25}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* Soft radial ticks — celebration without directional arrows */}
       <path
         d="M60 8v4M60 88v4M28 50h4M88 50h4M38 22l2.5 2.5M79.5 75.5L82 78M38 78l2.5-2.5M79.5 24.5L82 22"
         stroke={ILLUSTRATION_STROKE.accent}

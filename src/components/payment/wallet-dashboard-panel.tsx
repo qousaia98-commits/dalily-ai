@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type WalletDto = {
   walletId: string;
@@ -98,14 +99,15 @@ export function WalletDashboardPanel({ mode }: { mode: "customer" | "business" }
 
   if (loading || pending) {
     return (
-      <div className="space-y-4 animate-pulse" aria-busy="true">
-        <div className="h-8 w-40 rounded bg-muted" />
+      <div className="space-y-4" aria-busy="true">
+        <Skeleton className="h-8 w-40 rounded-xl" />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-20 rounded-xl bg-muted" />
+            <Skeleton key={i} className="h-20 rounded-xl" />
           ))}
         </div>
-        <p className="text-sm text-muted-foreground">{t("loading")}</p>
+        <Skeleton className="h-28 w-full rounded-2xl" />
+        <p className="sr-only">{t("loading")}</p>
       </div>
     );
   }
