@@ -2798,7 +2798,7 @@
       "metaDescription": "How Dalily handles your data during the closed beta marketplace flow.",
       "title": "Privacy Policy",
       "updated": "Last updated: August 2026",
-      "intro": "Dalily is a closed-beta marketplace: you describe a need, matched businesses send offers, you choose one and may pay an unlock fee to reveal contact details, then chat opens. This policy explains what we collect and how we use it during the beta. Operated by [Company legal name].",
+      "intro": "Dalily is a closed-beta marketplace: you describe a need, matched businesses send offers, you choose one and may pay an unlock fee to reveal contact details, then chat opens. This policy explains what we collect and how we use it during the beta. Operated by Dalily.",
       "sections": {
         "collect": {
           "title": "Information we collect",
@@ -2810,11 +2810,11 @@
         },
         "sharing": {
           "title": "Sharing",
-          "body": "We do not sell your personal data. Before unlock, businesses typically see request context without your private contact details. After you unlock, the selected parties can see the contact information needed to continue. We use infrastructure and payment providers (such as Supabase and our configured payment processor) to host and operate the service. Legal entity details for formal notices: [Company legal name], [registered address]."
+          "body": "We do not sell your personal data. Before unlock, businesses typically see request context without your private contact details. After you unlock, the selected parties can see the contact information needed to continue. We use infrastructure and payment providers (such as Supabase and our configured payment processor) to host and operate the service. Dalily currently operates without a formal registered business entity."
         },
         "contact": {
           "title": "Contact",
-          "body": "For privacy questions during the closed beta, contact us at [privacy contact email] or through your account support channel. Formal correspondence: [Company legal name], [registered address]."
+          "body": "For privacy questions during the closed beta, contact us at privacy@dalily.app or through your account support channel."
         }
       }
     },
@@ -2823,7 +2823,7 @@
       "metaDescription": "Terms for using Dalily’s closed-beta request, offer, unlock, and chat marketplace.",
       "title": "Terms of Service",
       "updated": "Last updated: August 2026",
-      "intro": "By using Dalily during the closed beta, you agree to these terms. Dalily is operated by [Company legal name] and connects customers with independent local businesses through requests, offers, optional unlock fees, and chat.",
+      "intro": "By using Dalily during the closed beta, you agree to these terms. Dalily connects customers with independent local businesses through requests, offers, optional unlock fees, and chat.",
       "sections": {
         "service": {
           "title": "The service",
@@ -2839,7 +2839,7 @@
         },
         "liability": {
           "title": "Limitation of liability",
-          "body": "Dalily is provided during the closed beta on an as-is basis. We are not liable for disputes, damages, service quality, or agreements between customers and providers. Governing notices: [Company legal name], [registered address]."
+          "body": "Dalily is provided during the closed beta on an as-is basis. We are not liable for disputes, damages, service quality, or agreements between customers and providers."
         }
       }
     }
