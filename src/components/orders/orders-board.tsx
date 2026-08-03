@@ -20,6 +20,8 @@ import {
 import { resolveOrderDisplayStatus } from "@/lib/orders/display-status";
 import { useMarketplaceRealtime } from "@/hooks/use-marketplace-realtime";
 import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
+import { EmptyOrdersIllustration } from "@/components/illustrations";
+import { GeometricPattern } from "@/components/brand/geometric-pattern";
 
 type CustomerProps = {
   mode: "customer";
@@ -138,9 +140,19 @@ export function OrdersBoard(props: Props) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-border bg-muted/30 px-6 py-12 text-center">
-          <p className="text-sm font-medium">{t("emptyTitle")}</p>
-          <p className="mt-1 text-sm text-muted-foreground">{t("emptyBody")}</p>
+        <div className="relative overflow-hidden rounded-3xl border border-dashed border-border bg-muted/30 px-6 py-12 text-center">
+          <GeometricPattern
+            className="absolute inset-0 size-full"
+            opacity={0.045}
+            density="sparse"
+          />
+          <div className="relative space-y-3">
+            <div className="mx-auto size-28">
+              <EmptyOrdersIllustration />
+            </div>
+            <p className="text-sm font-medium">{t("emptyTitle")}</p>
+            <p className="text-sm text-muted-foreground">{t("emptyBody")}</p>
+          </div>
         </div>
       ) : (
         <ul className="space-y-3">

@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
 import { Separator } from "@/components/ui/separator";
 import { DalilyLogo } from "@/components/brand/dalily-logo";
+import { PatternBackdrop } from "@/components/brand/pattern-backdrop";
 import { cn } from "@/lib/utils";
 import { isDirectSearchV1Enabled } from "@/lib/config/feature-flags";
 
@@ -10,7 +11,7 @@ export async function AppFooter({ className }: { className?: string } = {}) {
 
   return (
     <footer className={cn("relative overflow-hidden border-t bg-muted/20", className)}>
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-40 dalily-section-wash" />
+      <PatternBackdrop patternOpacity={0.04} density="sparse" />
       <div className="relative mx-auto max-w-5xl px-4 py-12 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3.5">

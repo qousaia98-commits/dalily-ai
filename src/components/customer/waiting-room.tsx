@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
-import { Loader2, Inbox, Bell } from "lucide-react";
+import { Loader2, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
 import type { MatchPoolSummary } from "@/domains/matching";
@@ -23,6 +23,11 @@ import { AutomationSuggestionsList } from "@/components/automation/automation-wi
 import type { AutomationSuggestion } from "@/lib/ai/automation/types";
 import { WorkflowSwitchHint } from "@/components/customer/workflow-switch-hint";
 import { isDualMarketplaceEnabled } from "@/lib/config/feature-flags";
+import {
+  EmptyOffersIllustration,
+  RequestPublishedIllustration,
+} from "@/components/illustrations";
+import { GeometricPattern } from "@/components/brand/geometric-pattern";
 
 export async function WaitingRoom({
   request,
@@ -87,7 +92,10 @@ export async function WaitingRoom({
 
   return (
     <div className="mx-auto max-w-lg space-y-6 py-10">
-      <div className="space-y-2 text-center">
+      <div className="space-y-3 text-center">
+        <div className="mx-auto size-28">
+          <RequestPublishedIllustration />
+        </div>
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </div>
@@ -137,14 +145,23 @@ export async function WaitingRoom({
           <p className="mt-1 text-sm text-muted-foreground">{t("matchedBody")}</p>
         </div>
       ) : !unlockSession && !releasedContact ? (
-        <div className="rounded-2xl border border-dashed border-border px-5 py-10 text-center">
-          <Inbox className="mx-auto mb-3 size-8 text-muted-foreground" aria-hidden />
-          <p className="font-medium">
-            {insufficient ? t("undersupplyTitle") : t("emptyTitle")}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {insufficient ? t("undersupplyBody") : t("emptyBody")}
-          </p>
+        <div className="relative overflow-hidden rounded-2xl border border-dashed border-border px-5 py-10 text-center">
+          <GeometricPattern
+            className="absolute inset-0 size-full"
+            opacity={0.05}
+            density="sparse"
+          />
+          <div className="relative space-y-3">
+            <div className="mx-auto size-28">
+              <EmptyOffersIllustration />
+            </div>
+            <p className="font-medium">
+              {insufficient ? t("undersupplyTitle") : t("emptyTitle")}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {insufficient ? t("undersupplyBody") : t("emptyBody")}
+            </p>
+          </div>
         </div>
       ) : null}
 

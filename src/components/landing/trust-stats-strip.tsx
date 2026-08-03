@@ -2,6 +2,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { countActiveVerifiedProviders } from "@/lib/providers/database";
 import { countActiveCategoryGroups } from "@/lib/categories/queries";
 import { logger } from "@/lib/observability/logger";
+import { PatternBackdrop } from "@/components/brand/pattern-backdrop";
 import { cn } from "@/lib/utils";
 
 /** Same closed-beta gate as robots/metadata — env truth, not a placeholder metric. */
@@ -75,10 +76,7 @@ export async function TrustStatsStrip({ className }: { className?: string }) {
         className,
       )}
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 dalily-section-wash"
-      />
+      <PatternBackdrop patternOpacity={0.05} density="sparse" />
       <ul className="relative mx-auto flex max-w-5xl flex-wrap items-stretch justify-center gap-x-8 gap-y-5 sm:gap-x-12">
         {stats.map((stat, index) => (
           <li

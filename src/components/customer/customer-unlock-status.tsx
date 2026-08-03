@@ -3,6 +3,7 @@ import { Link } from "@/lib/i18n/navigation";
 import type { UnlockSessionView } from "@/domains/unlock/types";
 import type { ReleasedContact } from "@/domains/unlock/types";
 import { Button } from "@/components/ui/button";
+import { UnlockSuccessIllustration } from "@/components/illustrations";
 
 export async function CustomerUnlockStatus({
   session,
@@ -20,7 +21,10 @@ export async function CustomerUnlockStatus({
 
   if (contact) {
     return (
-      <div className="space-y-2 rounded-2xl border border-border bg-muted/20 px-4 py-4 text-sm">
+      <div className="space-y-3 rounded-2xl border border-border bg-muted/20 px-4 py-4 text-sm">
+        <div className="mx-auto size-24">
+          <UnlockSuccessIllustration />
+        </div>
         <p className="font-medium">{t("unlockedTitle")}</p>
         <p className="text-muted-foreground">{t("unlockedBody")}</p>
         {contact.phone ? (

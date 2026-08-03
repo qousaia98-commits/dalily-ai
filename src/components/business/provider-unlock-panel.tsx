@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useRouter } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { UnlockSuccessIllustration } from "@/components/illustrations";
 import {
   cancelUnlockFeePaymentAction,
   confirmUnlockDevBypassAction,
@@ -275,9 +276,9 @@ export function ProviderUnlockPanel({
               </Button>
             </section>
           ) : awaitingReview ? (
-            <section className="space-y-4 rounded-3xl border border-emerald-500/25 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--card)_88%,#ecfdf5)_0%,var(--card)_100%)] px-5 py-8 text-center shadow-sm">
-              <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
-                <CheckCircle2 className="size-7" aria-hidden />
+            <section className="space-y-4 rounded-3xl border border-emerald-500/25 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--card)_88%,#ecfdf5)_0%,var(--card)_100%)] px-5 py-8 text-center shadow-sm dark:bg-[linear-gradient(180deg,color-mix(in_oklab,var(--card)_92%,#064e3b)_0%,var(--card)_100%)]">
+              <div className="mx-auto size-28">
+                <UnlockSuccessIllustration />
               </div>
               <div className="space-y-2">
                 <h2 className="text-xl font-bold tracking-tight">{tUx("successTitle")}</h2>

@@ -8,6 +8,7 @@ import { CategoryGrid } from "@/components/search/category-grid";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { FeaturedProviders } from "@/components/landing/featured-providers";
 import { TrustStatsStrip } from "@/components/landing/trust-stats-strip";
+import { PatternBackdrop } from "@/components/brand/pattern-backdrop";
 import {
   isCustomerIntentFlowV2Enabled,
   isDualMarketplaceEnabled,
@@ -50,6 +51,7 @@ export default async function HomePage() {
     <>
       <div className="flex flex-1 flex-col">
         <section className="relative overflow-hidden border-b border-border/60 px-4 pb-14 pt-10 sm:px-6 sm:pb-16 sm:pt-14">
+          <PatternBackdrop patternOpacity={0.045} density="sparse" wash={false} />
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklab,var(--dalily-gold)_14%,transparent),transparent_70%)]"
@@ -102,7 +104,7 @@ export default async function HomePage() {
         {(dualMarketplace || !intentFlow) && (
           <>
             <section className="relative overflow-hidden border-y border-border/60 bg-muted/20 px-4 py-14 sm:px-6 sm:py-16">
-              <div aria-hidden className="pointer-events-none absolute inset-0 dalily-section-wash" />
+              <PatternBackdrop patternOpacity={0.05} density="sparse" />
               <div className="relative mx-auto max-w-5xl">
                 <CategoryGrid />
               </div>

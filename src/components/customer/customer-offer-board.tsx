@@ -33,6 +33,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { StarRating } from "@/components/providers/star-rating";
 import { Bookmark, BookmarkCheck, ChevronDown, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { EmptyOffersIllustration } from "@/components/illustrations";
 
 const initial: OfferActionState = { success: false };
 
@@ -167,9 +168,12 @@ export function CustomerOfferBoard({
   if (offers.length === 0) {
     return (
       <div
-        className="rounded-2xl border border-dashed border-border px-5 py-10 text-center animate-fade-in"
+        className="relative overflow-hidden rounded-2xl border border-dashed border-border px-5 py-10 text-center animate-fade-in"
         role="status"
       >
+        <div className="relative mx-auto mb-3 size-28">
+          <EmptyOffersIllustration />
+        </div>
         <p className="font-medium">{t("decision.emptyTitle")}</p>
         <p className="mt-1 text-sm text-muted-foreground">{t("decision.emptyBody")}</p>
       </div>
