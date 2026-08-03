@@ -56,3 +56,4 @@ supabase/.branches/
 scripts/_tmp_*.mjs
 scripts/_debug_*.mjs
 docs/database/reports/_*.sql
+.env*
