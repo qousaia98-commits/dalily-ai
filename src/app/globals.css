@@ -168,6 +168,24 @@
     );
   }
 
+  /**
+   * Restrained frosted-glass accent — solid fallback first;
+   * blur only when backdrop-filter is supported (readable in light + dark).
+   */
+  .dalily-glass {
+    background-color: color-mix(in oklab, var(--card) 88%, transparent);
+    border-color: color-mix(in oklab, var(--dalily-gold) 22%, var(--border));
+    box-shadow: 0 1px 0 color-mix(in oklab, var(--dalily-gold) 12%, transparent);
+  }
+
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .dalily-glass {
+      background-color: color-mix(in oklab, var(--card) 58%, transparent);
+      -webkit-backdrop-filter: blur(14px) saturate(1.15);
+      backdrop-filter: blur(14px) saturate(1.15);
+    }
+  }
+
   .animate-mobile-backdrop-in {
     animation: mobile-backdrop-in 0.3s ease-out both;
   }
