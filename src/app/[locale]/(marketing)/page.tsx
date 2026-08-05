@@ -1,19 +1,13 @@
 import { ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { SearchHero } from "@/components/search/search-hero";
-import { IntentHero } from "@/components/customer/intent-hero";
-import { DualJourneyChooser } from "@/components/customer/dual-journey-chooser";
+import { HomepagePathChooser } from "@/components/customer/homepage-path-chooser";
 import { CategoryGrid } from "@/components/search/category-grid";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { FeaturedProviders } from "@/components/landing/featured-providers";
 import { TrustStatsStrip } from "@/components/landing/trust-stats-strip";
 import { PatternBackdrop } from "@/components/brand/pattern-backdrop";
 import { RevealOnScroll } from "@/components/motion/reveal-on-scroll";
-import {
-  isCustomerIntentFlowV2Enabled,
-  isDualMarketplaceEnabled,
-} from "@/lib/config/feature-flags";
 import { getAuthUser } from "@/lib/auth/session";
 import { buildPersonalizedGreeting, resolveGreetingRole } from "@/lib/greetings";
 import type { Locale } from "@/lib/i18n/config";
@@ -31,10 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomePage() {
   const t = await getTranslations("home");
-  const tDual = await getTranslations("dualMarketplace");
   const locale = (await getLocale()) as Locale;
-  const intentFlow = isCustomerIntentFlowV2Enabled();
-  const dualMarketplace = isDualMarketplaceEnabled();
   const authUser = await getAuthUser();
 
   const greeting =
@@ -60,41 +51,19 @@ export default async function HomePage() {
           <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-7 text-center sm:gap-9">
             <span className="animate-fade-in-up inline-flex items-center gap-1.5 rounded-full border border-[var(--dalily-gold)]/35 bg-[color-mix(in_oklab,var(--dalily-gold)_10%,transparent)] px-3.5 py-1.5 text-xs font-semibold text-foreground sm:text-sm">
               <ShieldCheck className="size-3.5 text-[var(--dalily-gold)]" aria-hidden />
-              {dualMarketplace
-                ? tDual("trustBadge")
-                : intentFlow
-                  ? t("intentTrustBadge")
-                  : t("trustBadge")}
+              {t("pathChooser.trustBadge")}
             </span>
 
             <div className="animate-fade-in-up stagger-1 space-y-3">
               <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-                {greeting
-                  ? greeting.title
-                  : dualMarketplace
-                    ? tDual("heroTitle")
-                    : intentFlow
-                      ? t("intentHeroTitle")
-                      : t("heroTitle")}
+                {greeting ? greeting.title : t("pathChooser.heroTitle")}
               </h1>
               <p className="text-balance mx-auto max-w-xl text-base text-muted-foreground sm:text-lg">
-                {greeting
-                  ? greeting.subtitle
-                  : dualMarketplace
-                    ? tDual("heroSubtitle")
-                    : intentFlow
-                      ? t("intentHeroSubtitle")
-                      : t("heroSubtitle")}
+                {greeting ? greeting.subtitle : t("pathChooser.heroSubtitle")}
               </p>
             </div>
 
-            {dualMarketplace ? (
-              <DualJourneyChooser className="animate-fade-in-up stagger-2" />
-            ) : intentFlow ? (
-              <IntentHero className="animate-fade-in-up stagger-2 w-full max-w-3xl" />
-            ) : (
-              <SearchHero className="animate-fade-in-up stagger-2 w-full max-w-3xl" />
-            )}
+            <HomepagePathChooser className="w-full" />
           </div>
         </section>
 
@@ -106,21 +75,20 @@ export default async function HomePage() {
           <HowItWorks />
         </RevealOnScroll>
 
-        {(dualMarketplace || !intentFlow) && (
-          <>
-            <RevealOnScroll>
-              <section className="relative overflow-hidden border-y border-border/60 bg-muted/20 px-4 py-14 sm:px-6 sm:py-16">
-                <PatternBackdrop patternOpacity={0.05} density="sparse" />
-                <div className="relative mx-auto max-w-5xl">
-                  <CategoryGrid />
-                </div>
-              </section>
-            </RevealOnScroll>
-            <RevealOnScroll>
-              <FeaturedProviders />
-            </RevealOnScroll>
-          </>
-        )}
+        <RevealOnScroll>
+          <section
+            id="browse-services"
+            className="relative scroll-mt-24 overflow-hidden border-y border-border/60 bg-muted/20 px-4 py-14 sm:px-6 sm:py-16"
+          >
+            <PatternBackdrop patternOpacity={0.05} density="sparse" />
+            <div className="relative mx-auto max-w-5xl">
+              <CategoryGrid />
+            </div>
+          </section>
+        </RevealOnScroll>
+        <RevealOnScroll>
+          <FeaturedProviders />
+        </RevealOnScroll>
       </div>
     </>
   );

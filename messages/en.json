@@ -807,6 +807,25 @@
     "intentHeroTitle": "What do you need?",
     "intentHeroSubtitle": "Describe your problem. Businesses send offers. You choose — and stay private until you unlock contact.",
     "aiPowered": "Smart search",
+    "pathChooser": {
+      "trustBadge": "Two clear ways to get help",
+      "heroTitle": "What do you need?",
+      "heroSubtitle": "Publish a request for offers, or browse trusted local businesses.",
+      "publish": {
+        "title": "Publish a request",
+        "body": "Describe the job once — matching businesses send offers. You stay private until you choose.",
+        "cta": "Start request"
+      },
+      "find": {
+        "title": "Find a business",
+        "body": "Browse categories and featured providers nearby — then contact when you are ready.",
+        "cta": "Browse services"
+      }
+    },
+    "floatingAi": {
+      "label": "Ask Dalily AI",
+      "ariaLabel": "Describe your problem with Dalily AI"
+    },
     "howItWorks": {
       "title": "How Dalily works",
       "subtitle": "Three clear steps from problem to help",

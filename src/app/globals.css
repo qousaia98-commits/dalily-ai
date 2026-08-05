@@ -119,8 +119,17 @@
     text-wrap: balance;
   }
 
+  /**
+   * fill-mode: backwards (not both) on purpose — these animate `transform`,
+   * and a lingering filled transform (even an identity one) creates a
+   * containing block for any `position: fixed` descendant, breaking fixed
+   * nav/buttons anywhere below these in the tree. `backwards` still avoids
+   * a flash-of-unanimated-state at start; the end state matches the
+   * un-animated default (opacity 1, transform none) so there's no visual
+   * difference once the animation completes.
+   */
   .animate-fade-in-up {
-    animation: fade-in-up 0.22s ease-out both;
+    animation: fade-in-up 0.22s ease-out backwards;
   }
 
   .animate-fade-in {
@@ -129,7 +138,7 @@
 
   /** Route enter — remounted via app/[locale]/template.tsx */
   .animate-page-enter {
-    animation: page-enter 0.18s ease-out both;
+    animation: page-enter 0.18s ease-out backwards;
   }
 
   /** Scroll-reveal: only hidden when JS marks pending AND motion is allowed */
@@ -139,12 +148,12 @@
   }
 
   .animate-reveal-in {
-    animation: reveal-in 0.2s ease-out both;
+    animation: reveal-in 0.2s ease-out backwards;
   }
 
   /** Success illustrations — one-shot entrance */
   .animate-success-enter {
-    animation: success-enter 0.32s ease-out both;
+    animation: success-enter 0.32s ease-out backwards;
   }
 
   .animate-draw-check {
@@ -156,7 +165,12 @@
   .animate-success-soft-pop {
     transform-box: fill-box;
     transform-origin: center;
-    animation: success-soft-pop 0.45s ease-out 0.08s both;
+    animation: success-soft-pop 0.45s ease-out 0.08s backwards;
+  }
+
+  /** Soft gold pulse for the floating AI entry — calm, not flashy. */
+  .animate-ai-glow {
+    animation: ai-glow 2.8s ease-in-out infinite;
   }
 
   /** Subtle gold radial wash for flat section dividers (no photography). */
@@ -215,6 +229,7 @@
     .animate-success-enter,
     .animate-draw-check,
     .animate-success-soft-pop,
+    .animate-ai-glow,
     .animate-mobile-backdrop-in,
     .animate-mobile-backdrop-out,
     .animate-mobile-drawer-in,
@@ -246,7 +261,7 @@
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -262,7 +277,7 @@
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -273,7 +288,7 @@
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -284,7 +299,7 @@
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: none;
   }
 }
 
@@ -305,7 +320,21 @@
   }
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: none;
+  }
+}
+
+@keyframes ai-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 12px 32px -10px rgba(11, 21, 38, 0.55),
+      0 0 0 0 color-mix(in oklab, var(--dalily-gold) 0%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 14px 36px -10px rgba(11, 21, 38, 0.5),
+      0 0 22px 2px color-mix(in oklab, var(--dalily-gold) 35%, transparent);
   }
 }
 
