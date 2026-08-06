@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { isCustomerIntentFlowV2Enabled } from "@/lib/config/feature-flags";
 import { getActiveCities } from "@/lib/geo/cities";
 import { nearestCitySlugFromCoords } from "@/lib/geo/nearest-city";
-import { getLeafCategories, getCategoryGroups } from "@/lib/categories/queries";
+import { getCategoryGroupsWithLeaves } from "@/lib/categories/queries";
 import { getLocalizedText } from "@/types/domain.types";
 import type { Locale } from "@/lib/i18n/config";
 import { findProvidersForDirectSearch } from "@/domains/customer/find-providers";
@@ -43,10 +43,9 @@ export default async function FindBusinessPage({
   const sp = await searchParams;
   const t = await getTranslations("findFlow");
 
-  const [cities, leaves, groups, jar] = await Promise.all([
+  const [cities, groupsWithLeaves, jar] = await Promise.all([
     getActiveCities(),
-    getLeafCategories(),
-    getCategoryGroups(),
+    getCategoryGroupsWithLeaves(),
     cookies(),
   ]);
 
@@ -54,9 +53,16 @@ export default async function FindBusinessPage({
     slug: c.slug,
     label: getLocalizedText(c.name, locale) || c.slug,
   }));
-  const categoryOptions = leaves.map((c) => ({
-    slug: c.slug,
-    label: getLocalizedText(c.name, locale) || c.slug,
+  // Nested so the visible "Category" select can show a top-level group
+  // (e.g. "Legal") as its own selectable option, with its leaves grouped
+  // underneath — a plain flat leaf list can't represent a group selection.
+  const categoryGroupOptions = groupsWithLeaves.map(({ group, leaves }) => ({
+    slug: group.slug,
+    label: getLocalizedText(group.name, locale) || group.slug,
+    leaves: leaves.map((leaf) => ({
+      slug: leaf.slug,
+      label: getLocalizedText(leaf.name, locale) || leaf.slug,
+    })),
   }));
 
   const q = sp.q?.trim() ?? "";
@@ -64,17 +70,20 @@ export default async function FindBusinessPage({
   const group = sp.group?.trim() ?? "";
   const cityExplicit = sp.city?.trim() ?? "";
 
-  // Visible confirmation of what was clicked — the leaf-category dropdown
-  // can't show a top-level group as a single selected option, so surface
-  // it separately instead of leaving the form looking like "Any category".
+  // Visible confirmation of what was clicked (badge above the form) —
+  // kept alongside the select itself now correctly reflecting the same
+  // value, belt-and-suspenders since the badge is more prominent.
   const activeCategoryLabel = category
-    ? categoryOptions.find((c) => c.slug === category)?.label
+    ? categoryGroupOptions.flatMap((g) => g.leaves).find((c) => c.slug === category)?.label
     : group
-      ? (() => {
-          const match = groups.find((g) => g.slug === group);
-          return match ? getLocalizedText(match.name, locale) || match.slug : null;
-        })()
+      ? categoryGroupOptions.find((g) => g.slug === group)?.label
       : null;
+
+  const defaultSelectValue = category
+    ? `category:${category}`
+    : group
+      ? `group:${group}`
+      : "";
 
   let defaultCity = cityExplicit;
   if (!defaultCity && jar.get(LOC_PREF_COOKIE)?.value === "enabled") {
@@ -138,10 +147,9 @@ export default async function FindBusinessPage({
 
       <FindSearchForm
         defaultQuery={q}
-        defaultCategory={category}
-        defaultGroup={group}
+        defaultSelectValue={defaultSelectValue}
         defaultCity={defaultCity}
-        categories={categoryOptions}
+        categoryGroups={categoryGroupOptions}
         cities={cityOptions}
       />
 

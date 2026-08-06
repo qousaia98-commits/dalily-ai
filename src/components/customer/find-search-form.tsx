@@ -8,21 +8,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 type Option = { slug: string; label: string };
+type GroupOption = Option & { leaves: Option[] };
 
 export function FindSearchForm({
   defaultQuery = "",
-  defaultCategory = "",
-  defaultGroup = "",
+  defaultSelectValue = "",
   defaultCity = "",
-  categories,
+  categoryGroups,
   cities,
 }: {
   defaultQuery?: string;
-  defaultCategory?: string;
-  /** Preserved when browsing via homepage group tiles (`?group=`). */
-  defaultGroup?: string;
+  /** `"group:<slug>"` or `"category:<slug>"` — matches an <option> value below. */
+  defaultSelectValue?: string;
   defaultCity?: string;
-  categories: Option[];
+  categoryGroups: GroupOption[];
   cities: Option[];
 }) {
   const t = useTranslations("findFlow");
@@ -34,14 +33,13 @@ export function FindSearchForm({
     const fd = new FormData(e.currentTarget);
     const params = new URLSearchParams();
     const q = String(fd.get("q") ?? "").trim();
-    const category = String(fd.get("category") ?? "").trim();
+    const selected = String(fd.get("category") ?? "").trim();
     const city = String(fd.get("city") ?? "").trim();
-    const group = String(fd.get("group") ?? "").trim();
     if (q) params.set("q", q);
-    if (category) {
-      params.set("category", category);
-    } else if (group) {
-      params.set("group", group);
+    if (selected.startsWith("category:")) {
+      params.set("category", selected.slice("category:".length));
+    } else if (selected.startsWith("group:")) {
+      params.set("group", selected.slice("group:".length));
     }
     if (city) params.set("city", city);
     startTransition(() => {
@@ -54,9 +52,6 @@ export function FindSearchForm({
       onSubmit={onSubmit}
       className="space-y-3 rounded-2xl border border-border bg-card p-4 shadow-sm"
     >
-      {defaultGroup && !defaultCategory ? (
-        <input type="hidden" name="group" value={defaultGroup} />
-      ) : null}
       <div className="relative">
         <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
@@ -74,14 +69,19 @@ export function FindSearchForm({
           <span className="font-medium text-muted-foreground">{t("filters.category")}</span>
           <select
             name="category"
-            defaultValue={defaultCategory}
+            defaultValue={defaultSelectValue}
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
           >
             <option value="">{t("filters.anyCategory")}</option>
-            {categories.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.label}
-              </option>
+            {categoryGroups.map((group) => (
+              <optgroup key={group.slug} label={group.label}>
+                <option value={`group:${group.slug}`}>{group.label}</option>
+                {group.leaves.map((leaf) => (
+                  <option key={leaf.slug} value={`category:${leaf.slug}`}>
+                    {leaf.label}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </label>
