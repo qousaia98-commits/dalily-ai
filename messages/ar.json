@@ -1186,6 +1186,7 @@
     "submit": "عرض النتائج",
     "emptyPrompt": "اختر فئة أو مدينة لتصفّح الأعمال القريبة.",
     "noResults": "لا نتائج مطابقة. جرّب فئة أو مدينة أخرى.",
+    "filteringBy": "عرض: {category}",
     "resultsLabel": "النتائج",
     "resultsCount": "{count} نتيجة",
     "distanceKm": "حوالي {km} كم",

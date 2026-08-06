@@ -1186,6 +1186,7 @@
     "submit": "Show results",
     "emptyPrompt": "Pick a category or city to browse businesses nearby.",
     "noResults": "No matching businesses. Try a different category or city.",
+    "filteringBy": "Showing: {category}",
     "resultsLabel": "Results",
     "resultsCount": "{count} results",
     "distanceKm": "~{km} km",

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { X } from "lucide-react";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { isCustomerIntentFlowV2Enabled } from "@/lib/config/feature-flags";
 import { getActiveCities } from "@/lib/geo/cities";
 import { nearestCitySlugFromCoords } from "@/lib/geo/nearest-city";
-import { getLeafCategories } from "@/lib/categories/queries";
+import { getLeafCategories, getCategoryGroups } from "@/lib/categories/queries";
 import { getLocalizedText } from "@/types/domain.types";
 import type { Locale } from "@/lib/i18n/config";
 import { findProvidersForDirectSearch } from "@/domains/customer/find-providers";
@@ -42,9 +43,10 @@ export default async function FindBusinessPage({
   const sp = await searchParams;
   const t = await getTranslations("findFlow");
 
-  const [cities, leaves, jar] = await Promise.all([
+  const [cities, leaves, groups, jar] = await Promise.all([
     getActiveCities(),
     getLeafCategories(),
+    getCategoryGroups(),
     cookies(),
   ]);
 
@@ -61,6 +63,18 @@ export default async function FindBusinessPage({
   const category = sp.category?.trim() ?? "";
   const group = sp.group?.trim() ?? "";
   const cityExplicit = sp.city?.trim() ?? "";
+
+  // Visible confirmation of what was clicked — the leaf-category dropdown
+  // can't show a top-level group as a single selected option, so surface
+  // it separately instead of leaving the form looking like "Any category".
+  const activeCategoryLabel = category
+    ? categoryOptions.find((c) => c.slug === category)?.label
+    : group
+      ? (() => {
+          const match = groups.find((g) => g.slug === group);
+          return match ? getLocalizedText(match.name, locale) || match.slug : null;
+        })()
+      : null;
 
   let defaultCity = cityExplicit;
   if (!defaultCity && jar.get(LOC_PREF_COOKIE)?.value === "enabled") {
@@ -109,6 +123,18 @@ export default async function FindBusinessPage({
           </p>
         ) : null}
       </header>
+
+      {activeCategoryLabel ? (
+        <div className="flex justify-center sm:justify-start">
+          <Link
+            href="/find"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[var(--dalily-gold)]/40 bg-[color-mix(in_oklab,var(--dalily-gold)_10%,transparent)] px-3.5 py-1.5 text-sm font-medium text-foreground transition-colors duration-200 hover:border-[var(--dalily-gold)]/70"
+          >
+            {t("filteringBy", { category: activeCategoryLabel })}
+            <X className="size-3.5" aria-hidden />
+          </Link>
+        </div>
+      ) : null}
 
       <FindSearchForm
         defaultQuery={q}
