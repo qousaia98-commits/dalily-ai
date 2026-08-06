@@ -6,9 +6,10 @@ import { Link, usePathname } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 /**
- * Persistent floating entry to the AI intake chat (/request/new/chat) when
- * that feature is enabled; falls back to the plain intake flow otherwise
- * (chat is off by default — see isIntakeChatEnabled()).
+ * Persistent floating entry to the AI intake chat (/request/new/chat).
+ * Renders nothing at all while the chat is disabled (off by default —
+ * see isIntakeChatEnabled()) rather than falling back to a plain link;
+ * the button itself should not be visible until that feature ships.
  * Sits above the mobile bottom nav; bottom-end corner on desktop (RTL-safe).
  */
 export function FloatingAiButton({
@@ -20,7 +21,10 @@ export function FloatingAiButton({
 }) {
   const t = useTranslations("home.floatingAi");
   const pathname = usePathname();
-  const href = chatEnabled ? "/request/new/chat" : "/request/new";
+
+  if (!chatEnabled) {
+    return null;
+  }
 
   // Hide on intake / chat so chrome does not stack on itself.
   if (pathname === "/request/new" || pathname === "/request/new/chat") {
@@ -29,7 +33,7 @@ export function FloatingAiButton({
 
   return (
     <Link
-      href={href}
+      href="/request/new/chat"
       aria-label={t("ariaLabel")}
       className={cn(
         "fixed z-[70] flex size-14 items-center justify-center rounded-full",
