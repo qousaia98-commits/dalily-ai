@@ -10,7 +10,7 @@ type HomepagePathChooserProps = {
 
 /**
  * Homepage hero path chooser — two decisive cards, no AI textarea.
- * Publish → intake flow; Find → same-page browse section (#browse-services).
+ * Publish → category-first intake; Find → /find browse.
  */
 export async function HomepagePathChooser({ className }: HomepagePathChooserProps) {
   const t = await getTranslations("home.pathChooser");
@@ -32,7 +32,7 @@ export async function HomepagePathChooser({ className }: HomepagePathChooserProp
         className="animate-fade-in-up stagger-2"
       />
       <PathCard
-        href="#browse-services"
+        href="/find"
         title={t("find.title")}
         body={t("find.body")}
         cta={t("find.cta")}

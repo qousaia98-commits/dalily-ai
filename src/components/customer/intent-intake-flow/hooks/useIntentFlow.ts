@@ -33,6 +33,8 @@ export function useIntentFlow({
   visionEnabled = false,
   voiceEnabled = false,
   targetProvider = null,
+  startAtCategory = false,
+  initialCategories = [],
 }: IntentIntakeFlowProps) {
   const t = useTranslations("intentFlow");
   const locale = useLocale();
@@ -44,21 +46,28 @@ export function useIntentFlow({
 
   const targeted = Boolean(targetProvider?.id && targetProvider.categoryId);
 
-  const [step, setStep] = useState<Step>("intent");
+  const [step, setStep] = useState<Step>(() =>
+    !targeted && startAtCategory ? "category" : "intent",
+  );
   const [intentText, setIntentText] = useState(initialIntent);
   const [suggestion, setSuggestion] = useState<CategorySuggestion | null>(null);
-  const [categories, setCategories] = useState<CategoryOption[]>(() =>
-    targeted && targetProvider
-      ? [
-          {
-            id: targetProvider.categoryId,
-            slug: targetProvider.categorySlug,
-            label: targetProvider.categoryLabel,
-          },
-        ]
-      : [],
-  );
-  const [categoryId, setCategoryId] = useState(targeted ? targetProvider!.categoryId : "");
+  const [categories, setCategories] = useState<CategoryOption[]>(() => {
+    if (targeted && targetProvider) {
+      return [
+        {
+          id: targetProvider.categoryId,
+          slug: targetProvider.categorySlug,
+          label: targetProvider.categoryLabel,
+        },
+      ];
+    }
+    return initialCategories;
+  });
+  const [categoryId, setCategoryId] = useState(() => {
+    if (targeted && targetProvider) return targetProvider.categoryId;
+    if (startAtCategory && initialCategories[0]?.id) return initialCategories[0].id;
+    return "";
+  });
   /** First AI suggestion for this intent (feedback loop — not overwritten on manual change). */
   const [suggestedCategoryId, setSuggestedCategoryId] = useState("");
   const [suggestedCategorySlug, setSuggestedCategorySlug] = useState(

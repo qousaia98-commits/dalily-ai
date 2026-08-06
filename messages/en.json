@@ -818,13 +818,13 @@
       },
       "find": {
         "title": "Find a business",
-        "body": "Browse categories and featured providers nearby — then contact when you are ready.",
-        "cta": "Browse services"
+        "body": "Browse by category near you — filter by city or name when you know what you want.",
+        "cta": "Browse businesses"
       }
     },
     "floatingAi": {
       "label": "Ask Dalily AI",
-      "ariaLabel": "Describe your problem with Dalily AI"
+      "ariaLabel": "Open Dalily AI chat to describe your problem"
     },
     "howItWorks": {
       "title": "How Dalily works",
@@ -1155,14 +1155,37 @@
       "assignment_failed": "Could not assign this business. Try again."
     }
   },
+  "intakeChat": {
+    "title": "Describe your problem",
+    "metaDescription": "Chat with Dalily AI to clarify what you need, then continue to the request form.",
+    "eyebrow": "Dalily AI",
+    "subtitle": "Tell us what’s going on — we’ll ask a few short questions, then you continue the normal request.",
+    "welcome": "What do you need help with? Describe the problem in your own words — no account needed to chat.",
+    "placeholder": "e.g. Kitchen sink is leaking under the cabinet…",
+    "send": "Send",
+    "thinking": "Thinking…",
+    "inputHint": "You stay in control — nothing is submitted until you continue.",
+    "continueHint": "Ready when you are — continue to fill in category, photos, and location.",
+    "readyHint": "Looks like we have enough to continue.",
+    "continueCta": "Continue to request",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "rateLimited": "Too many messages — wait a moment and try again.",
+      "contentBlocked": "That message couldn’t be processed. Please rephrase your problem.",
+      "unavailable": "AI chat is temporarily unavailable. You can still start a request directly.",
+      "tooLong": "Message is too long — shorten it and try again.",
+      "tooMany": "This chat is long enough — continue to the request form.",
+      "needMore": "Add a bit more detail about the problem before continuing."
+    }
+  },
   "findFlow": {
-    "title": "Find a specific business",
-    "metaDescription": "Browse matched businesses by name, category, or city — contact stays hidden until you send a request and unlock.",
-    "subtitle": "Search by name, category, or city — no phone numbers or exact addresses.",
-    "placeholder": "Business name or what you need…",
-    "submit": "Search",
-    "emptyPrompt": "Enter a name or pick a category/city to start.",
-    "noResults": "No matching businesses. Try different filters.",
+    "title": "Browse businesses near you",
+    "metaDescription": "Browse trusted local businesses by category and city — contact stays hidden until you send a request and unlock.",
+    "subtitle": "Pick a category and city to see matching businesses. You can also search by name — no phone numbers or exact addresses.",
+    "placeholder": "Optional: business name…",
+    "submit": "Show results",
+    "emptyPrompt": "Pick a category or city to browse businesses nearby.",
+    "noResults": "No matching businesses. Try a different category or city.",
     "resultsLabel": "Results",
     "resultsCount": "{count} results",
     "distanceKm": "~{km} km",

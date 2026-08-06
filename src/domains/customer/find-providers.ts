@@ -26,6 +26,8 @@ export type FindProviderCard = {
 export type FindProvidersInput = {
   query?: string;
   categorySlug?: string;
+  /** Top-level group slug (homepage CategoryGrid) — expands to leaf category ids. */
+  groupSlug?: string;
   citySlug?: string;
   locale?: Locale;
   limit?: number;
@@ -37,15 +39,17 @@ export async function findProvidersForDirectSearch(
   const q = input.query?.trim() ?? "";
   const hasQuery = q.length >= 2;
   const hasCategory = Boolean(input.categorySlug?.trim());
+  const hasGroup = Boolean(input.groupSlug?.trim());
   const hasCity = Boolean(input.citySlug?.trim());
 
-  if (!hasQuery && !hasCategory && !hasCity) {
+  if (!hasQuery && !hasCategory && !hasGroup && !hasCity) {
     return [];
   }
 
   const rows = await fetchActiveProviders({
     textTerms: hasQuery ? q : undefined,
     categorySlug: input.categorySlug?.trim() || undefined,
+    groupSlug: !hasCategory ? input.groupSlug?.trim() || undefined : undefined,
     citySlug: input.citySlug?.trim() || undefined,
     limit: input.limit ?? 40,
   });

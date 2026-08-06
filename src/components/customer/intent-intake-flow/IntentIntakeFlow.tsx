@@ -20,6 +20,8 @@ export function IntentIntakeFlow({
   visionEnabled = false,
   voiceEnabled = false,
   targetProvider = null,
+  startAtCategory = false,
+  initialCategories = [],
 }: IntentIntakeFlowProps) {
   const flow = useIntentFlow({
     initialIntent,
@@ -29,6 +31,8 @@ export function IntentIntakeFlow({
     visionEnabled,
     voiceEnabled,
     targetProvider,
+    startAtCategory,
+    initialCategories,
   });
 
   const t = flow.t as (key: string, values?: Record<string, string | number>) => string;

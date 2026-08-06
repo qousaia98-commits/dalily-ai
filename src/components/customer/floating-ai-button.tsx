@@ -6,21 +6,21 @@ import { Link, usePathname } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 /**
- * Persistent floating entry to the AI intake flow (/request/new).
+ * Persistent floating entry to the AI intake chat (/request/new/chat).
  * Sits above the mobile bottom nav; bottom-end corner on desktop (RTL-safe).
  */
 export function FloatingAiButton({ className }: { className?: string }) {
   const t = useTranslations("home.floatingAi");
   const pathname = usePathname();
 
-  // Already on the intake flow — hide to avoid redundant chrome.
-  if (pathname === "/request/new") {
+  // Hide on intake / chat so chrome does not stack on itself.
+  if (pathname === "/request/new" || pathname === "/request/new/chat") {
     return null;
   }
 
   return (
     <Link
-      href="/request/new"
+      href="/request/new/chat"
       aria-label={t("ariaLabel")}
       className={cn(
         "fixed z-[70] flex size-14 items-center justify-center rounded-full",

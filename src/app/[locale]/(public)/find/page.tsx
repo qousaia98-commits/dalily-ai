@@ -1,11 +1,9 @@
-import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
-import {
-  isDirectSearchV1Enabled,
-  isCustomerIntentFlowV2Enabled,
-} from "@/lib/config/feature-flags";
+import { isCustomerIntentFlowV2Enabled } from "@/lib/config/feature-flags";
 import { getActiveCities } from "@/lib/geo/cities";
+import { nearestCitySlugFromCoords } from "@/lib/geo/nearest-city";
 import { getLeafCategories } from "@/lib/categories/queries";
 import { getLocalizedText } from "@/types/domain.types";
 import type { Locale } from "@/lib/i18n/config";
@@ -13,6 +11,11 @@ import { findProvidersForDirectSearch } from "@/domains/customer/find-providers"
 import { FindSearchForm } from "@/components/customer/find-search-form";
 import { FindProviderResultCard } from "@/components/customer/find-provider-result-card";
 import { Link } from "@/lib/i18n/navigation";
+import {
+  NEARBY_LOC_COOKIE,
+  parseNearbyLocCookie,
+} from "@/lib/business/message-read-state";
+import { LOC_PREF_COOKIE } from "@/lib/geo/location-preference";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("findFlow");
@@ -27,18 +30,23 @@ export default async function FindBusinessPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ q?: string; category?: string; city?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    category?: string;
+    group?: string;
+    city?: string;
+  }>;
 }) {
-  if (!isDirectSearchV1Enabled()) {
-    redirect("/");
-  }
-
   const { locale: localeParam } = await params;
   const locale = localeParam as Locale;
   const sp = await searchParams;
   const t = await getTranslations("findFlow");
 
-  const [cities, leaves] = await Promise.all([getActiveCities(), getLeafCategories()]);
+  const [cities, leaves, jar] = await Promise.all([
+    getActiveCities(),
+    getLeafCategories(),
+    cookies(),
+  ]);
 
   const cityOptions = cities.map((c) => ({
     slug: c.slug,
@@ -51,8 +59,22 @@ export default async function FindBusinessPage({
 
   const q = sp.q?.trim() ?? "";
   const category = sp.category?.trim() ?? "";
-  const city = sp.city?.trim() ?? "";
-  const hasFilters = q.length >= 2 || Boolean(category) || Boolean(city);
+  const group = sp.group?.trim() ?? "";
+  const cityExplicit = sp.city?.trim() ?? "";
+
+  let defaultCity = cityExplicit;
+  if (!defaultCity && jar.get(LOC_PREF_COOKIE)?.value === "enabled") {
+    const nearby = parseNearbyLocCookie(jar.get(NEARBY_LOC_COOKIE)?.value);
+    if (nearby) {
+      const nearest = nearestCitySlugFromCoords(nearby.lat, nearby.lng);
+      if (nearest && cityOptions.some((c) => c.slug === nearest)) {
+        defaultCity = nearest;
+      }
+    }
+  }
+
+  const hasFilters =
+    q.length >= 2 || Boolean(category) || Boolean(group) || Boolean(defaultCity);
 
   let providers: Awaited<ReturnType<typeof findProvidersForDirectSearch>> = [];
   let searchError: string | null = null;
@@ -61,7 +83,8 @@ export default async function FindBusinessPage({
       providers = await findProvidersForDirectSearch({
         query: q.length >= 2 ? q : undefined,
         categorySlug: category || undefined,
-        citySlug: city || undefined,
+        groupSlug: !category && group ? group : undefined,
+        citySlug: defaultCity || undefined,
         locale,
       });
     } catch {
@@ -77,7 +100,10 @@ export default async function FindBusinessPage({
         {isCustomerIntentFlowV2Enabled() ? (
           <p className="text-sm text-muted-foreground">
             {t("broadcastHint")}{" "}
-            <Link href="/request/new" className="font-medium text-foreground underline-offset-4 hover:underline">
+            <Link
+              href="/request/new?mode=publish"
+              className="font-medium text-foreground underline-offset-4 hover:underline"
+            >
               {t("broadcastCta")}
             </Link>
           </p>
@@ -87,7 +113,8 @@ export default async function FindBusinessPage({
       <FindSearchForm
         defaultQuery={q}
         defaultCategory={category}
-        defaultCity={city}
+        defaultGroup={group}
+        defaultCity={defaultCity}
         categories={categoryOptions}
         cities={cityOptions}
       />
@@ -99,9 +126,13 @@ export default async function FindBusinessPage({
       ) : null}
 
       {!hasFilters ? (
-        <p className="text-center text-sm text-muted-foreground sm:text-start">{t("emptyPrompt")}</p>
+        <p className="text-center text-sm text-muted-foreground sm:text-start">
+          {t("emptyPrompt")}
+        </p>
       ) : providers.length === 0 && !searchError ? (
-        <p className="text-center text-sm text-muted-foreground sm:text-start">{t("noResults")}</p>
+        <p className="text-center text-sm text-muted-foreground sm:text-start">
+          {t("noResults")}
+        </p>
       ) : providers.length > 0 ? (
         <section className="space-y-4" aria-label={t("resultsLabel")}>
           <p className="text-sm text-muted-foreground">

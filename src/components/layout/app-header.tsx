@@ -9,10 +9,7 @@ import { LogoutButton } from "@/components/auth/logout-button";
 import { DalilyLogo } from "@/components/brand/dalily-logo";
 import { Button } from "@/components/ui/button";
 import { NotificationCenterBellLazy } from "@/components/notifications/notification-center-bell-lazy";
-import {
-  isSmartNotificationCenterEnabled,
-  isDirectSearchV1Enabled,
-} from "@/lib/config/feature-flags";
+import { isSmartNotificationCenterEnabled } from "@/lib/config/feature-flags";
 
 type AppHeaderProps = {
   /** When set, replaces personal account name (business dashboard). */
@@ -67,11 +64,9 @@ export async function AppHeader({
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/request/new">{tNav("search")}</Link>
               </Button>
-              {isDirectSearchV1Enabled() ? (
-                <Button variant="ghost" size="sm" asChild>
-                  <Link href="/find">{tNav("find")}</Link>
-                </Button>
-              ) : null}
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/find">{tNav("find")}</Link>
+              </Button>
               {platformAdmin ? (
                 <Button variant="ghost" size="sm" asChild>
                   <Link href="/admin">{tNav("admin")}</Link>

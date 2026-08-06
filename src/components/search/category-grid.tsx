@@ -49,7 +49,7 @@ export async function CategoryGrid({ className }: { className?: string }) {
           return (
             <Link
               key={group.id}
-              href="/request/new"
+              href={`/find?group=${encodeURIComponent(group.slug)}`}
               className={cn(
                 "group flex min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-[border-color,background-color,box-shadow,transform] duration-200 ease-out hover:border-[var(--dalily-gold)]/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 sm:min-h-32 sm:p-5",
                 "animate-fade-in-up",

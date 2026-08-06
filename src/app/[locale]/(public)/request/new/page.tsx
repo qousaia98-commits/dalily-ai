@@ -14,7 +14,7 @@ import { IntentIntakeFlow } from "@/components/customer/intent-intake-flow";
 import type { Locale } from "@/lib/i18n/config";
 import { createClient } from "@/lib/supabase/server";
 import { categorySlugFromId } from "@/lib/providers/reference";
-import { getCategoryNameMap } from "@/lib/categories/queries";
+import { getCategoryNameMap, getLeafCategories } from "@/lib/categories/queries";
 import type { TargetProviderContext } from "@/components/customer/intent-intake-flow/types";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -30,7 +30,7 @@ export default async function NewIntentRequestPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ q?: string; providerId?: string }>;
+  searchParams: Promise<{ q?: string; providerId?: string; mode?: string }>;
 }) {
   if (!isCustomerIntentFlowV2Enabled()) {
     redirect("/");
@@ -41,12 +41,22 @@ export default async function NewIntentRequestPage({
   const sp = await searchParams;
   const t = await getTranslations("intentFlow");
   const authUser = await getAuthUser();
-  const cities = await getActiveCities();
+  const startAtCategory = sp.mode?.trim() === "publish";
+  const [cities, leaves] = await Promise.all([
+    getActiveCities(),
+    startAtCategory ? getLeafCategories() : Promise.resolve([]),
+  ]);
 
   const cityOptions = cities.map((c) => ({
     id: c.id,
     slug: c.slug,
     label: getLocalizedText(c.name, locale) || c.slug,
+  }));
+
+  const initialCategories = leaves.map((leaf) => ({
+    id: leaf.id,
+    slug: leaf.slug,
+    label: getLocalizedText(leaf.name, locale) || leaf.slug,
   }));
 
   let targetProvider: TargetProviderContext | null = null;
@@ -89,6 +99,7 @@ export default async function NewIntentRequestPage({
 
   const returnQs = new URLSearchParams();
   if (sp.q?.trim()) returnQs.set("q", sp.q.trim());
+  if (startAtCategory) returnQs.set("mode", "publish");
   if (targetProvider) returnQs.set("providerId", targetProvider.id);
   const returnPath = returnQs.toString()
     ? `/request/new?${returnQs.toString()}`
@@ -113,6 +124,8 @@ export default async function NewIntentRequestPage({
         visionEnabled={isAiEngineV5Enabled()}
         voiceEnabled={isAiEngineV6Enabled()}
         targetProvider={targetProvider}
+        startAtCategory={startAtCategory && !targetProvider}
+        initialCategories={initialCategories}
       />
     </main>
   );

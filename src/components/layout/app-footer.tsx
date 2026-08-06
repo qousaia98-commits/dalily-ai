@@ -4,8 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { DalilyLogo } from "@/components/brand/dalily-logo";
 import { PatternBackdrop } from "@/components/brand/pattern-backdrop";
 import { cn } from "@/lib/utils";
-import { isDirectSearchV1Enabled } from "@/lib/config/feature-flags";
-
 export async function AppFooter({ className }: { className?: string } = {}) {
   const t = await getTranslations("footer");
 
@@ -29,13 +27,11 @@ export async function AppFooter({ className }: { className?: string } = {}) {
                   {t("links.search")}
                 </Link>
               </li>
-              {isDirectSearchV1Enabled() ? (
-                <li>
-                  <Link href="/find" className="transition-colors duration-200 hover:text-foreground">
-                    {t("links.find")}
-                  </Link>
-                </li>
-              ) : null}
+              <li>
+                <Link href="/find" className="transition-colors duration-200 hover:text-foreground">
+                  {t("links.find")}
+                </Link>
+              </li>
               <li>
                 <Link href="/register/business" className="transition-colors duration-200 hover:text-foreground">
                   {t("links.forBusiness")}
