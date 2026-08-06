@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import {
-  isAiPlatformEnabled,
+  isIntakeChatEnabled,
   isCustomerIntentFlowV2Enabled,
 } from "@/lib/config/feature-flags";
 import { AiIntakeChat } from "@/components/customer/ai-intake-chat";
@@ -23,7 +23,7 @@ export default async function IntakeChatPage() {
   if (!isCustomerIntentFlowV2Enabled()) {
     redirect("/");
   }
-  if (!isAiPlatformEnabled()) {
+  if (!isIntakeChatEnabled()) {
     redirect("/request/new");
   }
 

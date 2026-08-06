@@ -363,6 +363,16 @@ export function isAiPlatformEnabled(): boolean {
   );
 }
 
+/**
+ * Guest-accessible AI intake chat (/request/new/chat) — deliberately its
+ * own single switch, independent of the broader AI Platform umbrella
+ * above (which also gates unrelated admin AI tooling). Off by default;
+ * flip AI_INTAKE_CHAT on when ready to launch this specific feature.
+ */
+export function isIntakeChatEnabled(): boolean {
+  return envFlag("AI_INTAKE_CHAT");
+}
+
 /** Sprint 10 Phase 5 — Customer/Provider assistants (recommendations only). */
 export function isAiAssistantEnabled(): boolean {
   return (

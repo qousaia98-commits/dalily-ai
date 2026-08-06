@@ -79,6 +79,7 @@ export {
   isAiEngineV9Enabled,
   isAiChatAssistantEnabled,
   isAiPlatformEnabled,
+  isIntakeChatEnabled,
   isAiAssistantEnabled,
   isAiTranslationEnabled,
   isAiPricingEnabled,

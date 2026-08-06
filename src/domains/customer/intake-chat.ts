@@ -3,7 +3,7 @@
  * to `/request/new?q=…`. Never creates requests or contacts anyone.
  */
 
-import { isAiPlatformEnabled } from "@/lib/config/feature-flags";
+import { isIntakeChatEnabled } from "@/lib/config/feature-flags";
 import { completeWithFallback } from "@/domains/ai/providers";
 import { recommendModeration } from "@/domains/ai/moderation/service";
 import { scrubAiText } from "@/lib/ai/privacy/scrub";
@@ -114,7 +114,7 @@ export async function runIntakeChatTurn(input: {
   | { ok: true; turn: IntakeChatTurnResult }
   | { ok: false; error: string }
 > {
-  if (!isAiPlatformEnabled()) {
+  if (!isIntakeChatEnabled()) {
     return { ok: false, error: "feature_disabled" };
   }
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/auth/session";
-import { isAiPlatformEnabled } from "@/lib/config/feature-flags";
+import { isIntakeChatEnabled } from "@/lib/config/feature-flags";
 import {
   INTAKE_CHAT_MAX_MESSAGE_CHARS,
   INTAKE_CHAT_MAX_MESSAGES,
@@ -19,7 +19,7 @@ import { handleApiRoute } from "@/lib/observability/api-route";
  */
 export async function POST(request: Request) {
   return handleApiRoute("ai_intake_chat", async () => {
-    if (!isAiPlatformEnabled()) {
+    if (!isIntakeChatEnabled()) {
       return NextResponse.json({ error: "feature_disabled" }, { status: 404 });
     }
 
