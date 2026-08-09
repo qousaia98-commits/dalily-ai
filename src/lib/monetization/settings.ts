@@ -11,8 +11,9 @@ function db() {
 }
 
 const DEFAULTS: Omit<MonetizationBillingSettings, "id"> = {
-  businessPriceUsd: 20,
-  includedUnlocks: 10,
+  businessPriceUsd: 5,
+  /** -1 = unlimited included leads (flat subscription). */
+  includedUnlocks: -1,
   minLeadPriceUsd: 2,
   maxLeadPriceUsd: 20,
   baseLeadPriceUsd: 5,
@@ -27,10 +28,11 @@ const DEFAULTS: Omit<MonetizationBillingSettings, "id"> = {
 };
 
 function mapSettings(row: Record<string, unknown>): MonetizationBillingSettings {
+  const includedRaw = Number(row.included_unlocks ?? -1);
   return {
     id: String(row.id),
-    businessPriceUsd: Number(row.business_price_usd ?? 20),
-    includedUnlocks: Number(row.included_unlocks ?? 10),
+    businessPriceUsd: Number(row.business_price_usd ?? 5),
+    includedUnlocks: includedRaw < 0 ? -1 : Math.floor(includedRaw),
     minLeadPriceUsd: Number(row.min_lead_price_usd ?? 2),
     maxLeadPriceUsd: Number(row.max_lead_price_usd ?? 20),
     baseLeadPriceUsd: Number(row.base_lead_price_usd ?? 5),
@@ -73,7 +75,9 @@ export async function updateBillingSettings(
 
   const row = {
     business_price_usd: next.businessPriceUsd,
-    included_unlocks: Math.max(0, Math.floor(next.includedUnlocks)),
+    // -1 = unlimited; do not clamp negative to 0 (that would mean zero leads).
+    included_unlocks:
+      next.includedUnlocks < 0 ? -1 : Math.max(0, Math.floor(next.includedUnlocks)),
     min_lead_price_usd: min,
     max_lead_price_usd: max,
     base_lead_price_usd: next.baseLeadPriceUsd,

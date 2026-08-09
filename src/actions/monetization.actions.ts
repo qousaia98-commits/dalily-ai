@@ -67,47 +67,45 @@ export async function unlockLeadAction(sessionId: string): Promise<{
     metadata: { anonymized: true, sessionId },
   });
 
+  // Flat subscription model: no pay-per-lead — grant immediately (unlimited leads).
   if (isProviderMonetizationEnabled()) {
-    const consumed = await consumeIncludedUnlock({
+    const result = await completeUnlockSuccess({
+      sessionId,
+      actorUserId: authUser.id,
+      mode: "subscription_flat",
+    });
+    if (!result.ok) return { success: false, error: result.error };
+
+    void consumeIncludedUnlock({
       providerId: provider.id,
       unlockSessionId: sessionId,
       actorUserId: authUser.id,
     });
 
-    if (consumed.ok) {
-      const result = await completeUnlockSuccess({
-        sessionId,
-        actorUserId: authUser.id,
-        mode: "included_unlock",
-      });
-      if (!result.ok) return { success: false, error: result.error };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const admin = createAdminClient() as any;
+    await admin
+      .from("unlock_sessions")
+      .update({
+        unlock_method: "subscription",
+        fee_amount: 0,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", sessionId);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const admin = createAdminClient() as any;
-      await admin
-        .from("unlock_sessions")
-        .update({
-          unlock_method: "included",
-          fee_amount: 0,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", sessionId);
+    void emitAiLearningEvent({
+      eventType: "lead_unlock_included",
+      providerId: provider.id,
+      serviceRequestId: session.serviceRequestId,
+      metadata: { anonymized: true, method: "subscription_flat" },
+    });
 
-      void emitAiLearningEvent({
-        eventType: "lead_unlock_included",
-        providerId: provider.id,
-        serviceRequestId: session.serviceRequestId,
-        metadata: { anonymized: true, remaining: consumed.remaining },
-      });
-
-      revalidateUnlock(sessionId, session.serviceRequestId);
-      return {
-        success: true,
-        method: "included",
-        grantId: result.grantId,
-        remainingIncluded: consumed.remaining,
-      };
-    }
+    revalidateUnlock(sessionId, session.serviceRequestId);
+    return {
+      success: true,
+      method: "included",
+      grantId: result.grantId,
+    };
   }
 
   if (!isUnlockPaymentsV2Enabled()) {
@@ -325,4 +323,39 @@ export async function saveAdminBillingSettingsAction(
   });
   revalidatePath("/admin/monetization");
   return { ok: true, settings };
+}
+
+/** Admin activates / extends a provider Business subscription (manual until Prompt 12). */
+export async function adminMarkProviderSubscriptionPaidAction(input: {
+  providerId: string;
+  months?: number;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  const admin = await requireAdminUser();
+  if (!isProviderMonetizationEnabled()) {
+    return { ok: false, error: "feature_disabled" };
+  }
+  const providerId = input.providerId?.trim();
+  if (!providerId || !/^[0-9a-f-]{36}$/i.test(providerId)) {
+    return { ok: false, error: "invalid_provider" };
+  }
+  const months = Math.min(24, Math.max(1, Math.floor(input.months ?? 1)));
+
+  const { upgradeToBusinessPlan } = await import("@/lib/monetization");
+  await upgradeToBusinessPlan({
+    providerId,
+    actorUserId: admin.id,
+    months,
+  });
+
+  await writeMonetizationAudit({
+    eventKey: "admin_marked_subscription_paid",
+    actorUserId: admin.id,
+    providerId,
+    payload: { months },
+  });
+
+  revalidatePath("/admin/monetization");
+  revalidatePath("/business/subscription");
+  revalidatePath("/business/monetization");
+  return { ok: true };
 }

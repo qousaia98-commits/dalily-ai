@@ -129,10 +129,12 @@ export function MonetizationDashboardPanel({
           <p className="text-xs text-muted-foreground">{t("includedUnlocks")}</p>
           <p className="text-lg font-semibold">
             {isBusiness
-              ? t("unlocksRemaining", {
-                  remaining: usage.remaining,
-                  total: usage.includedAllowance,
-                })
+              ? usage.includedAllowance < 0 || usage.remaining < 0
+                ? t("unlocksUnlimited")
+                : t("unlocksRemaining", {
+                    remaining: usage.remaining,
+                    total: usage.includedAllowance,
+                  })
               : t("payPerLead")}
           </p>
           {isBusiness ? (
@@ -159,7 +161,6 @@ export function MonetizationDashboardPanel({
           <p className="text-sm text-muted-foreground">
             {t("upgradeBody", {
               price: settings.businessPriceUsd,
-              unlocks: settings.includedUnlocks,
             })}
           </p>
           <ul className="list-inside list-disc text-sm text-muted-foreground">
@@ -209,11 +210,12 @@ export function MonetizationDashboardPanel({
         <div className="space-y-3">
           <p className="text-sm text-muted-foreground">
             {t("businessActiveHint", {
-              unlocks: settings.includedUnlocks,
-              min: settings.minLeadPriceUsd,
-              max: settings.maxLeadPriceUsd,
+              price: settings.businessPriceUsd,
             })}
           </p>
+          <Button asChild variant="outline" className="rounded-xl">
+            <Link href="/business/subscription">{t("viewSubscription")}</Link>
+          </Button>
           {isStripe ? (
             <div className="flex flex-wrap gap-2">
               <Button

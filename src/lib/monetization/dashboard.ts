@@ -28,7 +28,7 @@ export async function getMonetizationDashboard(
     plan.billingMode === "business" ? settings.includedUnlocks : 0,
   );
 
-  // Included unlocks only apply to business; free shows 0 remaining included
+  // Flat model: only business plans have included leads (unlimited = -1).
   const effectiveUsage =
     plan.billingMode === "business"
       ? usage

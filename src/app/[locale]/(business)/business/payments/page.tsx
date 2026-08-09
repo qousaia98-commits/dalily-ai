@@ -65,6 +65,12 @@ export default async function BusinessPaymentsPage() {
     ...(isProviderMonetizationEnabled()
       ? [
           {
+            href: "/business/subscription",
+            title: t("links.subscription"),
+            description: t("links.subscriptionDesc"),
+            icon: Star,
+          },
+          {
             href: "/business/monetization",
             title: t("links.monetization"),
             description: t("links.monetizationDesc"),

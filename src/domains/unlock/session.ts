@@ -71,36 +71,14 @@ export async function openUnlockSessionForSelection(input: {
   }
   if (!selection.provider_id) return { ok: false, error: "provider_required" };
 
-  let fee = getUnlockFeeSnapshot();
-  let pricingExtras: Record<string, unknown> = {
-    unlock_method: "legacy",
-  };
-
-  if (isProviderMonetizationEnabled()) {
-    try {
-      const { quoteAndPersistLeadPrice } = await import(
-        "@/lib/monetization/quote"
-      );
-      const quote = await quoteAndPersistLeadPrice({
-        serviceRequestId: String(selection.service_request_id),
-        providerId: String(selection.provider_id),
-      });
-      fee = {
-        amount: quote.finalPriceUsd,
-        currency: quote.currency || "USD",
-      };
-      pricingExtras = {
-        unlock_method: "pay_per_lead",
-        ai_price_usd: quote.finalPriceUsd,
-        ai_score: quote.aiScore,
-        pricing_explanation_en: quote.explanationEn,
-        pricing_explanation_ar: quote.explanationAr,
-        pricing_history_id: quote.pricingHistoryId,
-      };
-    } catch {
-      // keep legacy fee snapshot
-    }
-  }
+  const monetizationOn = isProviderMonetizationEnabled();
+  // Flat $5/mo model: no pay-per-lead fee — session is ops/SLA record only.
+  const fee = monetizationOn
+    ? { amount: 0, currency: "USD" }
+    : getUnlockFeeSnapshot();
+  const pricingExtras: Record<string, unknown> = monetizationOn
+    ? { unlock_method: "subscription" }
+    : { unlock_method: "legacy" };
 
   const slaHours = getUnlockSlaHours();
   const slaDeadline = new Date(Date.now() + slaHours * 60 * 60 * 1000).toISOString();
@@ -113,7 +91,7 @@ export async function openUnlockSessionForSelection(input: {
       service_request_id: selection.service_request_id,
       provider_id: selection.provider_id,
       offer_id: selection.offer_id,
-      status: "payment_pending",
+      status: monetizationOn ? "opened" : "payment_pending",
       fee_amount: fee.amount,
       fee_currency: fee.currency,
       sla_deadline: slaDeadline,
@@ -139,11 +117,31 @@ export async function openUnlockSessionForSelection(input: {
     return { ok: false, error: "session_failed" };
   }
 
+  const { data: request } = await admin
+    .from("service_requests")
+    .select("customer_id")
+    .eq("id", selection.service_request_id)
+    .maybeSingle();
+
   const { data: provider } = await admin
     .from("providers")
     .select("owner_id")
     .eq("id", selection.provider_id)
     .maybeSingle();
+
+  // Flat subscription: open contact/chat immediately — customers never pay.
+  let sessionView = mapSession(session as Record<string, unknown>);
+  if (monetizationOn && request?.customer_id) {
+    const completed = await completeUnlockSuccess({
+      sessionId: session.id as string,
+      actorUserId: String(request.customer_id),
+      mode: "subscription_flat",
+    });
+    if (completed.ok) {
+      const refreshed = await getUnlockSessionById(session.id as string);
+      if (refreshed) sessionView = refreshed;
+    }
+  }
 
   if (provider?.owner_id) {
     await deliverMarketplaceNotification({
@@ -156,20 +154,7 @@ export async function openUnlockSessionForSelection(input: {
     });
   }
 
-  const historyId = pricingExtras.pricing_history_id;
-  if (typeof historyId === "string" && historyId) {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (admin as any)
-        .from("lead_pricing_history")
-        .update({ unlock_session_id: session.id })
-        .eq("id", historyId);
-    } catch {
-      // soft
-    }
-  }
-
-  return { ok: true, session: mapSession(session as Record<string, unknown>) };
+  return { ok: true, session: sessionView };
 }
 
 export async function getUnlockSessionForSelection(
@@ -218,12 +203,20 @@ export async function listProviderUnlockSessions(
  * Grant only if:
  * - UNLOCK_DEV_BYPASS (dev), or
  * - audited admin manual_confirm when UNLOCK_PAYMENTS_V2 is off, or
- * - payment_capture after verified paid unlock_fee payment (Sprint 6).
+ * - payment_capture after verified paid unlock_fee payment (Sprint 6), or
+ * - included_unlock / subscription_flat when PROVIDER_MONETIZATION is on
+ *   (flat $5/mo — contact opens immediately after customer selection).
  */
 export async function completeUnlockSuccess(input: {
   sessionId: string;
   actorUserId: string;
-  mode: "dev_bypass" | "manual_confirm" | "payment_capture" | "admin_comp" | "included_unlock";
+  mode:
+    | "dev_bypass"
+    | "manual_confirm"
+    | "payment_capture"
+    | "admin_comp"
+    | "included_unlock"
+    | "subscription_flat";
   paymentId?: string;
 }): Promise<{ ok: true; grantId: string } | { ok: false; error: string }> {
   if (!isUnlockV2Enabled()) return { ok: false, error: "feature_disabled" };
@@ -236,7 +229,10 @@ export async function completeUnlockSuccess(input: {
     return { ok: false, error: "payment_required" };
   }
 
-  if (input.mode === "included_unlock" && !isProviderMonetizationEnabled()) {
+  if (
+    (input.mode === "included_unlock" || input.mode === "subscription_flat") &&
+    !isProviderMonetizationEnabled()
+  ) {
     return { ok: false, error: "feature_disabled" };
   }
 
@@ -350,7 +346,11 @@ export async function completeUnlockSuccess(input: {
         ? `manual_confirm:${input.actorUserId}`
         : input.mode === "admin_comp"
           ? `admin_comp:${input.actorUserId}`
-          : `payment_capture:${input.paymentId}`;
+          : input.mode === "subscription_flat"
+            ? `subscription_flat:${input.actorUserId}`
+            : input.mode === "included_unlock"
+              ? `included_unlock:${input.actorUserId}`
+              : `payment_capture:${input.paymentId}`;
 
   await admin
     .from("unlock_sessions")

@@ -4,6 +4,7 @@ import type { UnlockSessionView } from "@/domains/unlock/types";
 import type { ReleasedContact } from "@/domains/unlock/types";
 import { Button } from "@/components/ui/button";
 import { UnlockSuccessIllustration } from "@/components/illustrations";
+import { isProviderMonetizationEnabled } from "@/lib/config/feature-flags";
 
 export async function CustomerUnlockStatus({
   session,
@@ -16,6 +17,7 @@ export async function CustomerUnlockStatus({
   conversationId?: string | null;
 }) {
   const t = await getTranslations("unlockFlow.customer");
+  const monetizationOn = isProviderMonetizationEnabled();
 
   if (!session && !contact) return null;
 
@@ -26,7 +28,9 @@ export async function CustomerUnlockStatus({
           <UnlockSuccessIllustration />
         </div>
         <p className="font-medium">{t("unlockedTitle")}</p>
-        <p className="text-muted-foreground">{t("unlockedBody")}</p>
+        <p className="text-muted-foreground">
+          {monetizationOn ? t("unlockedBodyFree") : t("unlockedBody")}
+        </p>
         {contact.phone ? (
           <p>
             {t("phone")}:{" "}
@@ -61,6 +65,16 @@ export async function CustomerUnlockStatus({
   }
 
   if (!session) return null;
+
+  // Flat model: pending is a rare race — never show a customer payment prompt.
+  if (monetizationOn) {
+    return (
+      <div className="space-y-2 rounded-2xl border border-border px-4 py-4 text-sm">
+        <p className="font-medium">{t("connectingTitle")}</p>
+        <p className="text-muted-foreground">{t("connectingBody")}</p>
+      </div>
+    );
+  }
 
   const tStatus = await getTranslations("unlockFlow.status");
 

@@ -1,9 +1,15 @@
 /**
- * Sprint 6 Phase 1 — FREE / BUSINESS plan + monthly included unlocks.
+ * Provider monetization plans — flat Business subscription ($5/mo, unlimited leads).
+ * "free" billing_mode is legacy only; new rows are always business (may be unpaid).
  */
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getBillingSettings, writeMonetizationAudit } from "./settings";
+import {
+  INCLUDED_UNLOCKS_UNLIMITED,
+  isUnlimitedIncludedUnlocks,
+  SUBSCRIPTION_GRACE_DAYS,
+} from "./visibility";
 import type {
   BillingMode,
   MonthlyUnlockUsage,
@@ -55,6 +61,10 @@ function mapPlan(row: Record<string, unknown>): ProviderMonetizationPlan {
   };
 }
 
+/**
+ * Load or create a monetization plan. Never demotes to a valid free tier —
+ * expired periods become past_due (still business) so visibility/grace apply.
+ */
 export async function ensureProviderMonetizationPlan(
   providerId: string,
 ): Promise<ProviderMonetizationPlan> {
@@ -65,53 +75,38 @@ export async function ensureProviderMonetizationPlan(
       .eq("provider_id", providerId)
       .maybeSingle();
     if (data) {
-      // Expire business → fall back to free
+      const periodEnd =
+        data.current_period_end ?? data.business_expires_at ?? null;
       if (
         data.billing_mode === "business" &&
-        data.business_expires_at &&
-        new Date(String(data.business_expires_at)).getTime() < Date.now()
+        periodEnd &&
+        new Date(String(periodEnd)).getTime() < Date.now() &&
+        data.status === "active"
       ) {
         await db()
           .from("provider_monetization_plans")
           .update({
-            billing_mode: "free",
-            status: "cancelled",
-            premium_badge: false,
-            search_boost: false,
-            analytics_enabled: false,
-            marketing_enabled: false,
-            ai_insights_enabled: false,
+            status: "past_due",
             updated_at: new Date().toISOString(),
           })
           .eq("provider_id", providerId);
-        return {
-          providerId,
-          billingMode: "free",
-          status: "cancelled",
-          businessExpiresAt: String(data.business_expires_at),
-          premiumBadge: false,
-          searchBoost: false,
-          analyticsEnabled: false,
-          marketingEnabled: false,
-          aiInsightsEnabled: false,
-          stripeCustomerId: data.stripe_customer_id
-            ? String(data.stripe_customer_id)
-            : null,
-          stripeSubscriptionId: null,
-          cancelAtPeriodEnd: false,
-          currentPeriodEnd: null,
-          currentPeriodStart: null,
-        };
+        return mapPlan({ ...data, status: "past_due" });
       }
       return mapPlan(data);
     }
 
+    // New providers start unpaid (business mode, no period) — not visible until paid.
     const { data: created } = await db()
       .from("provider_monetization_plans")
       .insert({
         provider_id: providerId,
-        billing_mode: "free",
-        status: "active",
+        billing_mode: "business",
+        status: "past_due",
+        premium_badge: false,
+        search_boost: false,
+        analytics_enabled: false,
+        marketing_enabled: false,
+        ai_insights_enabled: false,
       })
       .select("*")
       .single();
@@ -121,8 +116,8 @@ export async function ensureProviderMonetizationPlan(
   }
   return {
     providerId,
-    billingMode: "free",
-    status: "active",
+    billingMode: "business",
+    status: "past_due",
     businessExpiresAt: null,
     premiumBadge: false,
     searchBoost: false,
@@ -149,6 +144,7 @@ export async function upgradeToBusinessPlan(input: {
   expires.setUTCMonth(expires.getUTCMonth() + months);
   const periodYm = currentPeriodYm(now);
   const { start, end } = periodBounds(periodYm);
+  const expiresIso = expires.toISOString();
 
   await db().from("provider_monetization_plans").upsert(
     {
@@ -156,9 +152,11 @@ export async function upgradeToBusinessPlan(input: {
       billing_mode: "business",
       status: "active",
       business_started_at: now.toISOString(),
-      business_expires_at: expires.toISOString(),
+      business_expires_at: expiresIso,
       billing_period_start: start.toISOString().slice(0, 10),
       billing_period_end: end.toISOString().slice(0, 10),
+      current_period_start: now.toISOString(),
+      current_period_end: expiresIso,
       premium_badge: true,
       search_boost: true,
       analytics_enabled: true,
@@ -169,7 +167,6 @@ export async function upgradeToBusinessPlan(input: {
     { onConflict: "provider_id" },
   );
 
-  // Ensure current month usage row with full allowance
   await ensureMonthlyUsage(input.providerId, settings.includedUnlocks);
 
   await writeMonetizationAudit({
@@ -179,7 +176,8 @@ export async function upgradeToBusinessPlan(input: {
     payload: {
       priceUsd: settings.businessPriceUsd,
       includedUnlocks: settings.includedUnlocks,
-      expiresAt: expires.toISOString(),
+      expiresAt: expiresIso,
+      graceDays: SUBSCRIPTION_GRACE_DAYS,
     },
   });
 
@@ -194,6 +192,7 @@ export async function ensureMonthlyUsage(
   const periodYm = currentPeriodYm();
   const allowance = allowanceOverride ?? settings.includedUnlocks;
   const { end } = periodBounds(periodYm);
+  const unlimited = isUnlimitedIncludedUnlocks(allowance);
 
   try {
     const { data } = await db()
@@ -211,7 +210,9 @@ export async function ensureMonthlyUsage(
         periodYm,
         includedAllowance: included,
         usedCount: used,
-        remaining: Math.max(0, included - used),
+        remaining: isUnlimitedIncludedUnlocks(included)
+          ? INCLUDED_UNLOCKS_UNLIMITED
+          : Math.max(0, included - used),
         resetAt: data.reset_at ? String(data.reset_at) : end.toISOString(),
       };
     }
@@ -221,7 +222,7 @@ export async function ensureMonthlyUsage(
       .insert({
         provider_id: providerId,
         period_ym: periodYm,
-        included_allowance: allowance,
+        included_allowance: unlimited ? INCLUDED_UNLOCKS_UNLIMITED : allowance,
         used_count: 0,
         reset_at: end.toISOString(),
       })
@@ -229,12 +230,15 @@ export async function ensureMonthlyUsage(
       .single();
 
     if (created) {
+      const included = Number(created.included_allowance);
       return {
         providerId,
         periodYm,
-        includedAllowance: Number(created.included_allowance),
+        includedAllowance: included,
         usedCount: 0,
-        remaining: Number(created.included_allowance),
+        remaining: isUnlimitedIncludedUnlocks(included)
+          ? INCLUDED_UNLOCKS_UNLIMITED
+          : included,
         resetAt: String(created.reset_at),
       };
     }
@@ -245,15 +249,16 @@ export async function ensureMonthlyUsage(
   return {
     providerId,
     periodYm,
-    includedAllowance: allowance,
+    includedAllowance: unlimited ? INCLUDED_UNLOCKS_UNLIMITED : allowance,
     usedCount: 0,
-    remaining: allowance,
+    remaining: unlimited ? INCLUDED_UNLOCKS_UNLIMITED : allowance,
     resetAt: end.toISOString(),
   };
 }
 
 /**
- * Consume one included unlock. Returns false if none remaining or not business.
+ * Consume one included unlock. Unlimited plans always succeed (usage tracked).
+ * Returns false if not on an active/grace business plan.
  */
 export async function consumeIncludedUnlock(input: {
   providerId: string;
@@ -261,12 +266,16 @@ export async function consumeIncludedUnlock(input: {
   actorUserId?: string | null;
 }): Promise<{ ok: true; remaining: number } | { ok: false; error: string }> {
   const plan = await ensureProviderMonetizationPlan(input.providerId);
-  if (plan.billingMode !== "business" || plan.status !== "active") {
+  if (plan.billingMode !== "business") {
     return { ok: false, error: "not_business" };
   }
+  // Flat model: included unlocks work whenever the plan is not cancelled-without-period.
+  // Visibility is gated separately; unlock after selection is auto-granted.
 
   const usage = await ensureMonthlyUsage(input.providerId);
-  if (usage.remaining <= 0) {
+  const unlimited = isUnlimitedIncludedUnlocks(usage.includedAllowance);
+
+  if (!unlimited && usage.remaining <= 0) {
     return { ok: false, error: "no_included_unlocks" };
   }
 
@@ -283,6 +292,10 @@ export async function consumeIncludedUnlock(input: {
 
   if (error) return { ok: false, error: "consume_failed" };
 
+  const remaining = unlimited
+    ? INCLUDED_UNLOCKS_UNLIMITED
+    : Math.max(0, usage.includedAllowance - nextUsed);
+
   await writeMonetizationAudit({
     eventKey: "included_unlock_consumed",
     actorUserId: input.actorUserId,
@@ -290,20 +303,17 @@ export async function consumeIncludedUnlock(input: {
     payload: {
       unlockSessionId: input.unlockSessionId,
       used: nextUsed,
-      remaining: usage.includedAllowance - nextUsed,
+      remaining: unlimited ? "unlimited" : remaining,
       periodYm: usage.periodYm,
     },
   });
 
-  return {
-    ok: true,
-    remaining: Math.max(0, usage.includedAllowance - nextUsed),
-  };
+  return { ok: true, remaining };
 }
 
 /**
- * Reset all business providers' included unlocks for a new period.
- * Unused unlocks do NOT carry over (new row with used_count=0).
+ * Reset monthly usage rows for business providers.
+ * Unlimited allowance is written as -1; unused credits never carry over.
  */
 export async function resetMonthlyIncludedUnlocks(periodYm?: string): Promise<{
   resetCount: number;
@@ -312,12 +322,15 @@ export async function resetMonthlyIncludedUnlocks(periodYm?: string): Promise<{
   const settings = await getBillingSettings();
   const ym = periodYm ?? currentPeriodYm();
   const { end } = periodBounds(ym);
+  const allowance = isUnlimitedIncludedUnlocks(settings.includedUnlocks)
+    ? INCLUDED_UNLOCKS_UNLIMITED
+    : settings.includedUnlocks;
 
   const { data: businessProviders } = await db()
     .from("provider_monetization_plans")
     .select("provider_id")
     .eq("billing_mode", "business")
-    .eq("status", "active");
+    .in("status", ["active", "past_due"]);
 
   let resetCount = 0;
   for (const row of businessProviders ?? []) {
@@ -326,7 +339,7 @@ export async function resetMonthlyIncludedUnlocks(periodYm?: string): Promise<{
       {
         provider_id: providerId,
         period_ym: ym,
-        included_allowance: settings.includedUnlocks,
+        included_allowance: allowance,
         used_count: 0,
         reset_at: end.toISOString(),
         updated_at: new Date().toISOString(),
@@ -338,7 +351,7 @@ export async function resetMonthlyIncludedUnlocks(periodYm?: string): Promise<{
       providerId,
       payload: {
         periodYm: ym,
-        allowance: settings.includedUnlocks,
+        allowance,
         carryOver: false,
       },
     });

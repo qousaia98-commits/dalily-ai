@@ -69,6 +69,8 @@ const ACCOUNT_PREFIXES = [
 const PAYMENTS_PREFIXES = [
   "/business/payments",
   "/business/unlock",
+  "/business/subscription",
+  "/business/monetization",
 ] as const;
 
 /**

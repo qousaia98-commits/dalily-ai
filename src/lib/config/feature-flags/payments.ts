@@ -16,8 +16,11 @@ export function isUnlockPaymentsV2Enabled(): boolean {
 }
 
 /**
- * Sprint 6 Phase 1 — Provider Monetization:
- * FREE (AI pay-per-lead) vs BUSINESS ($20/mo, 10 included unlocks).
+ * Sprint 6 — Provider Monetization (flat $5/mo subscription model).
+ * When false: legacy unlock / free-tier surfaces stay as-is.
+ * When true: every provider needs a current paid Business plan to be visible
+ * to customers; customers never pay unlock fees; leads are unlimited.
+ * (Meaning shifted from FREE-vs-BUSINESS opt-in to whole provider-paid model.)
  */
 export function isProviderMonetizationEnabled(): boolean {
   return (

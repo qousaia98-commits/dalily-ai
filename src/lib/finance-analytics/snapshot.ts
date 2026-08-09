@@ -145,7 +145,7 @@ export async function computeFinanceDashboardSnapshot(input?: {
   }
 
   const settings = await getBillingSettings();
-  const businessPrice = settings.businessPriceUsd || 20;
+  const businessPrice = settings.businessPriceUsd || 5;
 
   const now = new Date();
   const todayStart = startOfUtcDay(now);

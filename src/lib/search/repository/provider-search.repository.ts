@@ -70,13 +70,31 @@ export async function fetchActiveProviders(
     );
   }
 
-  const { data, error } = await query.limit(filters.limit ?? 50);
+  // Over-fetch slightly so subscription visibility filter still fills the limit.
+  const fetchLimit = Math.min((filters.limit ?? 50) * 3, 150);
+  const { data, error } = await query.limit(fetchLimit);
 
   if (error) {
     throw new SearchDatabaseError(error.message, error.code);
   }
 
-  return data ?? [];
+  const rows = data ?? [];
+  if (rows.length === 0) return [];
+
+  try {
+    const { isProviderMonetizationEnabled } = await import(
+      "@/lib/config/feature-flags"
+    );
+    if (!isProviderMonetizationEnabled()) return rows.slice(0, filters.limit ?? 50);
+
+    const { filterVisibleProviderIds } = await import("@/lib/monetization");
+    const visible = await filterVisibleProviderIds(rows.map((r) => r.id));
+    return rows
+      .filter((r) => visible.has(r.id))
+      .slice(0, filters.limit ?? 50);
+  } catch {
+    return rows.slice(0, filters.limit ?? 50);
+  }
 }
 
 export async function fetchImagePaths(imageIds: string[]): Promise<Map<string, string>> {

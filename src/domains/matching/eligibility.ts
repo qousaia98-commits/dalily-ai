@@ -16,7 +16,7 @@ export type EligibleProviderCandidate = {
 
 /**
  * Hard eligibility for marketplace request matching.
- * Never loads or sorts by subscription plan.
+ * When PROVIDER_MONETIZATION is on, excludes providers without a visible paid plan.
  */
 export async function findEligibleProviderCandidates(input: {
   categoryId: string;
@@ -117,5 +117,17 @@ export async function findEligibleProviderCandidates(input: {
     });
   }
 
-  return candidates;
+  try {
+    const { isProviderMonetizationEnabled } = await import(
+      "@/lib/config/feature-flags"
+    );
+    if (!isProviderMonetizationEnabled() || candidates.length === 0) {
+      return candidates;
+    }
+    const { filterVisibleProviderIds } = await import("@/lib/monetization");
+    const visible = await filterVisibleProviderIds(candidates.map((c) => c.id));
+    return candidates.filter((c) => visible.has(c.id));
+  } catch {
+    return candidates;
+  }
 }
