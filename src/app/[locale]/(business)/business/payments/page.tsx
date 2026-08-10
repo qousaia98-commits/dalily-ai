@@ -22,8 +22,12 @@ export default async function BusinessPaymentsPage() {
   const authUser = await requireAuthUser();
   const provider = await getOwnedProvider(authUser.id);
 
+  // Flat $5/mo model: contact never gates on a per-unlock payment, so the
+  // "Contact unlock" entry (and its pending-payment badge) no longer applies.
+  const showLegacyUnlockTile = isUnlockV2Enabled() && !isProviderMonetizationEnabled();
+
   let unlockPending = 0;
-  if (provider && isUnlockV2Enabled()) {
+  if (provider && showLegacyUnlockTile) {
     try {
       await markNavChannelNotificationsRead(authUser.id, "unlock");
       const sessions = await listProviderUnlockSessions(provider.id);
@@ -36,7 +40,7 @@ export default async function BusinessPaymentsPage() {
   }
 
   const links = [
-    ...(isUnlockV2Enabled()
+    ...(showLegacyUnlockTile
       ? [
           {
             href: "/business/unlock",
