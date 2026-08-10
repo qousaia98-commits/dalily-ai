@@ -11,7 +11,12 @@ import { MobileBottomNavHost } from "@/components/layout/mobile-bottom-nav";
 import { MobileBottomNavSpacer } from "@/components/layout/mobile-bottom-nav-spacer";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { getProviderNavBadges } from "@/lib/badges";
-import { isOffersV2Enabled, isUnlockV2Enabled, isProviderDashboardV2Enabled } from "@/lib/config/feature-flags";
+import {
+  isOffersV2Enabled,
+  isUnlockV2Enabled,
+  isProviderDashboardV2Enabled,
+  isProviderMonetizationEnabled,
+} from "@/lib/config/feature-flags";
 import type { Locale } from "@/lib/i18n/config";
 import type { PlanSlug } from "@/lib/subscription/types";
 
@@ -27,6 +32,9 @@ export default async function BusinessLayout({ children }: { children: React.Rea
     const t = await getTranslations("business.header");
     const provider = await getOwnedProvider(authUser.id);
     const businessLabel = getBusinessHeaderLabel(provider, locale, t("fallback"));
+    // Flat $5/mo model: contact never gates on a per-unlock payment, so the
+    // "Contact unlock" nav entry no longer applies.
+    const showUnlockNav = isUnlockV2Enabled() && !isProviderMonetizationEnabled();
 
     let planSlug: PlanSlug = "free";
     let badges = {
@@ -72,7 +80,7 @@ export default async function BusinessLayout({ children }: { children: React.Rea
             businessName={provider ? businessLabel : null}
             badges={badges}
             showOpportunities={isOffersV2Enabled()}
-            showUnlock={isUnlockV2Enabled()}
+            showUnlock={showUnlockNav}
             marketplaceHome={isProviderDashboardV2Enabled()}
           />
           <div className="min-w-0 flex-1">{children}</div>
@@ -82,7 +90,7 @@ export default async function BusinessLayout({ children }: { children: React.Rea
           role="business"
           marketplaceHome={isProviderDashboardV2Enabled()}
           showOpportunities={isOffersV2Enabled()}
-          showUnlock={isUnlockV2Enabled()}
+          showUnlock={showUnlockNav}
         />
       </div>
     );

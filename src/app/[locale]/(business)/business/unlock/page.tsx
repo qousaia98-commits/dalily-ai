@@ -2,7 +2,11 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
-import { isUnlockDevBypassEnabled, isUnlockV2Enabled } from "@/lib/config/feature-flags";
+import {
+  isUnlockDevBypassEnabled,
+  isUnlockV2Enabled,
+  isProviderMonetizationEnabled,
+} from "@/lib/config/feature-flags";
 import { listProviderUnlockSessions } from "@/domains/unlock/session";
 import { Link } from "@/lib/i18n/navigation";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
@@ -10,6 +14,10 @@ import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 
 export default async function BusinessUnlockListPage() {
   if (!isUnlockV2Enabled()) redirect("/business/opportunities");
+  // Flat $5/mo model: contact never gates on a per-unlock payment — this
+  // list has nothing meaningful to show, send providers to the real
+  // subscription/payments surfaces instead.
+  if (isProviderMonetizationEnabled()) redirect("/business/payments");
 
   const t = await getTranslations("unlockFlow.provider");
   const authUser = await requireAuthUser();

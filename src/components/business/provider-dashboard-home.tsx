@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/lib/i18n/navigation";
 import { getLocale } from "next-intl/server";
+import { isProviderMonetizationEnabled } from "@/lib/config/feature-flags";
 import { Button } from "@/components/ui/button";
 import { WhyMatchedReasons } from "@/components/business/why-matched-reasons";
 import { NavCountBadge } from "@/components/shared/nav-count-badge";
@@ -41,6 +42,9 @@ export async function ProviderDashboardHomeView({
   const paused =
     data.pauseState.vacation_mode || !data.pauseState.accepting_requests;
   const { today, jobSections } = data;
+  // Flat $5/mo model: contact never gates on a per-unlock payment, so the
+  // unlock count/row is meaningless (structurally always 0) and confusing.
+  const monetizationOn = isProviderMonetizationEnabled();
 
   const summaryCards = [
     {
@@ -51,14 +55,18 @@ export async function ProviderDashboardHomeView({
       value: today.opportunitiesOpen,
       accent: true,
     },
-    {
-      key: "unlock",
-      href: "/business/payments",
-      icon: KeyRound,
-      label: t("today.unlock"),
-      value: today.unlockPending,
-      accent: today.unlockPending > 0,
-    },
+    ...(monetizationOn
+      ? []
+      : [
+          {
+            key: "unlock",
+            href: "/business/payments",
+            icon: KeyRound,
+            label: t("today.unlock"),
+            value: today.unlockPending,
+            accent: today.unlockPending > 0,
+          },
+        ]),
     {
       key: "waiting",
       href: "/business/opportunities",
@@ -251,11 +259,15 @@ export async function ProviderDashboardHomeView({
                 label: t("sections.waitingConfirmation"),
                 count: jobSections.waitingConfirmation,
               },
-              {
-                href: "/business/payments",
-                label: t("sections.unlockPending"),
-                count: jobSections.unlockPending,
-              },
+              ...(monetizationOn
+                ? []
+                : [
+                    {
+                      href: "/business/payments",
+                      label: t("sections.unlockPending"),
+                      count: jobSections.unlockPending,
+                    },
+                  ]),
               {
                 href: "/business/orders",
                 label: t("sections.activeJobs"),

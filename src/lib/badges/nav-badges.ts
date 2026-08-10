@@ -8,7 +8,11 @@ import {
   getUnreadUnlockNotificationCount,
   getUnreadVerificationNotificationCount,
 } from "@/lib/orders/notifications";
-import { isOffersV2Enabled, isUnlockV2Enabled } from "@/lib/config/feature-flags";
+import {
+  isOffersV2Enabled,
+  isProviderMonetizationEnabled,
+  isUnlockV2Enabled,
+} from "@/lib/config/feature-flags";
 import { getAdminUnreadBadgeCounts } from "@/lib/admin/nav-badges";
 import { loadCustomerConversations } from "@/lib/customer/load-conversations";
 import type {
@@ -44,7 +48,9 @@ export async function getProviderNavBadges(userId: string): Promise<ProviderNavB
         isOffersV2Enabled()
           ? getUnreadOpportunityNotificationCount(userId)
           : Promise.resolve(0),
-        isUnlockV2Enabled()
+        // Flat $5/mo model: contact never gates on a per-unlock payment, so
+        // the unlock nav badge no longer applies.
+        isUnlockV2Enabled() && !isProviderMonetizationEnabled()
           ? getUnreadUnlockNotificationCount(userId)
           : Promise.resolve(0),
       ]);

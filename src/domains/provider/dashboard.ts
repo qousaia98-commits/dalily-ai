@@ -8,6 +8,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import {
   isOffersV2Enabled,
   isProviderDashboardV2Enabled,
+  isProviderMonetizationEnabled,
   isUnlockV2Enabled,
 } from "@/lib/config/feature-flags";
 import { listProviderUnlockSessions } from "@/domains/unlock/session";
@@ -88,9 +89,15 @@ export async function getProviderDashboardHome(
     return emptyHome(providerId, options);
   }
 
+  // Flat $5/mo model: contact never gates on a per-unlock payment, so the
+  // "Contact unlock" priority queue no longer applies (sessions still get
+  // created for SLA/ops tracking, but auto-grant instantly — nothing to
+  // surface here).
+  const unlockQueueApplies = isUnlockV2Enabled() && !isProviderMonetizationEnabled();
+
   const [unlockSessions, opportunities, pauseState, reliability, pendingQa, activeJobs] =
     await Promise.all([
-      isUnlockV2Enabled() ? listProviderUnlockSessions(providerId) : Promise.resolve([]),
+      unlockQueueApplies ? listProviderUnlockSessions(providerId) : Promise.resolve([]),
       isOffersV2Enabled() ? listProviderOpportunities(providerId) : Promise.resolve([]),
       getProviderRequestSettings(providerId),
       loadReliability(providerId),
