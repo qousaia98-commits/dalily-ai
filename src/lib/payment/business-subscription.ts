@@ -8,7 +8,11 @@ import { upgradeToBusinessPlan } from "@/lib/monetization/plans";
 import { createPaymentIntent } from "@/lib/payment/orchestration";
 import { snapshotPaymentStatus } from "@/lib/payment/status-snapshots";
 import { emitAiLearningEvent } from "@/lib/ai/learning/events";
-import { getPaymentConfig, isPaymentConfigured } from "@/lib/payment/config";
+import {
+  getChamCashAccountAddress,
+  getPaymentConfig,
+  isPaymentConfigured,
+} from "@/lib/payment/config";
 
 function db() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,6 +30,7 @@ export async function startBusinessSubscriptionPayment(input: {
       reference: string;
       amount: number;
       currency: string;
+      paymentProvider: string;
       instructions?: {
         receiver: string;
         account: string;
@@ -99,6 +104,7 @@ export async function startBusinessSubscriptionPayment(input: {
     reference: intent.result.reference,
     amount: intent.result.amount,
     currency: intent.result.currency,
+    paymentProvider: intent.result.paymentProvider,
     instructions: intent.result.instructions,
     checkoutUrl: intent.result.checkoutUrl,
     publishableKey: intent.result.publishableKey,
@@ -115,6 +121,7 @@ export async function getActiveBusinessSubscriptionPayment(
   reference: string;
   amount: number;
   currency: string;
+  paymentProvider: string;
   status: string;
   hasReceipt: boolean;
   receiver: string;
@@ -153,17 +160,20 @@ export async function getActiveBusinessSubscriptionPayment(
     }
   }
 
+  const isShamCash = data.payment_provider === "shamcash";
+
   return {
     paymentId: String(data.id),
     reference: String(data.payment_reference ?? ""),
     amount: Number(data.amount),
     currency: String(data.currency ?? "USD"),
+    paymentProvider: String(data.payment_provider ?? "manual"),
     status: String(data.payment_status),
     hasReceipt: Boolean(data.receipt_path),
-    receiver: config.receiver,
-    account: config.account,
-    swift: config.swift || undefined,
-    bankName: config.bankName || undefined,
+    receiver: isShamCash ? "Dalily" : config.receiver,
+    account: isShamCash ? getChamCashAccountAddress() : config.account,
+    swift: isShamCash ? undefined : config.swift || undefined,
+    bankName: isShamCash ? undefined : config.bankName || undefined,
     checkoutUrl,
   };
 }

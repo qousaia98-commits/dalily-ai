@@ -4,16 +4,18 @@
  */
 
 import { ManualPaymentProvider } from "@/lib/payment/providers/manual.provider";
+import { ShamCashPaymentProvider } from "@/lib/payment/providers/shamcash.provider";
 import { StripePaymentProvider } from "@/lib/payment/providers/stripe.provider";
 import { StubPaymentProvider } from "@/lib/payment/providers/stub.provider";
 import { WalletPaymentProvider } from "@/lib/payment/providers/wallet.provider";
 import type { PaymentProvider } from "@/lib/payment/types";
-import { getPaymentConfig } from "@/lib/payment/config";
+import { getPaymentConfig, isChamCashConfigured } from "@/lib/payment/config";
 import { isStripeConfigured } from "@/lib/payment/stripe/client";
 import type { PaymentAdapterId } from "@/domains/payment/shared/types";
 
 const manual = new ManualPaymentProvider();
 const stripe = new StripePaymentProvider();
+const shamcash = new ShamCashPaymentProvider();
 const wallet = new WalletPaymentProvider();
 
 const stubs: Record<string, StubPaymentProvider> = {
@@ -22,7 +24,6 @@ const stubs: Record<string, StubPaymentProvider> = {
   google_pay: new StubPaymentProvider("google_pay"),
   cash: new StubPaymentProvider("cash"),
   bank_transfer: new StubPaymentProvider("bank_transfer"),
-  shamcash: new StubPaymentProvider("shamcash"),
   future_syria: new StubPaymentProvider("future_syria"),
   future_jordan: new StubPaymentProvider("future_jordan"),
   future_lebanon: new StubPaymentProvider("future_lebanon"),
@@ -33,6 +34,8 @@ export function resolveAdapter(id?: PaymentAdapterId | string | null): PaymentPr
   switch (key) {
     case "stripe":
       return isStripeConfigured() ? stripe : manual;
+    case "shamcash":
+      return isChamCashConfigured() ? shamcash : manual;
     case "manual":
       return manual;
     case "wallet":
@@ -42,7 +45,6 @@ export function resolveAdapter(id?: PaymentAdapterId | string | null): PaymentPr
     case "google_pay":
     case "cash":
     case "bank_transfer":
-    case "shamcash":
     case "future_syria":
     case "future_jordan":
     case "future_lebanon":

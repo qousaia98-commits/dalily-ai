@@ -55,6 +55,21 @@ export function localizeReceiptUploadError(
 }
 
 /**
+ * Resolve Cham Cash transaction verification error codes via
+ * paymentExperience.shamcash.errors.*
+ */
+export function localizeChamCashError(
+  tRaw: unknown,
+  code: string | null | undefined,
+): string {
+  const t = asTranslateFn(tRaw);
+  const normalized = (code ?? "").trim() || "verification_unavailable";
+  const key = `errors.${normalized}`;
+  if (t.has(key)) return t(key);
+  return t("errors.verification_unavailable");
+}
+
+/**
  * Resolve unlockFlow action errors safely.
  */
 export function localizeUnlockFlowError(

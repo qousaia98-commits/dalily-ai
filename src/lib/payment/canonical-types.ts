@@ -91,6 +91,7 @@ export type PaymentIntentResult = {
   reference: string;
   amount: number;
   currency: string;
+  paymentProvider: string;
   instructions?: {
     receiver: string;
     account: string;

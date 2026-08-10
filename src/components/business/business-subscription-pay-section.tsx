@@ -22,6 +22,7 @@ export type SubscriptionPendingPayment = {
   reference: string;
   amount: number;
   currency: string;
+  paymentProvider: string;
   status: string;
   hasReceipt: boolean;
   receiver: string;
@@ -48,6 +49,7 @@ function toInstructions(
     reference: p.reference,
     status: p.status,
     hasReceipt: p.hasReceipt,
+    paymentProvider: p.paymentProvider,
   };
 }
 

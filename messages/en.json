@@ -474,6 +474,24 @@
       "copyAmount": "Copy amount",
       "copied": "Copied",
       "referenceHint": "Add this number in the transfer note."
+    },
+    "shamcash": {
+      "title": "Verify with Cham Cash",
+      "body": "Send the amount to the Cham Cash account above, then paste the transaction ID from your Cham Cash app below to activate instantly.",
+      "inputLabel": "Cham Cash transaction ID",
+      "inputPlaceholder": "e.g. 123456789",
+      "verifyCta": "Verify and activate",
+      "verifying": "Verifying…",
+      "fallbackToReceipt": "Or upload a receipt for manual review instead",
+      "errors": {
+        "transaction_id_required": "Please enter your Cham Cash transaction ID.",
+        "verification_unavailable": "We couldn't verify this automatically. Please use the receipt upload option instead.",
+        "invalid_payment": "This payment can't be verified this way.",
+        "payment_not_submittable": "This payment can no longer be verified.",
+        "forbidden": "You don't have access to this payment.",
+        "login_required": "Please sign in and try again.",
+        "feature_disabled": "This feature is not available right now."
+      }
     }
   },
   "nav": {

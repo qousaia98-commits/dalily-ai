@@ -161,6 +161,7 @@ export async function upgradeBusinessPlanAction(): Promise<{
     reference: string;
     amount: number;
     currency: string;
+    paymentProvider: string;
     status: string;
     hasReceipt: boolean;
     receiver: string;
@@ -178,7 +179,7 @@ export async function upgradeBusinessPlanAction(): Promise<{
   const provider = await getOwnedProvider(authUser.id);
   if (!provider) return { success: false, error: "forbidden" };
 
-  // Plan activates only after verified payment (Stripe webhook or admin approve).
+  // Plan activates only after verified payment (Stripe webhook, Cham Cash auto-verify, or admin approve).
   const { startBusinessSubscriptionPayment, getActiveBusinessSubscriptionPayment } =
     await import("@/lib/payment/business-subscription");
 
@@ -220,6 +221,7 @@ export async function upgradeBusinessPlanAction(): Promise<{
       reference: started.reference,
       amount: started.amount,
       currency: started.currency,
+      paymentProvider: started.paymentProvider,
       status: "pending",
       hasReceipt: false,
       receiver: started.instructions?.receiver ?? "",
@@ -240,6 +242,7 @@ export async function renewBusinessPlanAction(): Promise<{
     reference: string;
     amount: number;
     currency: string;
+    paymentProvider: string;
     status: string;
     hasReceipt: boolean;
     receiver: string;
@@ -283,6 +286,7 @@ export async function renewBusinessPlanAction(): Promise<{
       reference: started.reference,
       amount: started.amount,
       currency: started.currency,
+      paymentProvider: started.paymentProvider,
       status: "pending",
       hasReceipt: false,
       receiver: started.instructions?.receiver ?? "",
@@ -291,6 +295,80 @@ export async function renewBusinessPlanAction(): Promise<{
       bankName: started.instructions?.bankName,
     },
   };
+}
+
+/**
+ * Provider pastes their Cham Cash transaction id for a pending
+ * business_subscription payment. Verifies it automatically via the
+ * shamcash provider; on success activates the plan immediately (no admin
+ * wait). If verification can't confirm it (API not integrated yet,
+ * network error, mismatch), returns an error so the UI can offer the
+ * manual receipt-upload fallback instead.
+ */
+export async function submitChamCashTransactionAction(
+  paymentId: string,
+  transactionId: string,
+): Promise<{ success: boolean; error?: string }> {
+  if (!isProviderMonetizationEnabled()) {
+    return { success: false, error: "feature_disabled" };
+  }
+  const authUser = await getAuthUser();
+  if (!authUser) return { success: false, error: "login_required" };
+  const provider = await getOwnedProvider(authUser.id);
+  if (!provider) return { success: false, error: "forbidden" };
+
+  const trimmed = transactionId.trim();
+  if (!trimmed) return { success: false, error: "transaction_id_required" };
+
+  const admin = createAdminClient();
+  const { data: payment } = await admin
+    .from("payments")
+    .select("id, provider_id, purpose, payment_provider, payment_status")
+    .eq("id", paymentId)
+    .maybeSingle();
+
+  if (!payment || payment.provider_id !== provider.id) {
+    return { success: false, error: "forbidden" };
+  }
+  if (payment.purpose !== "business_subscription" || payment.payment_provider !== "shamcash") {
+    return { success: false, error: "invalid_payment" };
+  }
+  if (payment.payment_status !== "pending" && payment.payment_status !== "pending_review") {
+    return { success: false, error: "payment_not_submittable" };
+  }
+
+  const { resolveAdapter } = await import("@/domains/payment/providers/registry");
+  const verified = await resolveAdapter("shamcash").verifyPayment({
+    paymentId,
+    externalTransactionId: trimmed,
+  });
+  if (!verified.success) {
+    return { success: false, error: "verification_unavailable" };
+  }
+
+  const { activateBusinessSubscriptionFromPayment } = await import(
+    "@/lib/payment/business-subscription"
+  );
+  const activated = await activateBusinessSubscriptionFromPayment({
+    paymentId,
+    actorUserId: authUser.id,
+    source: "webhook",
+  });
+  if (!activated.ok) {
+    return { success: false, error: activated.error };
+  }
+
+  void emitAiLearningEvent({
+    eventType: "subscription_payment_activated",
+    providerId: provider.id,
+    metadata: { anonymized: true, paymentId, provider: "shamcash" },
+  });
+
+  revalidatePath("/business/monetization");
+  revalidatePath("/business/payments/history");
+  revalidatePath("/business/subscription");
+  revalidatePath("/business");
+  return { success: true };
 }
 
 /**

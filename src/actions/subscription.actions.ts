@@ -31,6 +31,8 @@ export type PaymentInstructionsData = {
   reference: string;
   status: string;
   hasReceipt: boolean;
+  /** "manual" | "stripe" | "shamcash" | ... — drives which verify step the panel shows. */
+  paymentProvider?: string;
 };
 
 export type SubscriptionActionState = {

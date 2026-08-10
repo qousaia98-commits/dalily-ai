@@ -73,6 +73,7 @@ export async function createPaymentIntent(
             reference: String(existing.payment_reference),
             amount: Number(existing.amount),
             currency: String(existing.currency),
+            paymentProvider: String(existing.payment_provider ?? "manual"),
             reused: true,
           },
         };
@@ -97,6 +98,7 @@ export async function createPaymentIntent(
             reference: String(open.payment_reference),
             amount: Number(open.amount),
             currency: String(open.currency),
+            paymentProvider: String(open.payment_provider ?? "manual"),
             reused: true,
           },
         };
@@ -143,6 +145,7 @@ export async function createPaymentIntent(
         reference: created.instructions?.reference ?? reference,
         amount: input.amount,
         currency: input.currency,
+        paymentProvider: provider.name,
         instructions: created.instructions
           ? {
               receiver: created.instructions.receiver,

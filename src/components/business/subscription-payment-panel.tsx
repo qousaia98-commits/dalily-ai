@@ -8,6 +8,7 @@ import {
   preparePaymentReceiptUploadAction,
   type PaymentInstructionsData,
 } from "@/actions/subscription.actions";
+import { submitChamCashTransactionAction } from "@/actions/monetization.actions";
 import { uploadPaymentReceiptDirect } from "@/lib/payment/upload-payment-receipt";
 import { validateReceiptMeta } from "@/lib/payment/receipt-storage";
 import { localizeReceiptUploadError } from "@/lib/payment/localize-errors";
@@ -18,6 +19,7 @@ import { PaymentFlowStepper, type PaymentFlowStep } from "@/components/payment/p
 import { PaymentDetailsCard } from "@/components/payment/payment-details-card";
 import { PaymentAlert } from "@/components/payment/payment-alert";
 import { ReceiptUploadCard } from "@/components/payment/receipt-upload-card";
+import { ShamCashTransactionCard } from "@/components/payment/shamcash-transaction-card";
 
 type SubscriptionPaymentPanelProps = {
   instructions: PaymentInstructionsData;
@@ -42,6 +44,9 @@ export function SubscriptionPaymentPanel({ instructions, onBack }: SubscriptionP
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [progress, setProgress] = useState<number | null>(null);
+
+  const isShamCash = instructions.paymentProvider === "shamcash";
+  const [useReceiptFallback, setUseReceiptFallback] = useState(false);
 
   const paymentReady = isPaymentConfigured({
     provider: "manual",
@@ -208,6 +213,17 @@ export function SubscriptionPaymentPanel({ instructions, onBack }: SubscriptionP
                 </Button>
               ) : null}
             </section>
+          ) : isShamCash && !useReceiptFallback ? (
+            <ShamCashTransactionCard
+              disabled={pending}
+              onVerify={(transactionId) =>
+                runServerAction(() =>
+                  submitChamCashTransactionAction(instructions.paymentId, transactionId),
+                )
+              }
+              onVerified={() => setPhase("success")}
+              onFallbackToReceipt={() => setUseReceiptFallback(true)}
+            />
           ) : (
             <section className="space-y-4">
               <ReceiptUploadCard
