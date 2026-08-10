@@ -3311,6 +3311,20 @@
         }
       }
     },
+    "subscriptionVisibility": {
+      "title": "Subscribe to appear to customers",
+      "readyBody": "Your profile basics are ready — one more step so customers can find you.",
+      "body": "You will not appear in search or category browse, and you will not receive new requests, until you subscribe ({price} USD / month).",
+      "benefits": {
+        "search": "Visible in search and category browse",
+        "gallery": "Your photos and gallery are shown",
+        "contact": "Customers can find and message you",
+        "matching": "You appear in matching for new requests"
+      },
+      "cta": "Subscribe — {price} USD / mo",
+      "remindLater": "Remind me later",
+      "dismiss": "Dismiss"
+    },
     "growth": {
       "hero": {
         "eyebrow": "Growth Dashboard",

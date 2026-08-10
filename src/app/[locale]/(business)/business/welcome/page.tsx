@@ -11,6 +11,7 @@ import {
   resolveOnboardingPhase,
   shouldShowWelcomeLanding,
 } from "@/lib/business/onboarding";
+import { getSubscriptionVisibilityPrompt } from "@/lib/business/subscription-visibility-prompt";
 import { BusinessOnboardingWizard } from "@/components/business/onboarding/business-onboarding-wizard";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -34,9 +35,10 @@ export default async function BusinessWelcomePage() {
     redirect({ href: "/business", locale });
   }
 
-  const [verificationRow, categoryGroups] = await Promise.all([
+  const [verificationRow, categoryGroups, subscriptionPrompt] = await Promise.all([
     getProviderVerificationForOwner(provider.id),
     getCategoryGroupsWithLeaves(),
+    getSubscriptionVisibilityPrompt(provider.id),
   ]);
   const verification = toBusinessVerificationView(verificationRow);
   const phase = resolveOnboardingPhase(provider, verification, locale);
@@ -73,6 +75,7 @@ export default async function BusinessWelcomePage() {
         initialPhase={phase}
         alreadySubmitted={alreadySubmitted}
         showWelcomeFirst={showWelcomeFirst}
+        subscriptionPrompt={subscriptionPrompt}
       />
     </div>
   );

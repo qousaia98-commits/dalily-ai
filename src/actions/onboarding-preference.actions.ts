@@ -8,6 +8,7 @@ import {
   ONBOARDING_DEFER_COOKIE,
   ONBOARDING_DEFER_MAX_AGE_SEC,
   ONBOARDING_REMINDER_DISMISS_COOKIE,
+  SUBSCRIPTION_CARD_DISMISS_COOKIE,
   serializeTimestampCookie,
 } from "@/lib/business/onboarding-preference";
 
@@ -42,6 +43,14 @@ export async function dismissOnboardingCardAction(): Promise<{ success: boolean 
 export async function dismissOnboardingReminderAction(): Promise<{ success: boolean }> {
   await requireAuthUser();
   await setDismissCookie(ONBOARDING_REMINDER_DISMISS_COOKIE, 60 * 60 * 24 * 30);
+  revalidatePath("/business");
+  return { success: true };
+}
+
+/** Hide subscription visibility card for several days (same cooldown pattern). */
+export async function dismissSubscriptionCardAction(): Promise<{ success: boolean }> {
+  await requireAuthUser();
+  await setDismissCookie(SUBSCRIPTION_CARD_DISMISS_COOKIE, 60 * 60 * 24 * 30);
   revalidatePath("/business");
   return { success: true };
 }

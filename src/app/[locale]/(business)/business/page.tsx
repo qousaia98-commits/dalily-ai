@@ -17,9 +17,11 @@ import {
   ONBOARDING_CARD_DISMISS_COOKIE,
   ONBOARDING_DEFER_COOKIE,
   ONBOARDING_REMINDER_DISMISS_COOKIE,
+  SUBSCRIPTION_CARD_DISMISS_COOKIE,
   parseTimestampCookie,
 } from "@/lib/business/onboarding-preference";
 import { getOnboardingReminderState } from "@/lib/business/onboarding-reminders";
+import { getSubscriptionVisibilityPrompt } from "@/lib/business/subscription-visibility-prompt";
 import { getProviderSuccessDashboard } from "@/lib/provider-success/dashboard-service";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { GrowthHero } from "@/components/business/growth-hero";
@@ -28,6 +30,7 @@ import { DashboardConversationsPreview } from "@/components/business/conversatio
 import { ProviderSuccessDashboardView } from "@/components/provider-success/provider-success-dashboard";
 import { VerificationDashboardAlert } from "@/components/business/verification-dashboard-alert";
 import { OnboardingDashboardCard } from "@/components/business/onboarding/onboarding-dashboard-card";
+import { SubscriptionDashboardCard } from "@/components/business/onboarding/subscription-dashboard-card";
 import { ProviderDashboardHomeView } from "@/components/business/provider-dashboard-home";
 import { getProviderDashboardHome } from "@/domains/provider/dashboard";
 import { isProviderDashboardV2Enabled, isAiEngineV7Enabled, isPredictiveEngineEnabled, isAiEngineV9Enabled, isOfferDecisionEngineEnabled } from "@/lib/config/feature-flags";
@@ -75,6 +78,13 @@ export default async function BusinessDashboardPage() {
   if (shouldForceOnboarding(provider) && !onboardingDeferred) {
     redirect({ href: "/business/welcome", locale });
   }
+
+  const subscriptionCardDismissedAt = parseTimestampCookie(
+    jar.get(SUBSCRIPTION_CARD_DISMISS_COOKIE)?.value,
+  );
+  const subscriptionPrompt = await getSubscriptionVisibilityPrompt(provider.id, {
+    cardDismissedAt: subscriptionCardDismissedAt,
+  });
 
   const businessName = getLocalizedField(provider.name, locale) || provider.id;
 
@@ -199,6 +209,9 @@ export default async function BusinessDashboardPage() {
     return (
       <div className="w-full max-w-full space-y-6 overflow-x-hidden animate-fade-in">
         <VerificationDashboardAlert provider={provider} verification={verification} />
+        {subscriptionPrompt.show ? (
+          <SubscriptionDashboardCard priceUsd={subscriptionPrompt.priceUsd} />
+        ) : null}
         {providerAssistant ? (
           <ProviderAssistantPanel view={providerAssistant} />
         ) : null}
@@ -270,6 +283,10 @@ export default async function BusinessDashboardPage() {
 
       {reminder.showDashboardCard ? (
         <OnboardingDashboardCard copyId={reminder.copyId} href={onboardingHref} />
+      ) : null}
+
+      {subscriptionPrompt.show ? (
+        <SubscriptionDashboardCard priceUsd={subscriptionPrompt.priceUsd} />
       ) : null}
 
       <FirstRequestMediaBanner
