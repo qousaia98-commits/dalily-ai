@@ -298,16 +298,14 @@ export async function renewBusinessPlanAction(): Promise<{
 }
 
 /**
- * Provider pastes their Cham Cash transaction id for a pending
- * business_subscription payment. Verifies it automatically via the
- * shamcash provider; on success activates the plan immediately (no admin
- * wait). If verification can't confirm it (API not integrated yet,
- * network error, mismatch), returns an error so the UI can offer the
- * manual receipt-upload fallback instead.
+ * Shared by both Cham Cash entry points below: verify (pasted id, or
+ * poll the hosted checkout status when omitted) then activate on success.
+ * Never requires admin review — falls back to manual receipt upload in
+ * the UI whenever verification can't confirm anything.
  */
-export async function submitChamCashTransactionAction(
+async function verifyAndActivateChamCashPayment(
   paymentId: string,
-  transactionId: string,
+  transactionId: string | null,
 ): Promise<{ success: boolean; error?: string }> {
   if (!isProviderMonetizationEnabled()) {
     return { success: false, error: "feature_disabled" };
@@ -317,8 +315,10 @@ export async function submitChamCashTransactionAction(
   const provider = await getOwnedProvider(authUser.id);
   if (!provider) return { success: false, error: "forbidden" };
 
-  const trimmed = transactionId.trim();
-  if (!trimmed) return { success: false, error: "transaction_id_required" };
+  const trimmed = transactionId?.trim();
+  if (transactionId != null && !trimmed) {
+    return { success: false, error: "transaction_id_required" };
+  }
 
   const admin = createAdminClient();
   const { data: payment } = await admin
@@ -369,6 +369,33 @@ export async function submitChamCashTransactionAction(
   revalidatePath("/business/subscription");
   revalidatePath("/business");
   return { success: true };
+}
+
+/**
+ * Provider pastes their Cham Cash transaction id for a pending
+ * business_subscription payment (Tier 2 — no hosted checkout available).
+ * Verifies it automatically via the shamcash provider; on success
+ * activates the plan immediately (no admin wait). If verification can't
+ * confirm it, returns an error so the UI can offer the manual
+ * receipt-upload fallback instead.
+ */
+export async function submitChamCashTransactionAction(
+  paymentId: string,
+  transactionId: string,
+): Promise<{ success: boolean; error?: string }> {
+  return verifyAndActivateChamCashPayment(paymentId, transactionId);
+}
+
+/**
+ * Poll a Cham Cash hosted-checkout payment request after the provider is
+ * redirected back to Dalily (Tier 1 — one click, no manual id entry).
+ * Same activation path as submitChamCashTransactionAction; just skips
+ * the pasted transaction id and looks the status up by provider_reference.
+ */
+export async function pollChamCashPaymentStatusAction(
+  paymentId: string,
+): Promise<{ success: boolean; error?: string }> {
+  return verifyAndActivateChamCashPayment(paymentId, null);
 }
 
 /**

@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
@@ -8,7 +9,10 @@ import {
   preparePaymentReceiptUploadAction,
   type PaymentInstructionsData,
 } from "@/actions/subscription.actions";
-import { submitChamCashTransactionAction } from "@/actions/monetization.actions";
+import {
+  pollChamCashPaymentStatusAction,
+  submitChamCashTransactionAction,
+} from "@/actions/monetization.actions";
 import { uploadPaymentReceiptDirect } from "@/lib/payment/upload-payment-receipt";
 import { validateReceiptMeta } from "@/lib/payment/receipt-storage";
 import { localizeReceiptUploadError } from "@/lib/payment/localize-errors";
@@ -37,16 +41,48 @@ export function SubscriptionPaymentPanel({ instructions, onBack }: SubscriptionP
   const initiallyReview =
     instructions.status === "pending_review" || instructions.hasReceipt;
 
+  const isShamCash = instructions.paymentProvider === "shamcash";
+  const searchParams = useSearchParams();
+  const isShamCashReturn = isShamCash && searchParams.get("shamcash_return") === "1";
+
   const [phase, setPhase] = useState<"transfer" | "upload" | "success">(
-    initiallyReview ? "success" : "transfer",
+    initiallyReview ? "success" : isShamCashReturn ? "upload" : "transfer",
   );
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [progress, setProgress] = useState<number | null>(null);
 
-  const isShamCash = instructions.paymentProvider === "shamcash";
   const [useReceiptFallback, setUseReceiptFallback] = useState(false);
+  const [polling, setPolling] = useState(isShamCashReturn && !initiallyReview);
+
+  // One-click Cham Cash flow: returning from the hosted checkout redirect —
+  // poll a few times for the auto-verified status before falling back to
+  // asking the provider to paste their transaction id.
+  useEffect(() => {
+    if (!isShamCashReturn || initiallyReview) return;
+    let cancelled = false;
+
+    async function poll() {
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        const result = await runServerAction(() =>
+          pollChamCashPaymentStatusAction(instructions.paymentId),
+        );
+        if (cancelled) return;
+        if (result.success) {
+          setPhase("success");
+          return;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+      if (!cancelled) setPolling(false);
+    }
+
+    void poll();
+    return () => {
+      cancelled = true;
+    };
+  }, [isShamCashReturn, initiallyReview, instructions.paymentId]);
 
   const paymentReady = isPaymentConfigured({
     provider: "manual",
@@ -212,6 +248,11 @@ export function SubscriptionPaymentPanel({ instructions, onBack }: SubscriptionP
                   {tUx("back")}
                 </Button>
               ) : null}
+            </section>
+          ) : polling ? (
+            <section className="flex flex-col items-center gap-3 rounded-3xl border border-border bg-card px-5 py-10 text-center shadow-sm">
+              <Loader2 className="size-6 animate-spin text-muted-foreground" aria-hidden />
+              <p className="text-sm text-muted-foreground">{tUx("shamcash.checkingStatus")}</p>
             </section>
           ) : isShamCash && !useReceiptFallback ? (
             <ShamCashTransactionCard

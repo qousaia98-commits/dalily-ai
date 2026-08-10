@@ -476,6 +476,7 @@
       "referenceHint": "Add this number in the transfer note."
     },
     "shamcash": {
+      "checkingStatus": "Checking your payment status…",
       "title": "Verify with Cham Cash",
       "body": "Send the amount to the Cham Cash account above, then paste the transaction ID from your Cham Cash app below to activate instantly.",
       "inputLabel": "Cham Cash transaction ID",
