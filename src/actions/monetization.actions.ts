@@ -185,6 +185,7 @@ export async function upgradeBusinessPlanAction(): Promise<{
   const existing = await getActiveBusinessSubscriptionPayment(provider.id);
   if (existing) {
     revalidatePath("/business/monetization");
+    revalidatePath("/business/subscription");
     return {
       success: true,
       checkoutUrl: existing.checkoutUrl,
@@ -209,6 +210,7 @@ export async function upgradeBusinessPlanAction(): Promise<{
 
   revalidatePath("/business/monetization");
   revalidatePath("/business/payments/history");
+  revalidatePath("/business/subscription");
   revalidatePath("/business");
   return {
     success: true,
@@ -273,6 +275,7 @@ export async function renewBusinessPlanAction(): Promise<{
 
   revalidatePath("/business/monetization");
   revalidatePath("/business/payments/history");
+  revalidatePath("/business/subscription");
   return {
     success: true,
     payment: {
@@ -288,6 +291,143 @@ export async function renewBusinessPlanAction(): Promise<{
       bankName: started.instructions?.bankName,
     },
   };
+}
+
+/**
+ * Admin approve of a business_subscription payment receipt.
+ * Activates/renews via upgradeToBusinessPlan — not the legacy PlanSlug path.
+ */
+export async function approveBusinessSubscriptionPaymentAction(
+  paymentId: string,
+): Promise<{ success: boolean; error?: string }> {
+  const authUser = await requireAdminUser();
+  if (
+    !isProviderMonetizationEnabled() &&
+    !isUnlockPaymentsV2Enabled()
+  ) {
+    return { success: false, error: "feature_disabled" };
+  }
+
+  const admin = createAdminClient();
+  const { data: payment } = await admin
+    .from("payments")
+    .select("id, purpose")
+    .eq("id", paymentId)
+    .maybeSingle();
+
+  if (!payment || payment.purpose !== "business_subscription") {
+    return { success: false, error: "not_business_subscription" };
+  }
+
+  const { activateBusinessSubscriptionFromPayment } = await import(
+    "@/lib/payment/business-subscription"
+  );
+  const activated = await activateBusinessSubscriptionFromPayment({
+    paymentId,
+    actorUserId: authUser.id,
+    source: "admin_approval",
+  });
+  if (!activated.ok) return { success: false, error: activated.error };
+
+  await writeMonetizationAudit({
+    eventKey: "business_subscription_payment_approved",
+    actorUserId: authUser.id,
+    payload: { paymentId, renewed: activated.renewed },
+  });
+
+  const { logAdminAudit } = await import("@/lib/admin/audit");
+  await logAdminAudit({
+    actorId: authUser.id,
+    action: "payment_approved",
+    entityType: "payment",
+    entityId: paymentId,
+    metadata: {
+      purpose: "business_subscription",
+      renewed: activated.renewed,
+    },
+  });
+
+  revalidatePath("/admin/payments");
+  revalidatePath(`/admin/payments/${paymentId}`);
+  revalidatePath("/business/subscription");
+  revalidatePath("/business/monetization");
+  revalidatePath("/business/payments/history");
+  return { success: true };
+}
+
+/**
+ * Admin reject of a business_subscription payment receipt.
+ */
+export async function rejectBusinessSubscriptionPaymentAction(
+  paymentId: string,
+  adminNote?: string,
+): Promise<{ success: boolean; error?: string }> {
+  const authUser = await requireAdminUser();
+  if (
+    !isProviderMonetizationEnabled() &&
+    !isUnlockPaymentsV2Enabled()
+  ) {
+    return { success: false, error: "feature_disabled" };
+  }
+
+  const note = adminNote?.trim().slice(0, 1000) || undefined;
+
+  const admin = createAdminClient();
+  const { data: payment } = await admin
+    .from("payments")
+    .select("id, purpose")
+    .eq("id", paymentId)
+    .maybeSingle();
+
+  if (!payment || payment.purpose !== "business_subscription") {
+    return { success: false, error: "not_business_subscription" };
+  }
+
+  const { transitionPaymentStatus } = await import(
+    "@/lib/payment/orchestration"
+  );
+  const rejected = await transitionPaymentStatus({
+    paymentId,
+    toStatus: "rejected",
+    actorUserId: authUser.id,
+    source: "admin",
+    note: note || "admin_rejected",
+  });
+  if (!rejected.ok) return { success: false, error: rejected.error };
+
+  await admin
+    .from("payments")
+    .update({
+      rejected_at: new Date().toISOString(),
+      rejected_by: authUser.id,
+      admin_note: note || null,
+    })
+    .eq("id", paymentId);
+
+  await writeMonetizationAudit({
+    eventKey: "business_subscription_payment_rejected",
+    actorUserId: authUser.id,
+    payload: { paymentId, note: note ?? null },
+  });
+
+  const { logAdminAudit } = await import("@/lib/admin/audit");
+  await logAdminAudit({
+    actorId: authUser.id,
+    action: "payment_rejected",
+    entityType: "payment",
+    entityId: paymentId,
+    metadata: {
+      purpose: "business_subscription",
+      note: note ?? null,
+    },
+  });
+
+  revalidatePath("/admin/payments");
+  revalidatePath(`/admin/payments/${paymentId}`);
+  revalidatePath("/business/subscription");
+  revalidatePath("/business/monetization");
+  revalidatePath("/business/payments/history");
+  return { success: true };
 }
 
 export async function getAdminBillingSettingsAction(): Promise<
@@ -325,7 +465,7 @@ export async function saveAdminBillingSettingsAction(
   return { ok: true, settings };
 }
 
-/** Admin activates / extends a provider Business subscription (manual until Prompt 12). */
+/** Admin override: extend / activate without a receipt (comps, refunds, goodwill). */
 export async function adminMarkProviderSubscriptionPaidAction(input: {
   providerId: string;
   months?: number;

@@ -429,6 +429,9 @@ export async function getPaymentDetailForAdmin(paymentId: string) {
   if (purpose === "unlock_fee") {
     planSlug = "unlock_fee";
     planName = { en: "Unlock fee", ar: "رسوم الفتح" };
+  } else if (purpose === "business_subscription") {
+    planSlug = "business";
+    planName = { en: "Business plan", ar: "خطة الأعمال" };
   } else if (row.subscription_id) {
     const { data: sub } = await admin
       .from("subscriptions")

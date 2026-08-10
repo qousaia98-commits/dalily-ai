@@ -1,6 +1,9 @@
 import { processCompletionPrompts } from "@/lib/booking/completion-service";
 import { processSmartBookingReminders } from "@/lib/booking/smart/reminders";
-import { resetMonthlyIncludedUnlocks } from "@/lib/monetization";
+import {
+  processSubscriptionReminders,
+  resetMonthlyIncludedUnlocks,
+} from "@/lib/monetization";
 import {
   processRecurringReminders,
   processRecurringSchedules,
@@ -74,9 +77,15 @@ export async function runDailyMaintenanceJobs(): Promise<
 
   if (!isProviderMonetizationEnabled()) {
     jobs.push(skippedJob("monetization-reset", "flag_off"));
+    jobs.push(skippedJob("subscription-reminders", "flag_off"));
   } else {
     jobs.push(
       await runJob("monetization-reset", () => resetMonthlyIncludedUnlocks()),
+    );
+    jobs.push(
+      await runJob("subscription-reminders", () =>
+        processSubscriptionReminders(),
+      ),
     );
   }
 

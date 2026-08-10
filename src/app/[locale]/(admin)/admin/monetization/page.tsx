@@ -20,7 +20,15 @@ export default async function AdminMonetizationPage() {
         <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </div>
       <AdminMonetizationSettingsForm initial={settings} />
-      <AdminMarkSubscriptionPaidForm />
+      <section className="space-y-2">
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          {t("overrideSection")}
+        </p>
+        <AdminMarkSubscriptionPaidForm />
+      </section>
+      <p className="text-xs text-muted-foreground">
+        {t("reviewPaymentsHint")}
+      </p>
     </main>
   );
 }

@@ -8,15 +8,19 @@ import {
   getBillingSettings,
   getSubscriptionVisibility,
   SUBSCRIPTION_GRACE_DAYS,
+  SUBSCRIPTION_REMINDER_LEAD_DAYS,
 } from "@/lib/monetization";
+import { getActiveBusinessSubscriptionPayment } from "@/lib/payment/business-subscription";
 import { Link } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { PatternBackdrop } from "@/components/brand/pattern-backdrop";
 import { cn } from "@/lib/utils";
+import { BusinessSubscriptionPaySection } from "@/components/business/business-subscription-pay-section";
+
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 /**
- * Provider subscription status — flat $5/mo model.
- * Payment upload cycle lands in Prompt 12; admins mark paid for now.
+ * Provider subscription — flat $5/mo: status + manual receipt payment when needed.
  */
 export default async function BusinessSubscriptionPage() {
   if (!isProviderMonetizationEnabled()) {
@@ -28,11 +32,30 @@ export default async function BusinessSubscriptionPage() {
   if (!provider) redirect("/business");
 
   const t = await getTranslations("businessSubscription");
-  const [plan, settings] = await Promise.all([
+  const [plan, settings, pendingPayment] = await Promise.all([
     ensureProviderMonetizationPlan(provider.id),
     getBillingSettings(),
+    getActiveBusinessSubscriptionPayment(provider.id),
   ]);
   const visibility = getSubscriptionVisibility(plan);
+
+  const daysUntilEnd =
+    visibility.periodEnd && visibility.phase === "active"
+      ? Math.ceil(
+          (new Date(visibility.periodEnd).getTime() - Date.now()) / DAY_MS,
+        )
+      : null;
+
+  const approachingExpiry =
+    daysUntilEnd != null &&
+    daysUntilEnd >= 0 &&
+    daysUntilEnd <= SUBSCRIPTION_REMINDER_LEAD_DAYS;
+
+  const needsPayment =
+    visibility.phase !== "active" || approachingExpiry || Boolean(pendingPayment);
+
+  const payMode: "new" | "renew" =
+    visibility.phase === "unpaid" ? "new" : "renew";
 
   const phaseKey =
     visibility.phase === "active"
@@ -92,6 +115,12 @@ export default async function BusinessSubscriptionPage() {
           <p className="text-sm text-muted-foreground">{t("noPeriod")}</p>
         )}
 
+        {approachingExpiry && daysUntilEnd != null ? (
+          <p className="text-sm font-medium text-amber-700 dark:text-amber-400">
+            {t("approachingExpiry", { days: daysUntilEnd })}
+          </p>
+        ) : null}
+
         {visibility.phase === "grace" && visibility.graceDaysRemaining != null ? (
           <p className="text-sm font-medium text-amber-700 dark:text-amber-400">
             {t("graceRemaining", {
@@ -106,18 +135,26 @@ export default async function BusinessSubscriptionPage() {
         ) : null}
       </section>
 
-      <section className="relative space-y-3 rounded-3xl border border-border bg-card/80 p-5 sm:p-6">
-        <h2 className="text-base font-semibold">{t("paymentTitle")}</h2>
-        <p className="text-sm text-muted-foreground">{t("paymentBody")}</p>
-        <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" className="rounded-xl">
-            <Link href="/business/payments">{t("paymentsHub")}</Link>
-          </Button>
-          <Button asChild variant="ghost" className="rounded-xl">
-            <Link href="/business">{t("backHome")}</Link>
-          </Button>
-        </div>
-      </section>
+      {needsPayment ? (
+        <BusinessSubscriptionPaySection
+          priceUsd={settings.businessPriceUsd}
+          mode={payMode}
+          pendingPayment={pendingPayment}
+        />
+      ) : (
+        <section className="relative space-y-3 rounded-3xl border border-border bg-card/80 p-5 sm:p-6">
+          <h2 className="text-base font-semibold">{t("activeTitle")}</h2>
+          <p className="text-sm text-muted-foreground">{t("activeBody")}</p>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="outline" className="rounded-xl">
+              <Link href="/business/payments">{t("paymentsHub")}</Link>
+            </Button>
+            <Button asChild variant="ghost" className="rounded-xl">
+              <Link href="/business">{t("backHome")}</Link>
+            </Button>
+          </div>
+        </section>
+      )}
     </main>
   );
 }

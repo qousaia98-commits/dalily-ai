@@ -29,6 +29,11 @@ export {
   type SubscriptionVisibility,
   type SubscriptionVisibilityPhase,
 } from "./visibility";
+export {
+  processSubscriptionReminders,
+  SUBSCRIPTION_REMINDER_LEAD_DAYS,
+  type SubscriptionReminderResult,
+} from "./subscription-reminders";
 
 export async function getProviderSubscriptionVisibility(providerId: string) {
   const { ensureProviderMonetizationPlan } = await import("./plans");

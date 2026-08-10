@@ -8,8 +8,8 @@ import { Input } from "@/components/ui/input";
 import { adminMarkProviderSubscriptionPaidAction } from "@/actions/monetization.actions";
 
 /**
- * Admin-only: extend / activate a provider's flat Business subscription.
- * Full self-serve payment upload arrives in Prompt 12.
+ * Admin-only override: extend / activate a provider's Business subscription
+ * without a receipt (comps, goodwill, refunds). Prefer /admin/payments review.
  */
 export function AdminMarkSubscriptionPaidForm() {
   const t = useTranslations("monetization.admin");

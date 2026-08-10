@@ -115,13 +115,15 @@
       "save": "Save settings",
       "saved": "Settings saved",
       "saveError": "Could not save",
-      "markPaidTitle": "Mark provider paid",
-      "markPaidSubtitle": "Extend or activate a provider’s Business period (manual until self-serve payments).",
+      "markPaidTitle": "Override: mark provider paid",
+      "markPaidSubtitle": "Manual comp / goodwill / refund extension — prefer reviewing receipt payments under Admin → Payments.",
       "providerId": "Provider ID",
       "months": "Months to add",
       "markPaidCta": "Activate / extend",
       "markPaidSuccess": "Subscription activated",
-      "markPaidError": "Could not activate subscription"
+      "markPaidError": "Could not activate subscription",
+      "overrideSection": "Manual override",
+      "reviewPaymentsHint": "Providers upload receipts on /business/subscription. Review them under Admin → Payments (purpose: Business plan)."
     }
   },
   "assistant": {
@@ -1201,11 +1203,20 @@
     "price": "{price} USD / month",
     "unlimitedLeads": "Unlimited leads included — no per-lead fees.",
     "periodEnd": "Current period ends: {date}",
-    "noPeriod": "No active paid period yet. An admin can activate your plan after payment is confirmed.",
+    "noPeriod": "No active paid period yet. Pay below and upload your receipt for admin review.",
     "graceRemaining": "{days} day(s) left in the {graceDays}-day grace window before you are hidden.",
+    "approachingExpiry": "Your period ends in {days} day(s). Renew now to stay visible.",
     "hiddenHint": "You are not shown in search, category browse, or new matching until your subscription is current again. Your account and history stay intact.",
-    "paymentTitle": "How payment works",
-    "paymentBody": "Self-serve receipt upload is coming soon. For now, complete payment with Dalily ops — an admin marks your plan paid and extends your period.",
+    "planLabel": "Business plan",
+    "paymentTitle": "Pay your subscription",
+    "paymentBody": "Transfer {price} USD using the instructions, then upload your receipt. An admin reviews it and activates your period.",
+    "payCta": "Start payment — {price} USD",
+    "renewCta": "Renew — {price} USD",
+    "resumeCheckout": "Resume checkout",
+    "paymentStarted": "Payment started — follow the transfer steps",
+    "paymentStartError": "Could not start payment. Try again.",
+    "activeTitle": "You're all set",
+    "activeBody": "Your Business plan is active. We'll remind you a few days before the period ends.",
     "paymentsHub": "Payments hub",
     "backHome": "Business home"
   },
@@ -3981,7 +3992,11 @@
       },
       "subscriptionExpiring": {
         "title": "Subscription expiring soon",
-        "body": "Renew soon to keep your plan benefits."
+        "body": "Your Business plan ends in about {days} days. Renew for {price} USD/mo to stay visible."
+      },
+      "subscriptionGrace": {
+        "title": "Grace period — renew to stay visible",
+        "body": "{days} day(s) left in your {graceDays}-day grace window. Renew now or you will leave search and matching."
       },
       "newFeature": {
         "title": "New feature available",
@@ -4498,7 +4513,8 @@
         "free": "Starter",
         "pro": "PRO",
         "premium": "PREMIUM",
-        "unlock_fee": "Unlock fee"
+        "unlock_fee": "Unlock fee",
+        "business": "Business plan"
       },
       "status": {
         "pending": "Awaiting transfer",
