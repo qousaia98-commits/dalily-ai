@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
@@ -10,11 +10,13 @@ import { applyLanguage } from '@/i18n';
 import { useSettingsStore } from '@/store/settings';
 import { useTheme } from '@/theme/ThemeProvider';
 import { spacing } from '@/theme/tokens';
+import { ContactSupportSheet } from '@/features/account/ContactSupportSheet';
 
 export default function ProviderProfileScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const language = useSettingsStore((s) => s.language);
+  const [supportOpen, setSupportOpen] = useState(false);
   const { data, isLoading } = useQuery({
     queryKey: ['provider', 'profile'],
     queryFn: fetchProviderProfile,
@@ -71,6 +73,21 @@ export default function ProviderProfileScreen() {
         </Text>
       </Card>
 
+      <Card style={styles.card}>
+        <Text variant="subtitle">{t('account.security')}</Text>
+        <Button
+          title={t('account.changePassword.navTitle')}
+          variant="secondary"
+          onPress={() => router.push('/(provider)/change-password')}
+        />
+      </Card>
+
+      <Button
+        title={t('support.navTitle')}
+        variant="primary"
+        onPress={() => setSupportOpen(true)}
+      />
+
       <Button
         title={t('providerApp.calendar.manageAvailability')}
         variant="secondary"
@@ -104,6 +121,12 @@ export default function ProviderProfileScreen() {
           await logout();
           router.replace('/(auth)/login');
         }}
+      />
+
+      <ContactSupportSheet
+        visible={supportOpen}
+        onClose={() => setSupportOpen(false)}
+        role="business"
       />
     </ScrollView>
   );

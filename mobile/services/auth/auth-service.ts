@@ -20,6 +20,11 @@ export const forgotPasswordSchema = z.object({
   email: z.string().email(),
 });
 
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(8),
+});
+
 async function mapUser(): Promise<AuthUser | null> {
   const { data } = await supabase.auth.getUser();
   if (!data.user) return null;
@@ -96,6 +101,28 @@ export async function forgotPassword(input: z.infer<typeof forgotPasswordSchema>
   const { error } = await supabase.auth.resetPasswordForEmail(input.email.trim().toLowerCase());
   if (error) throw new Error(error.message);
   logEvent('auth_forgot_password');
+}
+
+/**
+ * Verifies the current password by re-authenticating (Supabase's client SDK
+ * has no server-side "current_password" check like the web app's server
+ * action), then updates to the new one. Never allows a passwordless change.
+ */
+export async function changePassword(
+  input: z.infer<typeof changePasswordSchema>,
+): Promise<void> {
+  const email = useAuthStore.getState().user?.email;
+  if (!email) throw new Error('reauth_required');
+
+  const { error: verifyError } = await supabase.auth.signInWithPassword({
+    email,
+    password: input.currentPassword,
+  });
+  if (verifyError) throw new Error('wrong_current_password');
+
+  const { error } = await supabase.auth.updateUser({ password: input.newPassword });
+  if (error) throw new Error(error.message);
+  logEvent('auth_change_password');
 }
 
 export async function logout(): Promise<void> {

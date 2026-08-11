@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -9,11 +9,13 @@ import { applyLanguage } from '@/i18n';
 import { useSettingsStore } from '@/store/settings';
 import { useTheme } from '@/theme/ThemeProvider';
 import { spacing } from '@/theme/tokens';
+import { ContactSupportSheet } from '@/features/account/ContactSupportSheet';
 
 export default function CustomerProfileScreen() {
   const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
   const { colors } = useTheme();
+  const [supportOpen, setSupportOpen] = useState(false);
   const language = useSettingsStore((s) => s.language);
   const themePreference = useSettingsStore((s) => s.themePreference);
   const setThemePreference = useSettingsStore((s) => s.setThemePreference);
@@ -91,7 +93,18 @@ export default function CustomerProfileScreen() {
       <Card style={styles.card}>
         <Text variant="subtitle">{t('customer.profile.security')}</Text>
         <Text muted>{t('customer.profile.securityHint')}</Text>
+        <Button
+          title={t('account.changePassword.navTitle')}
+          variant="secondary"
+          onPress={() => router.push('/(customer)/change-password')}
+        />
       </Card>
+
+      <Button
+        title={t('support.navTitle')}
+        variant="primary"
+        onPress={() => setSupportOpen(true)}
+      />
 
       <Button
         title={t('native.open')}
@@ -111,6 +124,12 @@ export default function CustomerProfileScreen() {
           await logout();
           router.replace('/(auth)/login');
         }}
+      />
+
+      <ContactSupportSheet
+        visible={supportOpen}
+        onClose={() => setSupportOpen(false)}
+        role="customer"
       />
     </ScrollView>
   );

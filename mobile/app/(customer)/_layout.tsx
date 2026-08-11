@@ -40,6 +40,7 @@ export default function CustomerLayout() {
       <Stack.Screen name="native" options={{ title: 'Native features' }} />
       <Stack.Screen name="privacy" options={{ title: 'Privacy' }} />
       <Stack.Screen name="web-request" options={{ title: 'Request' }} />
+      <Stack.Screen name="change-password" options={{ title: 'Change password' }} />
     </Stack>
   );
 }

@@ -118,10 +118,24 @@ export const getSubscriptionPageData = cache(async function getSubscriptionPageD
     ? "pending_payment"
     : (subscription?.status ?? "active");
 
+  // The flat $5/mo Business plan lives in provider_monetization_plans, a
+  // separate table from the legacy tiered `subscriptions` used above. A
+  // provider who only ever paid the flat plan still has a legacy "free"
+  // row (auto-created by ensureFreeSubscription), which would otherwise
+  // show "Starter" everywhere despite an active paid subscription.
+  const { ensureProviderMonetizationPlan } = await import("@/lib/monetization/plans");
+  const monetizationPlan = await ensureProviderMonetizationPlan(provider.id);
+  const isBusinessPlanActive =
+    monetizationPlan.billingMode === "business" && monetizationPlan.status === "active";
+
   return {
     provider,
     subscription: subscription
-      ? { ...subscription, status: statusForUi }
+      ? {
+          ...subscription,
+          status: statusForUi,
+          planSlug: isBusinessPlanActive ? ("pro" as PlanSlug) : subscription.planSlug,
+        }
       : subscription,
     plans,
     payments,
