@@ -8,6 +8,7 @@ import {
   Menu,
   Banknote,
   AlertTriangle,
+  LifeBuoy,
   MessageCircle,
   KeyRound,
   Activity,
@@ -185,6 +186,12 @@ function buildGroups(opts: {
       icon: AlertTriangle,
       key: "issues",
       badgeKey: "issues",
+    },
+    {
+      id: "support",
+      href: "/admin/support",
+      icon: LifeBuoy,
+      key: "support",
     },
     {
       id: "quality",

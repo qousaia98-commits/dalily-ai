@@ -628,7 +628,9 @@
         "wallet": "المحفظة",
         "walletDesc": "الأرصدة والمرتجعات والسجل",
         "assistant": "المساعد",
-        "assistantDesc": "اقتراحات لتحسين طلبك"
+        "assistantDesc": "اقتراحات لتحسين طلبك",
+        "changePassword": "تغيير كلمة المرور",
+        "changePasswordDesc": "تحديث كلمة مرور حسابك"
       }
     },
     "myBusiness": {
@@ -694,7 +696,9 @@
         "analytics": "الإحصائيات",
         "analyticsDesc": "أداء ونمو نشاطك",
         "payments": "المدفوعات",
-        "paymentsDesc": "الفتح والمدفوعات والسجل"
+        "paymentsDesc": "الفتح والمدفوعات والسجل",
+        "changePassword": "تغيير كلمة المرور",
+        "changePasswordDesc": "تحديث كلمة مرور حسابك"
       }
     },
     "growth": {
@@ -4058,6 +4062,7 @@
       "ranking": "الترتيب",
       "customers": "العملاء",
       "issues": "البلاغات",
+      "support": "الدعم",
       "reviewModeration": "إشراف التقييمات",
       "reputation": "محرك السمعة",
       "analytics": "التحليلات",
@@ -4836,6 +4841,28 @@
         "in_progress": "قيد المعالجة",
         "resolved": "محلول",
         "closed": "مغلق"
+      },
+      "actions": {
+        "inProgress": "بدء",
+        "resolve": "حل",
+        "close": "إغلاق"
+      }
+    },
+    "support": {
+      "eyebrow": "صندوق الدعم",
+      "title": "رسائل الدعم",
+      "subtitle": "رسائل أرسلها العملاء وأصحاب النشاطات مباشرةً إلى فريق المنصة.",
+      "empty": "لا رسائل في هذا الفلتر.",
+      "status": {
+        "all": "الكل",
+        "open": "مفتوحة",
+        "in_progress": "قيد المعالجة",
+        "resolved": "محلولة",
+        "closed": "مغلقة"
+      },
+      "role": {
+        "customer": "عميل",
+        "business": "صاحب نشاط"
       },
       "actions": {
         "inProgress": "بدء",
@@ -6276,6 +6303,27 @@
         "rate_limited": "محاولات كثيرة جداً. يرجى الانتظار بضع دقائق ثم المحاولة مرة أخرى.",
         "unknown": "حدث خطأ. يرجى المحاولة مرة أخرى"
       }
+    }
+  },
+  "support": {
+    "navTitle": "تواصل مع الدعم",
+    "navDesc": "أسئلة أو شكاوى أو أي شيء آخر — نحن هنا للمساعدة.",
+    "title": "تواصل مع الدعم",
+    "subtitle": "أرسل لنا رسالة وسيتواصل معك فريقنا.",
+    "subjectLabel": "الموضوع",
+    "subjectPlaceholder": "عن ماذا تريد التحدث؟",
+    "messageLabel": "الرسالة",
+    "messagePlaceholder": "اشرح سؤالك أو مشكلتك بالتفصيل…",
+    "submit": "إرسال الرسالة",
+    "sending": "جارٍ الإرسال…",
+    "successTitle": "تم إرسال الرسالة",
+    "successBody": "شكراً لتواصلك معنا — سيرد عليك فريقنا قريباً.",
+    "errors": {
+      "required": "يرجى تعبئة الحقلين.",
+      "subject_required": "يرجى إدخال الموضوع.",
+      "message_required": "يرجى إدخال الرسالة.",
+      "submit_failed": "تعذّر إرسال رسالتك. يرجى المحاولة مرة أخرى.",
+      "login_required": "يرجى تسجيل الدخول والمحاولة مرة أخرى."
     }
   },
   "notFound": {

@@ -2,6 +2,7 @@ import {
   Building2,
   CalendarClock,
   ClipboardList,
+  KeyRound,
   Languages,
   LogIn,
   Settings,
@@ -19,6 +20,7 @@ import { LogoutButton } from "@/components/auth/logout-button";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { MobileHubLinks } from "@/components/layout/mobile-hub-links";
+import { ContactSupportButton } from "@/components/account/contact-support-button";
 import { LocationSettings } from "@/components/account/location-settings";
 import {
   NEARBY_LOC_COOKIE,
@@ -147,6 +149,12 @@ export default async function AccountPage() {
                 icon: Building2,
               },
             ]),
+        {
+          href: "/reset-password",
+          title: t("links.changePassword"),
+          description: t("links.changePasswordDesc"),
+          icon: KeyRound,
+        },
       ]
     : [
         {
@@ -181,6 +189,8 @@ export default async function AccountPage() {
       </div>
 
       <MobileHubLinks links={links} />
+
+      {authUser ? <ContactSupportButton /> : null}
 
       <LocationSettings
         preference={locationPreference}

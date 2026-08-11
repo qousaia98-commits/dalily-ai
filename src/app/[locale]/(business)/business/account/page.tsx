@@ -5,6 +5,7 @@ import {
   BarChart3,
   CalendarDays,
   CalendarClock,
+  KeyRound,
   ShieldCheck,
   Settings,
   User,
@@ -19,6 +20,7 @@ import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { PlanBadge } from "@/components/shared/plan-badge";
 import { MobileHubLinks } from "@/components/layout/mobile-hub-links";
+import { ContactSupportButton } from "@/components/account/contact-support-button";
 import { NavCountBadge } from "@/components/shared/nav-count-badge";
 import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 import { getProviderNavBadges } from "@/lib/badges";
@@ -111,6 +113,12 @@ export default async function BusinessAccountPage() {
       description: t("links.analyticsDesc"),
       icon: BarChart3,
     },
+    {
+      href: "/reset-password",
+      title: t("links.changePassword"),
+      description: t("links.changePasswordDesc"),
+      icon: KeyRound,
+    },
   ];
 
   return (
@@ -141,6 +149,8 @@ export default async function BusinessAccountPage() {
         </h2>
         <MobileHubLinks links={moreLinks} />
       </section>
+
+      <ContactSupportButton />
 
       <section className="space-y-3 rounded-2xl border border-border bg-card p-4">
         <div className="flex min-h-12 items-center justify-between gap-3">
