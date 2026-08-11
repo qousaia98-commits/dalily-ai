@@ -81,7 +81,7 @@ export function OnboardingSuccessStep({ subscriptionPrompt = null }: Props) {
 
       {showSubscribe ? (
         <section
-          className="mx-auto max-w-md space-y-4 rounded-3xl border border-[var(--dalily-gold)]/40 bg-[color-mix(in_oklab,var(--dalily-gold)_8%,transparent)] p-5 text-start"
+          className="mx-auto max-w-md space-y-4 rounded-3xl border border-[var(--dalily-gold)]/40 bg-[color-mix(in_oklab,var(--dalily-gold)_8%,var(--card))] p-5 text-start"
           aria-labelledby="onboarding-subscribe-title"
         >
           <div className="space-y-2">
