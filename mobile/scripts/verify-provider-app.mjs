@@ -49,18 +49,14 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
+// The provider home screen defers entirely to the real web app (1:1 design
+// and functionality) via WebAppShell — no native dashboard reimplementation
+// to check for anymore.
 const dash = read('app/(provider)/(tabs)/index.tsx');
-for (const n of [
-  'businessHealthScore',
-  'assistantSummary',
-  'todaySchedule',
-  'pendingRecommendations',
-  'RefreshControl',
-  'fab',
-]) {
-  if (dash.includes(n)) ok(`dashboard ${n}`);
-  else fail(`dashboard missing ${n}`);
-}
+if (dash.includes('WebAppShell')) ok('dashboard renders WebAppShell');
+else fail('dashboard missing WebAppShell');
+if (dash.includes("target=\"/business\"")) ok('dashboard targets /business');
+else fail('dashboard missing /business target');
 
 const assistant = read('app/(provider)/assistant.tsx');
 if (

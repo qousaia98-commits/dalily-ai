@@ -52,17 +52,17 @@ for (const r of required) {
   else fail(`missing ${r}`);
 }
 
+// The customer home screen defers entirely to the real web app (1:1 design
+// and functionality) via WebAppShell — no native reimplementation of the
+// feed/categories/AI recommendations to check for anymore.
 const home = read('app/(customer)/(tabs)/index.tsx');
-for (const needle of [
-  'popularCategories',
-  'aiRecommendations',
-  'recentlyViewed',
-  'trending',
-  'nearby',
-  'RefreshControl',
-]) {
-  if (home.includes(needle)) ok(`home has ${needle}`);
-  else fail(`home missing ${needle}`);
+if (home.includes('WebAppShell')) ok('home renders WebAppShell');
+else fail('home missing WebAppShell');
+
+const shell = read('features/web-shell/WebAppShell.tsx');
+for (const needle of ['buildMobileBridgeWebViewUrl', 'hardwareBackPress', 'WebView']) {
+  if (shell.includes(needle)) ok(`WebAppShell has ${needle}`);
+  else fail(`WebAppShell missing ${needle}`);
 }
 
 const book = read('app/(customer)/book/[providerId].tsx');
