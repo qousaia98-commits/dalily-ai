@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Text, Card, Skeleton, Badge, Button } from '@/components/ui';
 import { ProviderCard, CategoryChip, SectionHeader } from '@/features/customer';
 import { fetchHomeFeed } from '@/features/customer/services';
+import { detectCustomerAddress } from '@/features/native/location/service';
 import { useAuthStore } from '@/store/auth';
 import { useTheme } from '@/theme/ThemeProvider';
 import { spacing } from '@/theme/tokens';
@@ -27,6 +28,21 @@ export default function CustomerHomeScreen() {
   const { data, isLoading, refetch, isRefetching } = useQuery({
     queryKey: ['customer', 'home'],
     queryFn: fetchHomeFeed,
+  });
+  // Real device location — falls back to the feed's placeholder label
+  // (only accurate once we have actual permission/GPS) rather than blocking render.
+  const { data: deviceAddress } = useQuery({
+    queryKey: ['customer', 'device-location'],
+    queryFn: async () => {
+      try {
+        const { address } = await detectCustomerAddress();
+        return address ?? null;
+      } catch {
+        return null;
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+    retry: false,
   });
 
   const openProvider = useCallback((id: string) => {
@@ -59,7 +75,7 @@ export default function CustomerHomeScreen() {
             {user?.email ? `, ${user.email.split('@')[0]}` : ''}
           </Text>
           <Text variant="title">{t('customer.title')}</Text>
-          <Text muted>📍 {data.locationLabel}</Text>
+          <Text muted>📍 {deviceAddress ?? data.locationLabel}</Text>
         </View>
         <Pressable onPress={() => router.push('/(customer)/notifications')}>
           <Badge label="🔔" tone="info" />

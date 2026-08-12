@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { router } from 'expo-router';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Text, Card, Button, Avatar, Badge } from '@/components/ui';
 import { logout } from '@/services/auth/auth-service';
@@ -10,12 +11,26 @@ import { useSettingsStore } from '@/store/settings';
 import { useTheme } from '@/theme/ThemeProvider';
 import { spacing } from '@/theme/tokens';
 import { ContactSupportSheet } from '@/features/account/ContactSupportSheet';
+import { detectCustomerAddress } from '@/features/native/location/service';
 
 export default function CustomerProfileScreen() {
   const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
   const { colors } = useTheme();
   const [supportOpen, setSupportOpen] = useState(false);
+  const { data: deviceAddress } = useQuery({
+    queryKey: ['customer', 'device-location'],
+    queryFn: async () => {
+      try {
+        const { address } = await detectCustomerAddress();
+        return address ?? null;
+      } catch {
+        return null;
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
   const language = useSettingsStore((s) => s.language);
   const themePreference = useSettingsStore((s) => s.themePreference);
   const setThemePreference = useSettingsStore((s) => s.setThemePreference);
@@ -46,7 +61,7 @@ export default function CustomerProfileScreen() {
 
       <Card style={styles.card}>
         <Text variant="subtitle">{t('customer.profile.addresses')}</Text>
-        <Text muted>Abdoun, Amman</Text>
+        <Text muted>{deviceAddress ?? t('customer.profile.addressUnknown')}</Text>
       </Card>
 
       <Card style={styles.card}>

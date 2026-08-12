@@ -85,11 +85,11 @@ export default ({ config }: ConfigContext): ExpoConfig =>
   splash: {
     image: './assets/splash-icon.png',
     resizeMode: 'contain',
-    backgroundColor: '#0B1F17',
+    backgroundColor: '#0B1526',
     dark: {
       image: './assets/splash-icon.png',
       resizeMode: 'contain',
-      backgroundColor: '#06140F',
+      backgroundColor: '#0B1526',
     },
   },
   ios: {
@@ -173,7 +173,7 @@ export default ({ config }: ConfigContext): ExpoConfig =>
       foregroundImage: './assets/android-icon-foreground.png',
       backgroundImage: './assets/android-icon-background.png',
       monochromeImage: './assets/android-icon-monochrome.png',
-      backgroundColor: '#0B1F17',
+      backgroundColor: '#0B1526',
     },
     package: meta.package,
     versionCode: 1,
@@ -222,10 +222,10 @@ export default ({ config }: ConfigContext): ExpoConfig =>
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#0B1F17',
+        backgroundColor: '#0B1526',
         image: './assets/splash-icon.png',
         dark: {
-          backgroundColor: '#06140F',
+          backgroundColor: '#0B1526',
           image: './assets/splash-icon.png',
         },
         imageWidth: 200,
@@ -236,7 +236,7 @@ export default ({ config }: ConfigContext): ExpoConfig =>
       'expo-notifications',
       {
         icon: './assets/android-icon-monochrome.png',
-        color: '#0B1F17',
+        color: '#0B1526',
         defaultChannel: 'dalily-default',
       },
     ],

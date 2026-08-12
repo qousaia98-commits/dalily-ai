@@ -85,14 +85,14 @@ export async function fetchHomeFeed(): Promise<HomeFeed> {
           verified: String(p.verification_status ?? '') === 'verified',
           rating: Number(p.rating_avg ?? 0),
           reviewCount: Number(p.review_count ?? 0),
-          distanceKm: 1 + i * 0.7,
+          distanceKm: null,
           startingPrice: 15 + i * 2,
-          currency: 'JOD',
+          currency: 'USD',
           available: true,
           responseTimeMin: 10 + i * 3,
           aiMatchScore: Math.max(0.55, 0.95 - i * 0.04),
           categoryIds: [],
-          city: 'Amman',
+          city: '',
           about: nameObj,
           trustScore: Math.min(1, Number(p.rating_avg ?? 0) / 5),
         };
@@ -132,6 +132,49 @@ export async function searchProviders(input: {
   categoryId?: string;
 }): Promise<CustomerProvider[]> {
   const q = (input.query ?? '').trim().toLowerCase();
+
+  // Real backend: query whenever available, not only once the user has
+  // typed something — an empty query should show real nearby/active
+  // providers, not silently fall back to demo data.
+  if (hasBackend()) {
+    try {
+      const { data } = await supabase
+        .from('providers')
+        .select('id, name, rating_avg, review_count, verification_status')
+        .eq('status', 'active')
+        .limit(30);
+      if (data?.length) {
+        const mapped = data.map((p, i) => {
+          const nameObj = localizeName(p.name, 'Provider');
+          return {
+            id: String(p.id),
+            name: nameObj.en,
+            photoUrl: null,
+            verified: String(p.verification_status ?? '') === 'verified',
+            rating: Number(p.rating_avg ?? 0),
+            reviewCount: Number(p.review_count ?? 0),
+            distanceKm: null,
+            startingPrice: 15,
+            currency: 'USD',
+            available: true,
+            responseTimeMin: 15,
+            aiMatchScore: 0.8,
+            categoryIds: [],
+            city: '',
+            about: nameObj,
+            trustScore: Math.min(1, Number(p.rating_avg ?? 0) / 5),
+          } satisfies CustomerProvider;
+        });
+        return q ? mapped.filter((p) => p.name.toLowerCase().includes(q)) : mapped;
+      }
+      // Backend reachable but genuinely no active providers yet — real
+      // empty state, not a reason to show fake ones.
+      if (data) return [];
+    } catch {
+      /* fall through to demo below */
+    }
+  }
+
   let list = [...DEMO_PROVIDERS];
   if (input.categoryId) {
     list = list.filter((p) => p.categoryIds.includes(input.categoryId!));
@@ -143,43 +186,6 @@ export async function searchProviders(input: {
         p.city.toLowerCase().includes(q) ||
         p.about.en.toLowerCase().includes(q),
     );
-  }
-
-  if (hasBackend() && q) {
-    try {
-      const { data } = await supabase
-        .from('providers')
-        .select('id, name, rating_avg, review_count, verification_status')
-        .eq('status', 'active')
-        .limit(30);
-      if (data?.length) {
-        list = data
-          .map((p, i) => {
-            const nameObj = localizeName(p.name, 'Provider');
-            return {
-              id: String(p.id),
-              name: nameObj.en,
-              photoUrl: null,
-              verified: String(p.verification_status ?? '') === 'verified',
-              rating: Number(p.rating_avg ?? 0),
-              reviewCount: Number(p.review_count ?? 0),
-              distanceKm: 1 + i,
-              startingPrice: 15,
-              currency: 'JOD',
-              available: true,
-              responseTimeMin: 15,
-              aiMatchScore: 0.8,
-              categoryIds: [],
-              city: 'Amman',
-              about: nameObj,
-              trustScore: 0.75,
-            } satisfies CustomerProvider;
-          })
-          .filter((p) => p.name.toLowerCase().includes(q));
-      }
-    } catch {
-      /* demo */
-    }
   }
   return list;
 }
@@ -240,11 +246,29 @@ export async function fetchBookings(): Promise<CustomerBooking[]> {
     if (!session.user) return [...local, ...DEMO_BOOKINGS];
     const { data } = await supabase
       .from('bookings')
-      .select('id, status, starts_at, location_text, provider_id, customer_notes')
+      .select('id, status, starts_at, location_text, provider_id, service_id, customer_notes')
       .eq('customer_id', session.user.id)
       .order('starts_at', { ascending: false })
       .limit(40);
     if (!data?.length) return [...local, ...DEMO_BOOKINGS];
+
+    const providerIds = [...new Set(data.map((b) => String(b.provider_id)))];
+    const serviceIds = [...new Set(data.map((b) => b.service_id).filter((id): id is string => Boolean(id)))];
+    const [{ data: providers }, { data: services }] = await Promise.all([
+      providerIds.length
+        ? supabase.from('providers').select('id, name').in('id', providerIds)
+        : Promise.resolve({ data: [] as { id: string; name: unknown }[] }),
+      serviceIds.length
+        ? supabase.from('provider_services').select('id, name').in('id', serviceIds)
+        : Promise.resolve({ data: [] as { id: string; name: unknown }[] }),
+    ]);
+    const providerNames = new Map(
+      (providers ?? []).map((p) => [String(p.id), localizeName(p.name, 'Provider').en]),
+    );
+    const serviceTitles = new Map(
+      (services ?? []).map((s) => [String(s.id), localizeName(s.name, 'Service').en]),
+    );
+
     const remote = data.map((b) => {
       const statusRaw = String(b.status);
       let status: CustomerBooking['status'] = 'upcoming';
@@ -256,13 +280,13 @@ export async function fetchBookings(): Promise<CustomerBooking[]> {
       return {
         id: String(b.id),
         providerId: String(b.provider_id),
-        providerName: 'Provider',
-        serviceTitle: 'Booking',
+        providerName: providerNames.get(String(b.provider_id)) ?? 'Provider',
+        serviceTitle: b.service_id ? (serviceTitles.get(String(b.service_id)) ?? 'Service') : 'Service',
         status,
         scheduledAt: String(b.starts_at),
         address: String(b.location_text ?? ''),
         priceEstimate: 0,
-        currency: 'JOD',
+        currency: 'USD',
         notes: b.customer_notes ? String(b.customer_notes) : null,
         canReschedule: status === 'upcoming',
       };

@@ -200,7 +200,7 @@ export function demoProviderProfile(id: string): ProviderProfile | null {
 
 export function demoHomeFeed(): HomeFeed {
   return {
-    locationLabel: 'Amman, Jordan',
+    locationLabel: 'Syria',
     categories: DEMO_CATEGORIES.filter((c) => c.popular || c.featured),
     recommended: DEMO_PROVIDERS.filter((p) => (p.aiMatchScore ?? 0) >= 0.85),
     recentlyViewed: [DEMO_PROVIDERS[0]!, DEMO_PROVIDERS[1]!],

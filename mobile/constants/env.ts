@@ -81,8 +81,8 @@ export const featureFlags = {
   analytics: truthy(process.env.EXPO_PUBLIC_FF_ANALYTICS, appEnv !== 'development'),
   otaUpdates: truthy(process.env.EXPO_PUBLIC_FF_OTA_UPDATES, appEnv !== 'development'),
   consentGate: truthy(process.env.EXPO_PUBLIC_FF_CONSENT_GATE, true),
-  /** WebView bridge into deployed web request → find → offers → unlock → chat. Default off. */
-  webRequestFlow: truthy(process.env.EXPO_PUBLIC_FF_WEB_REQUEST_FLOW, false),
+  /** WebView bridge into deployed web request → find → offers → unlock → chat. */
+  webRequestFlow: truthy(process.env.EXPO_PUBLIC_FF_WEB_REQUEST_FLOW, true),
 } as const;
 
 export type FeatureFlagKey = keyof typeof featureFlags;

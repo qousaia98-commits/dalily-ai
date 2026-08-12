@@ -1,19 +1,22 @@
 /**
  * Dalily Design System — semantic tokens.
- * Brand: deep green + gold (aligned with web).
+ * Brand: navy + gold — kept byte-for-byte aligned with the web app's
+ * CSS custom properties in src/app/globals.css (--dalily-navy, --dalily-gold, …).
  */
 
 export type ColorScheme = 'light' | 'dark';
 
 export const palette = {
-  forest: '#0B1F17',
-  forestMid: '#143D2B',
-  gold: '#C6A15B',
-  goldSoft: '#E8D5A3',
-  cream: '#F7F3EA',
-  sand: '#EFE7D6',
-  ink: '#0F1713',
-  mist: '#8A938C',
+  navy: '#0B1526',
+  navyDeep: '#151F33',
+  gold: '#C4A052',
+  goldLight: '#D4B76A',
+  white: '#FFFFFF',
+  surface: '#F7F8FA',
+  border: '#E4E7ED',
+  borderDark: '#2A3347',
+  muted: '#8A93A8',
+  textSecondary: '#5C6478',
   danger: '#C45C4A',
   success: '#2F7D4B',
   warning: '#C48A2A',
@@ -23,19 +26,19 @@ export const palette = {
 export function createColors(scheme: ColorScheme) {
   const dark = scheme === 'dark';
   return {
-    background: dark ? palette.forest : palette.cream,
-    surface: dark ? palette.forestMid : '#FFFFFF',
-    surfaceMuted: dark ? '#1A2E24' : palette.sand,
-    text: dark ? palette.cream : palette.ink,
-    textMuted: dark ? palette.mist : '#5C665F',
-    border: dark ? '#2A4034' : '#D9D0BE',
+    background: dark ? palette.navy : palette.white,
+    surface: dark ? palette.navyDeep : palette.white,
+    surfaceMuted: dark ? palette.navyDeep : palette.surface,
+    text: dark ? palette.white : palette.navy,
+    textMuted: dark ? palette.muted : palette.textSecondary,
+    border: dark ? palette.borderDark : palette.border,
     primary: palette.gold,
-    primaryText: palette.forest,
+    primaryText: palette.navy,
     danger: palette.danger,
     success: palette.success,
     warning: palette.warning,
     info: palette.info,
-    overlay: 'rgba(11, 31, 23, 0.55)',
+    overlay: 'rgba(11, 21, 38, 0.55)',
     highContrastText: dark ? '#FFFFFF' : '#000000',
   } as const;
 }
