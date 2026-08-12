@@ -15,11 +15,13 @@ export const MOBILE_BRIDGE_TTL_SECONDS = 60;
 
 /** Safe in-app path prefixes for post-bridge redirects (no open redirects). */
 export const MOBILE_BRIDGE_ALLOWED_PREFIXES = [
+  "/",
   "/request",
   "/find",
   "/providers",
   "/messages",
   "/account",
+  "/business",
 ] as const;
 
 export type MobileBridgeCodeRow = {
