@@ -28,6 +28,7 @@ export default function ProviderCalendarScreen() {
 
   const filtered = useMemo(() => {
     const list = blocks.data ?? [];
+    // eslint-disable-next-line react-hooks/purity -- intentional "as of render" snapshot for day/week filtering
     const now = Date.now();
     if (view === 'day') {
       return list.filter((b) => {

@@ -272,7 +272,7 @@ export default ({ config }: ConfigContext): ExpoConfig =>
   },
   extra: {
     eas: {
-      projectId: process.env.EAS_PROJECT_ID ?? 'dalily-mobile-foundation',
+      projectId: process.env.EAS_PROJECT_ID ?? '31ba2a6f-f542-4e2a-a533-0314c55555fc',
     },
     router: {
       origin: false,
@@ -284,5 +284,5 @@ export default ({ config }: ConfigContext): ExpoConfig =>
     supportUrl: SUPPORT_URL,
     supportEmail: SUPPORT_EMAIL,
   },
-  ...(process.env.EAS_OWNER ? { owner: process.env.EAS_OWNER } : {}),
+  owner: process.env.EAS_OWNER ?? 'quabbasis-team',
   }) as ExpoConfig;

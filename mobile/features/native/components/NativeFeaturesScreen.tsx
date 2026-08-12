@@ -76,6 +76,7 @@ export function NativeFeaturesScreen({ role }: Props) {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async setup fetch, setState happens post-await
     void refresh();
   }, []);
 
