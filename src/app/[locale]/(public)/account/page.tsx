@@ -2,19 +2,26 @@ import {
   Building2,
   CalendarClock,
   ClipboardList,
+  KeyRound,
   Languages,
   LogIn,
   Settings,
+  ShieldAlert,
+  User2,
   UserPlus,
+  Wallet,
+  Sparkles,
 } from "lucide-react";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { getAuthUser } from "@/lib/auth/session";
 import { isBusinessUser, canAccessAdminPanel } from "@/lib/auth/roles";
+import { isQualityCasesEnabled, isAiDynamicPricingEnabled, isForecastEngineEnabled, isAiSchedulingEnabled, isPaymentWalletEnabled, isAiAssistantEnabled } from "@/lib/config/feature-flags";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { MobileHubLinks } from "@/components/layout/mobile-hub-links";
+import { ContactSupportButton } from "@/components/account/contact-support-button";
 import { LocationSettings } from "@/components/account/location-settings";
 import {
   NEARBY_LOC_COOKIE,
@@ -39,7 +46,7 @@ export default async function AccountPage() {
   const links = authUser
     ? [
         {
-          href: "/account/requests",
+          href: "/account/orders",
           title: t("links.myRequests"),
           description: t("links.myRequestsDesc"),
           icon: ClipboardList,
@@ -50,6 +57,66 @@ export default async function AccountPage() {
           description: t("links.myBookingsDesc"),
           icon: CalendarClock,
         },
+        ...(isPaymentWalletEnabled()
+          ? [
+              {
+                href: "/account/wallet",
+                title: t("links.wallet"),
+                description: t("links.walletDesc"),
+                icon: Wallet,
+              },
+            ]
+          : []),
+        ...(isAiAssistantEnabled()
+          ? [
+              {
+                href: "/account/assistant",
+                title: t("links.assistant"),
+                description: t("links.assistantDesc"),
+                icon: Sparkles,
+              },
+            ]
+          : []),
+        ...(isQualityCasesEnabled()
+          ? [
+              {
+                href: "/account/quality",
+                title: t("links.quality"),
+                description: t("links.qualityDesc"),
+                icon: ShieldAlert,
+              },
+            ]
+          : []),
+        ...(isAiDynamicPricingEnabled()
+          ? [
+              {
+                href: "/account/pricing",
+                title: t("links.pricing"),
+                description: t("links.pricingDesc"),
+                icon: ClipboardList,
+              },
+            ]
+          : []),
+        ...(isForecastEngineEnabled()
+          ? [
+              {
+                href: "/account/forecast",
+                title: t("links.forecast"),
+                description: t("links.forecastDesc"),
+                icon: CalendarClock,
+              },
+            ]
+          : []),
+        ...(isAiSchedulingEnabled()
+          ? [
+              {
+                href: "/account/scheduling",
+                title: t("links.scheduling"),
+                description: t("links.schedulingDesc"),
+                icon: CalendarClock,
+              },
+            ]
+          : []),
         ...(platformAdmin
           ? [
               {
@@ -83,6 +150,18 @@ export default async function AccountPage() {
                 icon: Building2,
               },
             ]),
+        {
+          href: "/account/profile",
+          title: t("links.editProfile"),
+          description: t("links.editProfileDesc"),
+          icon: User2,
+        },
+        {
+          href: "/reset-password",
+          title: t("links.changePassword"),
+          description: t("links.changePasswordDesc"),
+          icon: KeyRound,
+        },
       ]
     : [
         {
@@ -117,6 +196,8 @@ export default async function AccountPage() {
       </div>
 
       <MobileHubLinks links={links} />
+
+      {authUser ? <ContactSupportButton /> : null}
 
       <LocationSettings
         preference={locationPreference}

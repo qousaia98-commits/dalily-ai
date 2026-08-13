@@ -1,4 +1,10 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getLocale } from "next-intl/server";
+import {
+  customerFallbackLabel,
+  resolvePersonDisplayName,
+  resolveProviderBusinessName,
+} from "@/lib/people/display-name";
 
 export type MarketplaceStats = {
   totalRequests: number;
@@ -70,7 +76,9 @@ export async function getMarketplaceStats(): Promise<MarketplaceStats> {
     const byProvider = new Map<string, number>();
     const byCustomer = new Map<string, number>();
     for (const r of rows) {
-      byProvider.set(r.provider_id, (byProvider.get(r.provider_id) ?? 0) + 1);
+      if (r.provider_id) {
+        byProvider.set(r.provider_id, (byProvider.get(r.provider_id) ?? 0) + 1);
+      }
       byCustomer.set(r.customer_id, (byCustomer.get(r.customer_id) ?? 0) + 1);
     }
 
@@ -93,16 +101,20 @@ export async function getMarketplaceStats(): Promise<MarketplaceStats> {
         : Promise.resolve({ data: [] }),
     ]);
 
+    const locale = await getLocale();
+    const customerFallback = customerFallbackLabel(locale);
+
     const providerName = new Map(
       (providers ?? []).map((p) => [
         p.id,
-        typeof p.name === "object" && p.name
-          ? ((p.name as { en?: string }).en ?? "Business")
-          : "Business",
+        resolveProviderBusinessName(p.name, locale),
       ]),
     );
     const customerName = new Map(
-      (profiles ?? []).map((p) => [p.user_id, p.display_name as string]),
+      (profiles ?? []).map((p) => [
+        p.user_id,
+        resolvePersonDisplayName(p.display_name as string | null, customerFallback),
+      ]),
     );
 
     const dailyMap = new Map<string, number>();
@@ -126,12 +138,12 @@ export async function getMarketplaceStats(): Promise<MarketplaceStats> {
       averageRating,
       topBusinesses: topProviderIds.map(([id, count]) => ({
         providerId: id,
-        name: providerName.get(id) ?? "Business",
+        name: providerName.get(id) ?? resolveProviderBusinessName(null, locale),
         count,
       })),
       mostActiveCustomers: topCustomerIds.map(([id, count]) => ({
         userId: id,
-        name: customerName.get(id) ?? "Customer",
+        name: customerName.get(id) ?? customerFallback,
         count,
       })),
       daily: [...dailyMap.entries()]

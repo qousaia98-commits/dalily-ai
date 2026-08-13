@@ -1,8 +1,18 @@
 import type { LucideIcon } from "lucide-react";
 
-export type MobileNavRole = "guest" | "business" | "admin";
+export type MobileNavRole = "guest" | "customer" | "business" | "admin";
 
-export type MobileNavBadgeKey = "approvals" | "payments" | "messages" | "notifications" | "requests";
+export type MobileNavBadgeKey =
+  | "approvals"
+  | "payments"
+  | "messages"
+  | "notifications"
+  | "requests"
+  | "orders"
+  | "opportunities"
+  | "unlock"
+  | "verification"
+  | "issues";
 
 export type MobileNavBadges = Partial<Record<MobileNavBadgeKey, number>>;
 

@@ -2,10 +2,8 @@
 
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  saveProviderRequestSettingsAction,
-  type ServiceRequestActionState,
-} from "@/actions/service-request.actions";
+import { saveProviderRequestSettingsAction } from "@/actions/service-request/update";
+import type { ServiceRequestActionState } from "@/actions/service-request/types";
 import type { ProviderRequestSettings } from "@/lib/service-requests/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +47,21 @@ export function RequestSettingsForm({ settings }: { settings: ProviderRequestSet
           name="vacationMode"
           type="checkbox"
           defaultChecked={settings.vacation_mode}
+          value="true"
+          className="size-5 rounded border"
+        />
+      </div>
+
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <Label htmlFor="handlesEmergency">{t("handlesEmergency")}</Label>
+          <p className="text-xs text-muted-foreground">{t("handlesEmergencyHint")}</p>
+        </div>
+        <input
+          id="handlesEmergency"
+          name="handlesEmergency"
+          type="checkbox"
+          defaultChecked={settings.handles_emergency !== false}
           value="true"
           className="size-5 rounded border"
         />

@@ -1,5 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
+import { getLocale } from "next-intl/server";
 import type { ChatConversation, ChatConversationStatus } from "@/lib/chat/types";
+import {
+  customerFallbackLabel,
+  resolvePersonDisplayName,
+  resolveProviderBusinessName,
+} from "@/lib/people/display-name";
 
 export type ConversationViewer = "customer" | "business";
 
@@ -155,13 +161,17 @@ export async function listConversationsForViewer(input: {
   ]);
 
   const profileMap = new Map((profiles ?? []).map((p) => [p.user_id, p.display_name as string]));
+  const locale = await getLocale();
+  const customerFallback = customerFallbackLabel(locale);
   const providerMap = new Map(
     (providers ?? []).map((p) => {
-      const name =
-        typeof p.name === "object" && p.name !== null
-          ? ((p.name as { en?: string }).en ?? (p.name as { ar?: string }).ar ?? "Business")
-          : "Business";
-      return [p.id, { name, ownerId: p.owner_id as string }];
+      return [
+        p.id,
+        {
+          name: resolveProviderBusinessName(p.name, locale),
+          ownerId: p.owner_id as string,
+        },
+      ];
     }),
   );
 
@@ -177,11 +187,16 @@ export async function listConversationsForViewer(input: {
     const peer =
       input.viewer === "customer"
         ? {
-            name: providerMap.get(conv.provider_id)?.name ?? "Business",
+            name:
+              providerMap.get(conv.provider_id)?.name ??
+              resolveProviderBusinessName(null, locale),
             userId: providerMap.get(conv.provider_id)?.ownerId ?? "",
           }
         : {
-            name: profileMap.get(conv.customer_id) ?? "Customer",
+            name: resolvePersonDisplayName(
+              profileMap.get(conv.customer_id),
+              customerFallback,
+            ),
             userId: conv.customer_id,
           };
     const latest = latestByConv.get(conv.id);

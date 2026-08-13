@@ -6,6 +6,8 @@ export type ControlCenterOverview = {
   pendingPayments: number;
   changesRequested: number;
   unreadMessages: number;
+  pendingVerifications: number;
+  openIssues: number;
   approvalsToday: number;
   registrationsThisWeek: number;
   approvedToday: number;
@@ -58,6 +60,8 @@ export async function getControlCenterOverview(): Promise<ControlCenterOverview>
     registrationsThisWeek,
     approvedToday,
     paidThisMonth,
+    pendingVerifications,
+    openIssuesRes,
   ] = await Promise.all([
     admin
       .from("providers")
@@ -94,6 +98,16 @@ export async function getControlCenterOverview(): Promise<ControlCenterOverview>
       .select("amount")
       .eq("payment_status", "paid")
       .gte("approved_at", monthStart),
+    admin
+      .from("provider_verifications")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "pending"),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (admin as any)
+      .from("booking_issue_reports")
+      .select("id", { count: "exact", head: true })
+      .is("deleted_at", null)
+      .in("moderation_status", ["open", "in_progress"]),
   ]);
 
   const revenueThisMonthUsd = (paidThisMonth.data ?? []).reduce(
@@ -121,11 +135,22 @@ export async function getControlCenterOverview(): Promise<ControlCenterOverview>
     else planCounts.starter += 1;
   }
 
+  let unreadMessages = 0;
+  try {
+    const { getAdminUnreadBadgeCounts } = await import("@/lib/admin/nav-badges");
+    const badges = await getAdminUnreadBadgeCounts();
+    unreadMessages = badges.messages ?? 0;
+  } catch {
+    unreadMessages = 0;
+  }
+
   return {
     pendingBusinesses: pendingBusinesses.count ?? 0,
     pendingPayments: pendingPayments.count ?? 0,
     changesRequested: changesRequested.count ?? 0,
-    unreadMessages: 0,
+    unreadMessages,
+    pendingVerifications: pendingVerifications.count ?? 0,
+    openIssues: (openIssuesRes.count as number | null) ?? 0,
     approvalsToday: approvalsToday.count ?? 0,
     registrationsThisWeek: registrationsThisWeek.count ?? 0,
     approvedToday: approvedToday.count ?? 0,

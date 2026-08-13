@@ -2,19 +2,23 @@
 
 import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
-import { redirect } from "@/lib/i18n/routing";
+import { redirect } from "@/lib/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   loginSchema,
   registerSchema,
   registerBusinessSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  changePasswordSchema,
 } from "@/lib/validations/auth";
 import { generateProviderSlug, mapAuthErrorCode } from "@/lib/auth/utils";
 import { resolveLocalizedField } from "@/lib/business/resolve-localized-fields";
 import { resolveAuthUserAfterSignUp } from "@/lib/auth/resolve-signup-user";
 import { getPostLoginPath } from "@/lib/auth/roles";
 import { sanitizeAppRedirect, stripLocaleFromPath, buildAuthCallbackUrl } from "@/lib/auth/safe-redirect";
+import { isPasswordRecoverySession } from "@/lib/auth/password-recovery";
 import { resolveCategorySlugToId } from "@/lib/categories/queries";
 import { CITY_IDS, MODULE_SERVICES_ID } from "@/lib/constants/reference-data";
 import {
@@ -676,6 +680,93 @@ export async function registerBusinessAction(
   logRegisterStep("redirect → /business/welcome", true, { locale: parsed.data.locale });
   redirect({ href: "/business/welcome", locale: parsed.data.locale as "ar" | "en" });
   return { success: true };
+}
+
+export async function requestPasswordResetAction(
+  _prevState: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const parsed = forgotPasswordSchema.safeParse({
+    email: formData.get("email"),
+  });
+  if (!parsed.success) {
+    return { success: false, error: "validation_error" };
+  }
+
+  const locale = (await getLocale()) as Locale;
+  const supabase = await createClient();
+  const redirectTo = buildAuthCallbackUrl("/reset-password", locale);
+
+  // Always return success to avoid email enumeration.
+  await supabase.auth.resetPasswordForEmail(parsed.data.email, { redirectTo });
+  return { success: true, message: "reset_email_sent" };
+}
+
+export async function updatePasswordAction(
+  _prevState: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const currentPasswordRaw = formData.get("currentPassword");
+  const hasCurrentPasswordField =
+    typeof currentPasswordRaw === "string" && currentPasswordRaw.length > 0;
+
+  const parsed = hasCurrentPasswordField
+    ? changePasswordSchema.safeParse({
+        currentPassword: currentPasswordRaw,
+        password: formData.get("password"),
+        confirmPassword: formData.get("confirmPassword"),
+      })
+    : resetPasswordSchema.safeParse({
+        password: formData.get("password"),
+        confirmPassword: formData.get("confirmPassword"),
+      });
+
+  if (!parsed.success) {
+    const mismatch = parsed.error.issues.some((i) => i.message === "password_mismatch");
+    return {
+      success: false,
+      error: mismatch ? "password_mismatch" : "validation_error",
+    };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { success: false, error: "session_required" };
+  }
+
+  const isRecovery = await isPasswordRecoverySession(supabase);
+
+  if (!isRecovery && !hasCurrentPasswordField) {
+    // Ordinary login session — refuse passwordless change (shared/hijacked session).
+    return { success: false, error: "reauth_required" };
+  }
+
+  const newPassword = parsed.data.password;
+  const { error } = isRecovery
+    ? await supabase.auth.updateUser({ password: newPassword })
+    : await supabase.auth.updateUser({
+        password: newPassword,
+        current_password: String(
+          (parsed.data as { currentPassword: string }).currentPassword,
+        ),
+      });
+  if (error) {
+    const mapped = mapAuthErrorCode(error.message);
+    const lower = error.message.toLowerCase();
+    if (
+      lower.includes("current password") ||
+      lower.includes("reauthentication") ||
+      lower.includes("reauthenticate")
+    ) {
+      return { success: false, error: "reauth_required" };
+    }
+    return { success: false, error: mapped };
+  }
+
+  return { success: true, message: "password_updated" };
 }
 
 export async function logoutAction(): Promise<void> {

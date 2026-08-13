@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { Images, Loader2, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import {
   updateProviderProfileAction,
   updateContactAction,

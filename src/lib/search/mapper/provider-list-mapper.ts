@@ -6,6 +6,7 @@ import type { ProviderListItem } from "@/types/search.types";
 import type { Database, LocalizedJson } from "@/types/database.types";
 import type { PlanSlug } from "@/lib/subscription/types";
 import { buildMatchReasons } from "@/lib/search/smart-match/reasons";
+import { isChatAuthV2Enabled } from "@/lib/config/feature-flags";
 
 type ProviderRow = Database["public"]["Tables"]["providers"]["Row"];
 
@@ -101,7 +102,8 @@ export function mapProviderRowsToListItems(
       distanceKm,
       latitude: coords?.lat ?? null,
       longitude: coords?.lng ?? null,
-      phone: row.phone?.trim() || null,
+      // Sprint 7 — strip directory phone when CHAT_AUTH_V2 (contact via grant only)
+      phone: isChatAuthV2Enabled() ? null : row.phone?.trim() || null,
       profileCompleteness: row.profile_completeness,
       responseTimeHours: row.response_time_hours,
       completedJobs,

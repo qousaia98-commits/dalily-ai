@@ -77,10 +77,13 @@ export type AvailabilitySettings = {
   timezone: string;
   slotDurations: BookingDurationMinutes[];
   bufferMinutes: number;
+  /** Dedicated travel pad between jobs (defaults to 20 when SMART_BOOKING). */
+  travelBufferMinutes: number;
   minNoticeHours: number;
   maxDaysAhead: number;
   emergencyAvailable: boolean;
   acceptingBookings: boolean;
+  defaultAppointmentType: import("@/lib/booking/smart/types").AppointmentType;
 };
 
 export type BlockedTime = {

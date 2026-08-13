@@ -1,12 +1,18 @@
+import { isQualityCasesEnabled, isAiDynamicPricingEnabled, isForecastEngineEnabled, isAiSchedulingEnabled, isAiBusinessAssistantEnabled } from "@/lib/config/feature-flags";
+import { getTranslations } from "next-intl/server";
+import { MobileHubLinks } from "@/components/layout/mobile-hub-links";
 import {
+  Brain,
+  CalendarClock,
   Clock3,
   Images,
+  LineChart,
+  Sparkles,
+  ShieldAlert,
   ShieldCheck,
   User,
   Wrench,
 } from "lucide-react";
-import { getTranslations } from "next-intl/server";
-import { MobileHubLinks } from "@/components/layout/mobile-hub-links";
 
 export default async function MyBusinessPage() {
   const t = await getTranslations("mobilePages.myBusiness");
@@ -42,6 +48,56 @@ export default async function MyBusinessPage() {
       description: t("links.verificationDesc"),
       icon: ShieldCheck,
     },
+    ...(isQualityCasesEnabled()
+      ? [
+          {
+            href: "/business/quality",
+            title: t("links.quality"),
+            description: t("links.qualityDesc"),
+            icon: ShieldAlert,
+          },
+        ]
+      : []),
+    ...(isAiDynamicPricingEnabled()
+      ? [
+          {
+            href: "/business/pricing",
+            title: t("links.pricing"),
+            description: t("links.pricingDesc"),
+            icon: LineChart,
+          },
+        ]
+      : []),
+    ...(isForecastEngineEnabled()
+      ? [
+          {
+            href: "/business/forecast",
+            title: t("links.forecast"),
+            description: t("links.forecastDesc"),
+            icon: Sparkles,
+          },
+        ]
+      : []),
+    ...(isAiSchedulingEnabled()
+      ? [
+          {
+            href: "/business/scheduling",
+            title: t("links.scheduling"),
+            description: t("links.schedulingDesc"),
+            icon: CalendarClock,
+          },
+        ]
+      : []),
+    ...(isAiBusinessAssistantEnabled()
+      ? [
+          {
+            href: "/business/assistant",
+            title: t("links.assistant"),
+            description: t("links.assistantDesc"),
+            icon: Brain,
+          },
+        ]
+      : []),
   ];
 
   return (

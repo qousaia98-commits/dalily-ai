@@ -7,6 +7,34 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: emailField,
+});
+
+export const resetPasswordSchema = z
+  .object({
+    password: z.string().min(6).max(128),
+    confirmPassword: z.string().min(6).max(128),
+    /** Required when changing password from a normal (non-recovery) session. */
+    currentPassword: z.string().min(1).max(128).optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "password_mismatch",
+    path: ["confirmPassword"],
+  });
+
+/** Change password while already logged in (requires current password). */
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1).max(128),
+    password: z.string().min(6).max(128),
+    confirmPassword: z.string().min(6).max(128),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "password_mismatch",
+    path: ["confirmPassword"],
+  });
+
 export const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
   email: emailField,

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { BadgeCheck, ThumbsUp } from "lucide-react";
 import { StarRating } from "@/components/providers/star-rating";
 import { Badge } from "@/components/ui/badge";
@@ -86,6 +86,31 @@ export function ReviewCard({ review, canVote, canReply = false }: Props) {
 
       {review.comment ? (
         <p className="text-sm leading-relaxed text-foreground">{review.comment}</p>
+      ) : null}
+
+      {review.dimensions &&
+      Object.values(review.dimensions).some((v) => typeof v === "number") ? (
+        <ul className="grid grid-cols-2 gap-1.5 text-xs text-muted-foreground sm:grid-cols-3">
+          {(
+            [
+              "communication",
+              "quality",
+              "punctuality",
+              "professionalism",
+              "value",
+            ] as const
+          ).map((dim) =>
+            review.dimensions?.[dim] != null ? (
+              <li key={dim}>
+                {t(`dimensions.${dim}`)}: {review.dimensions[dim]}/5
+              </li>
+            ) : null,
+          )}
+        </ul>
+      ) : null}
+
+      {review.aiSummary ? (
+        <p className="text-xs italic text-muted-foreground">{review.aiSummary}</p>
       ) : null}
 
       {review.images.length > 0 ? (

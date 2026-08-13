@@ -1,4 +1,4 @@
-import { redirect } from "@/lib/i18n/routing";
+import { redirect } from "@/lib/i18n/navigation";
 import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import type { AppRole } from "@/types/database.types";
@@ -63,6 +63,21 @@ export async function requireAdminUser(): Promise<AuthUser> {
   if (!canAccessAdminPanel(user.roles)) {
     const locale = (await getLocale()) as Locale;
     redirect({ href: "/", locale });
+    throw new Error("FORBIDDEN");
+  }
+  return user;
+}
+
+/**
+ * Financial mutations — Finance or Super Admin only (not moderators).
+ * For Server Actions: returns null instead of redirect when forbidden.
+ */
+export async function requireFinanceUser(): Promise<AuthUser> {
+  const user = await requireAuthUser();
+  const { canManageFinance } = await import("@/lib/auth/roles");
+  if (!canManageFinance(user.roles)) {
+    const locale = (await getLocale()) as Locale;
+    redirect({ href: "/admin", locale });
     throw new Error("FORBIDDEN");
   }
   return user;

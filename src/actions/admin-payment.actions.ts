@@ -6,24 +6,94 @@ import { isPlatformAdmin } from "@/lib/auth/roles";
 import { logAdminAudit } from "@/lib/admin/audit";
 import { revalidateSubscriptionSurfaces } from "@/lib/subscription/revalidate";
 import { subscriptionService } from "@/lib/subscription/subscription.service";
+import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  isProviderMonetizationEnabled,
+  isUnlockPaymentsV2Enabled,
+} from "@/lib/config/feature-flags";
+import {
+  captureUnlockFeePayment,
+  rejectUnlockFeePayment,
+} from "@/domains/payment/capture";
+import { revalidatePath } from "next/cache";
+import { revalidateOrderSurfaces } from "@/lib/orders/revalidate";
 
 export type AdminPaymentActionState = {
   success: boolean;
   error?: string;
 };
 
+function canReviewBusinessSubscription(): boolean {
+  return isUnlockPaymentsV2Enabled() || isProviderMonetizationEnabled();
+}
+
 export async function approvePaymentAction(paymentId: string): Promise<AdminPaymentActionState> {
   const authUser = await requireAdminUser();
   if (!isPlatformAdmin(authUser.roles)) return { success: false, error: "forbidden" };
 
   try {
+    const admin = createAdminClient();
+    const { data: payment } = await admin
+      .from("payments")
+      .select("id, purpose, unlock_session_id, provider_id")
+      .eq("id", paymentId)
+      .maybeSingle();
+
+    if (payment?.purpose === "business_subscription" && canReviewBusinessSubscription()) {
+      const {
+        approveBusinessSubscriptionPaymentAction,
+      } = await import("@/actions/monetization.actions");
+      return approveBusinessSubscriptionPaymentAction(paymentId);
+    }
+
+    if (isUnlockPaymentsV2Enabled() && payment?.purpose === "unlock_fee") {
+      const captured = await captureUnlockFeePayment({
+        paymentId,
+        actorId: authUser.id,
+        source: "admin_approval",
+        externalEventId: `admin_approval:${paymentId}`,
+      });
+      if (!captured.ok) return { success: false, error: captured.error };
+
+      await logAdminAudit({
+        actorId: authUser.id,
+        action: "payment_approved",
+        entityType: "payment",
+        entityId: paymentId,
+        metadata: {
+          purpose: "unlock_fee",
+          unlockSessionId: payment.unlock_session_id,
+          grantId: captured.grantId,
+          alreadyCaptured: captured.alreadyCaptured,
+        },
+      });
+
+      let serviceRequestId: string | null = null;
+      if (payment.unlock_session_id) {
+        revalidatePath(`/business/unlock/${payment.unlock_session_id}`);
+        const { data: session } = await admin
+          .from("unlock_sessions")
+          .select("service_request_id")
+          .eq("id", payment.unlock_session_id)
+          .maybeSingle();
+        serviceRequestId = (session?.service_request_id as string) ?? null;
+      }
+      revalidatePath("/admin/payments");
+      revalidateOrderSurfaces(serviceRequestId);
+      return { success: true };
+    }
+
     const result = await subscriptionService.activateAfterPayment(paymentId, authUser.id);
     await logAdminAudit({
       actorId: authUser.id,
       action: "payment_approved",
       entityType: "payment",
       entityId: paymentId,
-      metadata: { providerId: result.providerId, planSlug: result.planSlug ?? null },
+      metadata: {
+        purpose: "subscription",
+        providerId: result.providerId,
+        planSlug: result.planSlug ?? null,
+      },
     });
     revalidateSubscriptionSurfaces({ providerSlug: result.providerSlug });
     return { success: true };
@@ -43,6 +113,54 @@ export async function rejectPaymentAction(
   if (!note.success) return { success: false, error: "validation_error" };
 
   try {
+    const admin = createAdminClient();
+    const { data: payment } = await admin
+      .from("payments")
+      .select("id, purpose, unlock_session_id")
+      .eq("id", paymentId)
+      .maybeSingle();
+
+    if (payment?.purpose === "business_subscription" && canReviewBusinessSubscription()) {
+      const {
+        rejectBusinessSubscriptionPaymentAction,
+      } = await import("@/actions/monetization.actions");
+      return rejectBusinessSubscriptionPaymentAction(paymentId, note.data);
+    }
+
+    if (isUnlockPaymentsV2Enabled() && payment?.purpose === "unlock_fee") {
+      const rejected = await rejectUnlockFeePayment({
+        paymentId,
+        actorId: authUser.id,
+        adminNote: note.data || undefined,
+      });
+      if (!rejected.ok) return { success: false, error: rejected.error };
+
+      await logAdminAudit({
+        actorId: authUser.id,
+        action: "payment_rejected",
+        entityType: "payment",
+        entityId: paymentId,
+        metadata: {
+          purpose: "unlock_fee",
+          note: note.data || null,
+          unlockSessionId: payment.unlock_session_id,
+        },
+      });
+      let serviceRequestId: string | null = null;
+      if (payment.unlock_session_id) {
+        revalidatePath(`/business/unlock/${payment.unlock_session_id}`);
+        const { data: session } = await admin
+          .from("unlock_sessions")
+          .select("service_request_id")
+          .eq("id", payment.unlock_session_id)
+          .maybeSingle();
+        serviceRequestId = (session?.service_request_id as string) ?? null;
+      }
+      revalidatePath("/admin/payments");
+      revalidateOrderSurfaces(serviceRequestId);
+      return { success: true };
+    }
+
     const result = await subscriptionService.rejectPayment(
       paymentId,
       authUser.id,
@@ -53,7 +171,7 @@ export async function rejectPaymentAction(
       action: "payment_rejected",
       entityType: "payment",
       entityId: paymentId,
-      metadata: { providerId: result.providerId, note: note.data || null },
+      metadata: { purpose: "subscription", providerId: result.providerId, note: note.data || null },
     });
     revalidateSubscriptionSurfaces({ providerSlug: result.providerSlug });
     return { success: true };

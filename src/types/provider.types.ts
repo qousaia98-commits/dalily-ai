@@ -4,6 +4,7 @@ import type {
   ProviderStatus,
   VerificationStatus,
 } from "@/types/database.types";
+import { safeLocalizedText } from "@/lib/translation/guard";
 
 export type ProviderImage = {
   id: string;
@@ -63,8 +64,7 @@ export type ManagedProvider = {
 export const WEEKDAY_ORDER = [0, 1, 2, 3, 4, 5, 6] as const;
 
 export function getLocalizedField(value: LocalizedJson | null, locale: string): string {
-  if (!value) return "";
-  return locale === "en" ? value.en || value.ar : value.ar || value.en;
+  return safeLocalizedText(value, locale);
 }
 
 export function buildLocalizedField(ar: string, en: string): LocalizedJson {

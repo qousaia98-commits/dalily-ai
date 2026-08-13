@@ -1,39 +1,33 @@
 import Image from "next/image";
-import { MapPin, Phone, MessageCircle, Clock } from "lucide-react";
-import { cookies } from "next/headers";
+import { MapPin, Clock } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getLocalizedText } from "@/types/domain.types";
 import type { Locale } from "@/lib/i18n/config";
 import type { PublicProviderProfile } from "@/lib/providers/database";
-import { TrustScore } from "@/components/providers/trust-score";
+import type { PublicProviderTrustExtras } from "@/lib/providers/public-profile";
 import { StarRating } from "@/components/providers/star-rating";
+import { TrustScore } from "@/components/providers/trust-score";
+import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { Badge } from "@/components/ui/badge";
 import { PlanBadge } from "@/components/shared/plan-badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { OpenRouteButton } from "@/components/providers/open-route-button";
 import { SendRequestButton } from "@/components/providers/send-request-button";
+import { DirectRequestCta } from "@/components/providers/direct-request-cta";
 import { TrackProfileView } from "@/components/providers/track-profile-view";
-import { TrackContactClick } from "@/components/providers/track-contact-click";
 import { ProviderReviewsSection } from "@/components/reviews/provider-reviews-section";
 import { TrustBadgeList } from "@/components/reviews/trust-badge-list";
-import {
-  NEARBY_LOC_COOKIE,
-  parseNearbyLocCookie,
-} from "@/lib/business/message-read-state";
-import {
-  LOC_PREF_COOKIE,
-  parseLocationPreference,
-} from "@/lib/geo/location-preference";
-import { haversineKm, formatDistanceKm } from "@/lib/geo/distance";
-import { CITY_CENTROIDS } from "@/lib/geo/city-centroids";
+import { PublicTrustPanel } from "@/components/reviews/public-trust-panel";
+import type { PublicTrustView } from "@/lib/reputation/types";
 import type { PublicReview, ProviderReviewStats, ReviewSort } from "@/lib/reviews/types";
 import type { TrustBadgeId } from "@/lib/reviews/trust-score";
 import { BookingForm } from "@/components/booking/booking-form";
+import { isSmartBookingEnabled } from "@/lib/config/feature-flags";
+import { ProviderGalleryLazy } from "@/components/providers/provider-gallery-lazy";
+import { ProviderPublicStatsGrid } from "@/components/providers/provider-public-stats";
 
 type ProviderProfileViewProps = {
   provider: PublicProviderProfile;
+  trustExtras?: PublicProviderTrustExtras | null;
   isLoggedIn?: boolean;
   hasPendingRequest?: boolean;
   acceptingRequests?: boolean;
@@ -48,10 +42,13 @@ type ProviderProfileViewProps = {
   canVoteReviews: boolean;
   canReplyReviews?: boolean;
   bookingServices?: { id: string; name: string }[];
+  publicTrust: PublicTrustView;
+  offerDecisionMode?: boolean;
 };
 
 export async function ProviderProfileView({
   provider,
+  trustExtras = null,
   isLoggedIn = false,
   hasPendingRequest = false,
   acceptingRequests = true,
@@ -66,47 +63,35 @@ export async function ProviderProfileView({
   canVoteReviews,
   canReplyReviews = false,
   bookingServices = [],
+  publicTrust,
+  offerDecisionMode = false,
 }: ProviderProfileViewProps) {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("provider");
-  const jar = await cookies();
-  const locationEnabled =
-    parseLocationPreference(jar.get(LOC_PREF_COOKIE)?.value) === "enabled";
-  const nearbyLoc = locationEnabled
-    ? parseNearbyLocCookie(jar.get(NEARBY_LOC_COOKIE)?.value)
-    : null;
 
-  const destLat =
-    provider.latitude ??
-    (provider.citySlug ? CITY_CENTROIDS[provider.citySlug]?.lat : null) ??
-    null;
-  const destLng =
-    provider.longitude ??
-    (provider.citySlug ? CITY_CENTROIDS[provider.citySlug]?.lng : null) ??
-    null;
-
-  let distanceKm: number | null = null;
-  if (
-    nearbyLoc &&
-    destLat != null &&
-    destLng != null &&
-    Number.isFinite(destLat) &&
-    Number.isFinite(destLng)
-  ) {
-    distanceKm = haversineKm(nearbyLoc.lat, nearbyLoc.lng, destLat, destLng);
-  }
-
-  const districtLabel = provider.district ? getLocalizedText(provider.district, locale) : null;
   const cityLabel = getLocalizedText(provider.city, locale);
-  const locationLabel = districtLabel ? `${cityLabel}, ${districtLabel}` : cityLabel;
+  const businessName = getLocalizedText(provider.name, locale);
+  const displayName = trustExtras?.displayName?.trim() || businessName;
+  const headline = trustExtras?.headline?.trim() || null;
+  const stats = trustExtras?.stats;
+  const visibility = trustExtras?.visibility;
+  const weekdayFormatter = new Intl.DateTimeFormat(locale === "ar" ? "ar" : "en", {
+    weekday: "long",
+  });
+  const weekdayLabel = (dayOfWeek: number) =>
+    weekdayFormatter.format(new Date(Date.UTC(2024, 0, 7 + dayOfWeek)));
+
+  const trustPct =
+    trustExtras?.publicTrustScorePct ??
+    Math.max(1, Math.min(99, Math.round(provider.trustScore)));
 
   return (
-    <div className="animate-fade-in">
+    <div className={`animate-fade-in ${offerDecisionMode ? "pb-28" : ""}`}>
       <TrackProfileView providerId={provider.id} />
       <div className="relative h-48 overflow-hidden sm:h-64 md:h-72">
         <Image
           src={provider.coverImage}
-          alt={getLocalizedText(provider.name, locale)}
+          alt={businessName}
           fill
           className="object-cover"
           priority
@@ -120,20 +105,23 @@ export async function ProviderProfileView({
           <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl border-4 border-background shadow-lg sm:size-32">
             <Image
               src={provider.avatarImage}
-              alt={getLocalizedText(provider.name, locale)}
+              alt={businessName}
               fill
               className="object-cover"
               sizes="128px"
+              priority
             />
           </div>
           <div className="flex flex-1 flex-col gap-3 sm:pb-2">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl font-bold sm:text-3xl">
-                  {getLocalizedText(provider.name, locale)}
-                </h1>
+                <h1 className="text-2xl font-bold sm:text-3xl">{businessName}</h1>
                 {provider.verified ? (
-                  <Badge variant="success">{t("verified")}</Badge>
+                  <PublicVerificationBadge
+                    providerId={provider.id}
+                    verified
+                    size="md"
+                  />
                 ) : null}
                 <PlanBadge planSlug={provider.planSlug} size="md" />
                 {provider.planSlug === "premium" ? (
@@ -142,24 +130,37 @@ export async function ProviderProfileView({
                   </Badge>
                 ) : null}
               </div>
-              <p className="mt-1 text-muted-foreground">
-                {getLocalizedText(provider.categoryLabel, locale)}
-              </p>
+              {displayName !== businessName ? (
+                <p className="mt-1 text-sm font-medium text-foreground/80">{displayName}</p>
+              ) : null}
+              {headline ? (
+                <p className="mt-1 text-sm text-muted-foreground">{headline}</p>
+              ) : (
+                <p className="mt-1 text-muted-foreground">
+                  {getLocalizedText(provider.categoryLabel, locale)}
+                </p>
+              )}
             </div>
+
+            <div className="flex flex-wrap items-center gap-4">
+              <TrustScore score={trustPct} verified={provider.verified} size="lg" showBar />
+            </div>
+
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <StarRating rating={provider.rating} size="md" />
               <span>
                 {provider.reviewCount} {t("reviews")}
               </span>
+              {visibility?.showCompletedJobs !== false && stats ? (
+                <span>
+                  {t("completedJobsShort", { count: stats.completedJobs })}
+                </span>
+              ) : null}
               <TrustBadgeList badges={trustBadges.slice(0, 3)} />
-              <span className="flex items-center gap-1">
-                <MapPin className="size-4" />
-                {locationLabel}
-              </span>
-              {distanceKm != null ? (
-                <span className="flex items-center gap-1 font-medium text-foreground">
-                  <MapPin className="size-4 text-[var(--dalily-gold)]" aria-hidden />
-                  {t("distanceFromYou", { km: formatDistanceKm(distanceKm) })}
+              {visibility?.showServiceArea !== false ? (
+                <span className="flex items-center gap-1">
+                  <MapPin className="size-4" />
+                  {cityLabel}
                 </span>
               ) : null}
               {provider.responseTimeHours != null ? (
@@ -168,29 +169,128 @@ export async function ProviderProfileView({
                   {t("respondsIn", { hours: provider.responseTimeHours })}
                 </span>
               ) : null}
-              <span>{t("memberSince", { date: new Date(provider.memberSince).getFullYear() })}</span>
-              <span>{t("healthScore", { score: provider.profileCompleteness })}</span>
+              {stats ? (
+                <span>
+                  {t("memberSince", { date: new Date(provider.memberSince).getFullYear() })}
+                </span>
+              ) : null}
+              {trustExtras?.availabilityStatus ? (
+                <Badge variant="secondary">
+                  {t(`availability.${trustExtras.availabilityStatus}`)}
+                </Badge>
+              ) : null}
             </div>
+
+            {visibility?.showLanguages !== false &&
+            trustExtras &&
+            trustExtras.languages.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5">
+                {trustExtras.languages.map((lang) => (
+                  <Badge key={lang} variant="outline">
+                    {lang}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+
+            <p className="text-xs text-muted-foreground">{t("trustOnlyNote")}</p>
           </div>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
-            {provider.about ? (
-              <section>
+            {provider.about || trustExtras?.experience ? (
+              <section id="provider-about">
                 <h2 className="mb-3 text-lg font-semibold">{t("about")}</h2>
-                <p className="leading-relaxed text-muted-foreground">
-                  {getLocalizedText(provider.about, locale)}
-                </p>
+                {provider.about ? (
+                  <p className="leading-relaxed text-muted-foreground">
+                    {getLocalizedText(provider.about, locale)}
+                  </p>
+                ) : null}
+                {trustExtras?.experience ? (
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {trustExtras.experience}
+                  </p>
+                ) : null}
+                {trustExtras && trustExtras.specializations.length > 0 ? (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {trustExtras.specializations.map((s) => (
+                      <Badge key={s} variant="secondary">
+                        {s}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
+                {trustExtras && trustExtras.skills.length > 0 ? (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {trustExtras.skills.map((s) => (
+                      <Badge key={s} variant="outline">
+                        {s}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
               </section>
             ) : null}
 
-            {provider.services.length > 0 ? (
-              <section>
+            {trustExtras && trustExtras.serviceItems.length > 0 ? (
+              <section id="provider-services">
+                <h2 className="mb-3 text-lg font-semibold">{t("services")}</h2>
+                <ul className="space-y-3">
+                  {trustExtras.serviceItems.map((service) => (
+                    <li
+                      key={service.id}
+                      className="rounded-2xl border border-border/70 px-3.5 py-3"
+                    >
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <p className="font-medium">
+                          {getLocalizedText(service.name, locale)}
+                        </p>
+                        {service.startingPrice != null ? (
+                          <span className="text-sm font-semibold text-[var(--dalily-navy)] dark:text-[var(--dalily-gold)]">
+                            {t("fromPrice", {
+                              price: service.startingPrice,
+                              currency: service.currency ?? "SYP",
+                            })}
+                          </span>
+                        ) : null}
+                      </div>
+                      {service.description ? (
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {getLocalizedText(service.description, locale)}
+                        </p>
+                      ) : null}
+                      {service.estimatedResponseHours != null ? (
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {t("respondsIn", {
+                            hours: service.estimatedResponseHours,
+                          })}
+                        </p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Badge variant="outline">
+                    {getLocalizedText(provider.categoryLabel, locale)}
+                  </Badge>
+                  {(trustExtras.serviceCities ?? []).map((city) => (
+                    <Badge key={city} variant="outline">
+                      {city}
+                    </Badge>
+                  ))}
+                </div>
+              </section>
+            ) : provider.services.length > 0 ? (
+              <section id="provider-services">
                 <h2 className="mb-3 text-lg font-semibold">{t("services")}</h2>
                 <div className="flex flex-wrap gap-2">
                   {provider.services.map((service) => (
-                    <Badge key={service.ar + service.en} variant="secondary" className="px-3 py-1.5 text-sm">
+                    <Badge
+                      key={service.ar + service.en}
+                      variant="secondary"
+                      className="px-3 py-1.5 text-sm"
+                    >
                       {getLocalizedText(service, locale)}
                     </Badge>
                   ))}
@@ -198,137 +298,131 @@ export async function ProviderProfileView({
               </section>
             ) : null}
 
-            {provider.gallery.length > 0 ? (
+            {visibility?.showStatistics !== false && stats ? (
+              <ProviderPublicStatsGrid
+                stats={stats}
+                showCompletedJobs={visibility?.showCompletedJobs !== false}
+              />
+            ) : null}
+
+            {trustExtras &&
+            trustExtras.workingHours.some((h) => h.opensAt || h.isClosed) ? (
               <section>
-                <h2 className="mb-3 text-lg font-semibold">{t("gallery")}</h2>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  {provider.gallery.map((image) => (
-                    <div key={image} className="relative aspect-[4/3] overflow-hidden rounded-xl">
-                      <Image
-                        src={image}
-                        alt={getLocalizedText(provider.name, locale)}
-                        fill
-                        className="object-cover transition-transform hover:scale-105 motion-reduce:hover:scale-100"
-                        sizes="(max-width: 640px) 50vw, 33vw"
-                      />
-                    </div>
+                <h2 className="mb-3 text-lg font-semibold">{t("workingHours")}</h2>
+                <ul className="space-y-1.5 text-sm">
+                  {trustExtras.workingHours.map((hour) => (
+                    <li
+                      key={hour.dayOfWeek}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-border/60 px-3 py-2"
+                    >
+                      <span className="font-medium">{weekdayLabel(hour.dayOfWeek)}</span>
+                      <span className="text-muted-foreground">
+                        {hour.isClosed || !hour.opensAt || !hour.closesAt
+                          ? t("closedDay")
+                          : `${hour.opensAt} – ${hour.closesAt}`}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {visibility?.showCertificates !== false &&
+            trustExtras &&
+            trustExtras.certificates.length > 0 ? (
+              <section>
+                <h2 className="mb-3 text-lg font-semibold">{t("certificates")}</h2>
+                <div className="flex flex-wrap gap-2">
+                  {trustExtras.certificates.map((c) => (
+                    <Badge key={c} variant="outline">
+                      {c}
+                    </Badge>
                   ))}
                 </div>
               </section>
             ) : null}
 
-            <ProviderReviewsSection
-              providerId={provider.id}
-              stats={reviewStats}
-              reviews={reviews}
-              total={reviewTotal}
-              hasMore={reviewHasMore}
-              page={reviewPage}
-              sort={reviewSort}
-              badges={trustBadges}
-              canVote={canVoteReviews}
-              canReply={canReplyReviews}
-            />
+            {trustExtras && trustExtras.awards.length > 0 ? (
+              <section>
+                <h2 className="mb-3 text-lg font-semibold">{t("awards")}</h2>
+                <div className="flex flex-wrap gap-2">
+                  {trustExtras.awards.map((a) => (
+                    <Badge key={a} className="bg-[var(--dalily-gold)]/15 text-foreground">
+                      {a === "verified" ? t("verified") : a}
+                    </Badge>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {visibility?.showGallery !== false ? (
+              <ProviderGalleryLazy
+                items={trustExtras?.portfolio ?? []}
+                alt={businessName}
+              />
+            ) : null}
+
+            <div id="provider-reviews">
+              <ProviderReviewsSection
+                providerId={provider.id}
+                stats={reviewStats}
+                reviews={reviews}
+                total={reviewTotal}
+                hasMore={reviewHasMore}
+                page={reviewPage}
+                sort={reviewSort}
+                badges={trustBadges}
+                canVote={canVoteReviews}
+                canReply={canReplyReviews}
+              />
+            </div>
           </div>
 
           <div className="space-y-4">
-            <Card className="border-[var(--dalily-gold)]/25 bg-[color-mix(in_oklab,var(--dalily-gold)_6%,var(--card))]">
-              <CardHeader>
-                <CardTitle>{t("requestService")}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-sm text-muted-foreground">{t("requestServiceBody")}</p>
-                {estimatedResponseHours ? (
-                  <p className="text-xs text-muted-foreground">
-                    {t("estimatedResponse", { hours: estimatedResponseHours })}
-                  </p>
-                ) : null}
-                {!acceptingRequests ? (
-                  <p className="rounded-2xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
-                    {t("notAccepting")}
-                  </p>
-                ) : (
-                  <SendRequestButton
-                    providerId={provider.id}
-                    providerName={getLocalizedText(provider.name, locale)}
-                    isLoggedIn={isLoggedIn}
-                    hasPendingRequest={hasPendingRequest}
-                  />
-                )}
-              </CardContent>
-            </Card>
-
-            <BookingForm
-              providerId={provider.id}
-              services={bookingServices}
-              isLoggedIn={isLoggedIn}
-            />
-
-            <Card>
-              <CardHeader>
-                <CardTitle>{t("trustScore")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <TrustScore
-                  score={reviewStats.trustScore || provider.trustScore}
-                  verified={provider.verified}
-                  size="lg"
-                  showBar
-                />
-              </CardContent>
-            </Card>
-
-            {destLat != null && destLng != null ? (
-              <Card>
+            {!offerDecisionMode ? (
+              <Card className="border-[var(--dalily-gold)]/25 bg-[color-mix(in_oklab,var(--dalily-gold)_6%,var(--card))]">
                 <CardHeader>
-                  <CardTitle>{t("routeTitle")}</CardTitle>
+                  <CardTitle>{t("requestService")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {distanceKm != null ? (
-                    <p className="text-sm text-muted-foreground">
-                      {t("distanceFromYou", { km: formatDistanceKm(distanceKm) })}
+                  <p className="text-sm text-muted-foreground">{t("requestServiceBody")}</p>
+                  {estimatedResponseHours ? (
+                    <p className="text-xs text-muted-foreground">
+                      {t("estimatedResponse", { hours: estimatedResponseHours })}
                     </p>
                   ) : null}
-                  <OpenRouteButton lat={destLat} lng={destLng} />
+                  {!acceptingRequests ? (
+                    <p className="rounded-2xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+                      {t("notAccepting")}
+                    </p>
+                  ) : (
+                    <div className="space-y-2">
+                      <DirectRequestCta
+                        providerId={provider.id}
+                        acceptingRequests={acceptingRequests}
+                      />
+                      <SendRequestButton
+                        providerId={provider.id}
+                        providerName={businessName}
+                        isLoggedIn={isLoggedIn}
+                        hasPendingRequest={hasPendingRequest}
+                      />
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ) : null}
 
-            {(provider.phone || provider.whatsapp) && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t("contact")}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {provider.phone ? (
-                    <Button className="w-full gap-2" size="lg" asChild>
-                      <TrackContactClick
-                        providerId={provider.id}
-                        channel="phone"
-                        href={`tel:${provider.phone}`}
-                      >
-                        <Phone className="size-4" />
-                        {t("call")}
-                      </TrackContactClick>
-                    </Button>
-                  ) : null}
-                  {provider.whatsapp ? (
-                    <Button variant="outline" className="w-full gap-2" size="lg" asChild>
-                      <TrackContactClick
-                        providerId={provider.id}
-                        channel="whatsapp"
-                        href={`https://wa.me/${provider.whatsapp.replace(/\D/g, "")}`}
-                      >
-                        <MessageCircle className="size-4" />
-                        {t("whatsapp")}
-                      </TrackContactClick>
-                    </Button>
-                  ) : null}
-                  <Separator />
-                  <p className="text-center text-xs text-muted-foreground">{t("contactNote")}</p>
-                </CardContent>
-              </Card>
-            )}
+            {!offerDecisionMode ? (
+              <BookingForm
+                providerId={provider.id}
+                services={bookingServices}
+                isLoggedIn={isLoggedIn}
+                smartBookingEnabled={isSmartBookingEnabled()}
+              />
+            ) : null}
+
+            <PublicTrustPanel trust={publicTrust} />
           </div>
         </div>
       </div>

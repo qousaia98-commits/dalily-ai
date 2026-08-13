@@ -297,6 +297,18 @@ export function rankCandidates(
       if (bPrem !== aPrem) return bPrem - aPrem;
       return b.combinedScore - a.combinedScore;
     }
+    if (sort === "response") {
+      const ra =
+        a.provider.response_time_hours == null
+          ? Number.POSITIVE_INFINITY
+          : Number(a.provider.response_time_hours);
+      const rb =
+        b.provider.response_time_hours == null
+          ? Number.POSITIVE_INFINITY
+          : Number(b.provider.response_time_hours);
+      if (ra !== rb) return ra - rb;
+      return b.combinedScore - a.combinedScore;
+    }
 
     if (b.combinedScore !== a.combinedScore) return b.combinedScore - a.combinedScore;
     if (b.factors.quality !== a.factors.quality) return b.factors.quality - a.factors.quality;

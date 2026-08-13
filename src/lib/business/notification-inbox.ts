@@ -79,7 +79,7 @@ export function buildBusinessNotifications(input: BuildInput): BusinessNotificat
       bodyParams: { plan: input.pendingReviewPayment.planLabel },
       createdAt: input.pendingReviewPayment.submittedAt ?? now,
       unread: true,
-      href: "/business/subscription",
+      href: "/business/payments",
     });
   }
 
@@ -94,7 +94,7 @@ export function buildBusinessNotifications(input: BuildInput): BusinessNotificat
       bodyKey: isPremium ? "premiumActivated.body" : "proActivated.body",
       createdAt: input.recentlyPaid.approvedAt ?? now,
       unread: true,
-      href: "/business/subscription",
+      href: "/business/payments",
     });
   }
 
@@ -109,7 +109,7 @@ export function buildBusinessNotifications(input: BuildInput): BusinessNotificat
         bodyKey: "subscriptionExpiring.body",
         createdAt: now,
         unread: true,
-        href: "/business/subscription",
+        href: "/business/payments",
       });
     }
   }

@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "دليلي — ابحث عن خبير محلي موثوق في سوريا",
-    "description": "منصة ذكاء اصطناعي تساعدك على وصف مشكلتك والعثور على الخبير المحلي المناسب."
+    "title": "دليلي — من المشكلة إلى مساعدة محلية موثوقة",
+    "description": "صف ما تحتاجه، قارن عروض الأعمال المطابقة، افتح بيانات التواصل عند الاختيار، ثم تواصل عبر الدردشة — نسخة تجريبية مغلقة في سوريا."
   },
   "common": {
     "brand": "دليلي",
@@ -19,10 +19,488 @@
       "selectRequired": "يرجى الاختيار"
     }
   },
+  "notificationCenter": {
+    "title": "مركز الإشعارات",
+    "bellAria": "فتح الإشعارات",
+    "close": "إغلاق",
+    "unread": "{count} غير مقروء",
+    "empty": "لا إشعارات جديدة.",
+    "search": "بحث في الإشعارات…",
+    "markAllRead": "قراءة الكل",
+    "seedDemo": "إضافة مثال",
+    "loading": "جارٍ التحميل…",
+    "grouped": "{count} تحديثات · {title}",
+    "tabs": {
+      "inbox": "الوارد",
+      "digest": "ملخص الذكاء",
+      "prefs": "التفضيلات"
+    },
+    "digestHint": "الملخصات تشمل فقط الإشعارات التي يمكنك رؤيتها.",
+    "digestEmpty": "لا ملخصات بعد.",
+    "digestError": "تعذر إنشاء الملخص",
+    "digestReady": "الملخص جاهز",
+    "digestKinds": {
+      "morning": "صباحي",
+      "daily": "يومي",
+      "weekly": "أسبوعي",
+      "unread": "غير مقروء"
+    },
+    "prefs": {
+      "channels": "قنوات التسليم",
+      "inApp": "داخل التطبيق",
+      "push": "دفع",
+      "email": "بريد",
+      "categories": "الفئات",
+      "chat": "الدردشة",
+      "bookings": "الحجوزات",
+      "emergency": "الطوارئ",
+      "projects": "المشاريع",
+      "marketplace": "السوق",
+      "payments": "المدفوعات",
+      "voice": "الرسائل الصوتية",
+      "quiet": "ساعات الهدوء",
+      "quietEnabled": "تفعيل ساعات الهدوء"
+    },
+    "prefsSaved": "تم حفظ التفضيلات",
+    "prefsError": "تعذر حفظ التفضيلات"
+  },
+  "monetization": {
+    "dashboard": {
+      "badge": "خطة الأعمال",
+      "title": "الاشتراك والعملاء",
+      "subtitle": "خطة شهرية ثابتة — عملاء بلا حدود. الزبائن لا يدفعون رسوم فتح أبداً.",
+      "currentPlan": "الخطة الحالية",
+      "planFree": "غير مدفوع — غير ظاهر",
+      "planBusiness": "أعمال",
+      "premiumBadge": "شارة مميزة",
+      "includedUnlocks": "عملاء مشمولون",
+      "unlocksRemaining": "يتبقى {remaining} من {total}",
+      "unlocksUnlimited": "غير محدود",
+      "payPerLead": "اشتراك شهري ثابت",
+      "usedThisMonth": "استُخدم {count} هذا الشهر",
+      "monthSpend": "إنفاق الفتح هذا الشهر",
+      "unlockedTotal": "إجمالي العملاء المفتوحين",
+      "upgradeTitle": "تفعيل خطة الأعمال",
+      "upgradeBody": "{price} USD/شهر — عملاء بلا حدود. الظهور يتطلب فترة مدفوعة سارية.",
+      "benefitBadge": "شارة مميزة",
+      "benefitSearch": "الظهور في البحث والمطابقة",
+      "benefitAnalytics": "تحليلات الأعمال",
+      "benefitMarketing": "عروض تسويقية",
+      "benefitAi": "رؤى ذكاء للأعمال",
+      "upgradeCta": "بدء الدفع — {price} USD/شهر",
+      "upgradeSuccess": "تم تفعيل خطة الأعمال",
+      "upgradeError": "تعذر الترقية",
+      "businessActiveHint": "خطتك تشمل عملاء بلا حدود كل شهر بسعر {price} USD. لم يعد هناك دفع لكل عميل.",
+      "viewUnlocks": "عرض جلسات الفتح",
+      "upgradePaymentStarted": "تم إنشاء الدفع — حوّل وارفع الإيصال",
+      "upgradePaymentTitle": "ادفع لخطة الأعمال",
+      "upgradePaymentSubtitle": "أكمل التحويل ثم ارفع الإيصال. تُفعَّل الخطة بعد التحقق.",
+      "viewHistory": "سجل المدفوعات",
+      "viewSubscription": "حالة الاشتراك"
+    },
+    "admin": {
+      "title": "إعدادات اشتراك المزودين",
+      "subtitle": "ضبط سعر خطة الأعمال والحد الشهري للعملاء (-1 = غير محدود).",
+      "businessPrice": "سعر الأعمال (USD/شهر)",
+      "includedUnlocks": "عملاء مشمولون / شهر (-1 = غير محدود)",
+      "minLead": "أدنى سعر فتح (USD، قديم)",
+      "maxLead": "أقصى سعر فتح (USD، قديم)",
+      "baseLead": "السعر الأساسي (USD، قديم)",
+      "emergencyMul": "مضاعف الطوارئ",
+      "urgencyMul": "مضاعف الاستعجال",
+      "multiMul": "مضاعف متعدد الخدمات",
+      "complexityMul": "مضاعف التعقيد",
+      "distanceMul": "مضاعف المسافة / كم",
+      "demandMul": "مضاعف الطلب",
+      "save": "حفظ الإعدادات",
+      "saved": "تم الحفظ",
+      "saveError": "تعذر الحفظ",
+      "markPaidTitle": "تجاوز: تعليم مزود كمدفوع",
+      "markPaidSubtitle": "تمديد يدوي (تعويض / حسن نية / استرداد) — الأفضل مراجعة مدفوعات الإيصالات من الإدارة → المدفوعات.",
+      "providerId": "معرّف المزود",
+      "months": "أشهر للإضافة",
+      "markPaidCta": "تفعيل / تمديد",
+      "markPaidSuccess": "تم تفعيل الاشتراك",
+      "markPaidError": "تعذر تفعيل الاشتراك",
+      "overrideSection": "تجاوز يدوي",
+      "reviewPaymentsHint": "يرفع المزودون الإيصالات من /business/subscription. راجعها من الإدارة → المدفوعات (الغرض: خطة الأعمال)."
+    }
+  },
+  "assistant": {
+    "customer": {
+      "badge": "مساعد دليلي",
+      "title": "مرشد طلبك",
+      "nextAction": "التالي",
+      "missing": "ما زال ناقصاً",
+      "offerCompare": "مقارنة العروض",
+      "verified": "موثّق",
+      "appointment": "ملخص الموعد",
+      "afterJob": "بعد انتهاء العمل",
+      "askReview": "تقييم قصير يساعد العملاء الآخرين."
+    },
+    "provider": {
+      "badge": "مساعد دليلي",
+      "title": "مرشد يومك",
+      "today": "جدول اليوم",
+      "noToday": "لا أعمال مجدولة اليوم.",
+      "suggestedJobs": "أعمال مقترحة تالية",
+      "prep": "التحضير",
+      "travel": "نصائح التنقل",
+      "customerSummary": "ملخص العميل",
+      "chatSummary": "ملخص المحادثة",
+      "missed": "{count} فرص فائتة مؤخراً"
+    },
+    "suggestions": {
+      "title": "اقتراحات",
+      "accept": "نفّذ",
+      "ignore": "لاحقاً",
+      "reject": "غير مفيد"
+    }
+  },
+  "predictive": {
+    "wait": {
+      "badge": "وقت الانتظار المتوقع",
+      "confidence": "الثقة {pct}%"
+    },
+    "notifications": {
+      "title": "نصائح السوق"
+    }
+  },
+  "dualMarketplace": {
+    "trustBadge": "طريقتان للحصول على المساعدة",
+    "heroTitle": "ماذا تحتاج؟",
+    "heroSubtitle": "انشر طلباً لاستلام عروض، أو ابحث عن مزود وتواصل معه مباشرة.",
+    "intentLabel": "صف احتياجك",
+    "intentPlaceholder": "مثال: مفتاح إنارة معطل، أو تجديد مطبخ كامل…",
+    "aiSuggests": "توصية الذكاء",
+    "canIgnore": "يمكنك تجاهل التوصية واختيار أي مسار.",
+    "recommended": "موصى به",
+    "publish": {
+      "title": "نشر طلب",
+      "body": "استلم عدة عروض من المزودين.",
+      "cta": "انشر"
+    },
+    "find": {
+      "title": "ابحث عن مزود",
+      "body": "تصفح المزودين وتواصل معهم مباشرة.",
+      "cta": "تصفح"
+    },
+    "switch": {
+      "badge": "جرّب طريقة أخرى",
+      "toFindTitle": "لا عروض مناسبة بعد؟",
+      "toFindBody": "تواصل مع مزودين مباشرة من البحث.",
+      "toFindCta": "ابحث عن مزودين",
+      "toPublishTitle": "لا مزودين قريبين؟",
+      "toPublishBody": "انشر طلبك ليتمكن المزيد من المزودين من الرد.",
+      "toPublishCta": "انشر طلباً"
+    },
+    "opportunity": {
+      "budget": "الميزانية {amount}",
+      "photos": "{count} صورة"
+    }
+  },
+  "projects": {
+    "dashboard": {
+      "badge": "مشروع متعدد الخدمات",
+      "back": "العودة إلى الطلبات",
+      "progress": "{pct}% مكتمل",
+      "completion": "التقدم الإجمالي",
+      "estimate": "تقدير {min}–{max} أيام",
+      "packages": "حزم العمل",
+      "appointments": "مواعيد قادمة",
+      "timeline": "جدول المشروع",
+      "documents": "المستندات والصور",
+      "documentsEmpty": "لا مستندات مرفوعة بعد.",
+      "messages": "التواصل",
+      "messagesHint": "محادثات المشروع والحزم تبقى منفصلة بعد تعيين مزود.",
+      "openFull": "فتح لوحة المشروع",
+      "openPackage": "غرفة انتظار الحزمة",
+      "markDone": "تم",
+      "reorderSuccess": "تم تحديث ترتيب التنفيذ",
+      "reorderError": "تعذر إعادة الترتيب",
+      "statusError": "تعذر تحديث الحزمة",
+      "packageCompleted": "تم تعليم الحزمة كمكتملة",
+      "status": {
+        "detected": "مكتشف",
+        "planning": "تخطيط",
+        "offers": "جمع العروض",
+        "booked": "محجوز",
+        "in_progress": "جارٍ",
+        "completed": "مكتمل",
+        "cancelled": "ملغى"
+      },
+      "packageStatus": {
+        "planned": "مخطط",
+        "matching": "مطابقة",
+        "offers": "عروض",
+        "booked": "محجوز",
+        "blocked": "موقوف بسبب تبعية",
+        "in_progress": "جارٍ",
+        "completed": "مكتمل",
+        "cancelled": "ملغى"
+      }
+    },
+    "workspace": {
+      "badge": "مساحة التعاون",
+      "title": "مساحة عمل مشتركة للمشروع",
+      "subtitle": "المهام وقوائم التحقق والموافقات والنشاط في مكان واحد.",
+      "loading": "جارٍ تحميل المساحة…",
+      "loadError": "تعذر تحميل مساحة العمل",
+      "tabs": {
+        "overview": "نظرة عامة",
+        "tasks": "المهام",
+        "checklists": "قوائم التحقق",
+        "approvals": "الموافقات",
+        "activity": "النشاط",
+        "ai": "مساعد الذكاء"
+      },
+      "progress": {
+        "overall": "تقدم مساحة العمل",
+        "packages": "الحزم {done}/{total}",
+        "tasksOpen": "مهام مفتوحة: {count}",
+        "overdue": "مهام متأخرة: {count}",
+        "blocked": "مهام محظورة: {count}",
+        "approvals": "موافقات معلّقة: {count}",
+        "delayedPackages": "حزم متأخرة: {count}"
+      },
+      "taskPlaceholder": "مهمة مشتركة جديدة…",
+      "addTask": "إضافة مهمة",
+      "taskCreated": "تم إنشاء المهمة",
+      "taskError": "تعذر تحديث المهمة",
+      "tasksEmpty": "لا مهام مشتركة بعد.",
+      "due": "الاستحقاق {date}",
+      "taskStatus": {
+        "todo": "للتنفيذ",
+        "in_progress": "جارٍ",
+        "blocked": "محظور",
+        "completed": "مكتمل"
+      },
+      "checklistCreated": "تمت إضافة القائمة",
+      "checklistError": "تعذر تحديث القائمة",
+      "checklistsEmpty": "لا قوائم بعد — اختر قالباً أعلاه.",
+      "completed": "مكتمل",
+      "approvalPlaceholder": "عنوان الموافقة (مثل اعتماد العرض)…",
+      "requestApproval": "طلب موافقة",
+      "approvalRequested": "تم طلب الموافقة",
+      "approvalAccepted": "تمت الموافقة",
+      "approvalRejected": "تم الرفض",
+      "approvalError": "تعذر تحديث الموافقة",
+      "approvalsEmpty": "لا طلبات موافقة بعد.",
+      "approve": "موافقة",
+      "reject": "رفض",
+      "approvalKind": {
+        "quotation": "عرض سعر",
+        "package_completed": "اكتمال الحزمة",
+        "additional_work": "عمل إضافي",
+        "final_completion": "الإكمال النهائي",
+        "other": "أخرى"
+      },
+      "approvalStatus": {
+        "pending": "معلّق",
+        "approved": "موافق عليه",
+        "rejected": "مرفوض",
+        "cancelled": "ملغى"
+      },
+      "activityEmpty": "لا نشاط في المساحة بعد.",
+      "aiDisclaimer": "المساعد يقترح فقط — لا يغيّر بيانات المشروع تلقائياً.",
+      "aiGenerate": "تلخيص المشروع",
+      "aiError": "تعذر إنشاء ملخص الذكاء",
+      "aiNextSteps": "خطوات مقترحة",
+      "aiRisks": "مخاطر / عمل محظور",
+      "aiMissingDocs": "مستندات قد تكون ناقصة",
+      "aiAccept": "مفيد",
+      "aiAccepted": "تم حفظ الملاحظة"
+    }
+  },
+  "recurring": {
+    "dashboard": {
+      "badge": "خدمات متكررة",
+      "title": "خطط الصيانة",
+      "subtitle": "اشترك مرة — تُجدول الزيارات تلقائياً.",
+      "metrics": "الاحتفاظ ~{retention}% · الإكمال ~{completion}%",
+      "createTitle": "إنشاء خطة",
+      "titlePlaceholder": "مثال: صيانة حديقة",
+      "createCta": "ابدأ الخطة",
+      "created": "تم إنشاء الخطة",
+      "error": "حدث خطأ",
+      "aiTitle": "توصيات الذكاء",
+      "accept": "قبول",
+      "reject": "ليس الآن",
+      "accepted": "تم إنشاء الخطة من التوصية",
+      "rejected": "تم تجاهل التوصية",
+      "active": "خطط نشطة",
+      "paused": "خطط متوقفة",
+      "upcoming": "زيارات قادمة",
+      "completed": "زيارات مكتملة",
+      "renewals": "تجديدات قادمة",
+      "history": "السجل",
+      "pause": "إيقاف",
+      "resume": "استئناف",
+      "cancel": "إلغاء",
+      "renew": "تجديد",
+      "skip": "تخطي الزيارة",
+      "skipped": "تم تخطي الزيارة",
+      "emptyActive": "لا خطط نشطة بعد.",
+      "emptyPaused": "لا خطط متوقفة.",
+      "emptyUpcoming": "لا زيارات قادمة.",
+      "emptyCompleted": "لا زيارات مكتملة بعد.",
+      "emptyRenewals": "لا تجديدات قريبة.",
+      "emptyHistory": "لا خطط ملغاة.",
+      "interval": {
+        "weekly": "أسبوعي",
+        "biweekly": "كل أسبوعين",
+        "monthly": "شهري",
+        "quarterly": "كل 3 أشهر",
+        "semiannual": "كل 6 أشهر",
+        "yearly": "سنوي",
+        "custom": "مخصص"
+      }
+    },
+    "reminders": {
+      "upcoming_visit": {
+        "title": "زيارة صيانة قادمة",
+        "body": "لديك زيارة متكررة خلال 24 ساعة."
+      },
+      "plan_renewal": {
+        "title": "تجديد الخطة قريباً",
+        "body": "خطة الصيانة بحاجة إلى تجديد."
+      },
+      "visit_skipped": {
+        "title": "تم تخطي زيارة",
+        "body": "تم تخطي زيارة متكررة."
+      },
+      "plan_paused": {
+        "title": "خطة متوقفة",
+        "body": "تم إيقاف خطة صيانة."
+      },
+      "plan_cancelled": {
+        "title": "خطة ملغاة",
+        "body": "تم إلغاء خطة صيانة."
+      },
+      "maintenance_due": {
+        "title": "صيانة مستحقة",
+        "body": "زيارة متكررة متأخرة — جدوِل قريباً."
+      }
+    }
+  },
+  "automation": {
+    "suggestions": {
+      "title": "أتمتة الذكاء",
+      "mode": "الوضع: {mode}",
+      "why": "السبب"
+    },
+    "feedback": {
+      "accept": "قبول",
+      "reject": "رفض"
+    },
+    "providerSettings": {
+      "title": "أتمتة الذكاء",
+      "subtitle": "سير عمل اختياري — أنت تبقى المتحكم. المدفوعات لا تُنفَّذ تلقائياً أبداً.",
+      "autoAccept": "قبول تلقائي للطلبات عالية الثقة",
+      "autoAcceptHint": "فقط عند ثقة عالية جداً وبموافقتك.",
+      "autoRejectArea": "رفض تلقائي خارج منطقة الخدمة",
+      "autoRejectAreaHint": "رفض الطلبات خارج نطاق تغطيتك بوضوح.",
+      "autoRejectHours": "تنبيه خارج ساعات العمل",
+      "autoRejectHoursHint": "اقتراح رفض الطلبات خارج الدوام.",
+      "routeOpt": "اقتراح تحسين المسار",
+      "routeOptHint": "عند وجود عدة محطات اليوم.",
+      "scheduleGaps": "اقتراح ملء فراغات الجدول",
+      "scheduleGapsHint": "اقتراح أعمال قريبة عند وجود سعة فارغة.",
+      "safetyNote": "لا تُؤتمت أبداً: المدفوعات، التأكيدات القانونية، حذف الحساب، التحقق من الهوية، أو الإيقاف.",
+      "save": "حفظ إعدادات الأتمتة",
+      "saving": "جاري الحفظ…"
+    }
+  },
+  "paymentReceiptUpload": {
+    "title": "أرفق صورة إيصال التحويل",
+    "subtitle": "لن نتمكن من مراجعة عملية الدفع قبل رفع الإيصال.",
+    "formats": "PNG, JPG, JPEG, PDF",
+    "maxSize": "الحد الأقصى {size}",
+    "dropHint": "اسحب الملف هنا أو انقر للاختيار",
+    "fromGallery": "المعرض",
+    "fromCamera": "الكاميرا",
+    "change": "تغيير الصورة",
+    "remove": "إزالة الصورة",
+    "previewAlt": "معاينة إيصال التحويل",
+    "pdfSelected": "ملف PDF جاهز للرفع",
+    "imageLabel": "صورة",
+    "selectedSuccess": "تم اختيار الصورة بنجاح",
+    "errors": {
+      "file_required": "يرجى اختيار ملف الإيصال.",
+      "file_too_large": "الملف يجب أن يكون 10 ميغابايت أو أقل.",
+      "invalid_file_type": "الصيغ المسموحة: PNG و JPG و JPEG و PDF فقط.",
+      "upload_failed": "فشل رفع الإيصال. حاول مرة أخرى.",
+      "save_failed": "تعذر حفظ الإيصال. حاول مرة أخرى.",
+      "prepare_failed": "تعذر بدء الرفع. حاول مرة أخرى.",
+      "duplicate_receipt": "تم رفع إيصال لهذه الدفعة مسبقاً.",
+      "payment_not_submittable": "هذه الدفعة لم تعد تقبل إيصالاً.",
+      "invalid_payment": "دفعة غير صالحة.",
+      "use_direct_upload": "يرجى رفع الإيصال من زر الرفع.",
+      "receipt_failed": "فشل رفع الإيصال. حاول مرة أخرى.",
+      "generic": "تعذر إكمال الرفع. حاول مرة أخرى."
+    }
+  },
+  "paymentExperience": {
+    "brand": "Dalily Pay",
+    "stepLabel": "الخطوة {n}",
+    "unlockTitle": "دفع رسوم فتح التواصل",
+    "subscriptionTitle": "إتمام الدفع",
+    "steps": {
+      "review": "راجع بيانات الدفع",
+      "upload": "أرفق صورة إيصال التحويل",
+      "verify": "سنراجع الدفع ثم نفتح التواصل",
+      "verifySubscription": "سنراجع الدفع ثم نفعّل خطتك"
+    },
+    "transferCta": "تم التحويل — متابعة لرفع الإيصال",
+    "transferHint": "حوّل المبلغ باستخدام البيانات أعلاه، ثم ارفع صورة الإيصال.",
+    "submit": "إرسال للمراجعة",
+    "uploading": "جارٍ الإرسال…",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "errorTitle": "حدث خطأ أثناء رفع الإيصال.",
+    "errorFallback": "يرجى المحاولة مرة أخرى.",
+    "successTitle": "تم إرسال الإيصال بنجاح.",
+    "successBody": "سيتم مراجعة عملية الدفع قريباً.",
+    "successNotify": "سيتم إشعارك فور اعتماد الدفع.",
+    "progress": "تقدم الرفع",
+    "startPayment": "ابدأ الدفع",
+    "details": {
+      "ariaLabel": "بيانات الدفع",
+      "amount": "المبلغ",
+      "reference": "المرجع",
+      "receiver": "اسم المستلم",
+      "account": "الحساب",
+      "copy": "نسخ",
+      "copyAmount": "نسخ المبلغ",
+      "copied": "تم النسخ",
+      "referenceHint": "أضف هذا الرقم في ملاحظة التحويل."
+    },
+    "shamcash": {
+      "checkingStatus": "جارٍ التحقق من حالة الدفع…",
+      "title": "التحقق عبر شام كاش",
+      "body": "حوّل المبلغ إلى حساب شام كاش أعلاه، ثم الصق رقم عملية التحويل من تطبيق شام كاش أدناه لتفعيل خطتك فوراً.",
+      "inputLabel": "رقم عملية شام كاش",
+      "inputPlaceholder": "مثال: 123456789",
+      "verifyCta": "تحقق وفعّل",
+      "verifying": "جارٍ التحقق…",
+      "fallbackToReceipt": "أو ارفع إيصالاً للمراجعة اليدوية بدلاً من ذلك",
+      "errors": {
+        "transaction_id_required": "يرجى إدخال رقم عملية شام كاش.",
+        "verification_unavailable": "تعذّر التحقق تلقائياً. يرجى استخدام خيار رفع الإيصال بدلاً من ذلك.",
+        "invalid_payment": "لا يمكن التحقق من هذا الدفع بهذه الطريقة.",
+        "payment_not_submittable": "لم يعد بالإمكان التحقق من هذا الدفع.",
+        "forbidden": "ليس لديك صلاحية الوصول إلى هذا الدفع.",
+        "login_required": "يرجى تسجيل الدخول والمحاولة مرة أخرى.",
+        "feature_disabled": "هذه الميزة غير متاحة حالياً."
+      }
+    }
+  },
   "nav": {
-    "search": "البحث",
+    "search": "طلب جديد",
+    "find": "ابحث عن عمل",
     "forBusiness": "للأعمال",
     "dashboard": "لوحة التحكم",
+    "orders": "طلباتي",
     "admin": "الإدارة",
     "login": "دخول",
     "register": "تسجيل",
@@ -39,16 +517,22 @@
       "home": "الرئيسية",
       "aiAssistant": "المساعد الذكي",
       "messages": "الرسائل",
-      "search": "بحث",
+      "search": "طلب جديد",
+      "orders": "طلباتي",
       "favorites": "المفضلة",
       "account": "الحساب"
     },
     "business": {
       "dashboard": "الرئيسية",
       "requests": "الطلبات",
+      "orders": "طلباتي",
       "messages": "الرسائل",
       "growth": "النمو",
-      "account": "الحساب"
+      "account": "حسابي",
+      "newJobs": "الطلبات الجديدة",
+      "opportunities": "الطلبات الجديدة",
+      "unlock": "فتح التواصل",
+      "payments": "المدفوعات"
     },
     "admin": {
       "controlCenter": "الرئيسية",
@@ -56,7 +540,46 @@
       "payments": "المدفوعات",
       "messages": "الرسائل",
       "marketplace": "السوق",
-      "admin": "الإدارة"
+      "admin": "الإدارة",
+      "issues": "البلاغات"
+    }
+  },
+  "orders": {
+    "customerEyebrow": "طلباتي",
+    "customerTitle": "طلباتي",
+    "customerSubtitle": "تابع كل طلب من الانتظار حتى الإنجاز والتقييم — مباشرة.",
+    "providerEyebrow": "طلباتي",
+    "providerTitle": "طلباتي",
+    "providerSubtitle": "تابع أعمالك حسب الحالة — من انتظار التأكيد حتى الإكمال.",
+    "searchPlaceholder": "ابحث بالعنوان أو الاسم…",
+    "listLabel": "الطلبات حسب الحالة",
+    "emptyTitle": "لا شيء في هذا التبويب",
+    "emptyBody": "عند أي تحديث يظهر هنا فوراً.",
+    "customerTabs": {
+      "pending": "معلق",
+      "accepted": "مقبول",
+      "in_progress": "قيد التنفيذ",
+      "waiting": "بانتظار",
+      "completed": "مكتمل",
+      "cancelled": "ملغى"
+    },
+    "providerTabs": {
+      "waiting": "بانتظار التأكيد",
+      "active": "قيد التنفيذ",
+      "completed": "مكتملة",
+      "cancelled": "ملغاة"
+    },
+    "status": {
+      "pending": "معلق",
+      "waiting": "بانتظار",
+      "accepted": "مقبول",
+      "quoted": "عرض سعر",
+      "in_progress": "قيد التنفيذ",
+      "completed": "مكتمل — بانتظار التقييم",
+      "cancelled": "ملغى",
+      "rejected": "مرفوض",
+      "disputed": "نزاع",
+      "reviewed": "تم التقييم"
     }
   },
   "mobilePages": {
@@ -93,7 +616,23 @@
         "requestSettings": "إعدادات الطلبات",
         "requestSettingsDesc": "تحكم بكيفية تواصل الزبائن معك",
         "myBookings": "حجوزاتي",
-        "myBookingsDesc": "المواعيد التي طلبتها مع مزودي الخدمة"
+        "myBookingsDesc": "المواعيد التي طلبتها مع مزودي الخدمة",
+        "quality": "الجودة والشكاوى",
+        "qualityDesc": "تتبع الشكاوى والحلول",
+        "pricing": "تقدير السوق العادل",
+        "pricingDesc": "اطّلع على نطاق سعري شفاف للأعمال النموذجية",
+        "forecast": "نظرة على الطلب",
+        "forecastDesc": "أيام الطلب المرتفع ونصائح الحجز",
+        "scheduling": "نوافذ التوافر",
+        "schedulingDesc": "نوافذ المواعيد وتقدير الوصول",
+        "wallet": "المحفظة",
+        "walletDesc": "الأرصدة والمرتجعات والسجل",
+        "assistant": "المساعد",
+        "assistantDesc": "اقتراحات لتحسين طلبك",
+        "editProfile": "تعديل الملف الشخصي",
+        "editProfileDesc": "تحديث اسمك وبريدك الإلكتروني",
+        "changePassword": "تغيير كلمة المرور",
+        "changePasswordDesc": "تحديث كلمة مرور حسابك"
       }
     },
     "myBusiness": {
@@ -109,7 +648,17 @@
         "hours": "ساعات العمل",
         "hoursDesc": "متى يمكن للعملاء التواصل",
         "verification": "التوثيق",
-        "verificationDesc": "ابنِ الثقة بشارة موثّق"
+        "verificationDesc": "ابنِ الثقة بشارة موثّق",
+        "quality": "رؤى الجودة",
+        "qualityDesc": "الشكاوى ونصائح التحسين",
+        "pricing": "ذكاء التسعير",
+        "pricingDesc": "نطاقات مقترحة — أنت تحدد السعر النهائي",
+        "forecast": "توقّع الطلب",
+        "forecastDesc": "خطط السعة وفترات الذروة",
+        "scheduling": "الجدولة الذكية",
+        "schedulingDesc": "حسّن المسارات والفجوات والفرص",
+        "assistant": "مساعد الأعمال الذكي",
+        "assistantDesc": "إحاطة يومية وأهداف ونصائح نمو"
       }
     },
     "businessMessages": {
@@ -118,19 +667,42 @@
       "comingSoon": "الدردشة قادمة قريباً — ستظهر شارة عند الحاجة للاهتمام."
     },
     "businessAccount": {
-      "title": "الحساب",
+      "title": "حسابي",
+      "subtitle": "إدارة ملف عملك وإعداداتك من مكان واحد.",
       "signedInAs": "مسجّل الدخول باسم {name}",
       "language": "اللغة",
       "theme": "المظهر",
       "notifications": "الإشعارات",
-      "notificationsHint": "تُدار في النمو",
+      "notificationsHint": "تظهر الشارات تلقائياً عند التحديثات",
+      "sections": {
+        "business": "إعدادات العمل",
+        "more": "المزيد"
+      },
       "links": {
         "profile": "الملف الشخصي",
-        "profileDesc": "بيانات التواصل لنشاطك",
-        "subscription": "الاشتراك",
-        "subscriptionDesc": "الخطة وخيارات الترقية",
+        "profileDesc": "الاسم والتواصل وتفاصيل النشاط",
+        "services": "الخدمات",
+        "servicesDesc": "ما تقدمه للزبائن",
+        "availability": "التوفر",
+        "availabilityDesc": "متى يمكنك استقبال الطلبات",
+        "verification": "التوثيق",
+        "verificationDesc": "ابنِ الثقة بشارة موثّق",
+        "settings": "الإعدادات",
+        "settingsDesc": "استقبال الطلبات ووضع الإجازة",
+        "media": "الوسائط",
+        "mediaDesc": "صور أعمالك ومعرض الأعمال",
+        "calendar": "التقويم",
+        "calendarDesc": "مواعيد وأيام العمل",
+        "bookings": "الحجوزات",
+        "bookingsDesc": "المواعيد المحجوزة مع الزبائن",
+        "analytics": "الإحصائيات",
+        "analyticsDesc": "أداء ونمو نشاطك",
         "payments": "المدفوعات",
-        "paymentsDesc": "حالة الدفع والسجل"
+        "paymentsDesc": "الفتح والمدفوعات والسجل",
+        "editProfile": "تعديل الملف الشخصي",
+        "editProfileDesc": "تحديث اسمك وبريدك الإلكتروني",
+        "changePassword": "تغيير كلمة المرور",
+        "changePasswordDesc": "تحديث كلمة مرور حسابك"
       }
     },
     "growth": {
@@ -138,7 +710,6 @@
       "subtitle": "رؤى وصحة ونصائح لتنمية نشاطك.",
       "lockedTitle": "إحصاءات بريميوم",
       "lockedSubtitle": "رقِّ خطتك لفتح رؤى أعمق. خطة البداية تعرض لوحة النمو الأساسية أعلاه.",
-      "upgradeCta": "عرض الخطط",
       "locked": {
         "competitors": {
           "title": "نبض المنافسين",
@@ -170,7 +741,9 @@
         "searches": "تحليلات البحث",
         "searchesDesc": "ما يبحث عنه الناس",
         "subscriptions": "الاشتراكات",
-        "subscriptionsDesc": "الخطط ونظرة على الفوترة"
+        "subscriptionsDesc": "الخطط ونظرة على الفوترة",
+        "monetization": "تحقيق الدخل من العملاء",
+        "monetizationDesc": "خطة الأعمال وأسعار الفتح والمضاعفات"
       }
     }
   },
@@ -268,7 +841,29 @@
     "categoriesTitle": "تصفح الخدمات",
     "categorySearchLabel": "ابحث عن {category}",
     "trustBadge": "أعمال محلية موثوقة",
+    "intentTrustBadge": "فقط الأعمال المناسبة ترى طلبك",
+    "intentHeroTitle": "ماذا تحتاج؟",
+    "intentHeroSubtitle": "صف مشكلتك. الأعمال ترسل عروضاً. أنت تختار — ورقمها يبقى خاصاً حتى تفتح التواصل.",
     "aiPowered": "بحث ذكي",
+    "pathChooser": {
+      "trustBadge": "طريقتان واضحتان للحصول على المساعدة",
+      "heroTitle": "ماذا تحتاج؟",
+      "heroSubtitle": "انشر طلباً لاستلام عروض، أو تصفّح الأعمال المحلية الموثوقة.",
+      "publish": {
+        "title": "نشر طلب",
+        "body": "صف العمل مرة واحدة — الأعمال المناسبة ترسل عروضاً. تبقى خاصاً حتى تختار.",
+        "cta": "ابدأ الطلب"
+      },
+      "find": {
+        "title": "البحث عن عمل",
+        "body": "تصفّح حسب الفئة بالقرب منك — صفِّ حسب المدينة أو الاسم عندما تعرف ما تبحث عنه.",
+        "cta": "تصفّح الأعمال"
+      }
+    },
+    "floatingAi": {
+      "label": "اسأل دليلي",
+      "ariaLabel": "افتح دردشة دليلي لوصف مشكلتك"
+    },
     "howItWorks": {
       "title": "كيف يعمل دليلي؟",
       "subtitle": "ثلاث خطوات واضحة من المشكلة إلى المساعدة",
@@ -291,6 +886,754 @@
     "featured": {
       "title": "أعمال مميزة",
       "subtitle": "خدمات محلية موثوقة في سوريا"
+    },
+    "trustStats": {
+      "ariaLabel": "مؤشرات ثقة السوق",
+      "providers": "مزودون موثّقون",
+      "categories": "فئات خدمات",
+      "closedBeta": "الوصول",
+      "closedBetaValue": "نسخة تجريبية مغلقة"
+    }
+  },
+  "intentFlow": {
+    "pageTitle": "أخبرنا بما تحتاجه",
+    "pageSubtitle": "عادةً أقل من دقيقة — ثم نُبلغ الأعمال المناسبة.",
+    "metaDescription": "صف مشكلتك، استلم عروضاً من الأعمال المطابقة، افتح بيانات التواصل عند الاختيار، ثم تواصل عبر الدردشة.",
+    "targeted": {
+      "pageTitle": "أرسل طلباً لهذا العمل",
+      "pageSubtitle": "صف المشكلة — نرسل الطلب مباشرة لهذا العمل فقط.",
+      "banner": "الطلب موجّه إلى: {name}",
+      "bannerHint": "لن نُبلغ أعمالاً أخرى. الفئة محددة مسبقاً."
+    },
+    "hero": {
+      "placeholder": "ماذا تحتاج؟",
+      "cta": "متابعة",
+      "hint": "صف المشكلة بكلماتك",
+      "overlayTitle": "✨ ماذا تحتاج اليوم؟",
+      "overlaySubtitle": "صف المشكلة بكلماتك وسأجد لك المختص المناسب."
+    },
+    "back": "رجوع",
+    "continue": "متابعة",
+    "trust": {
+      "privacy": "رقم هاتفك يبقى مخفياً حتى تختار عملاً.",
+      "relevantOnly": "فقط الأعمال المناسبة تستلم طلبك.",
+      "addressLater": "العنوان الدقيق يُشارك فقط بعد اختيارك وفتح التواصل.",
+      "youControl": "أنت تتحكم بمن يحصل على بيانات التواصل.",
+      "verified": "الأعمال الموثّقة تظهر بوضوح."
+    },
+    "suggestions": {
+      "s1": "تسريب في أنبوب المطبخ",
+      "s2": "المكيف لا يبرّد",
+      "s3": "مغلوق برّا البيت",
+      "s4": "أحتاج كهربائي اليوم",
+      "contextual": {
+        "general": {
+          "g1": "أحتاج فني اليوم",
+          "g2": "عطل في المنزل",
+          "g3": "صيانة منزلية",
+          "g4": "إصلاح عاجل"
+        },
+        "electrical": {
+          "e1": "انقطاع الكهرباء",
+          "e2": "تركيب نجفة",
+          "e3": "إصلاح مفتاح",
+          "e4": "تغيير مقبس",
+          "e5": "إصلاح إنارة"
+        },
+        "plumbing": {
+          "p1": "تسريب مياه",
+          "p2": "انسداد المجلى",
+          "p3": "إصلاح الحنفية",
+          "p4": "إصلاح السخان",
+          "p5": "تسليك الصرف"
+        },
+        "painting": {
+          "a1": "دهان غرفة",
+          "a2": "تجديد الجدران",
+          "a3": "إصلاح التشققات",
+          "a4": "طلاء الواجهة"
+        },
+        "carpentry": {
+          "c1": "إصلاح الباب",
+          "c2": "إصلاح النافذة",
+          "c3": "تركيب رفوف",
+          "c4": "إصلاح الخزانة"
+        },
+        "hvac": {
+          "h1": "المكيف لا يبرد",
+          "h2": "تنظيف المكيف",
+          "h3": "تعبئة غاز",
+          "h4": "إصلاح الوحدة الخارجية"
+        }
+      }
+    },
+    "clarify": {
+      "electrical": {
+        "scope": "هل المشكلة في غرفة واحدة أم في كل المنزل؟",
+        "safety": "هل هناك شرر أو رائحة حريق؟"
+      },
+      "plumbing": {
+        "where": "أين التسريب أو العطل تقريباً؟",
+        "ongoing": "هل المياه ما زالت تسرب الآن؟"
+      },
+      "hvac": {
+        "symptom": "هل المكيف يشغّل لكن بدون تبريد؟",
+        "age": "منذ متى بدأت المشكلة؟"
+      },
+      "carpentry": {
+        "item": "ما الذي يحتاج إصلاحاً (باب، دولاب، خشب)؟",
+        "urgency": "هل يمنعك من إغلاق المنزل بأمان؟"
+      },
+      "painting": {
+        "indoor": "دهان داخلي أم خارجي؟",
+        "size": "غرفة واحدة أم أكثر؟"
+      },
+      "locksmith": {
+        "lockedOut": "هل أنت مغلوق خارج المنزل الآن؟",
+        "break": "هل القفل مكسور أم ضاع المفتاح؟"
+      }
+    },
+    "smartQuestions": {
+      "common": {
+        "photo": "هل يمكنك إضافة صورة للمشكلة؟",
+        "area": "ما أقرب منطقة أو معلم؟"
+      },
+      "electrical": {
+        "outage": "هل انقطعت الكهرباء؟",
+        "wholeHome": "هل المشكلة في الشقة كلها أم في مكان واحد؟",
+        "fuseChecked": "هل فحصت الفيوز / القاطع؟"
+      },
+      "plumbing": {
+        "leak": "هل يوجد تسرب مياه نشط؟",
+        "where": "ماسورة، مرحاض، مطبخ، أم حمّام؟",
+        "stillRunning": "هل المياه ما زالت تسرب أو تجري الآن؟"
+      },
+      "hvac": {
+        "symptom": "هل المكيف يعمل لكن بدون تبريد؟"
+      },
+      "locksmith": {
+        "lockedOut": "هل أنت مغلوق خارج المنزل الآن؟",
+        "breakOrLost": "هل القفل مكسور أم ضاع المفتاح؟"
+      },
+      "painting": {
+        "indoorOutdoor": "دهان داخلي أم خارجي؟",
+        "size": "تقريباً ما حجم المساحة (غرف أو م²)؟"
+      },
+      "carpentry": {
+        "item": "ما الذي يحتاج إصلاحاً (باب، دولاب، خشب)؟"
+      }
+    },
+    "workflow": {
+      "emergency": "حالة طارئة — نعطي أولوية للمزودين المتاحين القريبين.",
+      "guided": "بعض التفاصيل الإضافية تساعد على مطابقة أفضل.",
+      "collectOffers": "عمل أكبر — يُفضّل جمع عدة عروض.",
+      "directContact": "إصلاح صغير — مطابقة مباشرة مع مزود مناسبة."
+    },
+    "steps": {
+      "intent": {
+        "label": "صف المشكلة",
+        "placeholder": "اكتب وصفاً قصيراً لما تحتاجه…",
+        "continue": "متابعة"
+      },
+      "voice": {
+        "record": "سجّل رسالة صوتية",
+        "stop": "إيقاف",
+        "cancel": "إلغاء",
+        "recording": "جارٍ التسجيل…",
+        "transcribing": "جارٍ تحويل الصوت إلى نص…",
+        "aiSummary": "فهم الرسالة الصوتية",
+        "category": "الفئة المكتشفة",
+        "urgency": "الاستعجال المكتشف",
+        "language": "اللغة",
+        "unknownCategory": "غير واضحة بعد",
+        "confirm": "صحيح",
+        "editTranscript": "تعديل النص",
+        "saveEdit": "حفظ النص",
+        "cancelEdit": "إلغاء",
+        "confirmed": "شكراً — سنعتمد ذلك للمطابقة.",
+        "clarifyMismatch": "قد لا تتطابق الرسالة الصوتية مع باقي التفاصيل. أكّد أو عدّل.",
+        "errors": {
+          "permission_denied": "يلزم السماح باستخدام الميكروفون.",
+          "not_supported": "التسجيل الصوتي غير مدعوم في هذا المتصفح.",
+          "unknown": "تعذّر بدء التسجيل.",
+          "feature_disabled": "الإدخال الصوتي غير مفعّل.",
+          "no_audio": "لا يوجد تسجيل صوتي.",
+          "file_too_large": "الملف الصوتي كبير جداً.",
+          "invalid_file_type": "صيغة صوت غير مدعومة.",
+          "transcription_failed": "تعذّر التحويل إلى نص. يمكنك الكتابة بدل ذلك.",
+          "no_api_key": "تحويل الصوت غير متاح مؤقتاً."
+        }
+      },
+      "confirm": {
+        "badge": "اقتراح ذكي",
+        "title": "أعتقد أنك تحتاج إلى {category}.",
+        "subtitle": "هل هذا صحيح؟",
+        "yes": "نعم، صحيح",
+        "no": "لا، تصحيح"
+      },
+      "category": {
+        "title": "أكد الفئة",
+        "subtitle": "اقترحنا مطابقة — غيّرها إن لزم.",
+        "suggested": "المقترح: {category}",
+        "change": "الفئة"
+      },
+      "clarify": {
+        "title": "أسئلة سريعة",
+        "subtitle": "فقط التفاصيل الناقصة — يمكنك التخطي.",
+        "placeholder": "اختياري…",
+        "skip": "تخطي",
+        "completeness": "اكتمال الطلب: {score}%"
+      },
+      "photos": {
+        "title": "أضف صوراً (اختياري)",
+        "subtitle": "الصور تساعد الأعمال على إرسال عروض أفضل.",
+        "add": "إضافة صور",
+        "skip": "تخطي",
+        "count": "{count} صورة محددة",
+        "analyzing": "جارٍ تحليل صورتك…",
+        "aiSummary": "ملخص ذكي للصورة",
+        "confirm": "صحيح",
+        "correct": "غير دقيق",
+        "correctionPlaceholder": "ماذا يجب أن نرى بدلاً من ذلك؟",
+        "saveCorrection": "حفظ التصحيح",
+        "cancelCorrection": "إلغاء",
+        "confirmed": "شكراً — سنعتمد ذلك للمطابقة.",
+        "clarifyMismatch": "يبدو أن الصورة والوصف مختلفان. أكّد أو صحّح من فضلك.",
+        "failed": "تعذّر تحليل الصورة. يمكنك المتابعة."
+      },
+      "location": {
+        "title": "أين تحتاج المساعدة؟",
+        "subtitle": "المدينة تكفي للمطابقة. العنوان الدقيق يبقى خاصاً الآن.",
+        "city": "المدينة",
+        "areaOptional": "المنطقة أو معلم (اختياري)",
+        "areaPlaceholder": "مثلاً قرب أوتوستراد المزة"
+      },
+      "urgency": {
+        "title": "هل هذه حالة طارئة؟",
+        "subtitle": "الطلبات العاجلة تحصل على أولوية أعلى في السوق.",
+        "emergency": "طارئ",
+        "normal": "طلب عادي"
+      },
+      "publish": {
+        "title": "انشر طلبك",
+        "subtitle": "الأعمال المناسبة يمكنها إرسال عروض. تختار لاحقاً.",
+        "reviewTitle": "راجع طلبك",
+        "reviewSubtitle": "تأكد من التفاصيل قبل النشر — يمكنك التعديل.",
+        "edit": "تعديل",
+        "loginRequired": "سجّل الدخول للنشر — رقمك يبقى خاصاً حتى تختار.",
+        "cta": "نشر الطلب",
+        "fields": {
+          "category": "الفئة",
+          "problem": "المشكلة",
+          "location": "الموقع",
+          "urgency": "الأولوية",
+          "photos": "الصور"
+        }
+      }
+    },
+    "waiting": {
+      "title": "نُبلغ الأعمال المناسبة",
+      "subtitle": "ستظهر العروض هنا عندما يرد المزودون.",
+      "loading": "جارٍ تحميل طلبك…",
+      "trustNotBroadcast": "طلبك لا يُرسل للجميع — فقط للأعمال المناسبة.",
+      "emptyTitle": "لا عروض بعد",
+      "emptyBody": "تظهر العروض عندما ترد الأعمال المعيَّنة. طلبك محفوظ.",
+      "matchedTitle": "تم إبلاغ {count} من الأعمال المناسبة",
+      "matchedBody": "يمكنهم إرسال عروض قريبًا. أنت تتحكم بمن يحصل على بيانات تواصلك.",
+      "undersupplyTitle": "نبحث عن مزيد من المطابقات",
+      "undersupplyBody": "وسّعنا البحث عند الحاجة. ستظهر العروض عندما ترد الأعمال المؤهلة.",
+      "requestLabel": "طلبك",
+      "emergencyBadge": "مُعلَّم كطارئ",
+      "myRequests": "طلباتي",
+      "startNew": "طلب جديد",
+      "errorTitle": "الطلب غير موجود",
+      "errorBody": "غرفة الانتظار غير متاحة أو ليس لديك صلاحية."
+    },
+    "emergency": {
+      "badge": "إرسال طارئ",
+      "title": "يتم إرسال المساعدة الآن",
+      "subtitle": "تخطينا الانتظار العادي وأبلغنا أسرع المزودين المتاحين.",
+      "etaLabel": "الوصول المتوقع",
+      "etaUpdated": "حدّث في {time}",
+      "liveLocation": "موقع المزود المباشر",
+      "locationUpdated": "الموقع في {time}",
+      "timelineTitle": "الحالة المباشرة",
+      "timelineEmpty": "بانتظار أول تحديث للإرسال…",
+      "notified": "تم إبلاغ {count} مزودين",
+      "status": {
+        "detected": "تم اكتشاف حالة طارئة",
+        "dispatching": "جارٍ الإرسال",
+        "awaiting_accept": "بانتظار مزود",
+        "accepted": "قبل المزود",
+        "on_the_way": "في الطريق",
+        "arrived": "وصل",
+        "in_progress": "العمل جارٍ",
+        "completed": "اكتمل",
+        "cancelled": "أُلغي",
+        "stopped": "أُغلق الإرسال"
+      }
+    },
+    "errors": {
+      "unknown": "حدث خطأ. حاول مرة أخرى.",
+      "feature_disabled": "هذه التجربة غير مفعّلة.",
+      "login_required": "يرجى تسجيل الدخول للمتابعة.",
+      "intent_too_short": "صف ما تحتاجه بمزيد من التفصيل.",
+      "category_required": "يرجى تأكيد الفئة.",
+      "category_invalid": "هذه الفئة غير متاحة.",
+      "location_required": "يرجى اختيار مدينة.",
+      "location_invalid": "هذه المدينة غير متاحة.",
+      "urgency_required": "يرجى تأكيد الأولوية.",
+      "publish_failed": "تعذر نشر الطلب. حاول مرة أخرى.",
+      "contact_info_blocked": "لا تشارك أرقام الهاتف أو البريد هنا. تفاصيل التواصل تُفتح بعد دفع رسوم فتح التواصل.",
+      "provider_not_found": "هذا العمل غير متاح.",
+      "provider_unavailable": "هذا العمل لا يستقبل طلبات حالياً.",
+      "provider_category_mismatch": "فئة العمل لا تطابق طلبك.",
+      "already_matched": "تم تعيين مزودين لهذا الطلب مسبقاً.",
+      "pool_insert_failed": "تعذر إنشاء التعيين. حاول مرة أخرى.",
+      "assignment_failed": "تعذر تعيين العمل. حاول مرة أخرى."
+    }
+  },
+  "intakeChat": {
+    "title": "صف مشكلتك",
+    "metaDescription": "تحدث مع ذكاء دليلي لتوضيح ما تحتاجه، ثم تابع نموذج الطلب.",
+    "eyebrow": "دليلي AI",
+    "subtitle": "أخبرنا بما يحدث — نطرح أسئلة قصيرة، ثم تتابع الطلب العادي.",
+    "welcome": "بماذا تحتاج المساعدة؟ صف المشكلة بكلماتك — لا يلزم حساب للدردشة.",
+    "placeholder": "مثال: حوض المطبخ يسرّب تحت الخزانة…",
+    "send": "إرسال",
+    "thinking": "جاري التفكير…",
+    "inputHint": "أنت تتحكم — لا يُرسل أي طلب حتى تتابع.",
+    "continueHint": "عندما تكون جاهزاً — تابع لتعبئة الفئة والصور والموقع.",
+    "readyHint": "يبدو أن لدينا ما يكفي للمتابعة.",
+    "continueCta": "متابعة إلى الطلب",
+    "errors": {
+      "generic": "حدث خطأ. حاول مرة أخرى.",
+      "rateLimited": "رسائل كثيرة — انتظر لحظة ثم حاول مجدداً.",
+      "contentBlocked": "تعذر معالجة هذه الرسالة. أعد صياغة وصف المشكلة.",
+      "unavailable": "الدردشة غير متاحة مؤقتاً. يمكنك بدء طلب مباشرة.",
+      "tooLong": "الرسالة طويلة جداً — اختصرها وحاول مجدداً.",
+      "tooMany": "هذه المحادثة كافية — تابع إلى نموذج الطلب.",
+      "needMore": "أضف مزيداً من التفاصيل عن المشكلة قبل المتابعة."
+    }
+  },
+  "businessSubscription": {
+    "eyebrow": "الاشتراك",
+    "title": "خطة أعمالك",
+    "subtitle": "رسم شهري ثابت يبقيك ظاهراً للزبائن والمطابقة — عملاء بلا حدود مشمولون.",
+    "statusLabel": "حالة الظهور",
+    "phase": {
+      "active": "نشط",
+      "grace": "فترة سماح",
+      "hidden": "مخفي — تأخر الدفع",
+      "unpaid": "غير مدفوع — غير ظاهر"
+    },
+    "price": "{price} USD / شهر",
+    "unlimitedLeads": "عملاء بلا حدود — بدون رسوم لكل عميل.",
+    "periodEnd": "تنتهي الفترة الحالية: {date}",
+    "noPeriod": "لا توجد فترة مدفوعة بعد. ادفع أدناه وارفع إيصالك لمراجعة المسؤول.",
+    "graceRemaining": "يتبقى {days} يوم/أيام ضمن مهلة السماح {graceDays} أيام قبل إخفائك.",
+    "approachingExpiry": "تنتهي فترتك خلال {days} يوم/أيام. جدّد الآن لتبقى ظاهراً.",
+    "hiddenHint": "لن تظهر في البحث أو التصفح أو المطابقة الجديدة حتى يصبح اشتراكك سارياً مجدداً. حسابك وسجلك محفوظان.",
+    "planLabel": "خطة الأعمال",
+    "paymentTitle": "ادفع اشتراكك",
+    "paymentBody": "حوّل {price} USD حسب التعليمات ثم ارفع إيصالك. يراجعه المسؤول ويفعّل فترتك.",
+    "payCta": "ابدأ الدفع — {price} USD",
+    "renewCta": "تجديد — {price} USD",
+    "resumeCheckout": "متابعة الدفع",
+    "paymentStarted": "بدأ الدفع — اتبع خطوات التحويل",
+    "paymentStartError": "تعذر بدء الدفع. حاول مرة أخرى.",
+    "activeTitle": "كل شيء جاهز",
+    "activeBody": "خطة أعمالك نشطة. سنذكّرك قبل أيام من انتهاء الفترة.",
+    "paymentsHub": "مركز المدفوعات",
+    "backHome": "رئيسية الأعمال"
+  },
+  "findFlow": {
+    "title": "تصفّح الأعمال القريبة منك",
+    "metaDescription": "تصفّح الأعمال الموثوقة حسب الفئة والمدينة — تبقى بيانات التواصل مخفية حتى ترسل طلباً وتفتح التواصل.",
+    "subtitle": "اختر فئة ومدينة لعرض الأعمال المناسبة. يمكنك أيضاً البحث بالاسم — بدون أرقام هاتف أو عناوين دقيقة.",
+    "placeholder": "اختياري: اسم العمل…",
+    "submit": "عرض النتائج",
+    "emptyPrompt": "اختر فئة أو مدينة لتصفّح الأعمال القريبة.",
+    "noResults": "لا نتائج مطابقة. جرّب فئة أو مدينة أخرى.",
+    "filteringBy": "عرض: {category}",
+    "resultsLabel": "النتائج",
+    "resultsCount": "{count} نتيجة",
+    "distanceKm": "حوالي {km} كم",
+    "broadcastHint": "لست متأكداً من العمل؟",
+    "broadcastCta": "انشر طلباً للسوق",
+    "sendRequestCta": "أرسل طلباً لهذا العمل",
+    "filters": {
+      "category": "الفئة",
+      "city": "المدينة",
+      "anyCategory": "كل الفئات",
+      "anyCity": "كل المدن"
+    },
+    "errors": {
+      "searchFailed": "تعذر البحث. حاول مرة أخرى."
+    }
+  },
+  "offerFlow": {
+    "customer": {
+      "title": "العروض",
+      "subtitle": "قارن حتى 3 عروض ثم اختر واحداً. بيانات التواصل تبقى خاصة.",
+      "noContactYet": "اختيار عرض لا يشارك رقمك ولا يفتح الدردشة بعد.",
+      "select": "قبول الطلب",
+      "accept": "قبول الطلب",
+      "decline": "رفض",
+      "viewProfile": "عرض الملف",
+      "back": "رجوع",
+      "trustBarHint": "تبقى بيانات التواصل خاصة حتى تقبل ويكتمل فتح التواصل.",
+      "viewGallery": "المعرض",
+      "viewReviews": "التقييمات",
+      "completedJobs": "{count, plural, =0 {لا أعمال بعد} one {# عمل مكتمل} other {# أعمال مكتملة}}",
+      "compare": "مقارنة",
+      "removeCompare": "إزالة من المقارنة",
+      "business": "عمل",
+      "verified": "موثّق",
+      "selectedBadge": "مختار",
+      "comparing": "قيد المقارنة",
+      "rating": "{rating}★",
+      "selectedPendingUnlock": "تم اختيار العرض. فتح التواصل يأتي لاحقاً — لم يُشارك شيء بعد."
+    },
+    "decision": {
+      "recommendedBadge": "مزود موصى به",
+      "recommendedAria": "المزود الموصى به",
+      "trustScore": "الثقة {score}%",
+      "sortLabel": "ترتيب",
+      "filtersLabel": "تصفية",
+      "shortlist": "قائمة مختصرة",
+      "addShortlist": "حفظ في القائمة المختصرة",
+      "removeShortlist": "إزالة من القائمة المختصرة",
+      "shortlistedBadge": "مختصر",
+      "details": "رؤى",
+      "emptyTitle": "لا عروض بعد",
+      "emptyBody": "عندما يرسل المزودون عروضاً، ستقارنها هنا.",
+      "noMatches": "لا عروض تطابق هذه التصفية.",
+      "clearFilters": "مسح التصفية",
+      "assistantTitle": "لماذا يتميّز هذا المزود",
+      "insightsTitle": "رؤى العرض",
+      "risksTitle": "نقاط للانتباه",
+      "sorts": {
+        "recommended": "موصى به",
+        "rating": "أعلى تقييم",
+        "trust": "أفضل درجة ثقة",
+        "completed_jobs": "الأكثر خبرة",
+        "response_time": "الأسرع رداً",
+        "price": "أقل سعر",
+        "newest": "الأحدث",
+        "alphabetical": "أبجدياً"
+      },
+      "filters": {
+        "verified_only": "موثّق فقط",
+        "available_now": "متاح الآن",
+        "shortlisted": "القائمة المختصرة"
+      },
+      "summaries": {
+        "satisfaction_and_speed": "رضا عالٍ من العملاء ورد سريع.",
+        "reliability_and_jobs": "موثوقية ممتازة والعديد من الأعمال الناجحة.",
+        "verified_and_completion": "نشاط موثّق مع سجل إنجاز قوي.",
+        "fast_response": "يرد بسرعة على العملاء.",
+        "high_satisfaction": "تقييم مرتفع من العملاء.",
+        "strong_reliability": "مؤشرات موثوقية قوية.",
+        "highly_rated": "تقييم مرتفع من العملاء.",
+        "category_specialist": "متخصص في هذه الفئة.",
+        "frequently_hired": "يُطلب كثيراً.",
+        "new_provider": "مزود أحدث على دليلي.",
+        "excellent_completion": "سجل إنجاز ممتاز.",
+        "similar_experience": "خبرة في أعمال مشابهة.",
+        "verified_business": "نشاط موثّق.",
+        "good_value": "قيمة عرض تنافسية."
+      },
+      "insights": {
+        "fast_response": "يرد بسرعة كبيرة",
+        "highly_rated": "تقييم مرتفع من العملاء",
+        "category_specialist": "متخصص في هذه الفئة",
+        "frequently_hired": "يُطلب كثيراً",
+        "new_provider": "مزود جديد",
+        "excellent_completion": "سجل إنجاز ممتاز",
+        "similar_experience": "خبرة في أعمال مشابهة",
+        "verified_business": "نشاط موثّق",
+        "strong_reliability": "موثوقية قوية",
+        "good_value": "قيمة جيدة"
+      },
+      "risks": {
+        "new_provider": "أحدث على المنصة — أعمال مكتملة أقل حتى الآن.",
+        "limited_history": "سجل عمل محدود على دليلي.",
+        "slow_response": "عادة أبطأ في الرد.",
+        "recent_cancellations": "بعض الإلغاءات الأخيرة مسجّلة.",
+        "incomplete_profile": "الملف الشخصي غير مكتمل بعد.",
+        "temporarily_unavailable": "قد يكون غير متاح مؤقتاً."
+      },
+      "badges": {
+        "top_rated": "الأعلى تقييماً",
+        "fast_responder": "سريع الرد",
+        "highly_recommended": "موصى به بشدة",
+        "verified": "موثّق",
+        "reliable": "موثوق",
+        "experienced": "ذو خبرة",
+        "popular": "شائع",
+        "community_favorite": "مفضل المجتمع"
+      },
+      "assistant": {
+        "excellent_reviews": "تقييمات ممتازة",
+        "fast_communication": "تواصل سريع",
+        "verified_business": "نشاط موثّق",
+        "strong_reliability": "موثوقية قوية",
+        "category_fit": "ملاءمة قوية للفئة",
+        "strong_demand": "يختاره العملاء كثيراً",
+        "emerging_talent": "مزود واعد وأحدث",
+        "strong_completion": "إنجاز قوي للأعمال",
+        "relevant_experience": "خبرة ذات صلة",
+        "good_value": "قيمة تنافسية"
+      },
+      "compare": {
+        "title": "مقارنة المزودين",
+        "metric": "المعيار",
+        "rating": "التقييم",
+        "trust": "درجة الثقة",
+        "jobs": "أعمال مكتملة",
+        "response": "الرد (ساعات)",
+        "acceptance": "نسبة القبول",
+        "price": "السعر",
+        "verified": "موثّق",
+        "portfolio": "المعرض",
+        "yes": "نعم",
+        "no": "لا"
+      }
+    },
+    "provider": {
+      "eyebrow": "الطلبات الجديدة",
+      "listTitle": "الطلبات الجديدة",
+      "listSubtitle": "فرص عمل مطابقة لنشاطك. أرسل عرضك مباشرة — دون خطوة قبول تفتح الدردشة.",
+      "empty": "لا طلبات جديدة حالياً. ستظهر هنا عند وصول فرصة مناسبة.",
+      "noProvider": "أنشئ ملف عملك أولاً.",
+      "statusOffered": "تم إرسال العرض",
+      "statusOpen": "بانتظار عرضك",
+      "emergency": "طارئ",
+      "back": "كل الطلبات الجديدة",
+      "area": "ملاحظة الموقع",
+      "noAcceptRequired": "لا خطوة قبول — أرسل العرض مباشرة.",
+      "composeTitle": "إرسال عرض",
+      "useTemplate": "ابدأ من قالب",
+      "noTemplate": "عرض فارغ",
+      "etaPlaceholder": "مثال: اليوم ٤–٦ م",
+      "submit": "إرسال العرض",
+      "success": "تم إرسال العرض للزبون.",
+      "offerSentTitle": "تم إرسال عرضك بنجاح.",
+      "offerSentBody": "بانتظار قرار العميل.",
+      "offerSent": "تم إرسال عرضك بنجاح. بانتظار قرار العميل.",
+      "saveTemplate": "احفظ الحقول الحالية كقالب",
+      "templateLabel": "اسم القالب",
+      "saveTemplateCta": "حفظ القالب",
+      "templateSaved": "تم حفظ القالب.",
+      "clarifications": "أسئلة الزبون",
+      "prep": {
+        "badge": "تحضير ذكي",
+        "title": "ملخص التحضير",
+        "duration": "المدة المتوقعة",
+        "complexity": "درجة الصعوبة",
+        "priceRange": "نطاق السوق (تقديري)",
+        "tools": "أدوات متوقعة",
+        "materials": "مواد متوقعة",
+        "relatedTrades": "قد تحتاج حرفاً أخرى",
+        "detectedObjects": "ما ظهر في الصورة",
+        "likelyDamage": "الضرر المحتمل",
+        "estimatedRisk": "تقدير المخاطر",
+        "imageConfidence": "ثقة الصورة",
+        "visionMismatch": "قد لا تتطابق الصورة مع الوصف — أكّد مع العميل."
+      },
+      "voice": {
+        "badge": "صوت العميل",
+        "title": "رسالة صوتية",
+        "transcript": "النص المكتوب",
+        "original": "الصياغة الأصلية",
+        "aiSummary": "ملخص ذكي",
+        "category": "الفئة المكتشفة",
+        "urgency": "الاستعجال المتوقع",
+        "language": "اللغة / اللهجة",
+        "noAudio": "الملف الصوتي غير متاح — النص فقط.",
+        "audioUnsupported": "متصفحك لا يدعم تشغيل هذا الصوت."
+      },
+      "emergencyActions": {
+        "badge": "طارئ",
+        "title": "رد سريع",
+        "subtitle": "ضغطة واحدة — العميل ينتظر.",
+        "accept": "قبول",
+        "decline": "رفض",
+        "busy": "مشغول",
+        "onMyWay": "في الطريق",
+        "navigate": "التنقل",
+        "shareLocation": "مشاركة الموقع",
+        "stopShare": "إيقاف المشاركة",
+        "noLocation": "لا يوجد عنوان بعد",
+        "geoUnsupported": "الموقع غير مدعوم على هذا الجهاز",
+        "locationShared": "تمت مشاركة الموقع المباشر",
+        "locationError": "تعذرت مشاركة الموقع",
+        "error": "تعذر تحديث حالة الطوارئ",
+        "success": {
+          "accepted": "تم قبول الطارئ",
+          "declined": "تم الرفض",
+          "busy": "تم التعليم كمشغول",
+          "on_the_way": "أُبلغ العميل — في الطريق",
+          "arrived": "تم تسجيل الوصول",
+          "started": "بدأ العمل",
+          "completed": "اكتمل",
+          "notified": "تم الإشعار"
+        }
+      }
+    },
+    "fields": {
+      "price": "السعر",
+      "currency": "العملة",
+      "priceModel": "نوع السعر",
+      "eta": "الوقت المتوقع",
+      "inclusions": "ما يشمله العرض",
+      "message": "نبذة قصيرة"
+    },
+    "priceModel": {
+      "fixed": "ثابت",
+      "hourly": "بالساعة",
+      "estimate": "تقديري"
+    },
+    "quality": {
+      "nudge": "نصيحة: أضف وقتاً متوقعاً ونبذة قصيرة للمقارنة العادلة."
+    },
+    "qa": {
+      "title": "أسئلة سريعة",
+      "hint": "أسئلة محدودة فقط — ليست دردشة كاملة. بدون أرقام هاتف.",
+      "placeholder": "اسأل أو أجب باختصار…",
+      "send": "إرسال",
+      "customer": "أنت",
+      "provider": "العمل",
+      "errors": {
+        "failed": "تعذر الإرسال.",
+        "feature_disabled": "العروض غير مفعّلة.",
+        "body_invalid": "الرسالة يجب أن تكون ١–٥٠٠ حرف.",
+        "offer_closed": "هذا العرض مغلق.",
+        "clarification_limit": "تم بلوغ حد الأسئلة.",
+        "forbidden": "غير مسموح.",
+        "clarification_failed": "تعذر الإرسال.",
+        "contact_info_blocked": "لا تشارك أرقام الهاتف أو البريد هنا. تفاصيل التواصل تُفتح بعد دفع رسوم فتح التواصل."
+      }
+    },
+    "errors": {
+      "failed": "حدث خطأ.",
+      "feature_disabled": "العروض غير مفعّلة.",
+      "login_required": "يرجى تسجيل الدخول.",
+      "forbidden": "غير مسموح.",
+      "assignment_required": "هذه الفرصة غير معيَّنة لك.",
+      "price_invalid": "أدخل سعراً صالحاً.",
+      "not_found": "الطلب غير موجود.",
+      "not_marketplace_native": "هذا الطلب يستخدم المسار القديم.",
+      "legacy_assigned": "هذا الطلب معيَّن مسبقاً.",
+      "already_selected": "يوجد اختيار مسبقاً.",
+      "offer_exists": "لديك عرض نشط مسبقاً.",
+      "offer_failed": "تعذر إنشاء العرض.",
+      "offer_not_found": "العرض غير موجود.",
+      "selection_failed": "تعذر اختيار العرض.",
+      "decline_failed": "تعذر رفض العرض.",
+      "label_required": "اسم القالب مطلوب.",
+      "template_failed": "تعذر حفظ القالب.",
+      "use_offers": "استخدم مسار العروض لهذا الطلب.",
+      "rate_limited": "محاولات كثيرة — يرجى الانتظار قليلاً.",
+      "shortlist_full": "القائمة المختصرة ممتلئة لهذا الطلب.",
+      "save_failed": "تعذر تحديث القائمة المختصرة.",
+      "validation_error": "طلب غير صالح.",
+      "contact_info_blocked": "لا تشارك أرقام الهاتف أو البريد في العرض. تفاصيل التواصل تُفتح بعد دفع رسوم فتح التواصل."
+    }
+  },
+  "unlockFlow": {
+    "customer": {
+      "pendingTitle": "فتح التواصل قيد التنفيذ",
+      "pendingBody": "يجب على العمل المختار إكمال الفتح قبل مشاركة بيانات التواصل.",
+      "connectingTitle": "جارٍ توصيلك",
+      "connectingBody": "بيانات التواصل تُفتح الآن — عادةً لحظات. أنت لا تدفع أي رسوم.",
+      "sla": "الموعد النهائي: {deadline}",
+      "noContactYet": "الهاتف وواتساب والعنوان والدردشة تبقى مخفية حتى ينجح الفتح.",
+      "unlockedTitle": "تم فتح التواصل",
+      "unlockedBody": "يمكنك التواصل مع هذا العمل وفتح الدردشة الكاملة. الهاتف والدردشة يبقيان مقفلين حتى ينجح الفتح.",
+      "unlockedBodyFree": "يمكنك التواصل مع هذا العمل وفتح الدردشة الكاملة — بلا أي دفع مطلوب.",
+      "phone": "الهاتف",
+      "whatsapp": "واتساب",
+      "noPhoneOnFile": "لا رقم مسجّل — يمكنك استخدام الدردشة عندما تكون الجلسة جاهزة.",
+      "openChat": "فتح المحادثة"
+    },
+    "provider": {
+      "listTitle": "فتح العملاء",
+      "listSubtitle": "عروض مختارة بانتظار الفتح. بيانات الزبون تبقى مقفلة حتى تُكمل هذه الخطوة.",
+      "empty": "لا جلسات فتح بعد.",
+      "noProvider": "أنشئ ملف عملك أولاً.",
+      "title": "افتح هذا العميل",
+      "fee": "رسوم الفتح: {amount} {currency}",
+      "sla": "مهلة القرار: {deadline}",
+      "noContactUntilPay": "بيانات الزبون لا تُفتح إلا بعد نجاح الفتح.",
+      "devConfirm": "تأكيد الفتح (تجاوز تطوير)",
+      "awaitAdminOrSprint6": "تحصيل الدفع يأتي في Sprint 6. يمكن للمشرف تأكيد الفتح يدوياً الآن.",
+      "startPayment": "ابدأ دفع رسوم الفتح",
+      "paymentInstructions": "حوّل رسوم الفتح باستخدام هذا المرجع",
+      "payAmount": "المبلغ المستحق: {amount} {currency}",
+      "receiver": "المستلم",
+      "account": "الحساب",
+      "uploadReceipt": "ارفع إيصال التحويل",
+      "cancelPayment": "إلغاء الدفع",
+      "awaitingReview": "تم إرسال الإيصال — بانتظار تأكيد المشرف. بيانات التواصل تبقى مقفلة حتى ذلك الحين.",
+      "decline": "رفض العميل",
+      "succeeded": "نجح الفتح — تم إتاحة بيانات الزبون.",
+      "back": "كل جلسات الفتح",
+      "devBypassHint": "UNLOCK_DEV_BYPASS مفعّل — المنح بدون دفع مسموح محلياً فقط.",
+      "unlockPrice": "سعر فتح الطلب: {amount} {currency}",
+      "aiExplanation": "سبب هذا السعر",
+      "estValue": "القيمة التقديرية للمشروع: {amount} USD",
+      "estDuration": "المدة المتوقعة: ~{hours} ساعة",
+      "potentialRevenue": "إيراد محتمل: ~{amount} USD",
+      "includedLeft": "يتبقى {count} فتحات مشمولة في خطة الأعمال هذا الشهر",
+      "unlockIncluded": "فتح باستخدام الرصيد المشمول",
+      "unlockRequest": "فتح الطلب",
+      "status": {
+        "opened": "مفتوحة",
+        "payment_pending": "بانتظار الدفع",
+        "succeeded": "نجحت",
+        "declined": "مرفوضة",
+        "timed_out": "انتهت المهلة"
+      }
+    },
+    "status": {
+      "opened": "مفتوحة",
+      "payment_pending": "بانتظار الدفع",
+      "succeeded": "نجحت",
+      "declined": "مرفوضة",
+      "timed_out": "انتهت المهلة"
+    },
+    "errors": {
+      "failed": "حدث خطأ.",
+      "feature_disabled": "فتح التواصل غير مفعّل.",
+      "login_required": "يرجى تسجيل الدخول.",
+      "forbidden": "غير مسموح.",
+      "bypass_forbidden": "تجاوز التطوير معطّل.",
+      "session_not_found": "جلسة الفتح غير موجودة.",
+      "invalid_status": "هذه الجلسة لم تعد قابلة للتنفيذ.",
+      "grant_failed": "تعذر إنشاء منح التواصل.",
+      "request_not_found": "الطلب غير موجود.",
+      "payment_integration_pending": "تحصيل الدفع غير موصول بعد (Sprint 6).",
+      "payments_disabled": "مدفوعات الفتح غير مفعّلة.",
+      "payment_not_configured": "بيانات التحويل البنكي غير مهيأة.",
+      "payment_create_failed": "تعذر إنشاء دفعة الفتح.",
+      "payment_not_found": "الدفعة غير موجودة.",
+      "payment_required": "الفتح يتطلب دفعة مؤكدة.",
+      "payment_not_confirmed": "الدفع غير مؤكد.",
+      "payment_verify_failed": "تعذر التحقق من الدفع.",
+      "payment_update_failed": "تعذر تحديث الدفعة.",
+      "not_unlock_fee": "ليست دفعة رسوم فتح.",
+      "session_required": "جلسة الفتح مطلوبة.",
+      "receipt_failed": "فشل رفع الإيصال.",
+      "prepare_failed": "تعذر بدء الرفع. حاول مرة أخرى.",
+      "upload_failed": "فشل رفع الإيصال. حاول مرة أخرى.",
+      "save_failed": "تعذر حفظ الإيصال. حاول مرة أخرى.",
+      "duplicate_receipt": "تم رفع إيصال لهذه الدفعة مسبقاً.",
+      "selection_not_found": "الاختيار غير موجود.",
+      "selection_not_pending": "الاختيار ليس بانتظار الفتح.",
+      "provider_required": "مزود الخدمة مطلوب.",
+      "session_failed": "تعذر فتح جلسة الفتح."
     }
   },
   "search": {
@@ -701,7 +2044,31 @@
         "premium": "PREMIUM",
         "best_match": "الأفضل تطابقاً",
         "highest_rated": "الأعلى تقييماً",
-        "verified": "الموثقون أولاً"
+        "verified": "الموثقون أولاً",
+        "response": "أسرع رد"
+      },
+      "availability": "التوفر",
+      "availabilityOptions": {
+        "all": "الكل",
+        "today": "متاح اليوم"
+      },
+      "emergency": "طوارئ",
+      "emergencyOptions": {
+        "all": "الكل",
+        "yes": "يستقبل الطوارئ"
+      },
+      "language": "اللغة",
+      "languageOptions": {
+        "all": "الكل",
+        "ar": "العربية",
+        "en": "الإنجليزية"
+      },
+      "priceLevel": "مستوى السعر",
+      "priceOptions": {
+        "all": "الكل",
+        "budget": "اقتصادي",
+        "standard": "عادي",
+        "premium": "مميز"
       }
     },
     "recommendationBadges": {
@@ -746,7 +2113,80 @@
     "memberSince": "عضو منذ {date}",
     "healthScore": "الصحة {score}%",
     "healthShort": "الصحة",
-    "featured": "مميز"
+    "featured": "مميز",
+    "stats": {
+      "response": "الرد",
+      "completion": "الإنجاز",
+      "completionValue": "{score}%",
+      "area": "منطقة الخدمة",
+      "availability": "التوفر",
+      "open": "يستقبل",
+      "paused": "متوقف"
+    },
+    "publicStats": {
+      "title": "إحصاءات عامة",
+      "completedJobs": "أعمال مكتملة",
+      "successRate": "معدل النجاح",
+      "acceptanceRate": "معدل القبول",
+      "repeatCustomers": "زبائن متكررون",
+      "responseRate": "معدل الرد",
+      "avgResponse": "متوسط زمن الرد",
+      "reliability": "الموثوقية",
+      "profileCompletion": "اكتمال الملف",
+      "yearsOnDalily": "سنوات على دليلي",
+      "pct": "{value}%",
+      "hours": "{hours} س",
+      "years": "{count, plural, one {# سنة} other {# سنوات}}",
+      "lessThanYear": "جديد"
+    },
+    "workingHours": "ساعات العمل",
+    "languages": "اللغات",
+    "certificates": "الشهادات",
+    "awards": "الجوائز والشارات",
+    "closedDay": "مغلق",
+    "trustOnlyNote": "الهاتف والبريد والعنوان الدقيق تبقى خاصة حتى تأكيد الحجز.",
+    "completedJobsShort": "{count, plural, one {# عمل} other {# أعمال}}",
+    "fromPrice": "من {price} {currency}",
+    "availability": {
+      "available": "متاح",
+      "limited": "ساعات محدودة",
+      "paused": "لا يستقبل حالياً"
+    },
+    "galleryEmptyTitle": "لا معرض بعد",
+    "galleryEmptyBody": "هذا العمل لم ينشر صور معرض بعد.",
+    "galleryFullscreen": "معاينة المعرض",
+    "galleryClose": "إغلاق",
+    "portfolioKind": {
+      "gallery": "معرض",
+      "before": "قبل",
+      "after": "بعد",
+      "video": "فيديو",
+      "videoSoon": "الفيديو قريباً"
+    },
+    "errors": {
+      "title": "تعذر تحميل هذا الملف",
+      "body": "حاول مرة أخرى أو عد إلى البحث.",
+      "retry": "إعادة المحاولة",
+      "backSearch": "العودة للبحث"
+    }
+  },
+  "publicVerification": {
+    "eyebrow": "الثقة",
+    "title": "تفاصيل التوثيق",
+    "badgeDefault": "موثّق",
+    "openDetails": "فتح تفاصيل التوثيق لـ {label}",
+    "close": "إغلاق",
+    "loading": "جارٍ تحميل تفاصيل التوثيق…",
+    "empty": "لا تتوفر تفاصيل توثيق عامة بعد.",
+    "verifiedOn": "تم التوثيق في: {date}",
+    "trustBody": "المزودون الموثّقون أكّدوا هويتهم وعنوانهم.",
+    "trustOptional": "المستندات التجارية والمهنية الاختيارية تزيد ثقة الزبائن وتحسّن ظهور المزود على دليلي.",
+    "privacyNote": "لحمايتك وحمايتهم، لا يعرض دليلي للزبائن وثائق الهوية أو أرقام الهوية أو عناوين السكن أو أرقام وثائق التأمين أو الملفات المرفوعة.",
+    "expiration": {
+      "valid": "ساري",
+      "expiring_soon": "ينتهي قريبًا",
+      "expired": "منتهٍ"
+    }
   },
   "reviews": {
     "sectionTitle": "تقييمات الزبائن",
@@ -754,6 +2194,20 @@
     "empty": "لا توجد تقييمات بعد. الأعمال المكتملة يمكنها ترك أول تقييم.",
     "averageLabel": "متوسط التقييم",
     "basedOn": "بناءً على {count} تقييمات",
+    "basedOnVerified": "بناءً على {count} تقييمات موثّقة",
+    "recommendedBy": "يوصي به {pct}% من الزبائن",
+    "aiSummaryLabel": "ملخص الذكاء الاصطناعي",
+    "trustLevel": {
+      "eyebrow": "مستوى الثقة",
+      "excellent": "ممتاز",
+      "very_good": "جيد جداً",
+      "good": "جيد",
+      "developing": "قيد التطور",
+      "new_provider": "مزود جديد",
+      "needs_attention": "يحتاج انتباهاً",
+      "rising": "يتحسّن مؤخراً",
+      "fallback": "تُبنى إشارات الثقة مع التقييمات الموثّقة والأعمال المنجزة."
+    },
     "breakdownLabel": "توزيع التقييمات",
     "anonymous": "زبون مجهول",
     "customer": "زبون",
@@ -768,6 +2222,20 @@
     "replyPlaceholder": "اكتب رداً رسمياً…",
     "submitReply": "نشر الرد",
     "replying": "جارٍ النشر…",
+    "quality": {
+      "excellent": "ممتاز",
+      "veryGood": "جيد جداً",
+      "good": "جيد",
+      "fair": "مقبول",
+      "needsImprovement": "يحتاج تحسين"
+    },
+    "dimensions": {
+      "communication": "التواصل",
+      "quality": "جودة العمل",
+      "punctuality": "الالتزام بالمواعيد",
+      "professionalism": "الاحترافية",
+      "value": "القيمة مقابل السعر"
+    },
     "errors": {
       "login_required": "يرجى تسجيل الدخول",
       "forbidden": "غير مسموح",
@@ -783,7 +2251,9 @@
       "lowest": "الأقل تقييماً",
       "helpful": "الأكثر فائدة",
       "verified": "الموثّق أولاً",
-      "photos": "مع صور"
+      "photos": "مع صور",
+      "recommended": "موصى به",
+      "language": "لغتك"
     },
     "badges": {
       "top_rated": "الأعلى تقييماً",
@@ -851,10 +2321,12 @@
       "send": "إرسال رسالة",
       "error": "تعذر إرسال الرسالة. حاول مرة أخرى.",
       "attach": "إرفاق ملف",
-      "attachHint": "صور ومستندات — تُضغط تلقائياً",
+      "attachHint": "صور وفيديو وPDF وأوفيس وZIP وصوت — اسحب أو الصق أو اختر",
       "removeFile": "إزالة",
       "shareLocation": "مشاركة الموقع",
-      "locationShared": "تمت مشاركة الموقع"
+      "locationShared": "تمت مشاركة الموقع",
+      "replying": "رد على",
+      "cancelReply": "إلغاء"
     },
     "typing": {
       "one": "{name} يكتب…",
@@ -870,12 +2342,193 @@
       "offline": "غير متصل",
       "lastSeen": "آخر ظهور {time}"
     },
+    "search": {
+      "placeholder": "ابحث في الرسائل…",
+      "cta": "بحث"
+    },
+    "inbox": {
+      "markAllRead": "تحديد الكل كمقروء"
+    },
+    "media": {
+      "dropHere": "أسقط الملفات للإرفاق",
+      "retry": "إعادة المحاولة",
+      "cancel": "إلغاء",
+      "progress": "جاري الرفع {pct}%",
+      "failed": "فشل الرفع",
+      "cancelled": "تم الإلغاء",
+      "done": "تم الرفع",
+      "queued": "جاهز للإرسال",
+      "download": "تنزيل",
+      "voice": "رسالة صوتية"
+    },
+    "projectMedia": {
+      "title": "معرض المشروع",
+      "upload": "رفع",
+      "dropHint": "اسحب وأفلت الصور أو الفيديو أو المستندات هنا",
+      "all": "الكل",
+      "allPackages": "كل الباقات",
+      "empty": "لا توجد وسائط بعد",
+      "uploading": "جاري الرفع…",
+      "categories": {
+        "before": "قبل",
+        "progress": "قيد التنفيذ",
+        "completed": "مكتمل",
+        "documents": "مستندات",
+        "invoices": "فواتير",
+        "certificates": "شهادات",
+        "other": "أخرى"
+      }
+    },
+    "voice": {
+      "record": "تسجيل رسالة صوتية",
+      "recording": "جاري التسجيل…",
+      "paused": "متوقف مؤقتاً",
+      "pause": "إيقاف مؤقت",
+      "resume": "متابعة",
+      "send": "إرسال",
+      "cancel": "إلغاء",
+      "sending": "جاري إرسال الرسالة الصوتية…",
+      "noCalls": "رسائل صوتية فقط — بدون مكالمات مباشرة.",
+      "aiLabel": "نص تلقائي",
+      "grantConsent": "السماح بالتفريغ",
+      "revokeConsent": "إلغاء التفريغ",
+      "consentHint": "التفريغ يحتاج موافقتك. التسجيلات خاصة ولا تُستخدم للتدريب.",
+      "summary": "ملخص",
+      "viewOriginal": "الأصل",
+      "viewTranslated": "الترجمة",
+      "deleteTranscript": "حذف النص",
+      "noTranscript": "لا يوجد نص بعد لهذه الرسالة الصوتية.",
+      "searchTitle": "بحث في الرسائل الصوتية",
+      "searchPlaceholder": "ابحث في الكلام…",
+      "errors": {
+        "permission_denied": "تم رفض إذن الميكروفون.",
+        "not_supported": "التسجيل الصوتي غير مدعوم هنا.",
+        "no_audio": "لم يتم التقاط صوت.",
+        "too_large": "الرسالة الصوتية كبيرة جداً.",
+        "upload_failed": "فشل الرفع.",
+        "send_failed": "تعذر إرسال الرسالة الصوتية.",
+        "feature_disabled": "الرسائل الصوتية متوقفة.",
+        "unknown": "حدث خطأ ما."
+      }
+    },
+    "aiAssistant": {
+      "title": "مساعد الذكاء",
+      "aiLabel": "مولَّد بالذكاء",
+      "privacyNote": "المساعد يقترح فقط ولا يرسل رسائل تلقائياً. لا يُستخدم محتوى الدردشة لتدريب النماذج.",
+      "disableAi": "إيقاف الذكاء",
+      "enableAi": "تفعيل الذكاء",
+      "disabledHint": "مساعدة الذكاء متوقفة لحسابك.",
+      "deleteSummaries": "حذف ملخصات الذكاء",
+      "summarize": "تلخيص",
+      "suggestReplies": "اقتراح ردود",
+      "extract": "استخراج ومهام",
+      "error": "تعذر تشغيل المساعد. حاول مجدداً.",
+      "repliesTitle": "ردود مقترحة",
+      "extractionsTitle": "معلومات مستخرجة",
+      "tasksTitle": "مهام مفتوحة",
+      "viewOriginal": "الأصل",
+      "viewTranslated": "الترجمة",
+      "windows": {
+        "last_10": "آخر 10",
+        "today": "اليوم",
+        "last_7_days": "7 أيام",
+        "entire": "الكل"
+      },
+      "styles": {
+        "short": "قصير",
+        "detailed": "مفصّل",
+        "timeline": "خط زمني",
+        "action": "إجراءات"
+      },
+      "fields": {
+        "appointment": "موعد",
+        "address": "عنوان",
+        "phone": "هاتف",
+        "budget": "ميزانية",
+        "requested_date": "تاريخ مطلوب",
+        "service_type": "خدمة",
+        "materials": "مواد",
+        "urgency": "أولوية",
+        "other": "أخرى"
+      },
+      "sentiment": {
+        "positive": "نبرة إيجابية",
+        "neutral": "محايد",
+        "frustrated": "إشارات إحباط",
+        "urgent": "إشارات استعجال",
+        "escalation_risk": "خطر تصعيد"
+      },
+      "priority": {
+        "low": "أولوية منخفضة",
+        "normal": "أولوية عادية",
+        "high": "أولوية عالية",
+        "critical": "حرج"
+      }
+    },
     "actions": {
       "pin": "تثبيت",
       "unpin": "إلغاء التثبيت",
       "archive": "أرشفة",
       "unarchive": "إلغاء الأرشفة",
-      "searchMessages": "بحث في الرسائل"
+      "searchMessages": "بحث في الرسائل",
+      "copy": "نسخ",
+      "reply": "رد",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "edited": "معدّلة",
+      "forward": "إعادة توجيه"
+    },
+    "timeline": {
+      "aria": "خط زمني لتقدّم العمل",
+      "offer": "عرض",
+      "acceptance": "قبول",
+      "appointment": "موعد",
+      "arrival": "وصول",
+      "completion": "إنجاز",
+      "review": "تقييم",
+      "payment": "دفع"
+    },
+    "reactions": {
+      "aria": "تفاعلات الرسالة",
+      "add": "تفاعل بـ {emoji}"
+    },
+    "safety": {
+      "mute": "كتم المحادثة",
+      "unmute": "إلغاء الكتم",
+      "block": "حظر المستخدم",
+      "unblock": "إلغاء الحظر",
+      "report": "الإبلاغ عن المحادثة",
+      "reportTitle": "الإبلاغ عن هذه المحادثة",
+      "reason": "السبب",
+      "submitReport": "إرسال البلاغ",
+      "cancel": "إلغاء",
+      "reasons": {
+        "spam": "رسائل مزعجة",
+        "harassment": "تحرش",
+        "fraud": "احتيال",
+        "inappropriate": "محتوى غير لائق",
+        "other": "أخرى"
+      },
+      "errors": {
+        "failed": "حدث خطأ.",
+        "feature_disabled": "غير متاح.",
+        "login_required": "يرجى تسجيل الدخول.",
+        "forbidden": "غير مسموح.",
+        "rate_limited": "محاولات كثيرة.",
+        "update_failed": "تعذر التحديث.",
+        "report_failed": "تعذر إرسال البلاغ.",
+        "validation_error": "طلب غير صالح.",
+        "chat_locked": "المحادثة مقفلة.",
+        "not_found": "غير موجود."
+      }
+    },
+    "center": {
+      "title": "مركز التواصل",
+      "unread": "{count, plural, =0 {لا غير مقروء} one {# غير مقروء} other {# غير مقروء}}",
+      "customerHint": "الأعمال الحالية والمحادثات السابقة تبقى داخل دليلي.",
+      "businessHint": "نسّق الحجوزات هنا — لا حاجة لواتساب قبل القبول."
     }
   },
   "footer": {
@@ -884,7 +2537,8 @@
     "account": "الحساب",
     "legal": "قانوني",
     "links": {
-      "search": "البحث",
+      "search": "طلب جديد",
+      "find": "ابحث عن عمل",
       "forBusiness": "للأعمال",
       "login": "تسجيل الدخول",
       "register": "إنشاء حساب",
@@ -897,51 +2551,51 @@
   "legal": {
     "privacy": {
       "metaTitle": "سياسة الخصوصية — دليلي",
-      "metaDescription": "كيف تجمع دليلي معلوماتك وتستخدمها.",
+      "metaDescription": "كيف تتعامل دليلي مع بياناتك أثناء النسخة التجريبية المغلقة لسوق الطلبات والعروض.",
       "title": "سياسة الخصوصية",
-      "updated": "آخر تحديث: يوليو 2026",
-      "intro": "تساعد دليلي المستخدمين في العثور على مزودي خدمات محليين موثوقين. توضح هذه السياسة ما الذي نجمعه أثناء النسخة التجريبية وكيف نستخدمه.",
+      "updated": "آخر تحديث: أغسطس 2026",
+      "intro": "دليلي سوق تجريبي مغلق: تصف احتياجك، وترسل الأعمال المطابقة عروضاً، ثم تختار عرضاً وقد تدفع رسوم فتح لإظهار بيانات التواصل، وبعدها تُفتح الدردشة. توضح هذه السياسة ما نجمعه وكيف نستخدمه أثناء النسخة التجريبية. تُشغَّل بواسطة دليلي (Dalily).",
       "sections": {
         "collect": {
           "title": "المعلومات التي نجمعها",
-          "body": "نجمع تفاصيل الحساب (مثل البريد الإلكتروني والاسم)، ومعلومات ملف الأعمال التي تقدمها، واستعلامات البحث، وبيانات الاستخدام الأساسية اللازمة لتشغيل المنصة."
+          "body": "نجمع تفاصيل الحساب (مثل البريد الإلكتروني والاسم)، ووصف المشكلة وتفاصيل الطلب، وتفضيلات المدينة أو الموقع للمطابقة، والعروض والرسائل على المنصة، وسجلات رسوم الفتح (عبر مزودي الدفع)، وبيانات الاستخدام الأساسية لتشغيل الخدمة وحمايتها."
         },
         "use": {
           "title": "كيف نستخدم المعلومات",
-          "body": "نستخدم معلوماتك لتقديم نتائج البحث، وإدارة حسابات الأعمال، وتحسين الخدمة، والحفاظ على أمان المنصة. قد يتم تسجيل استعلامات البحث لتحسين جودة المطابقة."
+          "body": "نستخدم معلوماتك لمطابقة الطلبات مع الأعمال المناسبة، وتسليم العروض، ومعالجة رسوم الفتح عند اختيارك إظهار بيانات التواصل، وتشغيل الدردشة بعد الفتح، وتحسين جودة المطابقة أثناء النسخة التجريبية، والحفاظ على أمان المنصة. لا نستخدم بياناتك لنشر دليل عام لنتائج بحث يكشف بيانات التواصل قبل الفتح."
         },
         "sharing": {
           "title": "المشاركة",
-          "body": "لا نبيع بياناتك الشخصية. قد تكون بيانات الاتصال التي يختار مزود الخدمة نشرها مرئية للمستخدمين. نستخدم مزودي بنية تحتية (مثل Supabase) لاستضافة الخدمة."
+          "body": "لا نبيع بياناتك الشخصية. قبل الفتح ترى الأعمال عادة سياق الطلب دون بيانات تواصلك الخاصة. بعد الفتح يمكن للأطراف المختارة رؤية بيانات التواصل اللازمة للمتابعة. نستخدم مزودي بنية تحتية ودفع (مثل Supabase ومعالج الدفع المُعدّ) لاستضافة وتشغيل الخدمة. البيانات القانونية للإشعارات الرسمية: دليلي (Dalily)."
         },
         "contact": {
           "title": "التواصل",
-          "body": "لأسئلة الخصوصية أثناء النسخة التجريبية، تواصل مع فريق دليلي عبر بريد حسابك أو قناة دعم الأعمال."
+          "body": "لأسئلة الخصوصية أثناء النسخة التجريبية المغلقة، تواصل معنا عبر privacy@dalily.app أو قناة الدعم من حسابك. للمراسلات الرسمية: دليلي (Dalily)."
         }
       }
     },
     "terms": {
       "metaTitle": "شروط الاستخدام — دليلي",
-      "metaDescription": "شروط استخدام دليلي أثناء النسخة التجريبية.",
+      "metaDescription": "شروط استخدام سوق دليلي التجريبي: طلب، عروض، فتح تواصل، ودردشة.",
       "title": "شروط الاستخدام",
-      "updated": "آخر تحديث: يوليو 2026",
-      "intro": "باستخدامك دليلي أثناء النسخة التجريبية، فإنك توافق على هذه الشروط. تربط الخدمة المستخدمين بمزودي خدمات مستقلين.",
+      "updated": "آخر تحديث: أغسطس 2026",
+      "intro": "باستخدامك دليلي أثناء النسخة التجريبية المغلقة، فإنك توافق على هذه الشروط. تربط دليلي العملاء بأعمال محلية مستقلة عبر الطلبات والعروض ورسوم الفتح الاختيارية والدردشة.",
       "sections": {
         "service": {
           "title": "الخدمة",
-          "body": "دليلي منصة للاكتشاف. نساعدك في العثور على مزودين لكننا لا نقدم الخدمات بأنفسنا. قد تتغير الميزات أثناء النسخة التجريبية."
+          "body": "دليلي منصة سوق، وليست دليلاً لعرض أرقام التواصل للعامة. يصف العميل مشكلة؛ قد ترسل الأعمال المطابقة عروضاً؛ يختار العميل عرضاً وقد يدفع رسوم فتح لإظهار بيانات التواصل؛ ثم تُفتح الدردشة بين الطرفين. دليلي لا تؤدي الخدمات بنفسها. قد تتغير الميزات والرسوم والتوفر أثناء النسخة التجريبية المغلقة."
         },
         "accounts": {
           "title": "الحسابات",
-          "body": "أنت مسؤول عن بيانات دخول حسابك وعن المعلومات التي تقدمها. يجب على حسابات الأعمال تقديم تفاصيل دقيقة."
+          "body": "أنت مسؤول عن بيانات دخول حسابك وعن المعلومات التي تقدمها. يجب على حسابات الأعمال تقديم تفاصيل دقيقة عن الملف والخدمات. قد يؤدي إساءة استخدام مسارات الطلب أو العرض أو الفتح أو الدردشة إلى إيقاف الحساب أثناء النسخة التجريبية."
         },
         "providers": {
-          "title": "مزودو الخدمات",
-          "body": "المزودون المدرجون في دليلي هم أعمال مستقلة. يجب على المستخدمين التحقق من التفاصيل والاتفاق مباشرة مع المزود قبل بدء العمل."
+          "title": "مزودو الخدمات ورسوم الفتح",
+          "body": "المزودون على دليلي أعمال مستقلة. العروض دعوة للمتابعة؛ يجب على العملاء التحقق من التفاصيل والاتفاق على شروط العمل مباشرة مع المزود. رسوم الفتح تمنح الوصول إلى بيانات التواصل والدردشة لهذا الاختيار — وليست أجراً عن عمل المزود ما لم نوضح خلاف ذلك. لا يُتوقع ظهور بيانات التواصل قبل فتح ناجح."
         },
         "liability": {
           "title": "حدود المسؤولية",
-          "body": "تُقدَّم دليلي أثناء النسخة التجريبية كما هي. لسنا مسؤولين عن النزاعات أو الأضرار أو جودة الخدمة بين المستخدمين والمزودين."
+          "body": "تُقدَّم دليلي أثناء النسخة التجريبية المغلقة كما هي. لسنا مسؤولين عن النزاعات أو الأضرار أو جودة الخدمة أو الاتفاقات بين العملاء والمزودين. للإشعارات الرسمية: دليلي (Dalily)."
         }
       }
     }
@@ -958,19 +2612,26 @@
       "title": "لوحة الأعمال",
       "menu": "القائمة",
       "dashboard": "الرئيسية",
+      "newJobs": "الطلبات الجديدة",
+      "orders": "طلباتي",
+      "messages": "الرسائل",
+      "payments": "المدفوعات",
+      "account": "حسابي",
       "profile": "الملف الشخصي",
       "services": "الخدمات",
       "gallery": "المعرض",
       "media": "الوسائط",
       "analytics": "الإحصائيات",
-      "verification": "التحقق",
+      "verification": "التوثيق",
       "upgrade": "⭐ تطوير",
-      "messages": "الرسائل",
       "requests": "الطلبات",
+      "opportunities": "الطلبات الجديدة",
+      "unlock": "فتح التواصل",
       "settings": "الإعدادات",
       "bookings": "الحجوزات",
       "calendar": "التقويم",
-      "availability": "التوفر"
+      "availability": "التوفر",
+      "plan": "أدوات الخطة"
     },
     "requests": {
       "eyebrow": "الوارد",
@@ -1017,6 +2678,25 @@
         "reject_failed": "تعذر رفض الطلب.",
         "not_pending": "هذا الطلب لم يعد معلقاً.",
         "forbidden": "لا يمكنك إدارة هذا الطلب."
+      }
+    },
+    "paymentsHub": {
+      "title": "المدفوعات",
+      "subtitle": "فتح التواصل، الاشتراكات، وسجل المدفوعات في مكان واحد.",
+      "priorityTitle": "يوجد فتح بانتظارك",
+      "priorityBody": "لديك {count} جلسة فتح تحتاج إلى إكمال.",
+      "priorityCta": "عرض جلسات الفتح",
+      "links": {
+        "unlock": "فتح التواصل",
+        "unlockDesc": "أكمل الدفع لإتاحة بيانات الزبون",
+        "history": "سجل المدفوعات",
+        "historyDesc": "الاشتراكات وفتح العملاء والإيصالات",
+        "monetization": "الخطط والفتحات",
+        "monetizationDesc": "تفاصيل خطة الأعمال",
+        "subscription": "الاشتراك",
+        "subscriptionDesc": "حالة الخطة والسعر والظهور",
+        "wallet": "المحفظة والتحويلات",
+        "walletDesc": "الرصيد المتاح والضمان وحالة التحويل"
       }
     },
     "dashboard": {
@@ -1255,6 +2935,20 @@
           "body": "ملف مكتمل بيساعدك تستقبل طلبات حجز أكثر."
         }
       }
+    },
+    "subscriptionVisibility": {
+      "title": "اشترك حتى تظهر للزبائن",
+      "readyBody": "أساسيات ملفك جاهزة — خطوة واحدة بعد حتى يلاقوك الزباين.",
+      "body": "ما رح تظهر بالبحث أو تصفّح الفئات، وما رح تستقبل طلبات جديدة، حتى تشترك ({price} USD / شهر).",
+      "benefits": {
+        "search": "ظاهر بالبحث وتصفّح الفئات",
+        "gallery": "صورك ومعرضك بينعرضوا",
+        "contact": "الزبائن يقدروا يلاقوك ويراسلوك",
+        "matching": "بتظهر بمطابقة الطلبات الجديدة"
+      },
+      "cta": "اشترك — {price} USD / شهر",
+      "remindLater": "ذكّرني لاحقاً",
+      "dismiss": "إخفاء"
     },
     "growth": {
       "hero": {
@@ -1846,118 +3540,6 @@
       }
     },
     "subscription": {
-      "title": "كبّر شغلك مع دليلي",
-      "eyebrow": "النمو",
-      "subtitle": "اختار الخطة اللي بتساعدك توصل لزباين أكثر.",
-      "currentPlan": "خطتك",
-      "expiresAt": "تنتهي في {date}",
-      "noExpiration": "بدون تاريخ انتهاء",
-      "renew": "تجديد",
-      "downgrade": "الرجوع إلى Starter",
-      "cancel": "إلغاء الاشتراك",
-      "upgrade": "ترقية",
-      "current": "الخطة الحالية",
-      "freePrice": "مجاني",
-      "perMonth": "شهر",
-      "paymentHistory": "سجل المدفوعات",
-      "noPayments": "لا توجد مدفوعات بعد.",
-      "errors": {
-        "upgradeFailed": "ما قدرنا نبلّش الترقية. جرّب مرة تانية.",
-        "notApproved": "تُفتح الخطط بعد اعتماد نشاطك.",
-        "paymentPending": "لديك بالفعل دفعة قيد المراجعة.",
-        "paymentNotConfigured": "الترقيات المدفوعة غير متاحة مؤقتاً. جرّب لاحقاً أو تواصل مع الدعم.",
-        "downgradeFailed": "ما قدرنا نرجع لـ Starter. جرّب مرة تانية."
-      },
-      "lowerPlanHint": "مضمّنة في خطتك الأعلى",
-      "paymentPendingHint": "كمّل الدفع المعلّق أولاً",
-      "downgradeConfirm": {
-        "eyebrow": "تخفيض الخطة",
-        "title": "الرجوع إلى Starter؟",
-        "body": "هذا تخفيض للخطة. رح تخسر مزايا Pro/Premium فوراً وترجع للخطة المجانية Starter.",
-        "cta": "الرجوع إلى Starter",
-        "confirm": "نعم، الرجوع إلى Starter",
-        "cancel": "الإبقاء على خطتي",
-        "working": "جارٍ التبديل…"
-      },
-      "plans": {
-        "starter": {
-          "name": "Starter",
-          "price": "مجاناً",
-          "headline": "ابدأ شغلك على دليلي.",
-          "subtitle": "ابنِ الثقة. خلّي الناس تكتشفك.",
-          "description": "حضور كامل حتى يلاقوك الزباين ويتواصلوا معك — مجاناً للأبد.",
-          "why": "ابنِ الثقة، ظهر بالبحث، وخلّي الزباين يوصلوك.",
-          "cta": "كمّل بالخطة المجانية",
-          "includes": {
-            "profile": "ملف نشاط كامل",
-            "photos": "صور بتوري شغلك",
-            "reviews": "تقييمات بتبني الثقة",
-            "contact": "واتساب وهاتف — الزباين بيوصلوك",
-            "search": "ظهور بنتائج البحث",
-            "reach": "الزباين بيقدروا يتواصلوا معك",
-            "info": "معلومات النشاط"
-          }
-        },
-        "pro": {
-          "name": "PRO",
-          "price": "13 USD",
-          "badge": "الأكثر اختياراً",
-          "headline": "جيب زباين أكثر",
-          "subtitle": "زيد ظهورك واستقبل فرص أكثر.",
-          "description": "ظهور أعلى بالبحث حتى يكتشفك زباين أكثر.",
-          "why": "ناس أكثر بتشوفك. فرص أكثر. نمو قابل للقياس.",
-          "cta": "اشترك بـ PRO",
-          "includes": {
-            "ranking": "ظهور أعلى بالبحث",
-            "badge": "شارة PRO بتبني الثقة",
-            "insights": "افهم كيف عم يكبر شغلك",
-            "visibility": "شوف كم زبون اكتشفك",
-            "contacts": "إحصائيات تواصل بتوري اهتمام حقيقي",
-            "priority": "أولوية ظهور وين ما الناس عم تدور",
-            "support": "دعم بأولوية لما تحتاج",
-            "stats": "افهم كيف عم يكبر شغلك",
-            "ai": "إرشاد أذكى للملف"
-          }
-        },
-        "premium": {
-          "name": "PREMIUM",
-          "price": "20 USD",
-          "headline": "خليك الخيار الأول",
-          "subtitle": "أقصى ظهور للأنشطة الجاهزة تقود.",
-          "description": "كل شي من PRO — مع تميّز بالصفحة الرئيسية ورؤى نمو أعمق.",
-          "why": "ظهر أولاً — أقصى وصول وثقة بريميوم ومساحة للتوسّع.",
-          "cta": "اشترك بـ PREMIUM",
-          "includes": {
-            "everything": "كل شي من PRO",
-            "homepage": "تميّز بالصفحة الرئيسية",
-            "badge": "شارة Premium",
-            "maxVisibility": "أقصى ظهور بالبحث",
-            "insights": "اتجاهات البحث ومدن الزوار",
-            "campaigns": "حملات بريميوم مستقبلية",
-            "branches": "فروع متعددة",
-            "top": "أعلى ظهور بالبحث",
-            "locations": "مدن الزوار",
-            "support": "دعم بأولوية",
-            "early": "ميزات جديدة أولاً"
-          }
-        },
-        "free": "Starter"
-      },
-      "status": {
-        "trial": "تجريبي",
-        "active": "نشط",
-        "pending_payment": "بانتظار الدفع",
-        "expired": "منتهي",
-        "cancelled": "ملغى"
-      },
-      "paymentStatus": {
-        "pending": "بانتظار الحوالة",
-        "pending_review": "قيد مراجعة الدفع",
-        "paid": "مدفوع",
-        "failed": "فشل",
-        "cancelled": "ملغى",
-        "rejected": "مرفوض"
-      },
       "payment": {
         "stepLabel": "الدفع",
         "title": "كمّل الدفع",
@@ -2005,68 +3587,6 @@
         },
         "uploadProgress": "تقدم الرفع",
         "uploading": "جارٍ الرفع…"
-      },
-      "features": {
-        "maxServices": "حتى {value} خدمات",
-        "maxImages": "حتى {value} صور",
-        "verifiedBadge": "شارة موثّق",
-        "advancedAnalytics": "تحليلات متقدمة",
-        "featuredSection": "قسم مميز",
-        "premiumBadge": "شارة بريميوم",
-        "unlimitedServices": "خدمات غير محدودة"
-      },
-      "locked": {
-        "pendingTitle": "بانتظار الموافقة",
-        "pendingBody": "تُفتح خطط الاشتراك بعد موافقة الإدارة على نشاطك. سنرسل لك بريداً عند ذلك.",
-        "draftTitle": "أكمل ملفك أولاً",
-        "draftBody": "ارفع الشعار والغلاف والمعرض والهوية، ثم أرسل للموافقة. تظهر الخطط فقط بعد الاعتماد.",
-        "completeProfile": "إكمال الملف",
-        "uploadId": "رفع الهوية"
-      },
-      "intro": "بدون ضغط. اختار اللي بناسب شغلك اليوم — ورقّي لما تكون جاهز تكبر.",
-      "hero": {
-        "title": "كبّر شغلك مع دليلي.",
-        "subtitle": "اختار الخطة اللي بتساعدك توصل لزباين أكثر."
-      },
-      "summary": {
-        "eyebrow": "ملخص الترقية",
-        "continue": "متابعة",
-        "back": "رجوع",
-        "blurb": {
-          "pro": "ناس أكثر رح تشوف شغلك وتتواصل معك بثقة.",
-          "premium": "خليك الخيار الأول بمدينتك مع أكبر ظهور على دليلي."
-        }
-      },
-      "faq": {
-        "title": "أسئلة",
-        "subtitle": "أجوبة واضحة قبل ما تترقّى.",
-        "items": {
-          "active": {
-            "q": "متى بيصير اشتراكي فعّال؟",
-            "a": "بعد ما تحوّل وترفع الإيصال، فريقنا بيراجع الطلب. الخطة بتصير فعّالة فقط بعد موافقة الإدارة — مو تلقائياً."
-          },
-          "pay": {
-            "q": "كيف بدفع؟",
-            "a": "بتحوّل المبلغ يدوياً حسب تفاصيل الحساب اللي منعرضها، وبعدين بترفع إيصال واضح للمراجعة."
-          },
-          "upgrade": {
-            "q": "فيي أترقّى بعدين؟",
-            "a": "أكيد. ابدأ مجاناً بالخطة المجانية، وبعدين انتقل لـ PRO أو PREMIUM لما بدك زباين أكثر يلاقوك."
-          },
-          "cancel": {
-            "q": "فيي ألغي؟",
-            "a": "نعم. فيك تلغي أو ترجع للخطة المجانية من إعدادات خطتك. ما في خصومات تلقائية."
-          }
-        }
-      },
-      "trust": {
-        "title": "ثقة الأعمال المحلية",
-        "items": {
-          "secure": "دفع آمن",
-          "noAuto": "ما في خصومات تلقائية",
-          "transparent": "أسعار واضحة",
-          "support": "دعم سريع"
-        }
       }
     },
     "messages": {
@@ -2111,7 +3631,11 @@
       },
       "subscriptionExpiring": {
         "title": "الاشتراك قرب ينتهي",
-        "body": "جدّد قريب حتى تحافظ على مزايا خطتك."
+        "body": "خطة أعمالك تنتهي خلال حوالي {days} أيام. جدّد بـ {price} USD/شهر لتبقى ظاهراً."
+      },
+      "subscriptionGrace": {
+        "title": "فترة سماح — جدّد لتبقى ظاهراً",
+        "body": "يتبقى {days} يوم/أيام من مهلة السماح ({graceDays} أيام). جدّد الآن وإلا ستخرج من البحث والمطابقة."
       },
       "newFeature": {
         "title": "ميزة جديدة",
@@ -2208,8 +3732,6 @@
       "withPro": "⭐ مع PRO",
       "withPremium": "👑 مع PREMIUM",
       "impressions": "مرات الظهور",
-      "ctaPro": "جيب زباين أكثر مع PRO",
-      "ctaPremium": "خليك الخيار الأول",
       "premiumTitle": "أنت أصلاً على أعلى خطة بدليلي",
       "premiumBody": "الظهور الحقيقي لهالأسبوع من PREMIUM.",
       "emptyTitle": "ما في بيانات نمو بعد",
@@ -2240,6 +3762,25 @@
         "login_required": "يرجى تسجيل الدخول للمتابعة.",
         "forbidden": "لا يمكنك تغيير هذه الإعدادات.",
         "failed": "حدث خطأ ما."
+      },
+      "handlesEmergency": "استقبال طلبات الطوارئ",
+      "handlesEmergencyHint": "عند الإيقاف تُستبعد من مطابقات الطوارئ. كن صادقاً — الثقة تعتمد على ذلك."
+    },
+    "publicVisibility": {
+      "title": "خصوصية الملف العام",
+      "subtitle": "اختر ما يراه الزبائن في ملف الثقة العام قبل الحجز.",
+      "save": "حفظ الخصوصية",
+      "saving": "جاري الحفظ…",
+      "saved": "تم حفظ الخصوصية.",
+      "error": "تعذر حفظ إعدادات الخصوصية.",
+      "flags": {
+        "showLogo": "إظهار الصورة / الشعار",
+        "showGallery": "إظهار معرض الأعمال",
+        "showCompletedJobs": "إظهار عدد الأعمال المكتملة",
+        "showServiceArea": "إظهار منطقة الخدمة / المدن",
+        "showStatistics": "إظهار الإحصاءات العامة",
+        "showLanguages": "إظهار اللغات",
+        "showCertificates": "إظهار الشهادات"
       }
     },
     "success": {
@@ -2278,6 +3819,8 @@
         "actionsHint": "انتقل بسرعة إلى الأدوات التي تستخدمها أكثر.",
         "recommendations": "نصائح لتحسين عملك",
         "recommendationsHint": "خطوات بسيطة لتزيد طلباتك.",
+        "reputation": "رؤى السمعة",
+        "reputationHint": "نقاط القوة والاتجاهات واقتراحات الذكاء — النتائج الرقمية تبقى داخلية.",
         "statistics": "إحصائياتك",
         "statisticsHint": "رسوم بيانية وسجلك وإنجازاتك."
       },
@@ -2474,33 +4017,91 @@
           "improve_response": "ردّ أسرع على الرسائل وطلبات الحجز."
         }
       }
+    },
+    "reputationInsights": {
+      "eyebrow": "خاص",
+      "title": "سمعتك",
+      "strengths": "نقاط القوة",
+      "improvements": "فرص التحسين",
+      "suggestions": "اقتراحات الذكاء الاصطناعي",
+      "monthlyTrend": "اتجاه الثقة الأخير",
+      "scorePrivateNote": "النتائج الرقمية خاصة — العملاء يرون مستوى الثقة فقط.",
+      "metrics": {
+        "completedJobs": "أعمال مكتملة",
+        "cancellationRate": "معدل الإلغاء",
+        "responseTime": "وقت الرد",
+        "recommendationRate": "معدل التوصية"
+      },
+      "levels": {
+        "excellent": "ممتاز",
+        "very_good": "جيد جداً",
+        "good": "جيد",
+        "developing": "قيد التطور",
+        "new_provider": "مزود جديد",
+        "needs_attention": "يحتاج انتباهاً"
+      },
+      "trend": {
+        "rising": "صاعد",
+        "stable": "مستقر",
+        "declining": "متراجع"
+      }
     }
   },
   "admin": {
     "nav": {
-      "title": "مركز التحكم",
+      "title": "مركز العمليات",
       "menu": "قائمة الإدارة",
-      "dashboard": "لوحة المعلومات",
+      "dashboard": "الرئيسية",
       "providers": "المزودون",
-      "verification": "التحقق",
+      "verification": "التوثيق",
       "searches": "تحليلات البحث",
       "users": "المستخدمون",
       "categories": "الفئات",
       "payments": "المدفوعات",
       "subscriptions": "موافقات الاشتراك",
-      "businesses": "الأعمال",
+      "businesses": "مزودو الخدمة",
       "messages": "الرسائل",
       "marketplace": "السوق",
       "learning": "ذكاء التعلم",
       "ranking": "الترتيب",
       "customers": "العملاء",
-      "issues": "المشكلات",
+      "issues": "البلاغات",
+      "support": "الدعم",
       "reviewModeration": "إشراف التقييمات",
+      "reputation": "محرك السمعة",
       "analytics": "التحليلات",
+      "aiPredictions": "توقعات الذكاء",
+      "aiAutomation": "أتمتة الذكاء",
+      "emergency": "الطوارئ",
+      "projects": "المشاريع",
+      "recurring": "متكرر",
       "content": "المحتوى",
       "broadcasts": "البث",
-      "health": "صحة النظام",
-      "audit": "سجل التدقيق"
+      "health": "حالة النظام",
+      "audit": "سجل النشاط",
+      "unlockOps": "طلبات الفتح",
+      "cells": "الخلايا",
+      "inspect": "فحص",
+      "refunds": "الاستردادات",
+      "finance": "المالية",
+      "settings": "الإعدادات",
+      "groups": {
+        "people": "إدارة المستخدمين",
+        "operations": "العمليات",
+        "system": "النظام",
+        "more": "المزيد"
+      },
+      "quality": "حالات الجودة",
+      "fraud": "الاحتيال والمخاطر",
+      "aiOps": "عمليات الذكاء الاصطناعي",
+      "matching": "المطابقة الذكية",
+      "pricing": "التسعير الديناميكي",
+      "forecast": "توقّع الطلب",
+      "scheduling": "الجدولة الذكية",
+      "businessAssistant": "مساعد الأعمال",
+      "marketplaceIntelligence": "ذكاء السوق",
+      "wallet": "المحفظة والضمان",
+      "aiPlatform": "منصة الذكاء الاصطناعي"
     },
     "learning": {
       "eyebrow": "داخلي · Learning AI",
@@ -2567,7 +4168,9 @@
       "plans": {
         "free": "Starter",
         "pro": "PRO",
-        "premium": "PREMIUM"
+        "premium": "PREMIUM",
+        "unlock_fee": "رسوم الفتح",
+        "business": "خطة الأعمال"
       },
       "status": {
         "pending": "بانتظار الحوالة",
@@ -2603,6 +4206,15 @@
         "reject_failed": "ما قدرنا نرفض الدفع.",
         "validation_error": "ملاحظة غير صالحة.",
         "unknown": "صار خطأ."
+      },
+      "stats": {
+        "total": "إجمالي المدفوعات",
+        "pendingReview": "قيد المراجعة",
+        "paidUsd": "المدفوع (USD)",
+        "currentMonth": "هذا الشهر (USD)",
+        "previousMonth": "الشهر السابق (USD)",
+        "leadUnlocks": "فتحات عملاء مدفوعة",
+        "businessSubs": "اشتراكات أعمال مدفوعة"
       }
     },
     "dashboard": {
@@ -2899,20 +4511,87 @@
         "failed": "فشل",
         "cancelled": "ملغى",
         "rejected": "مرفوض"
-      }
+      },
+      "readOnlyBanner": "أدوات الاشتراك للقراءة فقط. عمليات اليوم تعتمد على فتح العملاء والخلايا. الإزالة في Sprint 10."
     },
     "controlCenter": {
       "hero": {
-        "eyebrow": "مركز التحكم",
-        "title": "أهلاً بعودتك. نظرة اليوم.",
-        "subtitleAttention": "{count} عناصر تحتاج انتباهك اليوم.",
-        "subtitleClear": "كل شي تمام حالياً — شغل ممتاز.",
-        "pendingBusinesses": "أعمال معلّقة",
-        "pendingPayments": "مدفوعات معلّقة",
-        "changesRequested": "تعديلات مطلوبة",
-        "registrationsWeek": "تسجيلات (7 أيام)",
-        "unreadMessages": "رسائل غير مقروءة",
-        "approvalsToday": "اعتمادات اليوم"
+        "eyebrow": "مركز العمليات",
+        "title": "أهلاً بعودتك.",
+        "subtitleAttention": "هناك {count} عناصر تحتاج انتباهك اليوم.",
+        "subtitleClear": "كل شيء على ما يرام حالياً."
+      },
+      "health": {
+        "title": "حالة المنصة",
+        "status": {
+          "healthy": {
+            "label": "جميع الأنظمة تعمل بشكل طبيعي",
+            "hint": "لا توجد طوابير عاجلة الآن."
+          },
+          "attention": {
+            "label": "توجد بعض المهام المعلقة",
+            "hint": "راجع المدفوعات أو التوثيق أو الاعتمادات."
+          },
+          "critical": {
+            "label": "توجد مشكلات تتطلب تدخلاً فورياً",
+            "hint": "بلاغات مفتوحة تحتاج متابعة."
+          }
+        }
+      },
+      "today": {
+        "title": "نظرة اليوم",
+        "subtitle": "فقط الطوابير الأهم الآن.",
+        "open": "فتح",
+        "cards": {
+          "businesses": "طلبات بانتظار المراجعة",
+          "verification": "توثيقات جديدة",
+          "payments": "مدفوعات بانتظار التأكيد",
+          "issues": "بلاغات جديدة",
+          "messages": "رسائل جديدة",
+          "changes": "مشكلات تحتاج متابعة"
+        }
+      },
+      "priorities": {
+        "title": "أولويات اليوم",
+        "empty": "لا أولويات عاجلة — الوضع مستقر.",
+        "items": {
+          "payments": "هناك {count} مدفوعات تحتاج للمراجعة.",
+          "verification": "لديك {count} طلبات توثيق جديدة.",
+          "businesses": "هناك {count} طلبات اعتماد بانتظار المراجعة.",
+          "issues": "يوجد {count} بلاغات تحتاج إلى متابعة.",
+          "changes": "هناك {count} ملفات ما زالت تحدّث وثائقها.",
+          "messages": "لديك {count} رسائل غير مقروءة."
+        }
+      },
+      "quickActions": {
+        "title": "إجراءات سريعة",
+        "items": {
+          "payments": "مراجعة المدفوعات",
+          "verification": "طلبات التوثيق",
+          "users": "إدارة المستخدمين",
+          "issues": "البلاغات",
+          "settings": "الإعدادات"
+        }
+      },
+      "activity": {
+        "title": "النشاط الأخير",
+        "viewAll": "عرض جميع النشاطات",
+        "empty": "لا يوجد نشاط حديث بعد.",
+        "by": "بواسطة {name}",
+        "system": "النظام",
+        "actions": {
+          "provider_approved": "تم اعتماد مزود خدمة",
+          "provider_rejected": "تم رفض مزود خدمة",
+          "provider_changes_requested": "طُلب تحديث للوثائق",
+          "payment_approved": "تم تأكيد دفعة",
+          "payment_rejected": "تم رفض دفعة",
+          "provider_suspended": "تم تعليق مزود خدمة",
+          "provider_archived": "تم أرشفة مزود خدمة",
+          "verification_approved": "تم قبول طلب توثيق",
+          "verification_rejected": "تم رفض طلب توثيق",
+          "verification_changes_requested": "طُلب تعديل على التوثيق",
+          "generic": "تم تسجيل تحديث مهم"
+        }
       },
       "tasks": {
         "title": "مهام اليوم",
@@ -2948,21 +4627,6 @@
         "starter": "Starter",
         "pro": "PRO",
         "premium": "PREMIUM"
-      },
-      "activity": {
-        "title": "النشاط",
-        "empty": "ما في نشاط حديث بعد.",
-        "by": "بواسطة {name}",
-        "system": "النظام",
-        "actions": {
-          "provider_approved": "تم اعتماد نشاط",
-          "provider_rejected": "تم رفض نشاط",
-          "provider_changes_requested": "طُلبت تعديلات",
-          "payment_approved": "تم اعتماد دفعة",
-          "payment_rejected": "تم رفض دفعة",
-          "provider_suspended": "تم تعليق نشاط",
-          "provider_archived": "تم أرشفة نشاط"
-        }
       },
       "marketplace": {
         "title": "نبض السوق",
@@ -3115,6 +4779,33 @@
         "response": "الاستجابة"
       }
     },
+    "offerDecision": {
+      "title": "عمليات قرار العروض",
+      "subtitle": "تمييز مميز، إيقاف احتيال، وتشخيص ترتيب الطلب. الأوزان لا تُعرض أبداً.",
+      "feature": "تمييز كمميز",
+      "unfeature": "إزالة التمييز",
+      "featuredBadge": "مميز",
+      "suspendFraud": "إيقاف (احتيال)",
+      "reactivate": "إعادة تفعيل",
+      "diagnosticsTitle": "تشخيص الترتيب",
+      "requestIdPlaceholder": "معرّف طلب الخدمة",
+      "runDiagnostics": "تشغيل التشخيص",
+      "generatedAt": "أُنشئ {at}",
+      "signals": "الإشارات النشطة",
+      "score": "الدرجة {score}",
+      "recommended": "موصى به"
+    },
+    "chatModeration": {
+      "title": "إشراف المحادثات",
+      "subtitle": "راجع البلاغات، أوقف المحادثات المسيئة، واحفظ أمان السوق.",
+      "empty": "لا بلاغات محادثات مفتوحة.",
+      "enableHint": "فعّل ENTERPRISE_COMMUNICATION لفتح طابور الإشراف.",
+      "conversation": "المحادثة",
+      "resolve": "حل",
+      "dismiss": "رفض",
+      "resolveAndSuspend": "حل وإيقاف",
+      "suspendOnly": "إيقاف المحادثة فقط"
+    },
     "controlCenterV2": {
       "title": "صحة المنصة",
       "subtitle": "مؤشرات السوق الحية للمشغّلين والمشرفين.",
@@ -3161,22 +4852,51 @@
         "close": "إغلاق"
       }
     },
+    "support": {
+      "eyebrow": "صندوق الدعم",
+      "title": "رسائل الدعم",
+      "subtitle": "رسائل أرسلها العملاء وأصحاب النشاطات مباشرةً إلى فريق المنصة.",
+      "empty": "لا رسائل في هذا الفلتر.",
+      "status": {
+        "all": "الكل",
+        "open": "مفتوحة",
+        "in_progress": "قيد المعالجة",
+        "resolved": "محلولة",
+        "closed": "مغلقة"
+      },
+      "role": {
+        "customer": "عميل",
+        "business": "صاحب نشاط"
+      },
+      "actions": {
+        "inProgress": "بدء",
+        "resolve": "حل",
+        "close": "إغلاق"
+      }
+    },
     "reviewModeration": {
       "eyebrow": "الإشراف",
       "title": "إشراف التقييمات",
-      "subtitle": "الأحدث والتقييمات المنخفضة والمبلّغ عنها. كشف السبام جاهز.",
+      "subtitle": "الأحدث والتقييمات المنخفضة وأعلام الذكاء الاصطناعي وطلبات الحذف.",
       "empty": "لا تقييمات في هذا الفلتر.",
-      "spamReady": "نقطة توسعة كشف السبام جاهزة (الذكاء الاصطناعي غير مفعّل).",
+      "spamReady": "كشف التقييمات المزيفة مفعّل (heuristic-v1).",
       "spamNotReady": "كشف السبام غير متاح.",
       "verified": "موثّق",
       "noComment": "بدون تعليق",
       "provider": "المزود",
       "warnDefault": "يرجى الالتزام بإرشادات مجتمع دليلي.",
+      "aiSummary": "ملخص الذكاء الاصطناعي",
+      "fakeRisk": "خطر التزييف",
+      "flags": "أعلام",
+      "history": "السجل",
+      "deleteRequested": "طلب حذف",
       "filters": {
         "newest": "الأحدث",
         "low": "تقييمات منخفضة",
         "hidden": "مخفي",
-        "pending": "معلّق"
+        "pending": "معلّق",
+        "flagged": "معلّم بالذكاء",
+        "delete_requests": "طلبات الحذف"
       },
       "actions": {
         "hide": "إخفاء",
@@ -3184,6 +4904,36 @@
         "delete": "حذف",
         "deleteConfirm": "حذف ناعم لهذا التقييم؟",
         "warnCustomer": "تحذير العميل"
+      }
+    },
+    "reputation": {
+      "eyebrow": "الثقة",
+      "title": "محرك السمعة بالذكاء الاصطناعي",
+      "subtitle": "النتائج الداخلية للإدارة فقط. العملاء يرون مستويات الثقة والتفسيرات الإيجابية.",
+      "distribution": "توزيع مستويات الثقة",
+      "highest": "أعلى سمعة",
+      "rising": "تحسّن سريع",
+      "declining": "تراجع",
+      "needsReview": "يحتاج مراجعة",
+      "complaintHeavy": "مشاكل موثوقية متكررة",
+      "empty": "لا مزودين في هذه القائمة بعد. أعد الحساب بعد الترحيل.",
+      "internalScore": "النتيجة الداخلية",
+      "levels": {
+        "excellent": "ممتاز",
+        "very_good": "جيد جداً",
+        "good": "جيد",
+        "developing": "قيد التطور",
+        "new_provider": "مزود جديد",
+        "needs_attention": "يحتاج انتباهاً"
+      },
+      "trend": {
+        "rising": "صاعد",
+        "stable": "مستقر",
+        "declining": "متراجع"
+      },
+      "links": {
+        "reviews": "إشراف التقييمات",
+        "providers": "المزودون"
       }
     },
     "broadcasts": {
@@ -3259,7 +5009,8 @@
         "searches": "تحليلات البحث",
         "marketplace": "السوق",
         "learning": "ذكاء التعلم",
-        "ranking": "مفتش الترتيب"
+        "ranking": "مفتش الترتيب",
+        "predictions": "توقعات الذكاء"
       },
       "kpis": {
         "bookingsTotal": "إجمالي الحجوزات",
@@ -3275,6 +5026,96 @@
         "avgRating": "متوسط التقييم",
         "recClickRate": "نسبة نقر التوصيات"
       }
+    },
+    "predictive": {
+      "eyebrow": "محرك الذكاء · المرحلة 8",
+      "title": "الذكاء التنبؤي",
+      "subtitle": "توقعات الطلب وتوازن العرض ورؤى السوق ودقة التنبؤ.",
+      "kpis": {
+        "health": "صحة السوق",
+        "accuracy": "دقة التوقعات",
+        "avgResponse": "متوسط الرد",
+        "completion": "اتجاه الإنجاز"
+      },
+      "demandTitle": "أبرز توقعات الطلب",
+      "balanceTitle": "توازن الطلب / العرض",
+      "balanceEmpty": "لا يوجد اختلال مفتوح.",
+      "actions": "موصى به",
+      "topServices": "أكثر الخدمات طلباً",
+      "growing": "الأسرع نمواً",
+      "heatmap": "كثافة الطلب حسب المنطقة",
+      "peakHours": "ساعات الذروة (UTC)",
+      "links": {
+        "analytics": "مركز التحليلات",
+        "marketplace": "السوق",
+        "learning": "ذكاء التعلم"
+      }
+    },
+    "automation": {
+      "eyebrow": "محرك الذكاء · المرحلة 9",
+      "title": "أتمتة الذكاء",
+      "subtitle": "سير العمل المنفَّذ والموافقات المعلّقة والدقة والتعلم من قرارات المستخدم.",
+      "kpis": {
+        "executed": "منفَّذ",
+        "pending": "موافقات معلّقة",
+        "accuracy": "دقة الأتمتة",
+        "acceptance": "نسبة القبول"
+      },
+      "pendingTitle": "موافقات معلّقة",
+      "pendingEmpty": "لا توجد تأكيدات معلّقة.",
+      "successful": "أنجح سير العمل",
+      "noWorkflows": "لا يوجد سير عمل منفَّذ بعد.",
+      "rejected": "اقتراحات مرفوضة",
+      "rejectedHint": "رفض المستخدم اقتراحات الأتمتة خلال آخر 14 يوماً.",
+      "recent": "أتمتة حديثة",
+      "links": {
+        "predictions": "توقعات الذكاء",
+        "learning": "ذكاء التعلم",
+        "analytics": "التحليلات"
+      }
+    },
+    "emergency": {
+      "eyebrow": "Sprint 4 · المرحلة 3",
+      "title": "مراقبة الطوارئ",
+      "subtitle": "الحالات النشطة وأوقات الاستجابة والوصول المتوقع ونجاح الإرسال.",
+      "kpis": {
+        "active": "طوارئ نشطة",
+        "avgResponse": "متوسط الاستجابة",
+        "avgEta": "متوسط الوصول",
+        "successRate": "نجاح الإرسال"
+      },
+      "activeTitle": "طوارئ نشطة",
+      "activeEmpty": "لا توجد إرسالات طارئة نشطة.",
+      "volumeTitle": "الحجم حسب الفئة",
+      "volumeEmpty": "لا حجم طوارئ خلال آخر 7 أيام.",
+      "noEta": "الوصول قيد الانتظار",
+      "openRequest": "فتح الطلب"
+    },
+    "projects": {
+      "eyebrow": "Sprint 4 · المرحلة 4",
+      "title": "مشاريع متعددة الخدمات",
+      "subtitle": "تجديدات معقدة مقسّمة إلى حزم حرف مع تنسيق ذكي.",
+      "kpis": {
+        "active": "مشاريع نشطة",
+        "completed": "مكتملة",
+        "avgProgress": "متوسط التقدم"
+      },
+      "listTitle": "مشاريع حديثة",
+      "empty": "لا توجد مشاريع متعددة الخدمات بعد.",
+      "open": "فتح"
+    },
+    "recurring": {
+      "eyebrow": "Sprint 4 · المرحلة 5",
+      "title": "متكرر والصيانة",
+      "subtitle": "الخطط النشطة والزيارات القادمة واقتراحات تحسين المسارات.",
+      "kpis": {
+        "active": "خطط نشطة",
+        "paused": "متوقفة",
+        "upcoming": "زيارات قادمة"
+      },
+      "optimizeTitle": "تحسين المسارات",
+      "optimizeEmpty": "لا فرص تجميع اليوم.",
+      "customerView": "لوحة التكرار للعميل"
     },
     "content": {
       "eyebrow": "المحتوى",
@@ -3299,6 +5140,1040 @@
           "body": "تحليلات البحث حسب المدينة والمشكلات الرائجة."
         }
       }
+    },
+    "unlockOps": {
+      "title": "عمليات الفتح",
+      "subtitle": "طابور رسوم الفتح وجلسات المهلة والتعويضات المدققة.",
+      "allPayments": "كل المدفوعات",
+      "pendingPayments": "رسوم فتح معلّقة",
+      "noPendingPayments": "لا رسوم معلّقة.",
+      "openSessions": "جلسات فتح مفتوحة",
+      "noOpenSessions": "لا جلسات مفتوحة.",
+      "timedOut": "انتهاء مهلة حديث",
+      "noTimedOut": "لا مهلات حديثة.",
+      "approve": "اعتماد الدفع",
+      "reject": "رفض",
+      "paymentDetail": "تفاصيل الدفع",
+      "inspectRequest": "فحص الطلب",
+      "compReason": "سبب التعويض (مطلوب)",
+      "compReasonPlaceholder": "لماذا يُعفى من الدفع؟",
+      "compUnlock": "تعويض فتح (مدقّق)"
+    },
+    "cells": {
+      "title": "سياسات الخلايا",
+      "subtitle": "تجميد أو تقييد خلايا المدينة × الفئة. الخلايا المجمّدة تتخطى المطابقة.",
+      "upsertTitle": "تعيين سياسة",
+      "city": "المدينة",
+      "category": "الفئة",
+      "select": "اختر…",
+      "frozen": "مجمّد",
+      "limited": "توفر محدود",
+      "concierge": "كونسيرج",
+      "reason": "سبب التدقيق",
+      "note": "ملاحظة داخلية",
+      "save": "حفظ السياسة",
+      "listTitle": "السياسات النشطة",
+      "empty": "لا تجاوزات بعد."
+    },
+    "inspect": {
+      "title": "فحص السوق",
+      "subtitle": "عرض للقراءة فقط للمطابقة والعروض والفتح. بدون بيانات تواصل.",
+      "requestIdPlaceholder": "معرّف الطلب",
+      "load": "تحميل",
+      "notFound": "الطلب غير موجود.",
+      "cellFrozen": "الخلية مجمّدة",
+      "cellLimited": "توفر محدود",
+      "cellConcierge": "كونسيرج",
+      "noCellPolicy": "لا تجاوز للخلية",
+      "pool": "مجموعة المطابقة",
+      "noPool": "لا مجموعة",
+      "offers": "العروض",
+      "noOffers": "لا عروض",
+      "unlock": "الاختيار والفتح",
+      "noSelection": "لا اختيار",
+      "noUnlock": "لا جلسة فتح",
+      "grantYes": "منح فتح التواصل: نعم",
+      "grantNo": "منح فتح التواصل: لا"
+    },
+    "stripeWebhooks": {
+      "eyebrow": "Stripe",
+      "pageTitle": "Webhooks Stripe",
+      "pageSubtitle": "أحداث Stripe الموثّقة وإعادة المحاولة.",
+      "backToPayments": "العودة للمدفوعات",
+      "title": "سجل Webhooks",
+      "subtitle": "سجل غير قابل للتكرار لأحداث Stripe.",
+      "empty": "لا أحداث Stripe بعد.",
+      "retry": "إعادة",
+      "retrySuccess": "تمت إعادة المعالجة",
+      "retryError": "فشلت إعادة المحاولة"
+    },
+    "financialDocuments": {
+      "eyebrow": "المالية",
+      "pageTitle": "المستندات المالية",
+      "pageSubtitle": "الفواتير والإيصالات وإعدادات الشركة واكتشاف المستندات الناقصة.",
+      "backToPayments": "العودة للمدفوعات",
+      "companySettings": "إعدادات فوترة الشركة",
+      "searchPlaceholder": "بحث في المستندات…",
+      "loadError": "تعذر التحميل",
+      "downloadError": "فشل التنزيل",
+      "download": "تنزيل",
+      "regenerate": "إعادة توليد",
+      "regenSuccess": "تمت إعادة توليد PDF",
+      "regenError": "فشلت إعادة التوليد",
+      "generate": "توليد",
+      "generateSuccess": "تم توليد المستند",
+      "generateError": "فشل التوليد",
+      "missingTitle": "مدفوعات ناجحة بلا مستند",
+      "stats": {
+        "total": "المستندات",
+        "invoices": "الفواتير",
+        "receipts": "الإيصالات",
+        "missing": "ناقصة"
+      }
+    },
+    "companyBilling": {
+      "companyName": "اسم الشركة",
+      "companyAddress": "العنوان",
+      "country": "البلد",
+      "vatNumber": "الرقم الضريبي (VAT)",
+      "taxId": "الرقم الضريبي",
+      "supportEmail": "بريد الدعم",
+      "website": "الموقع",
+      "phone": "الهاتف",
+      "currency": "العملة",
+      "taxRate": "نسبة الضريبة الافتراضية",
+      "invoiceFooter": "تذييل الفاتورة",
+      "legalNotice": "ملاحظة قانونية",
+      "save": "حفظ الإعدادات",
+      "saved": "تم الحفظ",
+      "saveError": "تعذر الحفظ"
+    },
+    "refunds": {
+      "eyebrow": "المالية",
+      "pageTitle": "الاستردادات والنزاعات",
+      "pageSubtitle": "مراجعة طلبات الاسترداد واعتماد استردادات Stripe وتتبع نزاعات الدفع.",
+      "backToPayments": "العودة للمدفوعات",
+      "toDocuments": "المستندات المالية",
+      "searchPlaceholder": "بحث بالدفع أو المرجع أو Stripe…",
+      "loadError": "تعذر التحميل",
+      "refundsTitle": "طلبات الاسترداد",
+      "disputesTitle": "نزاعات الدفع",
+      "emptyRefunds": "لا طلبات استرداد.",
+      "emptyDisputes": "لا نزاعات.",
+      "approve": "اعتماد",
+      "reject": "رفض",
+      "approveSuccess": "تم اعتماد الاسترداد",
+      "approveError": "تعذر الاعتماد",
+      "rejectSuccess": "تم رفض الاسترداد",
+      "rejectError": "تعذر الرفض",
+      "rejectPrompt": "سبب الرفض (اختياري)",
+      "remaining": "المتبقي بعد الاسترداد",
+      "uploadEvidence": "إضافة ملاحظة أدلة",
+      "evidencePlaceholder": "ملخص الأدلة لـ Stripe…",
+      "evidenceSuccess": "تم تسجيل الأدلة",
+      "evidenceError": "تعذر حفظ الأدلة",
+      "filters": {
+        "statusAll": "كل الحالات"
+      },
+      "stats": {
+        "total": "الإجمالي",
+        "requested": "بانتظار المراجعة",
+        "succeeded": "ناجح",
+        "failed": "فشل",
+        "refundedUsd": "مسترد (USD)"
+      },
+      "status": {
+        "requested": "مطلوب",
+        "pending": "معلق",
+        "approved": "معتمد",
+        "rejected": "مرفوض",
+        "processing": "قيد المعالجة",
+        "succeeded": "ناجح",
+        "failed": "فشل",
+        "cancelled": "ملغى"
+      },
+      "type": {
+        "full": "كامل",
+        "partial": "جزئي",
+        "manual": "يدوي",
+        "automatic": "تلقائي"
+      },
+      "disputeStatus": {
+        "opened": "مفتوح",
+        "evidence_requested": "مطلوب أدلة",
+        "evidence_submitted": "تم تقديم الأدلة",
+        "under_review": "قيد المراجعة",
+        "won": "فوز",
+        "lost": "خسارة",
+        "closed": "مغلق"
+      }
+    },
+    "finance": {
+      "eyebrow": "المالية",
+      "pageTitle": "تحليلات الإيرادات والمالية",
+      "pageSubtitle": "رؤى فورية حول الإيرادات والاشتراكات وفتح العملاء والاستردادات والنمو — قراءة فقط على بيانات الدفع الحالية.",
+      "loadError": "تعذر تحميل البيانات المالية",
+      "refreshed": "تم تحديث لوحة التحكم",
+      "refresh": "تحديث",
+      "computedAt": "آخر تحديث {at} · {cache}",
+      "fromCache": "مخزّن",
+      "live": "مباشر",
+      "exportError": "فشل التصدير",
+      "exportSuccess": "تم تنزيل التصدير",
+      "exportCsv": "تصدير CSV",
+      "exportPdf": "تصدير PDF",
+      "revenueTitle": "الإيرادات",
+      "subscriptionsTitle": "الاشتراكات",
+      "leadsTitle": "مدفوعات العملاء",
+      "refundsTitle": "الاستردادات والنزاعات",
+      "chartsTitle": "الاتجاهات",
+      "providersTitle": "أفضل المزودين",
+      "reportsTitle": "التقارير",
+      "reportsSubtitle": "أنشئ تقارير دورية وصدّر CSV أو PDF. التصدير يُسجَّل في التدقيق.",
+      "emptyChart": "لا بيانات في هذه الفترة بعد.",
+      "byCategory": "حسب الفئة",
+      "byCountry": "حسب البلد",
+      "byCity": "حسب المدينة",
+      "topReasons": "أبرز أسباب الاسترداد",
+      "recentTransactions": "أحدث المعاملات",
+      "recentRefunds": "أحدث الاستردادات",
+      "recentSubscriptions": "أحدث الاشتراكات",
+      "viewAllPayments": "كل المدفوعات",
+      "viewAllRefunds": "كل الاستردادات",
+      "businessFreeRatio": "أعمال {business} · مجاني {free}",
+      "links": {
+        "payments": "المدفوعات",
+        "refunds": "الاستردادات",
+        "documents": "المستندات"
+      },
+      "periods": {
+        "daily": "يومي",
+        "weekly": "أسبوعي",
+        "monthly": "شهري",
+        "quarterly": "ربع سنوي",
+        "yearly": "سنوي"
+      },
+      "charts": {
+        "dailyRevenue": "الإيراد اليومي (30 يوم)",
+        "monthlyRevenue": "الإيراد الشهري (12 شهر)",
+        "subscriptionGrowth": "خطط الأعمال النشطة",
+        "leadRevenue": "إيراد العملاء (30 يوم)",
+        "refundTrend": "حجم الاسترداد (30 يوم)",
+        "mrrTrend": "اتجاه MRR",
+        "arrTrend": "اتجاه ARR"
+      },
+      "table": {
+        "provider": "المزود",
+        "plan": "الخطة",
+        "revenue": "الإيراد",
+        "unlocks": "الفتحات",
+        "ltv": "القيمة مدى الحياة"
+      },
+      "kpis": {
+        "today": "اليوم",
+        "thisWeek": "هذا الأسبوع",
+        "thisMonth": "هذا الشهر",
+        "thisYear": "هذه السنة",
+        "lifetime": "إيراد مدى الحياة",
+        "mrr": "MRR",
+        "arr": "ARR",
+        "arpp": "ARPP",
+        "activeBusiness": "أعمال نشطة",
+        "freeProviders": "مزودون مجانيون",
+        "newSubscriptions": "جديد (30 يوم)",
+        "renewals": "تجديدات (30 يوم)",
+        "expiringSoon": "تنتهي (7 أيام)",
+        "cancelled": "ملغاة",
+        "conversionRate": "مجاني → أعمال",
+        "churnRate": "معدل التسرب",
+        "unlockedLeads": "عملاء مفتوحون",
+        "avgLeadPrice": "متوسط سعر العميل",
+        "leadRevenue": "إيراد العملاء",
+        "refundCount": "عدد الاستردادات",
+        "refundVolume": "حجم الاسترداد",
+        "refundRate": "معدل الاسترداد",
+        "partialVsFull": "جزئي / كامل",
+        "openDisputes": "نزاعات مفتوحة",
+        "wonDisputes": "فوز",
+        "lostDisputes": "خسارة",
+        "avgResolution": "متوسط الحل"
+      }
+    },
+    "quality": {
+      "eyebrow": "الجودة",
+      "title": "إدارة الحالات",
+      "subtitle": "تعيين وتصعيد ودمج وحل حالات جودة السوق.",
+      "empty": "لا توجد حالات جودة بعد.",
+      "byCategory": "حسب الفئة",
+      "provider": "المزود",
+      "stats": {
+        "open": "حالات مفتوحة",
+        "escalated": "مُصعَّدة",
+        "resolvedWeek": "تم حلها هذا الأسبوع"
+      },
+      "actions": {
+        "assign": "تعيين لي",
+        "changeStatus": "تغيير الحالة…",
+        "escalate": "تصعيد",
+        "resolve": "حل",
+        "reject": "رفض",
+        "rejectConfirm": "رفض هذه الحالة؟",
+        "mergeIntoNewest": "دمج في الأحدث"
+      },
+      "links": {
+        "issues": "بلاغات الحجوزات",
+        "refunds": "المبالغ المستردة"
+      },
+      "categories": {
+        "customer_complaint": "شكوى عميل",
+        "provider_complaint": "شكوى مزود",
+        "booking_issue": "مشكلة حجز",
+        "service_quality": "مشكلة جودة الخدمة",
+        "communication": "مشكلة تواصل",
+        "damage_report": "بلاغ ضرر",
+        "late_arrival": "تأخر الوصول",
+        "no_show": "عدم الحضور",
+        "policy_violation": "مخالفة السياسة",
+        "other": "أخرى"
+      },
+      "statuses": {
+        "open": "مفتوح",
+        "pending_information": "بانتظار معلومات",
+        "under_review": "قيد المراجعة",
+        "waiting_for_provider": "بانتظار المزود",
+        "waiting_for_customer": "بانتظار العميل",
+        "resolved": "تم الحل",
+        "rejected": "مرفوض",
+        "escalated": "مُصعَّد",
+        "closed": "مغلق"
+      },
+      "priorities": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "urgent": "عاجل"
+      }
+    },
+    "fraud": {
+      "eyebrow": "المخاطر",
+      "title": "الاحتيال واستخبارات المخاطر",
+      "subtitle": "اكتشاف بمساعدة المشرف. مستويات المخاطر داخلية ولا تُعرض للعملاء.",
+      "privacyNotice": "الدرجات الداخلية لا تظهر في الملفات العامة أو واجهات العملاء.",
+      "riskScores": "أعلى درجات المخاطر الداخلية",
+      "investigations": "التحقيقات",
+      "events": "أحداث الاحتيال الأخيرة",
+      "triggered": "القواعد المُفعَّلة",
+      "emptyScores": "لا توجد درجات مخاطر بعد. أعد حساب كيان للبدء.",
+      "emptyInvestigations": "لا توجد تحقيقات بعد.",
+      "emptyEvents": "لا توجد أحداث احتيال بعد.",
+      "stats": {
+        "open": "تحقيقات مفتوحة",
+        "escalated": "مُصعَّدة",
+        "highRisk": "كيانات عالية/حرجة",
+        "eventsToday": "أحداث اليوم"
+      },
+      "recalculate": {
+        "title": "إعادة حساب المخاطر",
+        "hint": "يشغّل محرك القواعد (+ طبقة ML اختيارية). لا يعلّق تلقائياً بشكل دائم.",
+        "entityId": "معرّف الكيان",
+        "submit": "احسب"
+      },
+      "entities": {
+        "provider": "مزود",
+        "customer": "عميل"
+      },
+      "actions": {
+        "investigate": "فتح تحقيق",
+        "assign": "تعيين لي",
+        "changeStatus": "تغيير الحالة…",
+        "escalate": "تصعيد",
+        "resolve": "حل",
+        "falsePositive": "إيجابية كاذبة",
+        "mergeIntoNewest": "دمج في الأحدث"
+      },
+      "links": {
+        "quality": "حالات الجودة",
+        "reviews": "إشراف التقييمات"
+      },
+      "levels": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "critical": "حرج"
+      },
+      "statuses": {
+        "open": "مفتوح",
+        "in_progress": "قيد التنفيذ",
+        "awaiting_info": "بانتظار معلومات",
+        "escalated": "مُصعَّد",
+        "resolved": "تم الحل",
+        "closed": "مغلق",
+        "false_positive": "إيجابية كاذبة"
+      },
+      "priorities": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "urgent": "عاجل"
+      },
+      "graph": {
+        "title": "علاقات مؤكدة",
+        "loading": "جارٍ تحميل الرسم…",
+        "empty": "لا روابط مؤكدة بعد."
+      }
+    },
+    "aiOps": {
+      "eyebrow": "العمليات",
+      "title": "عمليات الذكاء الاصطناعي وصحة المنصة",
+      "subtitle": "ذكاء تشغيلي موحّد عبر الجودة والثقة والاحتيال والمدفوعات والتجربة.",
+      "health": {
+        "title": "صحة المنصة",
+        "levels": {
+          "healthy": "سليم",
+          "degraded": "متدهور",
+          "critical": "حرج"
+        }
+      },
+      "kpis": {
+        "activeUsers": "المستخدمون النشطون",
+        "bookingsToday": "الحجوزات اليوم",
+        "completedJobs": "المهام المكتملة",
+        "openCases": "حالات مفتوحة",
+        "escalatedCases": "حالات مُصعَّدة",
+        "fraudAlerts": "تنبيهات احتيال",
+        "reviews": "التقييمات (7 أيام)",
+        "verificationPending": "تحقق معلّق",
+        "verificationVerified": "مزودون موثّقون",
+        "paymentSuccess": "نجاح الدفع",
+        "refundRate": "معدل الاسترداد",
+        "systemHealth": "صحة النظام"
+      },
+      "trust": {
+        "title": "توزيع الثقة",
+        "empty": "لا توجد بيانات سمعة بعد."
+      },
+      "insights": {
+        "title": "رؤى الذكاء الاصطناعي",
+        "empty": "حدّث لتوليد الرؤى.",
+        "tones": {
+          "positive": "إيجابي",
+          "neutral": "محايد",
+          "warning": "تحذير",
+          "critical": "حرج"
+        }
+      },
+      "alerts": {
+        "title": "تنبيهات تشغيلية",
+        "empty": "لا تنبيهات مفتوحة."
+      },
+      "anomalies": {
+        "title": "شذوذات",
+        "empty": "لا شذوذات مفتوحة."
+      },
+      "trends": {
+        "title": "الاتجاهات"
+      },
+      "categories": {
+        "title": "صحة الفئات",
+        "empty": "حدّث لحساب صحة الفئات.",
+        "score": "الدرجة"
+      },
+      "regions": {
+        "title": "صحة المناطق",
+        "empty": "حدّث لحساب صحة المناطق."
+      },
+      "tasks": {
+        "title": "مهام مركز الإجراءات",
+        "empty": "لا مهام مفتوحة."
+      },
+      "severity": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "critical": "حرج"
+      },
+      "alertStatus": {
+        "open": "مفتوح",
+        "acknowledged": "تم الإقرار",
+        "resolved": "تم الحل",
+        "dismissed": "مرفوض"
+      },
+      "actions": {
+        "refresh": "تحديث الصحة",
+        "export": "تصدير تقرير",
+        "acknowledge": "إقرار",
+        "resolve": "حل",
+        "assignTask": "تعيين مهمة",
+        "completeTask": "إكمال",
+        "createInvestigation": "إنشاء تحقيق",
+        "openQualityCase": "فتح حالة جودة"
+      },
+      "links": {
+        "fraud": "الاحتيال والمخاطر",
+        "quality": "حالات الجودة",
+        "reputation": "السمعة",
+        "systemHealth": "حالة النظام"
+      }
+    },
+    "matching": {
+      "eyebrow": "المطابقة",
+      "title": "المطابقة الذكية بالذكاء الاصطناعي",
+      "subtitle": "مطابقة مرجّحة معيارية مع الإنصاف والتفضيلات وتجارب جاهزة للتعلم الآلي.",
+      "privacyNotice": "الدرجات الداخلية للمشرفين فقط. يرى العملاء المزودين والشروحات العامة فقط.",
+      "stats": {
+        "avgLatency": "متوسط الكمون",
+        "feedback": "صفوف الملاحظات",
+        "accepted": "توصيات مقبولة",
+        "model": "النموذج"
+      },
+      "experiment": {
+        "title": "تجربة أ/ب",
+        "hint": "قواعد مقابل حركة ظل جاهزة للتعلم الآلي.",
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "enable": "تفعيل حركة ب",
+        "disable": "تعطيل التجربة",
+        "empty": "لا توجد تجربة بعد — طبّق الترحيل."
+      },
+      "weights": {
+        "title": "أوزان الإشارات",
+        "hint": "لا تسجيل نقاط ثابت — عدّل الأوزان مباشرة.",
+        "weight": "الوزن",
+        "enabled": "مفعّل",
+        "disabled": "معطّل",
+        "mlReady": "جاهز للتعلم الآلي",
+        "save": "حفظ"
+      },
+      "simulate": {
+        "title": "محاكاة / إعادة تشغيل",
+        "hint": "الصق معرّفات المزودين لمقارنة الترتيب.",
+        "placeholder": "معرّف-مزود-1، معرّف-مزود-2",
+        "run": "تشغيل المحاكاة"
+      },
+      "history": {
+        "title": "عمليات المطابقة الأخيرة",
+        "empty": "لا يوجد سجل بعد."
+      },
+      "fairness": {
+        "title": "الإنصاف",
+        "body": "تعزيز البداية والاستكشاف والتدوير المضبوط وتلاشي التعزيز يمنع الهيمنة الدائمة."
+      },
+      "links": {
+        "reputation": "السمعة",
+        "fraud": "الاحتيال",
+        "aiOps": "عمليات الذكاء الاصطناعي"
+      }
+    },
+    "pricing": {
+      "eyebrow": "التسعير",
+      "title": "التسعير الديناميكي بالذكاء الاصطناعي",
+      "subtitle": "ذكاء سوقي مرجّح يوصي بنطاقات — دليلي لا يفرض الأسعار أبداً.",
+      "privacyNotice": "حسابات الإشارات الداخلية للمشرفين فقط. يرى المزودون والعملاء النطاقات والشروحات العامة.",
+      "stats": {
+        "avgLatency": "متوسط الكمون",
+        "feedback": "صفوف الملاحظات",
+        "accepted": "عروض مقبولة",
+        "model": "النموذج"
+      },
+      "experiment": {
+        "title": "تجربة أ/ب",
+        "hint": "قواعد مقابل حركة ظل جاهزة للتعلم الآلي لإصدارات التسعير.",
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "enable": "تفعيل حركة ب",
+        "disable": "تعطيل التجربة",
+        "empty": "لا توجد تجربة بعد — طبّق الترحيل."
+      },
+      "weights": {
+        "title": "أوزان الإشارات",
+        "hint": "لا صيغة نهائية ثابتة — عدّل الأوزان مباشرة.",
+        "weight": "الوزن",
+        "enabled": "مفعّل",
+        "disabled": "معطّل",
+        "mlReady": "جاهز للتعلم الآلي",
+        "save": "حفظ"
+      },
+      "simulate": {
+        "title": "محاكاة",
+        "hint": "أعد تشغيل التسعير لفئة ومسافة سفر.",
+        "category": "مفتاح الفئة",
+        "distance": "المسافة كم",
+        "run": "تشغيل المحاكاة"
+      },
+      "market": {
+        "title": "لقطات السوق",
+        "empty": "لا توجد بيانات سوق بعد — حدّث بعد توفر العروض.",
+        "refresh": "تحديث إحصاءات السوق"
+      },
+      "history": {
+        "title": "التوصيات الأخيرة",
+        "empty": "لا يوجد سجل بعد.",
+        "replay": "إعادة تشغيل"
+      },
+      "links": {
+        "matching": "المطابقة الذكية",
+        "reputation": "السمعة",
+        "aiOps": "عمليات الذكاء الاصطناعي"
+      }
+    },
+    "forecast": {
+      "eyebrow": "التوقّع",
+      "title": "توقّع الطلب بالذكاء الاصطناعي",
+      "subtitle": "توقعات طلب معيارية لتخطيط السعة — إرشادية فقط وليست مضمونة.",
+      "privacyNotice": "حسابات الإشارات الداخلية للمشرفين فقط. يرى المزودون والعملاء الآفاق والشروحات العامة.",
+      "stats": {
+        "avgLatency": "متوسط الكمون",
+        "accuracyRows": "صفوف الدقة",
+        "avgError": "متوسط الخطأ",
+        "model": "النموذج"
+      },
+      "models": {
+        "title": "نماذج التوقّع",
+        "hint": "قارن النماذج القائمة على القواعد والجاهزة للتعلم الآلي.",
+        "empty": "لا توجد نماذج بعد — طبّق الترحيل.",
+        "default": "افتراضي"
+      },
+      "experiment": {
+        "title": "تجربة أ/ب",
+        "hint": "قواعد مقابل حركة ظل جاهزة للتعلم الآلي لإصدارات التوقّع.",
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "enable": "تفعيل حركة ب",
+        "disable": "تعطيل التجربة",
+        "empty": "لا توجد تجربة بعد — طبّق الترحيل."
+      },
+      "weights": {
+        "title": "أوزان الإشارات",
+        "hint": "إشارات مستقلة — عدّل الأوزان مباشرة.",
+        "weight": "الوزن",
+        "enabled": "مفعّل",
+        "disabled": "معطّل",
+        "mlReady": "جاهز للتعلم الآلي",
+        "save": "حفظ"
+      },
+      "simulate": {
+        "title": "محاكاة",
+        "hint": "أعد تشغيل توقّع لفئة وأفق زمني.",
+        "category": "مفتاح الفئة",
+        "run": "تشغيل المحاكاة"
+      },
+      "market": {
+        "title": "لقطات السوق",
+        "empty": "لا توجد لقطات بعد — حدّث بعد توفر الطلبات.",
+        "refresh": "تحديث إحصاءات السوق",
+        "growing": "نمو",
+        "declining": "تراجع"
+      },
+      "history": {
+        "title": "التوقعات الأخيرة",
+        "empty": "لا يوجد سجل بعد.",
+        "replay": "إعادة تشغيل",
+        "evaluate": "تقييم الدقة",
+        "actual": "الفعلي"
+      },
+      "links": {
+        "pricing": "التسعير الديناميكي",
+        "matching": "المطابقة الذكية",
+        "aiOps": "عمليات الذكاء الاصطناعي"
+      }
+    },
+    "scheduling": {
+      "eyebrow": "الجدولة",
+      "title": "الجدولة والسعة بالذكاء الاصطناعي",
+      "subtitle": "حسّن المسارات واملأ الفجوات وخطّط الفرص — إرشادي فقط.",
+      "privacyNotice": "حسابات الإشارات الداخلية للمشرفين فقط. المزود يقرر كل قبول.",
+      "stats": {
+        "avgLatency": "متوسط الكمون",
+        "utilization": "متوسط الاستغلال",
+        "idle": "متوسط الخمول",
+        "capture": "التقاط الفرص"
+      },
+      "profiles": {
+        "title": "ملفات التحسين",
+        "empty": "لا توجد ملفات بعد — طبّق الترحيل.",
+        "default": "افتراضي"
+      },
+      "experiment": {
+        "title": "تجربة أ/ب",
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "enable": "تفعيل حركة ب",
+        "disable": "تعطيل التجربة",
+        "empty": "لا توجد تجربة بعد — طبّق الترحيل."
+      },
+      "weights": {
+        "title": "أوزان الإشارات",
+        "hint": "إشارات تحسين مستقلة.",
+        "weight": "الوزن",
+        "mlReady": "جاهز للتعلم الآلي",
+        "save": "حفظ"
+      },
+      "simulate": {
+        "title": "محاكاة / إعادة تشغيل",
+        "placeholder": "معرّف-مزود",
+        "run": "تشغيل المحاكاة"
+      },
+      "history": {
+        "title": "التحسينات الأخيرة",
+        "empty": "لا يوجد سجل بعد.",
+        "replay": "إعادة تشغيل"
+      },
+      "links": {
+        "forecast": "توقّع الطلب",
+        "matching": "المطابقة الذكية",
+        "pricing": "التسعير الديناميكي"
+      }
+    },
+    "businessAssistant": {
+      "eyebrow": "الأعمال",
+      "title": "رؤى الأعمال بالذكاء الاصطناعي",
+      "subtitle": "تحليلات تدريب مجمّعة للسوق — دون هويات المنافسين.",
+      "stats": {
+        "providers": "مزودون متتبَّعون",
+        "briefings": "إحاطات (7 أيام)",
+        "healthy": "صحي",
+        "atRisk": "معرّض للخطر"
+      },
+      "experiment": {
+        "title": "تجربة أ/ب",
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "enable": "تفعيل حركة ب",
+        "disable": "تعطيل التجربة",
+        "empty": "لا توجد تجربة بعد — طبّق الترحيل."
+      },
+      "regions": {
+        "title": "فرص إقليمية",
+        "empty": "لا إشارات إقليمية بعد."
+      },
+      "categories": {
+        "title": "فرص الفئات",
+        "empty": "لا إشارات فئات بعد."
+      },
+      "privacy": "يرى المشرفون المجاميع فقط. مقاييس المزود خاصة بكل مالك.",
+      "links": {
+        "scheduling": "الجدولة الذكية",
+        "forecast": "توقّع الطلب"
+      }
+    },
+    "marketplaceIntelligence": {
+      "eyebrow": "الذكاء",
+      "title": "مركز ذكاء السوق",
+      "subtitle": "ذكاء استشاري موحّد عبر السوق. المحاكاة لا تؤثّر على الإنتاج أبداً.",
+      "stats": {
+        "health": "الصحة",
+        "liquidity": "السيولة",
+        "bookings": "الحجوزات (30 يوماً)",
+        "latency": "زمن الاستجابة",
+        "demand": "الطلب",
+        "supply": "العرض",
+        "completion": "الإنجاز",
+        "satisfaction": "الرضا"
+      },
+      "executive": {
+        "title": "تقرير تنفيذي",
+        "trend": "الاتجاه",
+        "confidence": "الثقة"
+      },
+      "kpis": {
+        "title": "مؤشرات السوق",
+        "growth": "النمو",
+        "acceptance": "القبول",
+        "cancellation": "الإلغاء",
+        "trust": "الثقة",
+        "fraud": "ضغط الاحتيال",
+        "quality": "الجودة",
+        "pricing": "اتجاهات التسعير",
+        "forecast": "دقة التوقّع",
+        "scheduling": "كفاءة الجدولة"
+      },
+      "opportunities": {
+        "title": "الفرص",
+        "empty": "لا فرص بعد."
+      },
+      "regions": {
+        "title": "ذكاء المناطق",
+        "empty": "لا إشارات إقليمية."
+      },
+      "categories": {
+        "title": "ذكاء الفئات",
+        "empty": "لا إشارات فئات."
+      },
+      "decisions": {
+        "title": "دعم القرار",
+        "confidence": "الثقة"
+      },
+      "simulation": {
+        "title": "التوأم الرقمي",
+        "notice": "محاكاة معزولة — الإنتاج لا يتغيّر أبداً.",
+        "run": "تشغيل محاكاة +15 مزوّد"
+      },
+      "modules": {
+        "title": "وحدات الذكاء",
+        "on": "تشغيل",
+        "off": "إيقاف",
+        "enableMl": "تفعيل ظل التعلم الآلي",
+        "disableMl": "تعطيل ظل التعلم الآلي"
+      },
+      "agents": {
+        "title": "وكلاء الذكاء المستقبليون",
+        "notice": "الوكلاء يوصون فقط — الإجراءات غير القابلة للعكس تتطلب إذناً صريحاً."
+      },
+      "meta": {
+        "reports": "تقارير مخزّنة",
+        "simulations": "محاكاة مسجّلة",
+        "version": "الخوارزمية"
+      },
+      "privacy": "لوحات التنفيذيين مقتصرة على المشرفين. رسم المعرفة داخلي فقط.",
+      "links": {
+        "businessAssistant": "مساعد الأعمال",
+        "forecast": "توقّع الطلب",
+        "pricing": "التسعير الديناميكي"
+      }
+    },
+    "enterprisePayments": {
+      "eyebrow": "مدفوعات المؤسسات",
+      "title": "المحفظة والضمان والمدفوعات",
+      "subtitle": "إدارة المحافظ والضمان والمدفوعات والرسوم والنزاعات.",
+      "toPayments": "المدفوعات ←",
+      "toRefunds": "المرتجعات ←",
+      "toFinance": "المالية ←",
+      "escrowTitle": "عمليات الضمان",
+      "payoutTitle": "التحويلات",
+      "feesTitle": "قواعد الرسوم",
+      "disputesTitle": "نزاعات السوق",
+      "empty": "لا يوجد شيء هنا بعد.",
+      "enabled": "مفعّل",
+      "disabled": "معطّل",
+      "stats": {
+        "wallets": "محافظ نشطة",
+        "balance": "رصيد المحافظ",
+        "escrowReserved": "ضمان محجوز",
+        "escrowDisputed": "ضمان متنازع",
+        "payoutsPending": "تحويلات معلقة",
+        "payoutsPaid": "تحويلات مدفوعة",
+        "disputes": "نزاعات مفتوحة",
+        "feeRules": "قواعد الرسوم"
+      },
+      "cols": {
+        "status": "الحالة",
+        "amount": "المبلغ",
+        "created": "الإنشاء",
+        "actions": "إجراءات",
+        "method": "الطريقة"
+      },
+      "actions": {
+        "release": "تحرير",
+        "refund": "استرداد",
+        "retry": "إعادة",
+        "process": "معالجة"
+      }
+    },
+    "aiPlatform": {
+      "eyebrow": "منصة الذكاء الاصطناعي",
+      "title": "مركز الذكاء الاصطناعي",
+      "subtitle": "الرؤى والاستخدام والمخاطر — التوصيات فقط دون حظر تلقائي.",
+      "toOps": "عمليات الذكاء ←",
+      "toFraud": "الاحتيال ←",
+      "stats": {
+        "requests": "طلبات 24س",
+        "errors": "أخطاء",
+        "latency": "متوسط الكمون",
+        "fallbacks": "احتياطي",
+        "fraud": "تنبيهات احتيال",
+        "moderation": "تقارير الإشراف"
+      },
+      "providersTitle": "المزوّدون",
+      "providersBody": "الأساسي: {primary} · الاحتياطي: {fallback}",
+      "centersTitle": "مراكز مرتبطة",
+      "usageTitle": "الاستخدام الأخير",
+      "moderationTitle": "توصيات الإشراف",
+      "empty": "لا بيانات بعد.",
+      "on": "مفعّل",
+      "off": "معطّل",
+      "ok": "نجاح",
+      "fail": "فشل"
+    }
+  },
+  "pricing": {
+    "provider": {
+      "title": "ذكاء التسعير",
+      "subtitle": "نطاقات مقترحة من بيانات السوق. أنت تحدد السعر النهائي دائماً.",
+      "stats": {
+        "suggestedRange": "النطاق المقترح",
+        "marketAverage": "متوسط السوق",
+        "pastAccepted": "متوسط المقبول سابقاً",
+        "acceptanceRate": "معدل القبول",
+        "competitiveness": "التنافسية",
+        "confidence": "الثقة"
+      },
+      "competitiveness": {
+        "below": "أقل من السوق",
+        "at": "عند السوق",
+        "above": "أعلى من السوق",
+        "unknown": "بيانات غير كافية"
+      },
+      "position": {
+        "budget": "نطاق اقتصادي",
+        "fair": "سوق عادل",
+        "premium": "نطاق مميز"
+      },
+      "aiTitle": "توصية الذكاء الاصطناعي",
+      "suggestedAvg": "المتوسط المقترح",
+      "neverForced": "دليلي لا يفرض هذا السعر — إرشاد فقط.",
+      "tipsTitle": "نصائح الذكاء الاصطناعي"
+    },
+    "customer": {
+      "eyebrow": "تقدير السوق",
+      "title": "نطاق السوق العادل",
+      "subtitle": "بناءً على أعمال مشابهة في منطقتك — وليس عرضاً نهائياً.",
+      "fairAverage": "المتوسط النموذجي",
+      "position": {
+        "budget": "نطاق اقتصادي",
+        "fair": "نطاق سوق عادل",
+        "premium": "نطاق مميز"
+      },
+      "budget": {
+        "under": "ميزانيتك أقل من النطاق النموذجي.",
+        "within": "ميزانيتك ضمن نطاق السوق العادل.",
+        "over": "ميزانيتك أعلى من النطاق النموذجي."
+      },
+      "disclaimer": "المزودون يحددون أسعارهم. هذا التقدير لا يعرض بيانات داخلية للمزود."
+    }
+  },
+  "forecast": {
+    "provider": {
+      "title": "توقّع الطلب",
+      "subtitle": "خطّط للتوظيف وفترات الذروة. التوقعات إرشادية — غير مضمونة.",
+      "stats": {
+        "staffing": "التوظيف المقترح",
+        "revenue": "فرصة الإيراد",
+        "busy": "فترة الذروة"
+      },
+      "horizonsTitle": "آفاق التوقّع",
+      "horizon": {
+        "24h": "الـ24 ساعة القادمة",
+        "7d": "الـ7 أيام القادمة",
+        "30d": "الـ30 يوماً القادمة",
+        "90d": "الـ90 يوماً القادمة"
+      },
+      "trend": {
+        "rising": "ارتفاع",
+        "stable": "مستقر",
+        "declining": "تراجع"
+      },
+      "expectedDemand": "الطلب المتوقع",
+      "confidence": "الثقة",
+      "capacity": "السعة المقترحة",
+      "bestHours": "أفضل ساعات العمل",
+      "vacation": "نوافذ إجازة مقترحة",
+      "accept": "مفيد",
+      "advisory": "إرشادي فقط — دليلي لا يضمن الطلب أو النتائج المستقبلية."
+    },
+    "customer": {
+      "eyebrow": "التوافر",
+      "title": "نظرة على الطلب",
+      "subtitle": "تلميحات مفيدة لوقت الحجز — وليست ضماناً.",
+      "demand": {
+        "low": "طلب أقل اليوم",
+        "moderate": "طلب متوسط اليوم",
+        "high": "طلب مرتفع اليوم"
+      },
+      "availability": {
+        "scarce": "قد يمتلئ المزودون بسرعة أكبر",
+        "normal": "توافر نموذجي",
+        "ample": "توافر أسرع محتمل"
+      },
+      "bookEarly": "يُفضّل الحجز مبكراً.",
+      "faster": "طلب منخفض — توافر أسرع متوقع.",
+      "advisory": "إرشادي فقط — دليلي لا يضمن التوافر المستقبلي."
+    }
+  },
+  "scheduling": {
+    "provider": {
+      "title": "الجدولة الذكية",
+      "subtitle": "حسّن اليوم واملأ الفجوات والتقط الفرص القريبة. القرار لك.",
+      "stats": {
+        "utilization": "الاستغلال",
+        "idle": "وقت الخمول",
+        "travel": "وقت السفر",
+        "burnout": "خطر الإرهاق"
+      },
+      "optimizedTitle": "جدول محسّن بالذكاء الاصطناعي",
+      "departure": "المغادرة",
+      "finish": "الانتهاء المتوقع",
+      "lunch": "الغداء",
+      "break": "استراحة",
+      "revenue": "توقّع الإيراد",
+      "opportunityScore": "درجة الفرصة",
+      "capacityTitle": "السعة",
+      "remaining": "المتبقي",
+      "overbooking": "خطر الحجز الزائد",
+      "opportunitiesTitle": "مخطّط الفرص",
+      "opportunitiesEmpty": "لا توجد فجوات قابلة للملء الآن.",
+      "accept": "قبول",
+      "ignore": "تجاهل",
+      "advisory": "إرشادي فقط — دليلي لا يحجز تلقائياً ولا يفرض قرارات."
+    },
+    "customer": {
+      "eyebrow": "الجدولة",
+      "title": "نوافذ التوافر",
+      "subtitle": "تلميحات توقيت مفيدة — وليست ضماناً صارماً.",
+      "confidence": "ثقة الحجز",
+      "arrival": "نافذة الوصول المقدّرة",
+      "availability": {
+        "scarce": "توافر محدود",
+        "normal": "توافر عادي",
+        "ample": "توافر جيد"
+      },
+      "advisory": "إرشادي فقط — أكّد الموعد النهائي مع مزودك."
+    }
+  },
+  "businessAssistant": {
+    "provider": {
+      "title": "مساعد الأعمال الذكي",
+      "subtitle": "تدريب شخصي لنمو الإيراد والجودة — أنت تبقى متحكماً.",
+      "stats": {
+        "health": "صحة العمل",
+        "revenue": "الإيراد (30 يوماً)",
+        "bookings": "الحجوزات",
+        "acceptance": "القبول",
+        "completion": "الإنجاز",
+        "cancellation": "الإلغاء",
+        "response": "زمن الاستجابة",
+        "satisfaction": "الرضا",
+        "trust": "الثقة",
+        "reputation": "السمعة",
+        "capacity": "السعة",
+        "benchmark": "المعيار"
+      },
+      "trend": {
+        "rising": "ارتفاع",
+        "stable": "مستقر",
+        "declining": "تراجع"
+      },
+      "cohort": {
+        "top_20": "أعلى 20٪",
+        "above_average": "فوق المتوسط",
+        "average": "متوسط",
+        "improving": "في تحسّن",
+        "below_average": "دون المتوسط"
+      },
+      "briefingTitle": "إحاطة الصباح",
+      "todaysBookings": "حجوزات اليوم",
+      "revenueForecast": "توقّع الإيراد",
+      "busyHours": "ساعات الذروة",
+      "reminders": "تذكيرات",
+      "insightsTitle": "رؤى الأعمال",
+      "recsTitle": "توصيات الذكاء الاصطناعي",
+      "growthTitle": "فرص النمو",
+      "goalsTitle": "الأهداف",
+      "goalsEmpty": "لا أهداف بعد — أضف واحداً أدناه.",
+      "goalPlaceholder": "هدف حجوزات شهري",
+      "addGoal": "إضافة هدف",
+      "accept": "قبول",
+      "dismiss": "تجاهل",
+      "advisory": "تدريب إرشادي فقط — دليلي لا يفرض قرارات المزود."
     }
   },
   "auth": {
@@ -3311,9 +6186,13 @@
     },
     "login": {
       "title": "تسجيل الدخول",
+      "metaDescription": "سجّل الدخول إلى دليلي لإدارة الطلبات والعروض والفتح والدردشة.",
       "subtitle": "مرحباً بعودتك إلى دليلي",
       "email": "البريد الإلكتروني",
       "password": "كلمة المرور",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور",
+      "forgotPassword": "نسيت كلمة المرور؟",
       "submit": "دخول",
       "noAccount": "ليس لديك حساب؟",
       "register": "إنشاء حساب",
@@ -3328,8 +6207,45 @@
         "unknown": "حدث خطأ. يرجى المحاولة مرة أخرى"
       }
     },
+    "forgotPassword": {
+      "title": "استعادة كلمة المرور",
+      "metaDescription": "اطلب رابط إعادة تعيين كلمة المرور لحساب دليلي.",
+      "subtitle": "أدخل بريدك وسنرسل رابط إعادة التعيين.",
+      "email": "البريد الإلكتروني",
+      "submit": "إرسال الرابط",
+      "sent": "إذا كان الحساب موجوداً، ستصلك رسالة خلال لحظات. تحقق من بريدك.",
+      "backToLogin": "العودة لتسجيل الدخول",
+      "errors": {
+        "validation_error": "يرجى إدخال بريد صالح",
+        "unknown": "حدث خطأ. حاول مرة أخرى."
+      }
+    },
+    "resetPassword": {
+      "title": "كلمة مرور جديدة",
+      "metaDescription": "عيّن كلمة مرور جديدة لحساب دليلي.",
+      "subtitle": "اختر كلمة مرور قوية لحسابك.",
+      "changeTitle": "تغيير كلمة المرور",
+      "changeSubtitle": "أدخل كلمة المرور الحالية ثم اختر كلمة جديدة.",
+      "currentPassword": "كلمة المرور الحالية",
+      "password": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور",
+      "submit": "حفظ كلمة المرور",
+      "success": "تم تحديث كلمة المرور. يمكنك تسجيل الدخول الآن.",
+      "toLogin": "تسجيل الدخول",
+      "toForgot": "اطلب رابط إعادة التعيين عبر البريد",
+      "errors": {
+        "validation_error": "كلمة المرور 6 أحرف على الأقل",
+        "password_mismatch": "كلمتا المرور غير متطابقتين",
+        "session_required": "افتح رابط إعادة التعيين من بريدك أولاً",
+        "reauth_required": "أكد كلمة المرور الحالية لتغييرها، أو اطلب رابط إعادة التعيين.",
+        "unknown": "حدث خطأ. حاول مرة أخرى."
+      }
+    },
     "register": {
       "title": "إنشاء حساب",
+      "metaDescription": "أنشئ حساب عميل في دليلي لنشر الطلبات ومقارنة العروض.",
       "subtitle": "انضم إلى دليلي واعثر على خدمات موثوقة",
       "name": "الاسم الكامل",
       "email": "البريد الإلكتروني",
@@ -3354,6 +6270,7 @@
     },
     "businessWizard": {
       "title": "تسجيل عملك",
+      "metaDescription": "سجّل عملك على دليلي لاستقبال الطلبات المطابقة وإرسال العروض.",
       "subtitle": "أكمل الخطوات لتظهر على دليلي",
       "step": "الخطوة {current} من {total}",
       "steps": {
@@ -3392,6 +6309,45 @@
       }
     }
   },
+  "support": {
+    "navTitle": "تواصل مع الدعم",
+    "navDesc": "أسئلة أو شكاوى أو أي شيء آخر — نحن هنا للمساعدة.",
+    "title": "تواصل مع الدعم",
+    "subtitle": "أرسل لنا رسالة وسيتواصل معك فريقنا.",
+    "subjectLabel": "الموضوع",
+    "subjectPlaceholder": "عن ماذا تريد التحدث؟",
+    "messageLabel": "الرسالة",
+    "messagePlaceholder": "اشرح سؤالك أو مشكلتك بالتفصيل…",
+    "submit": "إرسال الرسالة",
+    "sending": "جارٍ الإرسال…",
+    "successTitle": "تم إرسال الرسالة",
+    "successBody": "شكراً لتواصلك معنا — سيرد عليك فريقنا قريباً.",
+    "errors": {
+      "required": "يرجى تعبئة الحقلين.",
+      "subject_required": "يرجى إدخال الموضوع.",
+      "message_required": "يرجى إدخال الرسالة.",
+      "submit_failed": "تعذّر إرسال رسالتك. يرجى المحاولة مرة أخرى.",
+      "login_required": "يرجى تسجيل الدخول والمحاولة مرة أخرى."
+    }
+  },
+  "profile": {
+    "edit": {
+      "title": "تعديل الملف الشخصي",
+      "subtitle": "حدّث اسمك وبريدك الإلكتروني.",
+      "nameLabel": "الاسم",
+      "emailLabel": "البريد الإلكتروني",
+      "submit": "حفظ التغييرات",
+      "saving": "جارٍ الحفظ…",
+      "success": "تم تحديث ملفك الشخصي.",
+      "successEmailPending": "تم الحفظ. تحقق من بريدك الإلكتروني الجديد لتأكيد التغيير.",
+      "errors": {
+        "required": "يرجى تعبئة الحقلين.",
+        "validation_error": "يرجى إدخال اسم وبريد إلكتروني صحيحين.",
+        "save_failed": "تعذّر حفظ التغييرات. يرجى المحاولة مرة أخرى.",
+        "email_update_failed": "تعذّر تحديث بريدك الإلكتروني. يرجى المحاولة مرة أخرى."
+      }
+    }
+  },
   "notFound": {
     "code": "404",
     "title": "الصفحة غير موجودة",
@@ -3416,7 +6372,7 @@
     "pinnedSummary": "ملخص الطلب المثبت",
     "viewRequest": "عرض الطلب بالكامل",
     "photoAlt": "صورة لطلب {title}",
-    "chatLocked": "تفتح المحادثة بعد قبول العمل لطلبك.",
+    "chatLocked": "تفتح المحادثة بعد منح فتح التواصل.",
     "timeline": {
       "label": "خط زمني للطلب",
       "currentHint": "الخطوة الحالية",
@@ -3432,6 +6388,7 @@
     },
     "status": {
       "pending": "معلق",
+      "waiting": "بانتظار العروض",
       "accepted": "مقبول",
       "quoted": "عرض سعر مرسل",
       "quote_accepted": "تم قبول العرض",
@@ -3539,6 +6496,20 @@
       "comment": "تعليق",
       "photos": "صور (اختياري)",
       "photosHint": "حتى 5 صور للعمل المنجز.",
+      "photoKind": "نوع الصورة",
+      "photoKinds": {
+        "before": "قبل",
+        "after": "بعد",
+        "completed": "عمل مكتمل",
+        "general": "عام"
+      },
+      "dimensions": {
+        "communication": "التواصل",
+        "quality": "جودة العمل",
+        "punctuality": "الالتزام بالمواعيد",
+        "professionalism": "الاحترافية",
+        "value": "القيمة مقابل السعر"
+      },
       "anonymous": "اعرض اسمي كمجهول",
       "recommend": "هل توصي بهذا العمل؟",
       "recommendSkip": "أفضل عدم الإجابة",
@@ -3589,7 +6560,8 @@
       "pending_exists": "لديك بالفعل طلب معلق مع هذا العمل.",
       "self_request": "لا يمكنك إرسال طلب إلى عملك الخاص.",
       "settings_failed": "تعذر حفظ الإعدادات.",
-      "provider_not_found": "العمل غير موجود."
+      "provider_not_found": "العمل غير موجود.",
+      "use_offers": "استخدم مسار العروض لهذا الطلب في السوق."
     }
   },
   "notifications": {
@@ -3623,7 +6595,7 @@
     },
     "serviceCompleted": {
       "title": "اكتملت الخدمة",
-      "body": "تم تعليم «{title}» كمكتمل. يرجى التأكيد."
+      "body": "علّم مزوّد الخدمة «{title}» كمكتمل. يرجى تأكيد الإنجاز."
     },
     "completionConfirmed": {
       "title": "تم تأكيد الإنجاز",
@@ -3641,6 +6613,46 @@
       "title": "رسالة جديدة",
       "body": "لديك رسالة جديدة.",
       "attachmentBody": "وصلك مرفق جديد."
+    },
+    "chatReply": {
+      "title": "رد جديد",
+      "body": "رد أحدهم على رسالتك."
+    },
+    "chatPinned": {
+      "title": "تم تثبيت رسالة",
+      "body": "تم تثبيت رسالة في محادثتك."
+    },
+    "chatMention": {
+      "title": "تمت الإشارة إليك",
+      "body": "ذكرك أحدهم في محادثة."
+    },
+    "chatEmergency": {
+      "title": "محادثة طوارئ",
+      "body": "رسالة جديدة في محادثة طوارئ."
+    },
+    "offerReceived": {
+      "title": "عرض جديد",
+      "body": "أرسل مزود عرضاً على طلبك. راجعه في غرفة الانتظار."
+    },
+    "matchAssignment": {
+      "title": "طلب مطابق جديد",
+      "body": "طلب عميل يناسب عملك. افتح الفرص للرد بعرض."
+    },
+    "unlockOpened": {
+      "title": "فتح التواصل بانتظارك",
+      "body": "اختار الزبون عرضك. أكمل الفتح ضمن المهلة لإتاحة التواصل."
+    },
+    "unlockGranted": {
+      "title": "تم فتح التواصل",
+      "body": "أكمل مزوّد الخدمة فتح التواصل. يمكنك الآن رؤية بيانات الاتصال."
+    },
+    "unlockFallback": {
+      "title": "تم اختيار عمل تالٍ",
+      "body": "العمل السابق رفض أو انتهت المهلة. نقلناك إلى العرض التالي."
+    },
+    "unlockFallbackExhausted": {
+      "title": "لا فتح بعد",
+      "body": "لا عروض أخرى بعد الرفض أو انتهاء المهلة. راجع غرفة الانتظار."
     },
     "bookingCreated": {
       "title": "طلب حجز جديد",
@@ -3718,6 +6730,45 @@
     "duration": "المدة",
     "minutes": "{count} دقيقة",
     "pickSlot": "الأوقات المتاحة",
+    "appointmentType": "نوع الموعد",
+    "types": {
+      "immediate": "فوري",
+      "today": "اليوم",
+      "scheduled": "مجدول",
+      "recurring": "متكرر",
+      "emergency": "طارئ",
+      "video": "استشارة مرئية"
+    },
+    "smart": {
+      "recommended": "أوقات مقترحة بالذكاء",
+      "best": "الأفضل",
+      "alt": "بديل",
+      "moreTimes": "مزيد من الأوقات",
+      "buffer": "يشمل هامش تنقل {minutes} د"
+    },
+    "reschedule": {
+      "open": "إعادة جدولة",
+      "close": "إخفاء إعادة الجدولة",
+      "hint": "اختر وقتاً جديداً متاحاً. سيتم إشعار الطرف الآخر.",
+      "loading": "جاري تحميل البدائل…",
+      "empty": "لا توجد أوقات بديلة الآن.",
+      "confirm": "تأكيد الوقت الجديد"
+    },
+    "optimize": {
+      "badge": "جدولة ذكية",
+      "title": "مراجعة مسار اليوم",
+      "empty": "لا محطات اليوم."
+    },
+    "reminders": {
+      "title24h": "موعد غداً",
+      "body24h": "تذكير: لديك موعد خلال حوالي 24 ساعة.",
+      "title2h": "موعد خلال ساعتين",
+      "body2h": "موعدك يبدأ قريباً — كن جاهزاً.",
+      "titleOnWay": "المزود في الطريق",
+      "bodyOnWay": "المزود متوجه إلى الموعد.",
+      "titleChanged": "تم تحديث الموعد",
+      "bodyChanged": "تم تغيير وقت الموعد. راجع الوقت الجديد."
+    },
     "loadingSlots": "جاري تحميل الأوقات…",
     "noSlots": "لا توجد أوقات متاحة خلال الأسبوعين القادمين.",
     "location": "الموقع / العنوان",
@@ -3793,6 +6844,8 @@
       "timezone": "المنطقة الزمنية",
       "durations": "مدد الفترات (دقائق، مفصولة بفواصل)",
       "buffer": "فاصل بين المواعيد (دقيقة)",
+      "travelBuffer": "هامش التنقل (دقيقة)",
+      "defaultType": "نوع الموعد الافتراضي",
       "notice": "حد أدنى للإشعار المسبق (ساعات)",
       "ahead": "أيام الحجز المسبقة",
       "accepting": "قبول حجوزات جديدة",
@@ -3802,6 +6855,13 @@
       "blockStart": "يبدأ",
       "blockEnd": "ينتهي",
       "blockReason": "السبب",
+      "blockKind": "نوع الحظر",
+      "kinds": {
+        "vacation": "إجازة",
+        "blocked": "محظور",
+        "holiday": "عطلة",
+        "manual": "يدوي"
+      },
       "blockSubmit": "حظر الفترة",
       "noProvider": "أنشئ ملف عملك أولاً."
     },
@@ -3832,6 +6892,392 @@
         "validation_error": "يرجى اختيار سبب.",
         "login_required": "يرجى تسجيل الدخول."
       }
+    }
+  },
+  "providerDashboard": {
+    "eyebrow": "مساعد عملك اليومي",
+    "title": "{name}",
+    "subtitle": "ابدأ بنظرة اليوم، ثم انتقل للتفاصيل عند الحاجة.",
+    "today": {
+      "title": "نظرة اليوم",
+      "hint": "الأهم الآن فقط",
+      "opportunities": "فرص جديدة",
+      "unlock": "بانتظار الفتح",
+      "waiting": "بانتظار رد الزبون",
+      "activeJobs": "أعمال نشطة",
+      "messages": "رسائل غير مقروءة",
+      "rating": "تقييمك",
+      "ratingEmpty": "—"
+    },
+    "quickActions": {
+      "title": "اختصارات سريعة",
+      "opportunities": "فرص جديدة",
+      "jobs": "أعمالي",
+      "messages": "الرسائل",
+      "payments": "المدفوعات",
+      "profile": "ملف العمل",
+      "availability": "التوفر"
+    },
+    "sections": {
+      "title": "أعمالي",
+      "newOpportunities": "فرص جديدة",
+      "waitingConfirmation": "بانتظار تأكيد الزبون",
+      "unlockPending": "فتح التواصل",
+      "activeJobs": "أعمال مؤكدة / نشطة",
+      "pendingQa": "أسئلة بانتظار الرد",
+      "allJobs": "عرض كل الأعمال"
+    },
+    "pause": {
+      "title": "استقبال الفرص متوقف",
+      "body": "وضع الإجازة أو إغلاق الطلبات يمنع وصول فرص جديدة إليك.",
+      "cta": "تحديث الإعدادات"
+    },
+    "unlock": {
+      "title": "فتح التواصل",
+      "empty": "لا توجد جلسات فتح حالياً.",
+      "leadPending": "أكمل الفتح لإتاحة التواصل مع الزبون",
+      "sla": "المهلة: {deadline}",
+      "viewAll": "كل جلسات الفتح",
+      "status": {
+        "opened": "مفتوحة",
+        "payment_pending": "بانتظار الدفع"
+      }
+    },
+    "opportunities": {
+      "title": "أحدث الفرص",
+      "empty": "لا فرص مفتوحة حالياً. ستظهر هنا عند وصول طلب مناسب.",
+      "open": "بانتظار عرضك",
+      "offered": "تم إرسال العرض",
+      "emergency": "طارئ",
+      "viewAll": "كل الفرص"
+    },
+    "qa": {
+      "title": "أسئلة بانتظار الرد",
+      "empty": "لا أسئلة من الزبائن حالياً."
+    },
+    "jobs": {
+      "title": "أعمال نشطة",
+      "empty": "لا أعمال مفتوحة بعد.",
+      "openChat": "فتح المحادثة"
+    },
+    "reliability": {
+      "title": "موثوقية الفتح (آخر 30 يوماً)",
+      "body": "رفض: {declined} · انتهاء المهلة: {timedOut}"
+    },
+    "visibility": {
+      "title": "حسّن ظهورك",
+      "subtitle": "نصائح عملية لمساعدة العملاء على اختيارك — دون كشف معادلات الترتيب.",
+      "cta": "تحسين",
+      "tips": {
+        "complete_profile": {
+          "title": "أكمل ملفك",
+          "body": "ملف أوضح يبني الثقة قبل فتح عرضك."
+        },
+        "get_verified": {
+          "title": "احصل على التوثيق",
+          "body": "شارة التوثيق تزيد ثقة العملاء عند التعيين."
+        },
+        "collect_reviews": {
+          "title": "اجمع المزيد من التقييمات",
+          "body": "اطلب من العملاء الراضين ترك تقييم بعد إنجاز العمل."
+        },
+        "improve_response": {
+          "title": "ردّ بشكل أسرع",
+          "body": "الرد السريع يجعل عروضك أكثر بروزاً."
+        },
+        "reduce_cancellations": {
+          "title": "قلّل الإلغاءات",
+          "body": "الالتزام بالمواعيد يحسّن صورة موثوقيتك."
+        },
+        "add_portfolio": {
+          "title": "أضف صور أعمال",
+          "body": "اعرض أعمالاً حقيقية ليقيّم العملاء الجودة بسرعة."
+        },
+        "stay_available": {
+          "title": "ابقَ متاحاً",
+          "body": "أوقف وضع الإجازة عندما تستطيع قبول عمل جديد."
+        }
+      }
+    },
+    "matchReasons": {
+      "label": "لماذا ظهرت لك هذه الفرصة",
+      "category_fit": "ملاءمة الفئة",
+      "city_fit": "نفس المدينة",
+      "active_accepting": "يقبل الطلبات",
+      "verified": "موثّق",
+      "emergency_priority": "أولوية الطوارئ",
+      "newcomer_exploration": "استكشاف للأعمال الجديدة",
+      "expanded_area": "نطاق موسّع",
+      "high_rating": "تقييم مرتفع ({rating}★)",
+      "nearby": "يبعد {km} كم",
+      "available": "متاح الآن",
+      "excellent_rating": "تقييم ممتاز ({rating})",
+      "similar_jobs": "أنجز أكثر من {count} مهمة مشابهة",
+      "fast_response": "يرد خلال حوالي {minutes} دقيقة",
+      "high_acceptance": "معدل قبول مرتفع",
+      "match_score": "درجة التطابق {score}%",
+      "nearby_available": "قريب ومتاح اليوم",
+      "route_fit": "يتناسب مع مواعيدك الحالية ({km} كم)",
+      "service_distance": "يناسب خدماتك · يبعد {km} كم",
+      "service_fit": "يناسب خدماتك وسعتك الحالية",
+      "operational_score": "درجة التشغيل {score}%",
+      "response_band": "احتمال الرد {pct}%",
+      "emergency_exposure": "أولوية بث الطوارئ"
+    }
+  },
+  "paymentHistory": {
+    "title": "سجل المدفوعات",
+    "subtitle": "الاشتراكات وفتح العملاء والإيصالات — مع بحث حسب الشهر والحالة.",
+    "empty": "لا مدفوعات تطابق عوامل التصفية.",
+    "loadError": "تعذر تحميل المدفوعات",
+    "downloadError": "تعذر تنزيل الإيصال",
+    "downloadReceipt": "تنزيل الإيصال",
+    "searchPlaceholder": "بحث بالمرجع…",
+    "resultCount": "{count} دفعة",
+    "filters": {
+      "all": "كل الفترات",
+      "currentMonth": "هذا الشهر",
+      "previousMonth": "الشهر السابق",
+      "purpose": "النوع",
+      "purposeAll": "كل الأنواع",
+      "status": "الحالة",
+      "statusAll": "كل الحالات"
+    },
+    "purpose": {
+      "leadUnlock": "فتح عميل",
+      "business": "اشتراك أعمال",
+      "subscription": "اشتراك الخطة"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "pending_review": "قيد المراجعة",
+      "paid": "مدفوع",
+      "failed": "فشل",
+      "cancelled": "ملغى",
+      "rejected": "مرفوض",
+      "expired": "منتهٍ"
+    },
+    "refund": {
+      "pending": "استرداد بانتظار المراجعة",
+      "refunded": "تم استرداد {amount} {currency}"
+    }
+  },
+  "stripeCheckout": {
+    "leadAmount": "ادفع {amount} {currency}",
+    "payCta": "ادفع بأمان",
+    "processing": "جارٍ المعالجة…",
+    "errorTitle": "فشل الدفع",
+    "errorGeneric": "تعذر إكمال الدفع",
+    "secureHint": "بطاقة، Apple Pay و Google Pay عند التوفر. عبر Stripe."
+  },
+  "stripeBilling": {
+    "renewal": "يتجدد {date}",
+    "cancelScheduled": "إلغاء مجدول",
+    "managePayment": "تحديث طريقة الدفع",
+    "cancelRenewal": "إلغاء التجديد التلقائي",
+    "cancelSuccess": "تم إلغاء التجديد التلقائي",
+    "cancelError": "تعذر إلغاء التجديد",
+    "portalError": "تعذر فتح بوابة الفوترة",
+    "viewInvoices": "فواتير Stripe",
+    "invoicesError": "تعذر تحميل الفواتير",
+    "openInvoice": "فتح",
+    "resumeCheckout": "متابعة دفع Stripe"
+  },
+  "financialDocuments": {
+    "title": "الفواتير والإيصالات",
+    "subtitle": "حمّل ملفات PDF احترافية للاشتراكات وفتح العملاء.",
+    "empty": "لا مستندات بعد.",
+    "loadError": "تعذر تحميل المستندات",
+    "downloadError": "تعذر تنزيل PDF",
+    "downloadPdf": "تنزيل PDF",
+    "searchPlaceholder": "بحث برقم المستند…",
+    "filters": {
+      "type": "النوع",
+      "allTypes": "كل الأنواع"
+    },
+    "types": {
+      "invoice": "فاتورة أعمال",
+      "leadReceipt": "إيصال فتح عميل",
+      "manualReceipt": "إيصال دفع يدوي",
+      "creditNote": "إشعار دائن"
+    }
+  },
+  "refunds": {
+    "title": "الاستردادات والنزاعات",
+    "subtitle": "اطلب استردادًا للمراجعة. فقط المسؤولون يعتمدون ويعالجون الاستردادات.",
+    "requestTitle": "طلب استرداد",
+    "requestHint": "لا يمكنك استرداد دفعة بنفسك — يجب اعتماد المسؤول.",
+    "historyTitle": "سجل الاستردادات",
+    "disputesTitle": "النزاعات",
+    "empty": "لا طلبات استرداد بعد.",
+    "emptyDisputes": "لا نزاعات دفع.",
+    "noPaidPayments": "لا مدفوعات قابلة للاسترداد",
+    "amountPlaceholder": "مبلغ جزئي (اتركه فارغًا للمتبقي بالكامل)",
+    "reasonPlaceholder": "سبب الاسترداد…",
+    "submitRequest": "إرسال طلب الاسترداد",
+    "requestSuccess": "تم إرسال طلب الاسترداد",
+    "requestInvalid": "أدخل سببًا ومبلغًا صالحين",
+    "downloadCreditNote": "تنزيل إشعار دائن",
+    "downloadError": "فشل التنزيل",
+    "remaining": "المتبقي بعد هذا الاسترداد",
+    "alreadyRefunded": "مسترد سابقًا",
+    "type": {
+      "full": "كامل",
+      "partial": "جزئي",
+      "manual": "يدوي",
+      "automatic": "تلقائي"
+    },
+    "status": {
+      "requested": "مطلوب",
+      "pending": "معلق",
+      "approved": "معتمد",
+      "rejected": "مرفوض",
+      "processing": "قيد المعالجة",
+      "succeeded": "ناجح",
+      "failed": "فشل",
+      "cancelled": "ملغى"
+    },
+    "disputeStatus": {
+      "opened": "مفتوح",
+      "evidence_requested": "مطلوب أدلة",
+      "evidence_submitted": "تم تقديم الأدلة",
+      "under_review": "قيد المراجعة",
+      "won": "فوز",
+      "lost": "خسارة",
+      "closed": "مغلق"
+    },
+    "errors": {
+      "generic": "تعذر إرسال طلب الاسترداد",
+      "feature_disabled": "الاستردادات غير مفعّلة",
+      "login_required": "يرجى تسجيل الدخول",
+      "forbidden": "غير مسموح",
+      "invalid_input": "إدخال غير صالح",
+      "payment_not_found": "الدفع غير موجود",
+      "payment_not_paid": "الدفع غير مدفوع",
+      "nothing_to_refund": "لا يتبقى ما يُسترد",
+      "amount_exceeds_remaining": "المبلغ يتجاوز الرصيد المتبقي",
+      "refund_already_open": "يوجد طلب استرداد مفتوح",
+      "create_failed": "تعذر إنشاء الطلب"
+    }
+  },
+  "quality": {
+    "form": {
+      "title": "فتح حالة جودة",
+      "category": "الفئة",
+      "priority": "الأولوية",
+      "caseTitle": "العنوان",
+      "description": "صف ما حدث",
+      "evidence": "دليل مصور (اختياري)",
+      "submit": "إرسال الحالة",
+      "submitting": "جارٍ الإرسال…",
+      "success": "تم إنشاء الحالة {number}. سنبقيك على اطلاع.",
+      "categories": {
+        "customer_complaint": "شكوى عميل",
+        "provider_complaint": "شكوى مزود",
+        "booking_issue": "مشكلة حجز",
+        "service_quality": "مشكلة جودة الخدمة",
+        "communication": "مشكلة تواصل",
+        "damage_report": "بلاغ ضرر",
+        "late_arrival": "تأخر الوصول",
+        "no_show": "عدم الحضور",
+        "policy_violation": "مخالفة السياسة",
+        "other": "أخرى"
+      },
+      "priorities": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "urgent": "عاجل"
+      }
+    },
+    "errors": {
+      "failed": "تعذر إرسال الحالة.",
+      "feature_disabled": "حالات الجودة غير مفعّلة.",
+      "login_required": "يرجى تسجيل الدخول.",
+      "forbidden": "غير مسموح.",
+      "validation_error": "تحقق من الحقول.",
+      "create_failed": "تعذر إنشاء الحالة.",
+      "not_found": "الحالة غير موجودة.",
+      "invalid_status": "هذا الإجراء غير متاح للحالة الحالية."
+    },
+    "customer": {
+      "title": "الجودة والشكاوى",
+      "subtitle": "أبلغ عن مشكلة، ارفع الأدلة، وتابع الحل.",
+      "yourCases": "حالاتك",
+      "empty": "لا توجد حالات بعد.",
+      "resolution": "القرار",
+      "rateResolution": "ما مدى رضاك عن الحل؟",
+      "statuses": {
+        "open": "مفتوح",
+        "pending_information": "بانتظار معلومات",
+        "under_review": "قيد المراجعة",
+        "waiting_for_provider": "بانتظار المزود",
+        "waiting_for_customer": "بانتظار العميل",
+        "resolved": "تم الحل",
+        "rejected": "مرفوض",
+        "escalated": "مُصعَّد",
+        "closed": "مغلق"
+      }
+    },
+    "provider": {
+      "title": "رؤى الجودة",
+      "subtitle": "عرض خاص للشكاوى وأداء الحل ونصائح التحسين.",
+      "openCase": "الإبلاغ عن مشكلة جودة",
+      "recommendations": "توصيات الذكاء الاصطناعي",
+      "history": "سجل الشكاوى",
+      "empty": "لا توجد حالات جودة لنشاطك بعد.",
+      "respondHint": "رد على العملاء في الرسائل عند طلب معلومات.",
+      "metrics": {
+        "total": "إجمالي الحالات",
+        "open": "مفتوح",
+        "resolutionRate": "معدل الحل",
+        "avgHours": "متوسط وقت الحل"
+      }
+    }
+  },
+  "wallet": {
+    "eyebrow": "المحفظة",
+    "title": "محفظتي",
+    "subtitle": "الأرصدة والسجل وسجل المدفوعات.",
+    "businessTitle": "محفظة الأعمال",
+    "businessSubtitle": "المدفوعات والأموال المحجوزة وسجل المعاملات.",
+    "loading": "جاري تحميل المحفظة…",
+    "errorTitle": "تعذر تحميل المحفظة",
+    "errorBody": "يرجى المحاولة مرة أخرى بعد لحظات.",
+    "empty": "لا توجد محفظة بعد.",
+    "ledgerTitle": "السجل",
+    "ledgerEmpty": "لا توجد قيود بعد.",
+    "historyTitle": "سجل المدفوعات",
+    "historyEmpty": "لا توجد معاملات بعد.",
+    "balances": {
+      "available": "المتاح",
+      "reserved": "محجوز",
+      "pendingPayout": "قيد التحويل",
+      "refund": "المرتجعات",
+      "bonus": "مكافآت"
+    }
+  },
+  "aiPlatform": {
+    "assistant": {
+      "eyebrow": "مساعد ذكي",
+      "pageTitle": "مساعد دليلي",
+      "pageSubtitle": "اقتراحات فقط — أنت تقرر دائماً.",
+      "providerPageTitle": "مساعد الأعمال",
+      "providerPageSubtitle": "مسودات واقتراحات — لا إرسال تلقائي.",
+      "title": "المساعد",
+      "subtitle": "حسّن الطلبات والعروض دون تنفيذ تلقائي.",
+      "controlNote": "لن يُرسل المساعد طلبات أو رسائل نيابةً عنك.",
+      "capability": "القدرة",
+      "prompt": "الوصف",
+      "promptPlaceholder": "صف ما تحتاجه…",
+      "generate": "إنشاء اقتراح",
+      "regenerate": "إعادة التوليد",
+      "copy": "نسخ",
+      "loading": "جاري التوليد…",
+      "error": "تعذر إنشاء الاقتراح.",
+      "confidence": "الثقة {value}%",
+      "feedbackUp": "مفيد",
+      "feedbackDown": "غير مفيد"
     }
   }
 }

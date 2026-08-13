@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { Loader2 } from "lucide-react";
 import { submitVerificationAction } from "@/actions/verification.actions";
 import type { ManagedProvider } from "@/types/provider.types";
@@ -14,6 +14,7 @@ import { WelcomeLanding } from "./welcome-landing";
 import { OnboardingIdentityStep } from "./onboarding-identity-step";
 import { OnboardingProfileStep } from "./onboarding-profile-step";
 import { OnboardingSuccessStep } from "./onboarding-success-step";
+import type { OnboardingSuccessSubscriptionPrompt } from "./onboarding-success-step";
 
 const STEPS: OnboardingPhase[] = ["identity", "profile", "success"];
 
@@ -25,6 +26,7 @@ type Props = {
   initialPhase: OnboardingPhase;
   alreadySubmitted: boolean;
   showWelcomeFirst: boolean;
+  subscriptionPrompt?: OnboardingSuccessSubscriptionPrompt | null;
 };
 
 export function BusinessOnboardingWizard({
@@ -35,6 +37,7 @@ export function BusinessOnboardingWizard({
   initialPhase,
   alreadySubmitted,
   showWelcomeFirst,
+  subscriptionPrompt = null,
 }: Props) {
   const t = useTranslations("business.onboarding");
   const te = useTranslations("business.verification");
@@ -123,7 +126,9 @@ export function BusinessOnboardingWizard({
           />
         ) : null}
 
-        {phase === "success" ? <OnboardingSuccessStep /> : null}
+        {phase === "success" ? (
+          <OnboardingSuccessStep subscriptionPrompt={subscriptionPrompt} />
+        ) : null}
 
         {pending && phase === "profile" ? (
           <div className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">

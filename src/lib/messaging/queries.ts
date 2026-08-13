@@ -1,7 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
+import { getLocale } from "next-intl/server";
 import { getOwnedProvider } from "@/lib/providers/database";
 import type { BusinessConversation, ConversationMessage } from "@/lib/business/conversations";
 import { resolveLatestMessageAt } from "@/lib/messaging/format-conversation-time";
+import {
+  customerFallbackLabel,
+  resolvePersonDisplayName,
+  resolveProviderBusinessName,
+} from "@/lib/people/display-name";
 
 type ConversationRow = {
   id: string;
@@ -25,6 +31,9 @@ type MessageRow = {
   location_lat?: number | null;
   location_lng?: number | null;
   location_label?: string | null;
+  reply_to_message_id?: string | null;
+  is_pinned?: boolean | null;
+  edited_at?: string | null;
 };
 
 export async function loadConversationsForCustomer(
@@ -71,7 +80,7 @@ async function buildConversationList(
     const primary = await supabase
       .from("messages")
       .select(
-        "id, conversation_id, sender_id, body_text, created_at, is_system, event_type, delivery_status, message_type, location_lat, location_lng, location_label",
+        "id, conversation_id, sender_id, body_text, created_at, is_system, event_type, delivery_status, message_type, location_lat, location_lng, location_label, reply_to_message_id, is_pinned, edited_at",
       )
       .in("conversation_id", ids)
       .order("created_at", { ascending: true });
@@ -79,7 +88,9 @@ async function buildConversationList(
     if (primary.error) {
       const fallback = await supabase
         .from("messages")
-        .select("id, conversation_id, sender_id, body_text, created_at, is_system, event_type")
+        .select(
+          "id, conversation_id, sender_id, body_text, created_at, is_system, event_type, delivery_status, message_type, location_lat, location_lng, location_label",
+        )
         .in("conversation_id", ids)
         .order("created_at", { ascending: true });
       messages = (fallback.data ?? null) as unknown as MessageRow[] | null;
@@ -111,21 +122,65 @@ async function buildConversationList(
     .select("id, name, owner_id")
     .in("id", providerIds);
 
+  const locale = await getLocale();
+  const customerFallback = customerFallbackLabel(locale);
+
   const providerMap = new Map(
     (providers ?? []).map((p) => [
       p.id,
       {
-        name:
-          typeof p.name === "object" && p.name !== null
-            ? ((p.name as { en?: string }).en ?? (p.name as { ar?: string }).ar ?? "Business")
-            : "Business",
+        name: resolveProviderBusinessName(p.name, locale),
         ownerId: p.owner_id as string,
       },
     ]),
   );
 
+  // Hydrate chat attachments + signed URLs (Sprint 5 Phase 2)
+  const allMessageIds = (messages ?? []).map((m) => m.id);
+  const attachmentsByMessage = new Map<
+    string,
+    NonNullable<ConversationMessage["attachments"]>
+  >();
+  if (allMessageIds.length) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: atts } = await (supabase as any)
+      .from("message_attachments")
+      .select(
+        "id, message_id, file_name, display_name, mime_type, kind, path, bucket, duration_ms, is_pinned",
+      )
+      .in("message_id", allMessageIds)
+      .is("deleted_at", null);
+
+    for (const att of (atts ?? []) as Array<Record<string, unknown>>) {
+      const messageId = String(att.message_id);
+      const bucket = String(att.bucket ?? "chat-attachments");
+      const path = String(att.path ?? "");
+      let signedUrl: string | null = null;
+      if (path) {
+        const { data: signed } = await supabase.storage
+          .from(bucket)
+          .createSignedUrl(path, 3600);
+        signedUrl = signed?.signedUrl ?? null;
+      }
+      const list = attachmentsByMessage.get(messageId) ?? [];
+      list.push({
+        id: String(att.id),
+        fileName: String(att.display_name || att.file_name || "file"),
+        mimeType: String(att.mime_type ?? "application/octet-stream"),
+        kind: String(att.kind ?? "other"),
+        signedUrl,
+        durationMs: (att.duration_ms as number | null) ?? null,
+        path,
+        bucket,
+        isPinned: Boolean(att.is_pinned),
+      });
+      attachmentsByMessage.set(messageId, list);
+    }
+  }
+
   return conversations.map((conv) => {
     const rawMessages = messagesByConv.get(conv.id) ?? [];
+    const bodyById = new Map(rawMessages.map((m) => [m.id, m.body_text]));
     const mappedMessages: ConversationMessage[] = rawMessages.map((m) => {
       const from = m.is_system
         ? "dalily"
@@ -140,6 +195,7 @@ async function buildConversationList(
         !m.is_system &&
         ((viewer === "customer" && from === "customer") ||
           (viewer === "business" && from === "business"));
+      const replyId = m.reply_to_message_id ?? null;
       return {
         id: m.id,
         bodyText: m.body_text,
@@ -155,6 +211,13 @@ async function buildConversationList(
         locationLat: m.location_lat ?? null,
         locationLng: m.location_lng ?? null,
         locationLabel: m.location_label ?? null,
+        replyToMessageId: replyId,
+        replyPreview: replyId
+          ? (bodyById.get(replyId) ?? "").slice(0, 120) || null
+          : null,
+        isPinned: Boolean(m.is_pinned),
+        editedAt: m.edited_at ?? null,
+        attachments: attachmentsByMessage.get(m.id) ?? [],
       };
     });
 
@@ -162,8 +225,8 @@ async function buildConversationList(
     const providerInfo = providerMap.get(conv.provider_id);
     const name =
       viewer === "customer"
-        ? (providerInfo?.name ?? "Business")
-        : (profileMap.get(conv.customer_id) ?? "Customer");
+        ? (providerInfo?.name ?? resolveProviderBusinessName(null, locale))
+        : resolvePersonDisplayName(profileMap.get(conv.customer_id), customerFallback);
     const unreadCount = mappedMessages.filter((m) => !m.read).length;
     // Prefer the newest message row; never fall back to a bogus/epoch last_message_at.
     const updatedAt = resolveLatestMessageAt(mappedMessages);

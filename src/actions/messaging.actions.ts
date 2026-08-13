@@ -10,7 +10,7 @@ import {
   serializeMsgReadCookie,
   serializeNearbyLocCookie,
 } from "@/lib/business/message-read-state";
-import { DALILY_CONVERSATION_ID, markDalilyMessagesRead } from "@/lib/dalily-messages/inbox";
+import { DALILY_CONVERSATION_ID, markDalilyMessagesRead } from "@/domains/chat";
 import { getAuthUser } from "@/lib/auth/session";
 import { logAdminAction } from "@/lib/admin/action-log";
 import { createAdminClient } from "@/lib/supabase/admin";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import type { ActivityItem } from "@/lib/provider-success/types";
 import { formatDateTime } from "@/lib/format/datetime";
 

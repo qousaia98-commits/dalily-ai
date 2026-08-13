@@ -15,13 +15,16 @@ import { DalilyScoreBreakdownCard } from "@/components/provider-success/dalily-s
 import { TodayOverviewStrip } from "@/components/provider-success/today-overview-strip";
 import { MyBusinessStrip } from "@/components/provider-success/my-business-strip";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
+import { ProviderReputationInsightsPanel } from "@/components/provider-success/reputation-insights-panel";
 import { getTranslations } from "next-intl/server";
+import type { ProviderReputationInsights } from "@/lib/reputation/types";
 
 type Props = {
   data: ProviderSuccessDashboard;
   showVerify: boolean;
   userId: string;
   providerId?: string | null;
+  reputationInsights?: ProviderReputationInsights | null;
 };
 
 /**
@@ -33,6 +36,7 @@ export async function ProviderSuccessDashboardView({
   showVerify,
   userId,
   providerId,
+  reputationInsights = null,
 }: Props) {
   const t = await getTranslations("business.success.sections");
 
@@ -58,6 +62,18 @@ export async function ProviderSuccessDashboardView({
           />
         </div>
       </section>
+
+      {reputationInsights ? (
+        <section className="space-y-4" aria-labelledby="reputation-insights-title">
+          <header className="space-y-1">
+            <h2 id="reputation-insights-title" className="text-lg font-bold tracking-tight">
+              {t("reputation")}
+            </h2>
+            <p className="text-sm text-muted-foreground">{t("reputationHint")}</p>
+          </header>
+          <ProviderReputationInsightsPanel insights={reputationInsights} />
+        </section>
+      ) : null}
 
       {/* Section 2 — My Business */}
       <section className="space-y-4" aria-labelledby="my-business-title">

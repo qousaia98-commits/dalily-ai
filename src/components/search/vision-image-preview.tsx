@@ -5,7 +5,7 @@ import { Camera, ImageIcon, Replace, Trash2, ZoomIn, X, Sparkles } from "lucide-
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { VisionLocalImage } from "@/lib/vision/client-upload";
+import type { VisionLocalImage } from "@/domains/vision/client";
 
 type Props = {
   image: VisionLocalImage;

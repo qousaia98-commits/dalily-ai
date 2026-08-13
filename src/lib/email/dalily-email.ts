@@ -194,6 +194,25 @@ export async function sendBookingCompletionPromptEmail(input: {
   });
 }
 
+export async function sendSupportMessageNotificationEmail(input: {
+  to: string;
+  fromName: string;
+  role: string;
+  subject: string;
+  message: string;
+  adminUrl: string;
+}) {
+  return sendEmail({
+    tag: "support_message_received",
+    to: input.to,
+    subject: `[Support] ${input.subject}`,
+    html: `<p>New support message from ${input.fromName} (${input.role}):</p>
+       <p><strong>${input.subject}</strong></p>
+       <p>${input.message.replace(/\n/g, "<br/>")}</p>
+       <p><a href="${input.adminUrl}">View in admin</a></p>`,
+  });
+}
+
 export async function sendPaymentRejectedEmail(
   input: LocaleInput & {
     planLabel: string;

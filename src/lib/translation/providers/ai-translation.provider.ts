@@ -1,5 +1,6 @@
 import type { Locale } from "@/lib/i18n/config";
 import type { TranslationProvider } from "@/lib/translation/types";
+import { looksLikeTranslationFailure } from "@/lib/translation/guard";
 
 const LOCALE_LABEL: Record<Locale, string> = {
   ar: "Arabic",
@@ -37,7 +38,7 @@ export class AITranslationProvider implements TranslationProvider {
         messages: [
           {
             role: "system",
-            content: `You translate business content for a local services marketplace. Translate from ${LOCALE_LABEL[from]} to ${LOCALE_LABEL[to]}. Return only the translated text with no quotes or commentary.`,
+            content: `You translate business content for a local services marketplace. Translate from ${LOCALE_LABEL[from]} to ${LOCALE_LABEL[to]}. Return only the translated text with no quotes or commentary. Never ask for more input. Never apologize. If the source is empty or unusable, return an empty string.`,
           },
           { role: "user", content: trimmed },
         ],
@@ -53,9 +54,12 @@ export class AITranslationProvider implements TranslationProvider {
       choices?: Array<{ message?: { content?: string } }>;
     };
 
-    const translated = payload.choices?.[0]?.message?.content?.trim();
+    const translated = payload.choices?.[0]?.message?.content?.trim() ?? "";
     if (!translated) {
       throw new Error("Translation provider returned an empty response.");
+    }
+    if (looksLikeTranslationFailure(translated)) {
+      throw new Error("Translation provider returned a non-translation response.");
     }
 
     return translated;

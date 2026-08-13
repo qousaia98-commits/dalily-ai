@@ -12,6 +12,7 @@ type Props = {
   label: string;
   errorMessage?: string | null;
   formId?: string;
+  required?: boolean;
 };
 
 export function InteractiveStarRating({
@@ -22,6 +23,7 @@ export function InteractiveStarRating({
   label,
   errorMessage,
   formId,
+  required = true,
 }: Props) {
   const errorId = formId ? `${formId}-${name}-error` : `${name}-error`;
 
@@ -32,8 +34,8 @@ export function InteractiveStarRating({
         type="hidden"
         name={name}
         value={value || ""}
-        data-required
-        aria-required={true}
+        {...(required ? { "data-required": true } : {})}
+        aria-required={required || undefined}
         aria-invalid={Boolean(errorMessage) || undefined}
       />
       <div

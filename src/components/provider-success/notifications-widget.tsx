@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { Bell } from "lucide-react";
 import type { NotificationWidgetItem } from "@/lib/provider-success/types";
 import { cn } from "@/lib/utils";
-import { markNotificationReadAction } from "@/actions/service-request.actions";
+import { markNotificationReadAction } from "@/actions/service-request/notifications";
 import { OfficialDalilyAvatar } from "@/components/messaging/official-dalily-avatar";
 import { VerifiedBadge } from "@/components/messaging/verified-badge";
 

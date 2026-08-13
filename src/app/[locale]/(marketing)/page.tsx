@@ -1,46 +1,95 @@
 import { ShieldCheck } from "lucide-react";
-import { getTranslations } from "next-intl/server";
-import { SearchHero } from "@/components/search/search-hero";
+import type { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
+import { HomepagePathChooser } from "@/components/customer/homepage-path-chooser";
 import { CategoryGrid } from "@/components/search/category-grid";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { FeaturedProviders } from "@/components/landing/featured-providers";
+import { TrustStatsStrip } from "@/components/landing/trust-stats-strip";
+import { PatternBackdrop } from "@/components/brand/pattern-backdrop";
+import { RevealOnScroll } from "@/components/motion/reveal-on-scroll";
+import { getAuthUser } from "@/lib/auth/session";
+import { buildPersonalizedGreeting, resolveGreetingRole } from "@/lib/greetings";
+import type { Locale } from "@/lib/i18n/config";
+import { buildSiteMetadata } from "@/lib/brand/metadata";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  const locale = await getLocale();
+  return buildSiteMetadata({
+    title: t("title"),
+    description: t("description"),
+    locale,
+  });
+}
 
 export default async function HomePage() {
   const t = await getTranslations("home");
+  const locale = (await getLocale()) as Locale;
+  const authUser = await getAuthUser();
+
+  const greeting =
+    authUser && resolveGreetingRole(authUser.roles) === "customer"
+      ? buildPersonalizedGreeting({
+          roles: authUser.roles,
+          displayName: authUser.displayName,
+          email: authUser.email,
+          locale,
+          userId: authUser.id,
+        })
+      : null;
 
   return (
     <>
-      <main className="flex flex-1 flex-col">
-        <section className="border-b border-border/60 px-4 pb-14 pt-10 sm:px-6 sm:pb-16 sm:pt-14">
-          <div className="mx-auto flex max-w-5xl flex-col items-center gap-7 text-center sm:gap-9">
+      <div className="flex flex-1 flex-col">
+        <section className="relative overflow-hidden border-b border-border/60 px-4 pb-14 pt-10 sm:px-6 sm:pb-16 sm:pt-14">
+          <PatternBackdrop patternOpacity={0.045} density="sparse" wash={false} />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklab,var(--dalily-gold)_14%,transparent),transparent_70%)]"
+          />
+          <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-7 text-center sm:gap-9">
             <span className="animate-fade-in-up inline-flex items-center gap-1.5 rounded-full border border-[var(--dalily-gold)]/35 bg-[color-mix(in_oklab,var(--dalily-gold)_10%,transparent)] px-3.5 py-1.5 text-xs font-semibold text-foreground sm:text-sm">
               <ShieldCheck className="size-3.5 text-[var(--dalily-gold)]" aria-hidden />
-              {t("trustBadge")}
+              {t("pathChooser.trustBadge")}
             </span>
 
             <div className="animate-fade-in-up stagger-1 space-y-3">
               <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-                {t("heroTitle")}
+                {greeting ? greeting.title : t("pathChooser.heroTitle")}
               </h1>
               <p className="text-balance mx-auto max-w-xl text-base text-muted-foreground sm:text-lg">
-                {t("heroSubtitle")}
+                {greeting ? greeting.subtitle : t("pathChooser.heroSubtitle")}
               </p>
             </div>
 
-            <SearchHero className="animate-fade-in-up stagger-2 w-full max-w-3xl" />
+            <HomepagePathChooser className="w-full" />
           </div>
         </section>
 
-        <HowItWorks />
+        <RevealOnScroll>
+          <TrustStatsStrip />
+        </RevealOnScroll>
 
-        <section className="border-y border-border/60 bg-muted/20 px-4 py-14 sm:px-6 sm:py-16">
-          <div className="mx-auto max-w-5xl">
-            <CategoryGrid />
-          </div>
-        </section>
+        <RevealOnScroll>
+          <HowItWorks />
+        </RevealOnScroll>
 
-        <FeaturedProviders />
-      </main>
+        <RevealOnScroll>
+          <section
+            id="browse-services"
+            className="relative scroll-mt-24 overflow-hidden border-y border-border/60 bg-muted/20 px-4 py-14 sm:px-6 sm:py-16"
+          >
+            <PatternBackdrop patternOpacity={0.05} density="sparse" />
+            <div className="relative mx-auto max-w-5xl">
+              <CategoryGrid />
+            </div>
+          </section>
+        </RevealOnScroll>
+        <RevealOnScroll>
+          <FeaturedProviders />
+        </RevealOnScroll>
+      </div>
     </>
   );
 }

@@ -1,20 +1,36 @@
 import { getTranslations } from "next-intl/server";
 import { getFeaturedProviders } from "@/lib/providers/database";
 import { ProviderCard } from "@/components/providers/provider-card";
+import { PatternBackdrop } from "@/components/brand/pattern-backdrop";
+import { logger } from "@/lib/observability/logger";
 import { cn } from "@/lib/utils";
 
 export async function FeaturedProviders({ className }: { className?: string }) {
   const t = await getTranslations("home.featured");
-  const providers = await getFeaturedProviders(3);
+
+  let providers: Awaited<ReturnType<typeof getFeaturedProviders>> = [];
+  try {
+    providers = await getFeaturedProviders(3);
+  } catch (error) {
+    logger.error("landing.featured-providers", "getFeaturedProviders failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
 
   if (providers.length === 0) {
     return null;
   }
 
   return (
-    <section className={cn("bg-muted/30 px-4 py-16 sm:px-6 sm:py-20", className)}>
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-10 text-center sm:text-start">
+    <section
+      className={cn(
+        "relative overflow-hidden bg-muted/30 px-4 py-16 sm:px-6 sm:py-20",
+        className,
+      )}
+    >
+      <PatternBackdrop patternOpacity={0.05} density="sparse" />
+      <div className="relative mx-auto max-w-5xl">
+        <div className="mb-10 animate-fade-in-up text-center sm:text-start">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("title")}</h2>
           <p className="mt-3 text-muted-foreground">{t("subtitle")}</p>
         </div>

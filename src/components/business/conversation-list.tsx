@@ -1,9 +1,10 @@
 import { MessageCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import type { BusinessConversation } from "@/lib/business/conversations";
 import { ConversationListClient } from "@/components/business/conversation-list-client";
 import { EmptyState } from "@/components/shared/empty-state";
+import { EmptyMessagesIllustration } from "@/components/illustrations";
 import { Button } from "@/components/ui/button";
 
 export async function ConversationList({
@@ -28,11 +29,12 @@ export async function ConversationList({
 
   if (conversations.length === 0) {
     const isBusiness = messagesPath.includes("business");
-    const primaryHref = isBusiness ? "/business/requests" : "/search";
+    const primaryHref = isBusiness ? "/business/requests" : "/request/new";
     const ctaLabel = isBusiness ? t("viewAll") : t("browseCta");
     return (
       <EmptyState
         icon={MessageCircle}
+        illustration={<EmptyMessagesIllustration />}
         title={t("emptyTitle")}
         body={t("emptyBody")}
         primary={{ href: primaryHref, label: ctaLabel }}

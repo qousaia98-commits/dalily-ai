@@ -7,6 +7,7 @@ import {
 } from "@/lib/service-requests/queries";
 import { BUSINESS_REQUEST_TABS } from "@/lib/service-requests/status-machine";
 import { BusinessRequestsBoard } from "@/components/business/business-requests-board";
+import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 import type { BusinessRequestTab } from "@/lib/service-requests/status-machine";
 
 export default async function BusinessRequestsPage() {
@@ -24,6 +25,7 @@ export default async function BusinessRequestsPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6 overflow-x-hidden animate-fade-in">
+      <MarkNavChannelSeen channel="orders" />
       <header className="space-y-2">
         <p className="text-xs font-bold tracking-[0.16em] text-[var(--dalily-gold)] uppercase">
           {t("eyebrow")}

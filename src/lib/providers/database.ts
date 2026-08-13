@@ -7,6 +7,7 @@ import { rankProviders } from "@/lib/search/ranking/rank-providers";
 import { getActivePlanSlugsByProviderIds } from "@/lib/subscription/repository";
 import { fetchActiveProviders, fetchImagePaths } from "@/lib/search/repository/provider-search.repository";
 import { mapProviderRowsToListItems } from "@/lib/search/mapper/provider-list-mapper";
+import { isChatAuthV2Enabled } from "@/lib/config/feature-flags";
 import type { CategorySlug } from "@/lib/categories/types";
 import type { ProviderListItem } from "@/types/search.types";
 import type { LocalizedText } from "@/types/domain.types";
@@ -189,13 +190,6 @@ export type PublicProviderProfile = {
   gallery: string[];
 };
 
-function parseAddressLineText(value: unknown): LocalizedText | null {
-  if (!value || typeof value !== "object") return null;
-  const obj = value as { ar?: string; en?: string };
-  if (!obj.ar && !obj.en) return null;
-  return { ar: obj.ar ?? "", en: obj.en ?? "" };
-}
-
 export async function getPublicProviderById(id: string): Promise<PublicProviderProfile | null> {
   const supabase = await createClient();
 
@@ -258,6 +252,9 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
 
   const planMap = await getActivePlanSlugsByProviderIds([provider.id]);
 
+  // Trust page / public directory: never expose phone, WhatsApp, exact address, or GPS.
+  // Contact unlock happens only after booking / unlock grant (CHAT_AUTH_V2).
+  const hidePublicContact = isChatAuthV2Enabled();
   return {
     id: provider.id,
     slug: provider.slug,
@@ -267,9 +264,9 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     categoryLabel: { ar: categoryName.ar, en: categoryName.en },
     city: cityLabel,
     citySlug: cityKey ?? null,
-    district: parseAddressLineText(provider.address_line),
-    latitude: provider.latitude,
-    longitude: provider.longitude,
+    district: null,
+    latitude: null,
+    longitude: null,
     rating: Number(provider.rating_avg),
     reviewCount: provider.review_count,
     trustScore: provider.trust_score,
@@ -279,12 +276,29 @@ export async function getPublicProviderById(id: string): Promise<PublicProviderP
     memberSince: provider.created_at,
     coverImage: cover ? getStoragePublicUrl(cover.path) : DEFAULT_COVER,
     avatarImage: avatar ? getStoragePublicUrl(avatar.path) : DEFAULT_AVATAR,
-    phone: provider.phone,
-    whatsapp: provider.whatsapp,
+    phone: hidePublicContact ? null : provider.phone,
+    whatsapp: hidePublicContact ? null : provider.whatsapp,
     responseTimeHours: provider.response_time_hours,
     services: activeServices,
     gallery,
   };
+}
+
+/** Public landing trust signal — active + fully verified providers only. */
+export async function countActiveVerifiedProviders(): Promise<number> {
+  const supabase = await createClient();
+  const { count, error } = await supabase
+    .from("providers")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "active")
+    .eq("verification_status", "verified")
+    .is("deleted_at", null);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return count ?? 0;
 }
 
 export async function getFeaturedProviders(limit = 3): Promise<ProviderListItem[]> {

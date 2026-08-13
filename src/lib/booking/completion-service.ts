@@ -10,7 +10,7 @@ import { trackBookingAnalytics } from "@/lib/booking/analytics";
 import { updateBookingStatus, getBookingById } from "@/lib/booking/booking-service";
 import type { Booking, BookingIssueReason } from "@/lib/booking/types";
 import { BOOKING_ISSUE_REASONS } from "@/lib/booking/types";
-import { setConversationFlags } from "@/lib/chat/conversation-service";
+import { setConversationFlags } from "@/domains/chat";
 
 async function notifyInApp(input: {
   userId: string;
@@ -281,6 +281,64 @@ export async function customerConfirmCompletion(input: {
     actorId: input.customerId,
   });
 
+  try {
+    const { isSmartMatchingEngineEnabled, isAiDynamicPricingEnabled } =
+      await import("@/lib/config/feature-flags");
+    if (isSmartMatchingEngineEnabled()) {
+      const { recordMatchFeedback } = await import(
+        "@/lib/matching-engine/service"
+      );
+      const { learnFromMatchFeedback } = await import(
+        "@/lib/matching-engine/preferences"
+      );
+      void recordMatchFeedback({
+        bookingId: input.bookingId,
+        customerId: input.customerId,
+        providerId: booking.providerId,
+        recommended: true,
+        accepted: true,
+        completed: true,
+      });
+      void learnFromMatchFeedback({
+        customerId: input.customerId,
+        providerId: booking.providerId,
+        accepted: true,
+      });
+    }
+    if (isAiDynamicPricingEnabled()) {
+      const { recordPricingFeedback } = await import(
+        "@/lib/pricing-engine/service"
+      );
+      let offeredPrice: number | null = null;
+      if (booking.serviceRequestId) {
+        try {
+          const admin = createAdminClient();
+          const { data: offer } = await admin
+            .from("marketplace_offers")
+            .select("price")
+            .eq("service_request_id", booking.serviceRequestId)
+            .eq("provider_id", booking.providerId)
+            .eq("status", "selected")
+            .maybeSingle();
+          if (offer?.price != null) offeredPrice = Number(offer.price);
+        } catch {
+          /* optional */
+        }
+      }
+      if (offeredPrice != null && offeredPrice > 0) {
+        void recordPricingFeedback({
+          providerId: booking.providerId,
+          customerId: input.customerId,
+          offeredPrice,
+          accepted: true,
+          completed: true,
+        });
+      }
+    }
+  } catch {
+    /* matching / pricing feedback optional */
+  }
+
   const supabase = await createClient();
   const { data: provider } = await supabase
     .from("providers")
@@ -347,12 +405,33 @@ export async function customerReportIssue(input: {
 
   const supabase = await createClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (supabase as any).from("booking_issue_reports").insert({
-    booking_id: input.bookingId,
-    customer_id: input.customerId,
-    provider_id: booking.providerId,
-    reason: input.reason,
-  });
+  const { data: issueReport } = await (supabase as any)
+    .from("booking_issue_reports")
+    .insert({
+      booking_id: input.bookingId,
+      customer_id: input.customerId,
+      provider_id: booking.providerId,
+      reason: input.reason,
+    })
+    .select("id")
+    .maybeSingle();
+
+  try {
+    const { isQualityCasesEnabled } = await import("@/lib/config/feature-flags");
+    if (isQualityCasesEnabled() && issueReport?.id) {
+      const { createCaseFromBookingIssue } = await import("@/lib/quality/service");
+      void createCaseFromBookingIssue({
+        bookingIssueReportId: issueReport.id as string,
+        bookingId: input.bookingId,
+        customerId: input.customerId,
+        providerId: booking.providerId,
+        reason: input.reason,
+        details: null,
+      });
+    }
+  } catch {
+    /* quality bridge optional */
+  }
 
   await trackBookingAnalytics({
     eventType: "issue_reported",

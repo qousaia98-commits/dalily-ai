@@ -1,6 +1,5 @@
 import { Lock, Sparkles, Star, TrendingUp, MapPin, Search, BarChart3 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { getSubscriptionPageData } from "@/actions/subscription.actions";
@@ -10,7 +9,6 @@ import { categorySlugFromId } from "@/lib/providers/reference";
 import { BusinessStatsCards } from "@/components/business/business-stats-cards";
 import { DashboardGrowthPotential } from "@/components/business/dashboard-growth-potential";
 import { PlanBadge } from "@/components/shared/plan-badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { PlanSlug } from "@/lib/subscription/types";
@@ -201,9 +199,6 @@ export default async function BusinessAnalyticsPage() {
                 </div>
               ))}
           </div>
-          <Button asChild className="w-full sm:w-auto">
-            <Link href="/business/subscription">{tGrowth("upgradeCta")}</Link>
-          </Button>
         </section>
       ) : null}
     </div>

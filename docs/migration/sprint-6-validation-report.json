@@ -1,0 +1,130 @@
+{
+  "generatedAt": "2026-07-25T16:09:41.566Z",
+  "sprint": 6,
+  "suite": "validate-sprint6-unlock-payments",
+  "summary": {
+    "passed": 22,
+    "failed": 0,
+    "warnings": 0,
+    "total": 22
+  },
+  "results": [
+    {
+      "name": "schema.payments_unlock_columns",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "schema.unlock_sessions.payment_id",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "schema.payment_webhook_events",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "fixture.marketplace_chain",
+      "status": "PASS",
+      "detail": "request=abfec525-b5f4-4f34-b783-5bb5c520554b"
+    },
+    {
+      "name": "security.pre_payment_contact_hidden",
+      "status": "PASS",
+      "detail": "gate closed (no grant ⇒ no PII hydrate)"
+    },
+    {
+      "name": "security.pre_payment_no_grant",
+      "status": "PASS",
+      "detail": "no grant"
+    },
+    {
+      "name": "security.client_cannot_insert_grant",
+      "status": "PASS",
+      "detail": "new row violates row-level security policy for table \"contact_release_grants\""
+    },
+    {
+      "name": "security.authed_customer_cannot_insert_grant",
+      "status": "PASS",
+      "detail": "42501"
+    },
+    {
+      "name": "failed_payment.no_grant",
+      "status": "PASS",
+      "detail": "no grant"
+    },
+    {
+      "name": "failed_payment.contact_hidden",
+      "status": "PASS",
+      "detail": "gate closed (no grant ⇒ no PII hydrate)"
+    },
+    {
+      "name": "cancelled_payment.no_grant",
+      "status": "PASS",
+      "detail": "no grant"
+    },
+    {
+      "name": "retry.payment_recreate_after_fail_cancel",
+      "status": "PASS",
+      "detail": "151719de-a6f8-464a-9fd9-65a7d3c043e1"
+    },
+    {
+      "name": "idempotency.duplicate_active_charge_blocked",
+      "status": "PASS",
+      "detail": "23505"
+    },
+    {
+      "name": "happy_path.capture",
+      "status": "PASS",
+      "detail": "grant=5f7a4d1e-5e92-4722-aa6f-5ab18b69cd06"
+    },
+    {
+      "name": "happy_path.contact_visible_after_grant",
+      "status": "PASS",
+      "detail": "+963911000006"
+    },
+    {
+      "name": "idempotency.recapture_same_grant",
+      "status": "PASS",
+      "detail": "5f7a4d1e-5e92-4722-aa6f-5ab18b69cd06"
+    },
+    {
+      "name": "idempotency.unique_grant_constraint",
+      "status": "PASS",
+      "detail": "23505"
+    },
+    {
+      "name": "webhook.first_insert",
+      "status": "PASS",
+      "detail": "ceb51def-e26b-4e71-ba98-b0d71bf625c1"
+    },
+    {
+      "name": "webhook.duplicate_event_blocked",
+      "status": "PASS",
+      "detail": "23505"
+    },
+    {
+      "name": "security.capture_requires_paid",
+      "status": "PASS",
+      "detail": "status=pending"
+    },
+    {
+      "name": "security.unpaid_no_grant",
+      "status": "PASS",
+      "detail": "no grant"
+    },
+    {
+      "name": "cleanup",
+      "status": "PASS",
+      "detail": "ephemeral fixtures removed"
+    }
+  ],
+  "warnings": [],
+  "notes": {
+    "unitTests": "none in repo",
+    "integrationTests": "this script",
+    "e2eBrowser": "none (no playwright/cypress)",
+    "unlockPaymentsFlagInEnv": "true"
+  }
+}

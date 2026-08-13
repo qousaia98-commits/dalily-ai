@@ -520,6 +520,7 @@ export type AdminProviderReview = {
   services: Array<{ id: string; name: LocalizedJson }>;
   createdAt: string;
   profileCompleteness: number;
+  isFeatured: boolean;
   currentPlanSlug: string;
   openPayment: AdminProviderOpenPayment | null;
   adminReviewNote: string | null;
@@ -706,6 +707,7 @@ export async function getProviderForAdminReview(
     })),
     createdAt: provider.created_at,
     profileCompleteness: provider.profile_completeness,
+    isFeatured: Boolean(provider.is_featured),
     currentPlanSlug: subscription?.planSlug ?? "free",
     openPayment,
     adminReviewNote: provider.admin_review_note ?? null,

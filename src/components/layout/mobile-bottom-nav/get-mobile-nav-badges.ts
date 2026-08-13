@@ -1,18 +1,23 @@
 import { getAuthUser } from "@/lib/auth/session";
-import { loadBusinessConversations } from "@/lib/business/load-conversations";
-import { countUnreadConversations } from "@/lib/business/conversations";
-import { countPendingRequestsForOwner } from "@/lib/service-requests/queries";
-import { loadCustomerConversations } from "@/lib/customer/load-conversations";
-import { getAdminUnreadBadgeCounts } from "@/lib/admin/nav-badges";
+import {
+  getAdminNavBadges,
+  getCustomerNavBadges,
+  getProviderNavBadges,
+} from "@/lib/badges";
 import type { MobileNavBadges, MobileNavRole } from "./types";
 
+/**
+ * Mobile nav badges — reuses shared badge counters for all roles.
+ */
 export async function getMobileNavBadges(role: MobileNavRole): Promise<MobileNavBadges> {
   if (role === "admin") {
     try {
-      const counts = await getAdminUnreadBadgeCounts();
+      const counts = await getAdminNavBadges();
       return {
-        approvals: counts.approvals ?? counts.businesses ?? 0,
-        payments: counts.payments ?? 0,
+        approvals: counts.approvals,
+        payments: counts.payments,
+        issues: counts.issues,
+        messages: counts.messages,
       };
     } catch {
       return {};
@@ -22,28 +27,32 @@ export async function getMobileNavBadges(role: MobileNavRole): Promise<MobileNav
   if (role === "business") {
     try {
       const authUser = await getAuthUser();
-      if (!authUser) return { messages: 0, requests: 0 };
-      const [{ conversations }, pendingRequests] = await Promise.all([
-        loadBusinessConversations(authUser.id),
-        countPendingRequestsForOwner(authUser.id),
-      ]);
+      if (!authUser) return { messages: 0, orders: 0, opportunities: 0 };
+      const badges = await getProviderNavBadges(authUser.id);
       return {
-        messages: countUnreadConversations(conversations),
-        requests: pendingRequests,
+        messages: badges.messages,
+        orders: badges.orders,
+        opportunities: badges.opportunities,
+        requests: badges.requests,
+        unlock: badges.unlock,
+        verification: badges.verification,
       };
     } catch {
-      return { messages: 0, requests: 0 };
+      return { messages: 0, orders: 0, opportunities: 0 };
     }
   }
 
-  if (role === "guest") {
+  if (role === "guest" || role === "customer") {
     try {
       const authUser = await getAuthUser();
-      if (!authUser) return { messages: 0 };
-      const { conversations } = await loadCustomerConversations(authUser.id);
-      return { messages: countUnreadConversations(conversations) };
+      if (!authUser) return { messages: 0, orders: 0 };
+      const badges = await getCustomerNavBadges(authUser.id);
+      return {
+        messages: badges.messages,
+        orders: badges.orders,
+      };
     } catch {
-      return { messages: 0 };
+      return { messages: 0, orders: 0 };
     }
   }
 

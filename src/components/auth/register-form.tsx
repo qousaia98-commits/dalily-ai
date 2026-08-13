@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import { registerAction, type AuthActionState } from "@/actions/auth.actions";
 import { useClientFormValidation } from "@/hooks/use-client-form-validation";

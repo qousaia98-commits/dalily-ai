@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { markConversationReadAction } from "@/actions/messaging.actions";
-import { DALILY_CONVERSATION_ID } from "@/lib/dalily-messages/official-account";
+import { DALILY_CONVERSATION_ID } from "@/domains/chat/client";
+import { runServerAction } from "@/lib/next/server-action-recovery";
 
 /**
  * Marks a conversation as read when the thread is opened.
@@ -30,9 +31,15 @@ export function MarkConversationRead({
     ran.current = true;
 
     void (async () => {
-      const result = await markConversationReadAction(conversationId, lastMessageAt);
-      if (result.success) {
-        router.refresh();
+      try {
+        const result = await runServerAction(() =>
+          markConversationReadAction(conversationId, lastMessageAt),
+        );
+        if (result.success) {
+          router.refresh();
+        }
+      } catch {
+        // skew → full reload via runServerAction
       }
     })();
   }, [conversationId, lastMessageAt, unreadCount, router]);

@@ -18,13 +18,16 @@ export class ManualPaymentProvider implements PaymentProvider {
       .from("payments")
       .insert({
         provider_id: input.providerId,
-        subscription_id: input.subscriptionId,
+        subscription_id: input.subscriptionId ?? null,
         payment_provider: "manual",
         payment_status: "pending",
         amount: input.amount,
         currency: input.currency,
         payment_reference: input.reference,
-      })
+        purpose: (input.purpose ?? "subscription") as never,
+        unlock_session_id: input.unlockSessionId ?? null,
+        idempotency_key: input.idempotencyKey ?? null,
+      } as never)
       .select("id, payment_reference")
       .single();
 
@@ -73,12 +76,13 @@ export class ManualPaymentProvider implements PaymentProvider {
     await admin.from("payments").update({ payment_status: "cancelled" }).eq("id", paymentId);
   }
 
-  async refund(paymentId: string): Promise<void> {
-    const admin = createAdminClient();
-    await admin
-      .from("payments")
-      .update({ payment_status: "failed" })
-      .eq("id", paymentId)
-      .eq("payment_status", "paid");
+  async refund(
+    paymentId: string,
+    _options?: { amount?: number; currency?: string; reason?: string },
+  ): Promise<{ ok: true } | { ok: false; error: string }> {
+    // Manual rail: refunds are completed via admin workflow, not provider API.
+    void paymentId;
+    void _options;
+    return { ok: false, error: "manual_refund_via_admin_workflow" };
   }
 }

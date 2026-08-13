@@ -3,6 +3,8 @@ import { AppHeader } from "@/components/layout/app-header";
 import { MobileBottomNavHost } from "@/components/layout/mobile-bottom-nav";
 import { MobileBottomNavSpacer } from "@/components/layout/mobile-bottom-nav-spacer";
 import { LocationOnboardingHost } from "@/components/location/location-onboarding-host";
+import { FloatingAiButton } from "@/components/customer/floating-ai-button";
+import { isIntakeChatEnabled } from "@/lib/config/feature-flags";
 
 export function PageShell({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +14,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
       <AppFooter className="hidden md:block" />
       <MobileBottomNavSpacer />
       <MobileBottomNavHost role="guest" />
+      <FloatingAiButton chatEnabled={isIntakeChatEnabled()} />
       <LocationOnboardingHost />
     </div>
   );

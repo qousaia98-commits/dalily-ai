@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { requireAdminUser } from "@/lib/auth/session";
 import { listAdminIssues } from "@/lib/admin/issue-center";
 import { AdminIssueCenter } from "@/components/admin/admin-issue-center";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 type PageProps = {
   searchParams: Promise<{ status?: string }>;

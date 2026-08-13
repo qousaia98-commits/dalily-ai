@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import {
   acceptQuoteAction,
   completeServiceAction,
@@ -12,8 +12,8 @@ import {
   sendQuoteAction,
   submitReviewAction,
   reportProblemAction,
-  type ServiceRequestActionState,
-} from "@/actions/service-request.actions";
+} from "@/actions/service-request/status";
+import type { ServiceRequestActionState } from "@/actions/service-request/types";
 import { RequestTimeline } from "@/components/marketplace/request-timeline";
 import { InteractiveStarRating } from "@/components/reviews/interactive-star-rating";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ import {
   canSendQuote,
   nextStepHint,
 } from "@/lib/service-requests/status-machine";
+import { resolveOrderDisplayStatus } from "@/lib/orders/display-status";
 import { useMarketplaceRealtime } from "@/hooks/use-marketplace-realtime";
 import { SuccessMoment } from "@/components/shared/success-moment";
 import { FieldError } from "@/components/forms/field-error";
@@ -44,9 +45,26 @@ type Props = {
   viewer: "customer" | "business";
   userId: string;
   providerId?: string | null;
+  /**
+   * When false (OFFERS_V2 + lifecycle_version >= 2), hide legacy quote accept/send
+   * and block chat entry from this panel.
+   */
+  legacyQuotesEnabled?: boolean;
+  /**
+   * Sprint 7 — server-computed full-chat authorization (grant-gated when CHAT_AUTH_V2).
+   * When omitted, falls back to legacy status canChat().
+   */
+  chatAuthorized?: boolean;
 };
 
-export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Props) {
+export function RequestWorkflowPanel({
+  request,
+  viewer,
+  userId,
+  providerId,
+  legacyQuotesEnabled = true,
+  chatAuthorized,
+}: Props) {
   const t = useTranslations("marketplace");
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -54,6 +72,10 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
   const [successKey, setSuccessKey] = useState<string | null>(null);
   const [showCompleteConfirm, setShowCompleteConfirm] = useState(false);
   const [showDispute, setShowDispute] = useState(false);
+
+  const canOpenChat =
+    Boolean(request.conversationId) &&
+    (chatAuthorized ?? canChat(request.status));
 
   useMarketplaceRealtime({
     userId,
@@ -87,13 +109,14 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
   };
 
   const nextKey = nextStepHint(request.status, viewer);
+  const displayStatus = resolveOrderDisplayStatus(request);
 
   return (
     <div className="space-y-6 animate-fade-in">
       <header className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-2xl font-bold tracking-tight">{request.title}</h1>
-          <Badge variant="secondary">{t(`status.${request.status}`)}</Badge>
+          <Badge variant="secondary">{t(`status.${displayStatus}`)}</Badge>
         </div>
         <p className="text-sm text-muted-foreground">
           {viewer === "business"
@@ -158,7 +181,7 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
             </dl>
           </section>
 
-          {request.quote ? (
+          {legacyQuotesEnabled && request.quote ? (
             <section className="rounded-3xl border border-border bg-card p-5 shadow-sm">
               <h2 className="mb-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
                 {t("quote.title")}
@@ -209,7 +232,7 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
             </section>
           ) : null}
 
-          {viewer === "business" && canSendQuote(request.status) ? (
+          {legacyQuotesEnabled && viewer === "business" && canSendQuote(request.status) ? (
             <QuoteForm requestId={request.id} />
           ) : null}
 
@@ -301,7 +324,7 @@ export function RequestWorkflowPanel({ request, viewer, userId, providerId }: Pr
             </p>
           ) : null}
 
-          {request.conversationId && canChat(request.status) ? (
+          {canOpenChat ? (
             <Button
               variant="outline"
               className="min-h-11 w-full rounded-2xl"
@@ -458,6 +481,13 @@ function ReviewForm({ requestId }: { requestId: string }) {
   const router = useRouter();
   const [state, action, pending] = useActionState(submitReviewAction, initial);
   const [rating, setRating] = useState(0);
+  const [dims, setDims] = useState({
+    communication: 0,
+    quality: 0,
+    punctuality: 0,
+    professionalism: 0,
+    value: 0,
+  });
   const { fieldErrors, guardSubmit, clearFieldError } = useClientFormValidation({
     formId: "review",
   });
@@ -490,9 +520,43 @@ function ReviewForm({ requestId }: { requestId: string }) {
         errorMessage={fieldErrors.rating}
         formId="review"
       />
+      {(
+        [
+          "communication",
+          "quality",
+          "punctuality",
+          "professionalism",
+          "value",
+        ] as const
+      ).map((key) => (
+        <InteractiveStarRating
+          key={key}
+          name={key}
+          label={t(`dimensions.${key}`)}
+          value={dims[key]}
+          onChange={(value) => setDims((d) => ({ ...d, [key]: value }))}
+          disabled={pending}
+          formId={`review-${key}`}
+          required={false}
+        />
+      ))}
       <div className="space-y-1.5">
         <Label htmlFor="comment">{t("comment")}</Label>
         <Textarea id="comment" name="comment" rows={4} className="rounded-xl" />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="photoKind">{t("photoKind")}</Label>
+        <select
+          id="photoKind"
+          name="photoKind"
+          className="flex h-10 w-full rounded-xl border border-input bg-background px-3 text-sm"
+          defaultValue="completed"
+        >
+          <option value="completed">{t("photoKinds.completed")}</option>
+          <option value="before">{t("photoKinds.before")}</option>
+          <option value="after">{t("photoKinds.after")}</option>
+          <option value="general">{t("photoKinds.general")}</option>
+        </select>
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="photos">{t("photos")}</Label>

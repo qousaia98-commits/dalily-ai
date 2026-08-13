@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Camera, Loader2, Search, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -83,7 +83,7 @@ export function SearchForm({
     } else {
       params.delete(URGENCY_PARAM);
     }
-    router.push(`/search?${params.toString()}`);
+    router.push(`/request/new?${params.toString()}`);
   }
 
   function enterPipeline(trimmed: string, options?: { skipDiagnosis?: boolean; urgency?: string }) {
@@ -240,7 +240,7 @@ export function SearchForm({
             type="submit"
             size="lg"
             disabled={checking}
-            className="min-h-12 flex-1 gap-2 rounded-2xl px-8 font-semibold shadow-lg shadow-primary/20 sm:flex-none"
+            className="min-h-12 flex-1 gap-2 rounded-2xl px-8 font-semibold shadow-lg shadow-primary/20 transition-[box-shadow,transform] duration-200 hover:shadow-xl hover:shadow-primary/25 sm:flex-none"
           >
             {checking ? (
               <Loader2 className="size-5 animate-spin" aria-hidden />

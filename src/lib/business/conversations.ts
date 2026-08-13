@@ -30,6 +30,10 @@ export type ConversationMessage = {
   locationLat?: number | null;
   locationLng?: number | null;
   locationLabel?: string | null;
+  replyToMessageId?: string | null;
+  replyPreview?: string | null;
+  isPinned?: boolean;
+  editedAt?: string | null;
   /** Official channel category badge (future-ready; absent on legacy rows). */
   category?: DalilyMessageCategory | null;
   /** Optional rich layout for official messages. */
@@ -40,6 +44,10 @@ export type ConversationMessage = {
     mimeType: string;
     kind: string;
     signedUrl?: string | null;
+    durationMs?: number | null;
+    path?: string;
+    bucket?: string;
+    isPinned?: boolean;
   }>;
 };
 

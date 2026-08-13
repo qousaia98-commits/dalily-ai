@@ -16,13 +16,28 @@ export async function putFileToStorage(input: {
   file: File;
   mimeType: string;
   onPercent: (ratio: number) => void;
-}): Promise<{ ok: boolean }> {
+  signal?: AbortSignal;
+}): Promise<{ ok: boolean; error?: string }> {
+  if (input.signal?.aborted) {
+    return { ok: false, error: "cancelled" };
+  }
+
   if (input.signedUrl) {
     try {
-      await xhrPut(input.signedUrl, input.file, input.mimeType, input.onPercent);
+      await xhrPut(
+        input.signedUrl,
+        input.file,
+        input.mimeType,
+        input.onPercent,
+        input.signal,
+      );
       return { ok: true };
-    } catch {
-      // fall through
+    } catch (err) {
+      if (input.signal?.aborted) return { ok: false, error: "cancelled" };
+      // fall through to token / session upload
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[putFileToStorage] signedUrl PUT failed", err);
+      }
     }
   }
 
@@ -37,14 +52,24 @@ export async function putFileToStorage(input: {
       input.onPercent(1);
       return { ok: true };
     }
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[putFileToStorage] uploadToSignedUrl failed", error.message);
+    }
   }
+
+  if (input.signal?.aborted) return { ok: false, error: "cancelled" };
 
   const { error } = await supabase.storage.from(input.bucket).upload(input.path, input.file, {
     contentType: input.mimeType,
     upsert: false,
   });
 
-  if (error) return { ok: false };
+  if (error) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[putFileToStorage] upload failed", error.message);
+    }
+    return { ok: false, error: "upload_failed" };
+  }
   input.onPercent(1);
   return { ok: true };
 }
@@ -54,6 +79,7 @@ function xhrPut(
   file: File,
   mimeType: string,
   onPercent: (ratio: number) => void,
+  signal?: AbortSignal,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -69,6 +95,17 @@ function xhrPut(
       else reject(new Error(`upload_http_${xhr.status}`));
     };
     xhr.onerror = () => reject(new Error("upload_network"));
+    const onAbort = () => {
+      xhr.abort();
+      reject(new Error("cancelled"));
+    };
+    if (signal) {
+      if (signal.aborted) {
+        onAbort();
+        return;
+      }
+      signal.addEventListener("abort", onAbort, { once: true });
+    }
     xhr.send(file);
   });
 }

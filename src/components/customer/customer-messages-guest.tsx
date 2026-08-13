@@ -1,6 +1,6 @@
 import { LogIn, MessageCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
 
 export async function CustomerMessagesGuest() {
@@ -23,7 +23,7 @@ export async function CustomerMessagesGuest() {
           </Link>
         </Button>
         <Button variant="outline" asChild>
-          <Link href="/search">{t("browseCta")}</Link>
+          <Link href="/request/new">{t("browseCta")}</Link>
         </Button>
       </div>
     </div>

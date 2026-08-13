@@ -6,6 +6,8 @@
 export const ONBOARDING_DEFER_COOKIE = "dalily_onboarding_defer";
 export const ONBOARDING_REMINDER_DISMISS_COOKIE = "dalily_onboarding_reminder_dismiss";
 export const ONBOARDING_CARD_DISMISS_COOKIE = "dalily_onboarding_card_dismiss";
+/** Soft-dismiss for “subscribe to appear in search” dashboard card. */
+export const SUBSCRIPTION_CARD_DISMISS_COOKIE = "dalily_subscription_card_dismiss";
 
 /** Session defer — hide forced welcome for this browser session (≈ 12h). */
 export const ONBOARDING_DEFER_MAX_AGE_SEC = 60 * 60 * 12;

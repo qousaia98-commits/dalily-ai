@@ -81,4 +81,9 @@ export type ScoreCalculatorInput = {
   unreadRatio?: number | null;
   planIsPremium?: boolean;
   matchesCategory?: boolean;
+  /**
+   * Soft boost from AI Reputation Engine (~-0.1…0.1).
+   * Never ranks by reputation alone — applied as one factor among many.
+   */
+  reputationSearchBoost?: number | null;
 };

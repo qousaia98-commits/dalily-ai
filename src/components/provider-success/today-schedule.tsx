@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { MessageCircle, CalendarDays, Navigation } from "lucide-react";
 import type { TodayAppointment } from "@/lib/provider-success/types";
 import { Button } from "@/components/ui/button";

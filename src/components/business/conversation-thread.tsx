@@ -1,6 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import type { BusinessConversation } from "@/lib/business/conversations";
 import type { ServiceRequestDetail } from "@/lib/service-requests/types";
 import { MarkConversationRead } from "@/components/business/mark-conversation-read";
@@ -9,17 +9,38 @@ import { ConversationQuickActions } from "@/components/messaging/conversation-qu
 import { OfficialDalilyAvatar } from "@/components/messaging/official-dalily-avatar";
 import { OfficialMessageCard } from "@/components/messaging/official-message-card";
 import { ReadReceiptIcon } from "@/components/messaging/read-receipt-icon";
+import { PublicVerificationBadge } from "@/components/verification/public-verification-badge";
 import { VerifiedBadge } from "@/components/messaging/verified-badge";
+import { MessageBubbleActions } from "@/components/messaging/message-bubble-actions";
+import { MessageMediaPreview } from "@/components/messaging/message-media-preview";
+import { AiChatPanel } from "@/components/messaging/ai-chat-panel";
+import { MessageTranslateToggle } from "@/components/messaging/message-translate-toggle";
+import { VoiceTranscriptPanel } from "@/components/messaging/voice-transcript-panel";
 import { MarketplaceRealtimeBridge } from "@/components/marketplace/realtime-bridge";
+import { isAiChatAssistantEnabled, isChatVoiceMessagingEnabled, isEnterpriseCommunicationEnabled } from "@/lib/config/feature-flags";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { canChat } from "@/lib/service-requests/status-machine";
+import {
+  canAccessFullChat,
+  loadConversationTimeline,
+  listReactionsForMessages,
+  getConversationSafetySettings,
+} from "@/domains/chat";
+import { BookingTimeline } from "@/components/messaging/booking-timeline";
+import { MessageReactions } from "@/components/messaging/message-reactions";
+import { ConversationSafetyMenu } from "@/components/messaging/conversation-safety-menu";
 import {
   formatMessageTime,
   isValidMessageTimestamp,
   resolveLatestMessageAt,
-} from "@/lib/messaging/format-conversation-time";
+} from "@/domains/chat";
+import {
+  businessFallbackLabel,
+  customerFallbackLabel,
+  resolvePersonDisplayName,
+} from "@/lib/people/display-name";
 
 export async function ConversationThread({
   conversation,
@@ -38,13 +59,69 @@ export async function ConversationThread({
 }) {
   const t = await getTranslations(namespace);
   const tm = await getTranslations("marketplace");
+  const ta = await getTranslations("messaging.actions");
   const locale = await getLocale();
-  const name = conversation.nameKey ? t(conversation.nameKey) : (conversation.name ?? "Chat");
+  const aiChatEnabled = isAiChatAssistantEnabled();
+  const voiceEnabled = isChatVoiceMessagingEnabled();
+  const fallback =
+    viewer === "customer"
+      ? businessFallbackLabel(locale)
+      : customerFallbackLabel(locale);
+  const name = conversation.nameKey
+    ? t(conversation.nameKey)
+    : resolvePersonDisplayName(conversation.name, fallback);
   const lastMessageAt = resolveLatestMessageAt(conversation.messages);
   const isOfficial = conversation.kind === "dalily" || conversation.official;
   const profileHref = `${messagesPath}/dalily/about`;
 
-  const chatOpen = request ? canChat(request.status) : conversation.kind === "customer";
+  let providerVerified = false;
+  if (viewer === "customer" && request?.provider_id) {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data } = await (createAdminClient() as any)
+        .from("providers")
+        .select("verification_status")
+        .eq("id", request.provider_id)
+        .maybeSingle();
+      providerVerified = data?.verification_status === "verified";
+    } catch {
+      providerVerified = false;
+    }
+  }
+
+  const chatOpen = request
+    ? await canAccessFullChat({
+        serviceRequestId: request.id,
+        status: request.status,
+        lifecycleVersion: request.lifecycle_version ?? 1,
+      })
+    : Boolean(conversation.kind === "dalily" || conversation.official || conversation.kind === "customer");
+
+  const enterprise = isEnterpriseCommunicationEnabled();
+  const timeline =
+    enterprise && conversation.kind === "customer" && userId
+      ? await loadConversationTimeline({
+          conversationId: conversation.id,
+          serviceRequestId: request?.id ?? conversation.serviceRequestId ?? null,
+        })
+      : [];
+
+  const reactionsByMessage =
+    enterprise && conversation.kind === "customer" && userId
+      ? await listReactionsForMessages({
+          messageIds: conversation.messages.map((m) => m.id),
+          userId,
+        })
+      : new Map();
+
+  const safety =
+    enterprise && conversation.kind === "customer" && userId
+      ? await getConversationSafetySettings({
+          conversationId: conversation.id,
+          userId,
+          peerUserId: conversation.peerUserId ?? null,
+        })
+      : null;
 
   return (
     <div className="flex min-h-[28rem] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
@@ -98,7 +175,17 @@ export async function ConversationThread({
                 {name.slice(0, 1).toUpperCase()}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-bold text-foreground">{name}</p>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <p className="truncate font-bold text-foreground">{name}</p>
+                  {viewer === "customer" &&
+                  request?.provider_id &&
+                  providerVerified ? (
+                    <PublicVerificationBadge
+                      providerId={request.provider_id}
+                      verified
+                    />
+                  ) : null}
+                </div>
                 {request ? (
                   <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
                     <span className="truncate text-xs text-muted-foreground">{request.title}</span>
@@ -115,12 +202,22 @@ export async function ConversationThread({
             </>
           )}
           {conversation.kind === "customer" ? (
-            <ConversationQuickActions
-              conversationId={conversation.id}
-              viewer={viewer === "customer" ? "customer" : "business"}
-              pinned={conversation.pinned}
-              archived={conversation.archived || conversation.state === "archived"}
-            />
+            <div className="flex shrink-0 items-center gap-0.5">
+              <ConversationQuickActions
+                conversationId={conversation.id}
+                viewer={viewer === "customer" ? "customer" : "business"}
+                pinned={conversation.pinned}
+                archived={conversation.archived || conversation.state === "archived"}
+              />
+              {enterprise && safety ? (
+                <ConversationSafetyMenu
+                  conversationId={conversation.id}
+                  peerUserId={conversation.peerUserId ?? null}
+                  muted={safety.muted}
+                  blocked={safety.blockedPeer}
+                />
+              ) : null}
+            </div>
           ) : null}
         </div>
         {request ? (
@@ -159,6 +256,15 @@ export async function ConversationThread({
           </div>
         ) : null}
       </header>
+
+      {timeline.length > 0 ? <BookingTimeline items={timeline} /> : null}
+
+      {conversation.kind === "customer" ? (
+        <AiChatPanel
+          conversationId={conversation.id}
+          enabled={aiChatEnabled}
+        />
+      ) : null}
 
       <div
         className="flex flex-1 flex-col gap-3 overflow-y-auto bg-muted/20 p-4"
@@ -222,9 +328,55 @@ export async function ConversationThread({
                   mine
                     ? "rounded-ee-md bg-[var(--dalily-navy)] text-white"
                     : "rounded-es-md border border-border bg-card text-foreground",
+                  msg.isPinned && "ring-1 ring-[var(--dalily-gold)]/50",
                 )}
               >
+                {msg.replyPreview ? (
+                  <p
+                    className={cn(
+                      "mb-1 border-s-2 ps-2 text-[11px] opacity-80",
+                      mine ? "border-white/50" : "border-muted-foreground/40",
+                    )}
+                  >
+                    {msg.replyPreview}
+                  </p>
+                ) : null}
                 <p className="whitespace-pre-wrap">{body}</p>
+                {!msg.isSystem && msg.bodyText && conversation.kind === "customer" ? (
+                  <MessageTranslateToggle
+                    conversationId={conversation.id}
+                    messageId={msg.id}
+                    originalText={msg.bodyText}
+                    enabled={aiChatEnabled}
+                  />
+                ) : null}
+                {msg.attachments?.length ? (
+                  <MessageMediaPreview
+                    attachments={msg.attachments}
+                    conversationId={conversation.id}
+                    mine={mine}
+                  />
+                ) : null}
+                {msg.messageType === "voice" ||
+                msg.attachments?.some(
+                  (a) => a.kind === "voice" || a.mimeType.startsWith("audio/"),
+                ) ? (
+                  <VoiceTranscriptPanel
+                    conversationId={conversation.id}
+                    messageId={msg.id}
+                    enabled={voiceEnabled}
+                  />
+                ) : null}
+                {msg.editedAt ? (
+                  <p
+                    className={cn(
+                      "mt-0.5 text-[10px]",
+                      mine ? "text-white/50" : "text-muted-foreground",
+                    )}
+                  >
+                    {ta("edited")}
+                  </p>
+                ) : null}
                 {msg.messageType === "location" && msg.locationLat != null && msg.locationLng != null ? (
                   <a
                     href={`https://www.openstreetmap.org/?mlat=${msg.locationLat}&mlon=${msg.locationLng}#map=16/${msg.locationLat}/${msg.locationLng}`}
@@ -251,6 +403,22 @@ export async function ConversationThread({
                       <ReadReceiptIcon status={msg.deliveryStatus ?? (msg.read ? "read" : "sent")} />
                     ) : null}
                   </time>
+                ) : null}
+                {conversation.kind === "customer" && msg.bodyText ? (
+                  <MessageBubbleActions
+                    messageId={msg.id}
+                    conversationId={conversation.id}
+                    bodyText={msg.bodyText}
+                    mine={mine}
+                    isPinned={msg.isPinned}
+                  />
+                ) : null}
+                {enterprise && !msg.isSystem && conversation.kind === "customer" ? (
+                  <MessageReactions
+                    messageId={msg.id}
+                    conversationId={conversation.id}
+                    reactions={reactionsByMessage.get(msg.id) ?? []}
+                  />
                 ) : null}
               </div>
             </div>

@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-07-28T03:25:04.279Z",
+  "baselinePath": "supabase/migrations/baseline/baseline.sql",
+  "applyOk": true,
+  "applyError": null,
+  "baselineStats": {
+    "types": 13,
+    "tables": 242,
+    "views": 6,
+    "funcs": 41,
+    "indexes": 297,
+    "policies": 349,
+    "triggers": 22,
+    "rls": 241,
+    "extensions": 5,
+    "fks": 263
+  },
+  "dumpStats": {
+    "types": 13,
+    "tables": 242,
+    "views": 6,
+    "funcs": 41,
+    "indexes": 297,
+    "policies": 349,
+    "triggers": 22,
+    "rls": 241,
+    "extensions": 5,
+    "fks": 263
+  },
+  "liveCounts": {
+    "tables": 242,
+    "views": 6,
+    "routines": 72,
+    "policies": 110,
+    "indexes": 626
+  },
+  "tablesMatch": true,
+  "policiesClose": false,
+  "verdict": "PASS_WITH_NOTES",
+  "notes": [
+    "Baseline is the verified remote public schema dump plus storage bucket inserts.",
+    "Plain Postgres stubs Supabase roles/schemas; vault/supabase_vault may warn.",
+    "Production upgrade does not re-apply baseline — see docs/database/migrations.md."
+  ]
+}

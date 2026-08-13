@@ -1,0 +1,371 @@
+{
+  "common": {
+    "appName": "Dalily",
+    "loading": "Loading…",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "save": "Save",
+    "offline": "You are offline",
+    "empty": "Nothing here yet",
+    "error": "Something went wrong"
+  },
+  "auth": {
+    "login": "Log in",
+    "register": "Create account",
+    "forgotPassword": "Forgot password?",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "sendReset": "Send reset link",
+    "logout": "Log out",
+    "welcomeBack": "Welcome back",
+    "createAccount": "Join Dalily"
+  },
+  "customer": {
+    "title": "Find trusted help nearby",
+    "subtitle": "Book services with confidence.",
+    "tabs": {
+      "home": "Home",
+      "search": "Search",
+      "bookings": "Bookings",
+      "favorites": "Favorites",
+      "profile": "Profile"
+    },
+    "home": {
+      "welcome": "Welcome",
+      "searchPlaceholder": "Search services or providers",
+      "quickActions": "Quick actions",
+      "popularCategories": "Popular categories",
+      "aiRecommendations": "For you",
+      "recommended": "Recommended services",
+      "recentlyViewed": "Recently viewed",
+      "trending": "Trending providers",
+      "nearby": "Nearby services",
+      "postRequest": "Post a request"
+    },
+    "webRequest": {
+      "title": "New request",
+      "close": "Close",
+      "loading": "Opening secure session…",
+      "error": "Could not open the request flow. Please try again.",
+      "noSession": "Please sign in again to continue.",
+      "loadFailed": "The page failed to load. Please try again."
+    },
+    "search": {
+      "label": "Search",
+      "history": "Recent searches",
+      "clear": "Clear",
+      "suggestions": "Suggestions",
+      "aiSuggestions": "AI suggestions",
+      "results": "Results",
+      "voicePrep": "Voice search coming soon"
+    },
+    "categories": {
+      "featured": "Featured",
+      "popular": "Popular",
+      "nested": "More specific",
+      "all": "All categories",
+      "detailHint": "Browse trusted providers in this category."
+    },
+    "provider": {
+      "about": "About",
+      "gallery": "Gallery",
+      "noGallery": "Photos coming soon",
+      "services": "Services & pricing",
+      "availability": "Availability",
+      "availableNow": "Available now",
+      "busy": "Currently busy",
+      "reviews": "Reviews",
+      "highlights": "Highlights",
+      "map": "Location",
+      "mapUnavailable": "Map unavailable",
+      "book": "Book now",
+      "share": "Share"
+    },
+    "book": {
+      "title": "Book a service",
+      "selectService": "Select a service",
+      "schedule": "Pick date & time",
+      "nativePickerHint": "Native date/time pickers can replace text fields in a later build.",
+      "date": "Date",
+      "time": "Time",
+      "address": "Address",
+      "notes": "Notes",
+      "imagesHint": "You can attach photos in a later release.",
+      "estimate": "Price estimate",
+      "aiPrice": "AI fair-price hint",
+      "confirm": "Review & confirm",
+      "confirmTitle": "Confirm booking",
+      "confirmBody": "We will notify the provider. You stay in control.",
+      "place": "Place booking",
+      "steps": {
+        "service": "Service",
+        "schedule": "Schedule",
+        "details": "Details",
+        "confirm": "Confirm"
+      }
+    },
+    "bookings": {
+      "trackStatus": "Track status",
+      "trackHint": "Live tracking arrives in a later sprint.",
+      "reschedule": "Reschedule",
+      "filters": {
+        "all": "All",
+        "upcoming": "Upcoming",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      }
+    },
+    "favorites": {
+      "empty": "No favorites yet",
+      "emptyHint": "Save providers and categories for quick rebook.",
+      "categories": "Saved categories",
+      "providers": "Saved providers",
+      "rebook": "Quick rebook",
+      "quickRebook": "Rebook top favorite",
+      "save": "Save",
+      "saved": "Saved"
+    },
+    "profile": {
+      "guest": "Guest",
+      "personal": "Personal information",
+      "personalHint": "Edit profile details on web or a later mobile release.",
+      "addresses": "Addresses",
+      "addressUnknown": "Turn on location to find help near you",
+      "payments": "Payment methods",
+      "paymentsHint": "Secure payment methods are prepared for a later release.",
+      "language": "Language",
+      "theme": "Theme",
+      "privacy": "Privacy & accessibility",
+      "highContrast": "High contrast",
+      "largeFonts": "Large fonts",
+      "security": "Security",
+      "securityHint": "Biometric unlock and secure session are foundation-ready."
+    }
+  },
+  "provider": {
+    "home": "Business",
+    "title": "Grow your business",
+    "subtitle": "Manage jobs, offers and schedule."
+  },
+  "providerApp": {
+    "tabs": {
+      "home": "Home",
+      "jobs": "Jobs",
+      "calendar": "Calendar",
+      "messages": "Messages",
+      "profile": "Profile"
+    },
+    "dashboard": {
+      "subtitle": "Your business at a glance",
+      "health": "Health",
+      "revenueToday": "Today",
+      "assistant": "AI Business Assistant",
+      "pendingRecs": "pending",
+      "openAssistant": "Open assistant",
+      "today": "Today's schedule",
+      "performance": "Performance overview",
+      "aiInsights": "AI insights",
+      "quickActions": "Quick actions",
+      "analytics": "Analytics",
+      "fab": "Open jobs"
+    },
+    "jobs": {
+      "customer": "Customer",
+      "attachments": "Attachments",
+      "noAttachments": "No attachments",
+      "navigate": "Navigate",
+      "share": "Share job",
+      "addNote": "Add note",
+      "notes": "Notes",
+      "advance": "Update status",
+      "filters": {
+        "all": "All",
+        "upcoming": "Upcoming",
+        "active": "Active",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "rescheduled": "Rescheduled"
+      }
+    },
+    "calendar": {
+      "schedule": "Schedule",
+      "workingHours": "Working hours",
+      "blocked": "Blocked time",
+      "blockedHint": "Block personal time from the availability screen.",
+      "vacation": "Vacation",
+      "vacationHint": "Plan vacation during low-demand periods.",
+      "recurring": "recurring",
+      "weekday": "Day {{day}}",
+      "manageAvailability": "Manage availability",
+      "views": {
+        "day": "Day",
+        "week": "Week",
+        "month": "Month"
+      }
+    },
+    "messages": {
+      "unread": "unread"
+    },
+    "profile": {
+      "trust": "Trust",
+      "services": "Services & pricing",
+      "documents": "Documents",
+      "gallery": "Gallery",
+      "photos": "photos"
+    },
+    "assistant": {
+      "disabled": "Business Assistant is disabled.",
+      "briefing": "Morning briefing",
+      "insights": "Insights",
+      "recommendations": "Recommendations",
+      "accept": "Accept",
+      "dismiss": "Dismiss",
+      "goals": "Goals",
+      "growth": "Growth opportunities",
+      "benchmark": "Benchmark",
+      "history": "Recommendation history"
+    },
+    "analytics": {
+      "revenue": "Revenue",
+      "bookings": "Bookings",
+      "rating": "Rating",
+      "completion": "Completion",
+      "response": "Response",
+      "repeat": "Repeat customers",
+      "capacity": "Capacity",
+      "forecast": "Forecast",
+      "weekly": "Weekly revenue",
+      "pricingTrend": "Pricing trend"
+    },
+    "offline": {
+      "queued": "Queued updates"
+    }
+  },
+  "admin": {
+    "home": "Admin",
+    "title": "Admin (coming soon)",
+    "subtitle": "Marketplace operations console."
+  },
+  "account": {
+    "security": "Security",
+    "changePassword": {
+      "navTitle": "Change password",
+      "title": "Change password",
+      "subtitle": "Enter your current password and choose a new one.",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "submit": "Update password",
+      "saving": "Updating…",
+      "successTitle": "Password updated",
+      "successBody": "Your password has been changed.",
+      "errors": {
+        "required": "Please fill in both fields.",
+        "tooShort": "New password must be at least 8 characters.",
+        "mismatch": "Passwords do not match.",
+        "wrongCurrent": "Current password is incorrect.",
+        "failed": "Could not update your password. Please try again."
+      }
+    }
+  },
+  "support": {
+    "navTitle": "Contact support",
+    "title": "Contact support",
+    "subtitle": "Send us a message and our team will get back to you.",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "What's this about?",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Describe your question or issue…",
+    "submit": "Send message",
+    "sending": "Sending…",
+    "close": "Close",
+    "successTitle": "Message sent",
+    "successBody": "Thanks for reaching out — our team will get back to you soon.",
+    "errors": {
+      "required": "Please fill in both fields.",
+      "submitFailed": "Could not send your message. Please try again."
+    }
+  },
+  "legal": {
+    "privacyTitle": "Privacy & data",
+    "privacySubtitle": "Control consent, export your data, or request account deletion.",
+    "accept": "Accept Privacy Policy & Terms",
+    "accepted": "Legal documents accepted",
+    "preferences": "Preferences",
+    "analytics": "Analytics",
+    "crashReporting": "Crash reporting",
+    "marketing": "Marketing messages",
+    "openPrivacy": "Open Privacy Policy",
+    "openTerms": "Open Terms of Service",
+    "exportData": "Request data export",
+    "deleteAccount": "Request account deletion",
+    "deleteQueued": "Deletion request queued. Support will confirm by email."
+  },
+  "native": {
+    "open": "Native features",
+    "title": "Native capabilities",
+    "subtitle": "Camera, location, push, biometrics, and offline media — iOS & Android.",
+    "disabled": "Native features are disabled.",
+    "permissions": "Permissions",
+    "perm": {
+      "camera": "Camera",
+      "cameraDesc": "Profile photos, job documentation, verification.",
+      "photos": "Photos",
+      "photosDesc": "Gallery selection for bookings and business gallery.",
+      "location": "Location",
+      "locationDesc": "Nearby services, address detection, navigation.",
+      "notifications": "Notifications",
+      "notificationsDesc": "Booking updates, jobs, messages, and AI briefings."
+    },
+    "push": {
+      "title": "Push notifications",
+      "register": "Register device (FCM / APNs)",
+      "test": "Send test notification",
+      "history": "History",
+      "unavailable": "Push token unavailable on this device/simulator."
+    },
+    "biometric": {
+      "title": "Biometric unlock",
+      "enable": "Require biometrics",
+      "prompt": "Unlock Dalily",
+      "setPin": "Set fallback PIN (1357)",
+      "pinSet": "Fallback PIN saved securely."
+    },
+    "media": {
+      "title": "Camera & gallery",
+      "camera": "Take photo",
+      "gallery": "Pick from gallery",
+      "queueUpload": "Queue for upload",
+      "sync": "Sync offline uploads",
+      "queued": "Queued / pending",
+      "before": "Before photo",
+      "after": "After photos",
+      "attachments": "Booking attachments",
+      "addPhotos": "Add photos"
+    },
+    "location": {
+      "title": "Location & maps",
+      "detect": "Detect my address"
+    },
+    "nav": {
+      "title": "Navigate",
+      "google": "Google Maps",
+      "apple": "Apple Maps",
+      "copy": "Copy address",
+      "shareLocation": "Share location",
+      "eta": "Estimated travel time"
+    },
+    "share": {
+      "referral": "Referrals",
+      "shareReferral": "Share referral link",
+      "booking": "Share booking"
+    },
+    "device": {
+      "title": "Device features (prep)",
+      "subtitle": "Calendar, widgets, Live Activities, shortcuts — architecture ready."
+    }
+  }
+}

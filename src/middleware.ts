@@ -1,6 +1,6 @@
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest } from "next/server";
-import { routing } from "@/lib/i18n/routing";
+import { routing } from "@/lib/i18n/routing-config";
 import { updateSession } from "@/lib/supabase/middleware";
 
 const intlMiddleware = createMiddleware(routing);
@@ -25,6 +25,10 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|api/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    // /auth/* are root-level, unprefixed route handlers (OAuth callback,
+    // mobile session bridge) that manage their own Supabase session and
+    // redirect — the next-intl locale rewrite has no matching [locale]
+    // page for them and 404s if it's allowed to intercept.
+    "/((?!_next/static|_next/image|favicon.ico|robots\\.txt|sitemap\\.xml|api/|auth/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|webmanifest)$).*)",
   ],
 };

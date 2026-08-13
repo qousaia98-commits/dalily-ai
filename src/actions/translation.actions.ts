@@ -30,7 +30,17 @@ export async function previewLocalizedFieldAction(
       sourceText,
       existing: { ar: existingAr, en: existingEn },
     });
-    return { success: true, result };
+
+    // Never preview AI meta-responses in the business UI.
+    const { looksLikeTranslationFailure } = await import("@/lib/translation/guard");
+    const cleaned: LocalizedJson = {
+      ar: looksLikeTranslationFailure(result.ar) ? sourceLocale === "ar" ? sourceText : "" : result.ar,
+      en: looksLikeTranslationFailure(result.en) ? sourceLocale === "en" ? sourceText : "" : result.en,
+    };
+    if (sourceLocale === "ar") cleaned.ar = sourceText.trim();
+    if (sourceLocale === "en") cleaned.en = sourceText.trim();
+
+    return { success: true, result: cleaned };
   } catch (error) {
     // Never swallow Next.js redirect() from requireAuthUser
     const digest = (error as { digest?: string } | null)?.digest;

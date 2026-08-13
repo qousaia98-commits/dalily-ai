@@ -7,7 +7,7 @@ import { updateIssueModerationAction } from "@/actions/admin-control-center.acti
 import type { AdminIssueItem } from "@/lib/admin/issue-center";
 import { formatDateTime } from "@/lib/format/datetime";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 type Props = { items: AdminIssueItem[] };
 

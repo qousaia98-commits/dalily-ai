@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getAuthUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getOwnedProvider } from "@/lib/providers/database";
-import { getOrCreateConversationForRequest } from "@/lib/chat/conversation-service";
+import { getOrCreateConversationForRequest } from "@/domains/chat";
 import { trackBookingAnalytics } from "@/lib/booking/analytics";
 import {
   createBooking,
@@ -80,18 +80,46 @@ export async function fetchAvailableSlotsAction(input: {
   fromDate: string;
   durationMinutes: number;
   days?: number;
+  appointmentType?: string;
+  urgency?: "emergency" | "normal";
 }) {
   const duration = input.durationMinutes as BookingDurationMinutes;
   if (!BOOKING_DURATIONS.includes(duration)) {
-    return { success: false as const, slots: [], error: "invalid_duration" };
+    return {
+      success: false as const,
+      slots: [],
+      suggestions: null,
+      error: "invalid_duration",
+    };
   }
+
+  const { isSmartBookingEnabled } = await import("@/lib/config/feature-flags");
+  if (isSmartBookingEnabled()) {
+    const { suggestSmartSlots } = await import("@/lib/booking/smart/suggest-slots");
+    const suggestions = await suggestSmartSlots({
+      providerId: input.providerId,
+      fromDate: input.fromDate,
+      durationMinutes: duration,
+      days: input.days ?? 14,
+      appointmentType: input.appointmentType as
+        | import("@/lib/booking/smart/types").AppointmentType
+        | undefined,
+      urgency: input.urgency,
+    });
+    return {
+      success: true as const,
+      slots: suggestions.allSlots,
+      suggestions,
+    };
+  }
+
   const slots = await generateAvailableSlots({
     providerId: input.providerId,
     fromDate: input.fromDate,
     durationMinutes: duration,
     days: input.days ?? 14,
   });
-  return { success: true as const, slots };
+  return { success: true as const, slots, suggestions: null };
 }
 
 export async function createBookingAction(formData: FormData): Promise<{
@@ -328,6 +356,55 @@ export async function completeBookingAction(bookingId: string) {
   const result = await requestCustomerConfirmation(bookingId);
   if (!result.success) return result;
 
+  try {
+    const {
+      isAiEngineV4Enabled,
+      isAiEngineV5Enabled,
+      isAiEngineV6Enabled,
+      isAiEngineV7Enabled,
+    } = await import("@/lib/config/feature-flags");
+    if (isAiEngineV4Enabled()) {
+      const { compareJobAnalysisOutcome } = await import("@/lib/ai/jobs/learning");
+      const durationMinutes = Math.max(
+        1,
+        Math.round(
+          (new Date(booking.endsAt).getTime() - new Date(booking.startsAt).getTime()) /
+            60000,
+        ),
+      );
+      void compareJobAnalysisOutcome({
+        serviceRequestId: booking.serviceRequestId,
+        bookingId: booking.id,
+        actualDurationMinutes: durationMinutes,
+      });
+    }
+    if (isAiEngineV5Enabled() && booking.serviceRequestId) {
+      const { compareVisionAnalysisOutcome } = await import(
+        "@/lib/ai/vision/learning"
+      );
+      void compareVisionAnalysisOutcome({
+        serviceRequestId: booking.serviceRequestId,
+      });
+    }
+    if (isAiEngineV6Enabled() && booking.serviceRequestId) {
+      const { compareVoiceTranscriptOutcome } = await import(
+        "@/lib/ai/voice/learning"
+      );
+      void compareVoiceTranscriptOutcome({
+        serviceRequestId: booking.serviceRequestId,
+      });
+    }
+    if (isAiEngineV7Enabled() && booking.serviceRequestId) {
+      const { buildAfterJobAssist } = await import("@/lib/ai/assistant/after-job");
+      void buildAfterJobAssist({
+        problemSummary: booking.customerNotes || booking.serviceName || "Service job",
+        serviceRequestId: booking.serviceRequestId,
+      });
+    }
+  } catch {
+    // Learning must never break completion.
+  }
+
   await postBookingSystemMessage(
     booking.conversationId,
     authUser.id,
@@ -430,8 +507,117 @@ export async function rescheduleBookingAction(formData: FormData) {
     actorId: authUser.id,
   });
 
+  try {
+    const { emitAiLearningEvent } = await import("@/lib/ai/learning/events");
+    void emitAiLearningEvent({
+      eventType: "reschedule_accepted",
+      providerId: booking.providerId,
+      customerId: booking.customerId,
+      serviceRequestId: booking.serviceRequestId,
+      metadata: { bookingId, startsAt, endsAt },
+    });
+  } catch {
+    /* soft */
+  }
+
+  // Notify the other party
+  const otherUserId =
+    booking.customerId === authUser.id
+      ? (
+          await (async () => {
+            const { createAdminClient } = await import("@/lib/supabase/admin");
+            const admin = createAdminClient();
+            const { data } = await admin
+              .from("providers")
+              .select("owner_id")
+              .eq("id", booking.providerId)
+              .maybeSingle();
+            return (data?.owner_id as string | undefined) ?? null;
+          })()
+        )
+      : booking.customerId;
+  if (otherUserId) {
+    await notifyBooking({
+      userId: otherUserId,
+      type: "booking_rescheduled",
+      titleKey: "booking.reminders.titleChanged",
+      bodyKey: "booking.reminders.bodyChanged",
+      href:
+        booking.customerId === authUser.id
+          ? `/business/bookings/${bookingId}`
+          : `/account/bookings/${bookingId}`,
+      requestId: booking.serviceRequestId,
+      conversationId: booking.conversationId,
+    });
+  }
+
   revalidateBookingPaths(booking.providerId);
   return { success: true };
+}
+
+export async function recordSlotSuggestionDecisionAction(input: {
+  providerId: string;
+  startsAt: string;
+  rank: number | null;
+  decision: "accepted" | "rejected" | "ignored" | "modified";
+  appointmentType?: string;
+  bookingId?: string | null;
+}) {
+  const authUser = await getAuthUser();
+  try {
+    const admin = (await import("@/lib/supabase/admin")).createAdminClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (admin as any).from("booking_slot_feedback").insert({
+      booking_id: input.bookingId ?? null,
+      provider_id: input.providerId,
+      customer_id: authUser?.id ?? null,
+      suggested_starts_at: input.startsAt,
+      suggested_rank: input.rank,
+      decision: input.decision,
+      appointment_type: input.appointmentType ?? null,
+    });
+  } catch {
+    /* soft until migration */
+  }
+
+  try {
+    const { emitAiLearningEvent } = await import("@/lib/ai/learning/events");
+    void emitAiLearningEvent({
+      eventType:
+        input.decision === "accepted"
+          ? "slot_suggestion_accepted"
+          : input.decision === "rejected"
+            ? "slot_suggestion_rejected"
+            : "slot_suggested",
+      providerId: input.providerId,
+      customerId: authUser?.id ?? null,
+      metadata: input,
+    });
+  } catch {
+    /* soft */
+  }
+
+  return { ok: true };
+}
+
+export async function optimizeMyDayAction(date?: string) {
+  const authUser = await getAuthUser();
+  if (!authUser) return { success: false as const, error: "login_required" };
+  const provider = await getOwnedProvider(authUser.id);
+  if (!provider) return { success: false as const, error: "forbidden" };
+  const { optimizeProviderDay } = await import("@/lib/booking/smart/day-optimize");
+  const result = await optimizeProviderDay({
+    providerId: provider.id,
+    date,
+  });
+  return { success: true as const, result };
+}
+
+export async function processSmartBookingRemindersAction() {
+  const { processSmartBookingReminders } = await import(
+    "@/lib/booking/smart/reminders"
+  );
+  return processSmartBookingReminders();
 }
 
 export async function saveAvailabilitySettingsAction(formData: FormData) {
@@ -449,11 +635,17 @@ export async function saveAvailabilitySettingsAction(formData: FormData) {
     providerId: provider.id,
     timezone: String(formData.get("timezone") ?? "Asia/Damascus"),
     slotDurations: durations.length ? durations : [30, 60],
-    bufferMinutes: Number(formData.get("bufferMinutes") ?? 0),
+    bufferMinutes: Number(formData.get("bufferMinutes") ?? 20),
+    travelBufferMinutes: Number(
+      formData.get("travelBufferMinutes") ?? formData.get("bufferMinutes") ?? 20,
+    ),
     minNoticeHours: Number(formData.get("minNoticeHours") ?? 2),
     maxDaysAhead: Number(formData.get("maxDaysAhead") ?? 60),
     emergencyAvailable: formData.has("emergencyAvailable"),
     acceptingBookings: formData.has("acceptingBookings"),
+    defaultAppointmentType: (String(
+      formData.get("defaultAppointmentType") ?? "scheduled",
+    ) || "scheduled") as AvailabilitySettings["defaultAppointmentType"],
   };
 
   const result = await upsertAvailabilitySettings(settings);

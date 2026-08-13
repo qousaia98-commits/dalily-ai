@@ -1,0 +1,72 @@
+{
+  "appName": "Dalily",
+  "subtitle": {
+    "en": "Book trusted local services",
+    "ar": "احجز خدمات محلية موثوقة"
+  },
+  "description": {
+    "en": "Dalily helps customers discover and book trusted local service providers, and helps providers manage jobs, calendars, messages, and AI-assisted business insights — all in one bilingual mobile app.",
+    "ar": "يساعد دليلي العملاء على اكتشاف وحجز مقدمي الخدمات المحليين الموثوقين، ويساعد المزودين على إدارة الوظائف والتقويم والرسائل ورؤى الأعمال المدعومة بالذكاء الاصطناعي — في تطبيق ثنائي اللغة."
+  },
+  "keywords": {
+    "en": [
+      "local services",
+      "booking",
+      "home services",
+      "Jordan",
+      "providers",
+      "marketplace",
+      "Dalily"
+    ],
+    "ar": ["خدمات محلية", "حجز", "خدمات منزلية", "دليلي", "مزودو خدمات"]
+  },
+  "categories": {
+    "iosPrimary": "Lifestyle",
+    "iosSecondary": "Business",
+    "androidPrimary": "Lifestyle",
+    "androidSecondary": "Business"
+  },
+  "support": {
+    "email": "support@dalily.app",
+    "url": "https://dalily.app/support",
+    "privacyUrl": "https://dalily.app/privacy",
+    "termsUrl": "https://dalily.app/terms",
+    "marketingUrl": "https://dalily.app"
+  },
+  "screenshots": {
+    "phone": [
+      "store/assets/screenshots/phone-01-home.png",
+      "store/assets/screenshots/phone-02-search.png",
+      "store/assets/screenshots/phone-03-booking.png",
+      "store/assets/screenshots/phone-04-provider-jobs.png",
+      "store/assets/screenshots/phone-05-assistant.png"
+    ],
+    "tablet": [
+      "store/assets/screenshots/tablet-01-home.png",
+      "store/assets/screenshots/tablet-02-provider.png"
+    ]
+  },
+  "featureGraphic": "store/assets/feature-graphic.png",
+  "appPreviewVideo": {
+    "status": "preparation",
+    "script": "store/assets/preview-video-script.md",
+    "targetDurationSec": 30
+  },
+  "iconSystem": {
+    "ios": "assets/icon.png",
+    "androidAdaptive": {
+      "foreground": "assets/android-icon-foreground.png",
+      "background": "assets/android-icon-background.png",
+      "monochrome": "assets/android-icon-monochrome.png"
+    },
+    "notification": "assets/android-icon-monochrome.png",
+    "darkModeCompatible": true
+  },
+  "splash": {
+    "light": { "background": "#0B1F17", "image": "assets/splash-icon.png" },
+    "dark": { "background": "#06140F", "image": "assets/splash-icon.png" },
+    "tablet": "same assets, contain resize",
+    "landscapePrep": "portrait primary; landscape splash deferred to 1.1",
+    "brandAnimationPrep": "Lottie intro optional after first production week"
+  }
+}

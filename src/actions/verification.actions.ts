@@ -297,6 +297,15 @@ export async function approveVerificationAction(
 
   await ensureFreeSubscription(providerId);
 
+  const { syncIdentityCheckOnApproval } = await import(
+    "@/lib/verification/public-summary"
+  );
+  await syncIdentityCheckOnApproval({
+    providerId,
+    reviewedAt: now,
+    reviewedBy: authUser.id,
+  });
+
   const owner = await getProviderOwnerEmailContext(providerId);
   if (owner?.email) {
     await sendBusinessApprovedEmail({

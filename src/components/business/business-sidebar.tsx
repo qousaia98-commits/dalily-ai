@@ -1,59 +1,154 @@
 "use client";
 
 import {
-  LayoutDashboard,
-  User,
-  Wrench,
-  Images,
-  BarChart3,
-  ShieldCheck,
-  Star,
-  Menu,
+  Home,
+  Sparkles,
+  ClipboardList,
   MessageCircle,
-  Inbox,
-  Settings,
-  CalendarDays,
-  CalendarClock,
-  Clock3,
+  Wallet,
+  UserRound,
+  Menu,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link, usePathname } from "@/lib/i18n/routing";
+import { Link, usePathname } from "@/lib/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { PlanBadge } from "@/components/shared/plan-badge";
-import { useState } from "react";
+import { NavCountBadge } from "@/components/shared/nav-count-badge";
+import { useMemo, useState } from "react";
 import type { PlanSlug } from "@/lib/subscription/types";
+import { getActiveNavigationItem } from "@/lib/navigation/active-item";
 
-const navItems = [
-  { href: "/business", icon: LayoutDashboard, key: "dashboard", exact: true },
-  { href: "/business/requests", icon: Inbox, key: "requests", badgeKey: "requests" as const },
-  { href: "/business/bookings", icon: CalendarClock, key: "bookings" },
-  { href: "/business/calendar", icon: CalendarDays, key: "calendar" },
-  { href: "/business/availability", icon: Clock3, key: "availability" },
-  { href: "/business/messages", icon: MessageCircle, key: "messages", badgeKey: "messages" as const },
-  { href: "/business/profile", icon: User, key: "profile" },
-  { href: "/business/services", icon: Wrench, key: "services" },
-  { href: "/business/media", icon: Images, key: "media" },
-  { href: "/business/analytics", icon: BarChart3, key: "analytics" },
-  { href: "/business/verification", icon: ShieldCheck, key: "verification", badgeKey: "verification" as const },
-  { href: "/business/settings", icon: Settings, key: "settings" },
-  { href: "/business/subscription", icon: Star, key: "upgrade" },
-] as const;
+type SidebarBadgeKey =
+  | "messages"
+  | "requests"
+  | "orders"
+  | "opportunities"
+  | "unlock"
+  | "verification";
+
+type NavItem = {
+  id: string;
+  href: string;
+  icon: typeof Home;
+  key: string;
+  exact?: boolean;
+  badgeKey?: SidebarBadgeKey;
+  matchPrefixes?: readonly string[];
+};
 
 type BusinessSidebarProps = {
   planSlug?: PlanSlug | string;
   businessName?: string | null;
-  badges?: { messages?: number; requests?: number; verification?: number };
+  badges?: Partial<Record<SidebarBadgeKey, number>>;
+  showOpportunities?: boolean;
+  showUnlock?: boolean;
+  /** Kept for callers; simplified nav is always used. */
+  marketplaceHome?: boolean;
 };
 
+const ACCOUNT_PREFIXES = [
+  "/business/account",
+  "/business/profile",
+  "/business/services",
+  "/business/media",
+  "/business/availability",
+  "/business/calendar",
+  "/business/bookings",
+  "/business/verification",
+  "/business/quality",
+  "/business/pricing",
+  "/business/forecast",
+  "/business/scheduling",
+  "/business/assistant",
+  "/business/settings",
+  "/business/analytics",
+  "/business/my-business",
+] as const;
+
+const PAYMENTS_PREFIXES = [
+  "/business/payments",
+  "/business/unlock",
+  "/business/subscription",
+  "/business/monetization",
+] as const;
+
+/**
+ * Simplified provider navigation — 6 primary destinations.
+ * Nested tools stay reachable via Account / Payments hubs.
+ */
 export function BusinessSidebar({
   planSlug = "free",
   businessName,
   badges = {},
+  showOpportunities = false,
+  showUnlock = false,
 }: BusinessSidebarProps) {
   const t = useTranslations("business.nav");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navItems = useMemo((): NavItem[] => {
+    const newJobsHref = showOpportunities
+      ? "/business/opportunities"
+      : "/business/requests";
+
+    return [
+      {
+        id: "dashboard",
+        href: "/business",
+        icon: Home,
+        key: "dashboard",
+        exact: true,
+      },
+      {
+        id: "newJobs",
+        href: newJobsHref,
+        icon: Sparkles,
+        key: "newJobs",
+        badgeKey: showOpportunities ? "opportunities" : "requests",
+        matchPrefixes: showOpportunities
+          ? ["/business/opportunities"]
+          : ["/business/requests"],
+      },
+      {
+        id: "orders",
+        href: "/business/orders",
+        icon: ClipboardList,
+        key: "orders",
+        badgeKey: "orders",
+        // When New Jobs owns /business/requests, do not also claim it here.
+        matchPrefixes: showOpportunities
+          ? ["/business/orders", "/business/requests"]
+          : ["/business/orders"],
+      },
+      {
+        id: "messages",
+        href: "/business/messages",
+        icon: MessageCircle,
+        key: "messages",
+        badgeKey: "messages",
+      },
+      {
+        id: "payments",
+        href: "/business/payments",
+        icon: Wallet,
+        key: "payments",
+        badgeKey: showUnlock ? "unlock" : undefined,
+        matchPrefixes: PAYMENTS_PREFIXES,
+      },
+      {
+        id: "account",
+        href: "/business/account",
+        icon: UserRound,
+        key: "account",
+        badgeKey: "verification",
+        matchPrefixes: ACCOUNT_PREFIXES,
+      },
+    ];
+  }, [showOpportunities, showUnlock]);
+
+  const activeItem = getActiveNavigationItem(pathname, navItems);
 
   const NavContent = () => (
     <nav className="flex flex-col gap-1" aria-label={t("title")}>
@@ -64,32 +159,25 @@ export function BusinessSidebar({
         </div>
       ) : null}
       {navItems.map((item) => {
-        const { href, icon: Icon, key } = item;
-        const exact = "exact" in item && item.exact;
-        const badgeKey = "badgeKey" in item ? item.badgeKey : undefined;
+        const { href, icon: Icon, key, badgeKey } = item;
         const badgeCount = badgeKey ? (badges[badgeKey] ?? 0) : 0;
-        const active = exact
-          ? pathname === href
-          : pathname === href || pathname.startsWith(`${href}/`);
+        const active = activeItem.id === item.id;
         return (
           <Link
-            key={href}
+            key={key}
             href={href}
             onClick={() => setMobileOpen(false)}
+            aria-current={active ? "page" : undefined}
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
               active
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
           >
-            <Icon className="size-4 shrink-0" />
+            <Icon className="size-4 shrink-0" aria-hidden />
             <span className="flex-1">{t(key)}</span>
-            {badgeCount > 0 ? (
-              <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-[var(--dalily-gold)] px-1.5 py-0.5 text-[0.625rem] font-bold text-[var(--dalily-navy)]">
-                {badgeCount > 99 ? "99+" : badgeCount}
-              </span>
-            ) : null}
+            <NavCountBadge count={badgeCount} />
           </Link>
         );
       })}
@@ -99,7 +187,12 @@ export function BusinessSidebar({
   return (
     <>
       <div className="mb-4 hidden md:block lg:hidden">
-        <Button variant="outline" size="sm" onClick={() => setMobileOpen(!mobileOpen)} className="gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="gap-2"
+        >
           <Menu className="size-4" />
           {t("menu")}
         </Button>

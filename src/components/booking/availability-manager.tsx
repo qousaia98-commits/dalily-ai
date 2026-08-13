@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import { saveAvailabilitySettingsAction, blockTimeAction } from "@/actions/booking.actions";
 import type { AvailabilitySettings } from "@/lib/booking/types";
 import { Button } from "@/components/ui/button";
@@ -62,6 +62,28 @@ export function AvailabilityManager({ settings }: Props) {
               max={120}
               defaultValue={settings.bufferMinutes}
               className="h-11 rounded-xl"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="travelBufferMinutes">{t("travelBuffer")}</Label>
+            <Input
+              id="travelBufferMinutes"
+              name="travelBufferMinutes"
+              type="number"
+              min={0}
+              max={120}
+              defaultValue={settings.travelBufferMinutes}
+              className="h-11 rounded-xl"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="defaultAppointmentType">{t("defaultType")}</Label>
+            <Input
+              id="defaultAppointmentType"
+              name="defaultAppointmentType"
+              defaultValue={settings.defaultAppointmentType}
+              className="h-11 rounded-xl"
+              placeholder="scheduled"
             />
           </div>
           <div className="space-y-1.5">
@@ -150,7 +172,20 @@ export function AvailabilityManager({ settings }: Props) {
           <Label htmlFor="reason">{t("blockReason")}</Label>
           <Input id="reason" name="reason" className="h-11 rounded-xl" />
         </div>
-        <input type="hidden" name="kind" value="vacation" />
+        <div className="space-y-1.5">
+          <Label htmlFor="kind">{t("blockKind")}</Label>
+          <select
+            id="kind"
+            name="kind"
+            defaultValue="vacation"
+            className="flex h-11 w-full rounded-xl border border-input bg-background px-3 text-sm"
+          >
+            <option value="vacation">{t("kinds.vacation")}</option>
+            <option value="blocked">{t("kinds.blocked")}</option>
+            <option value="holiday">{t("kinds.holiday")}</option>
+            <option value="manual">{t("kinds.manual")}</option>
+          </select>
+        </div>
         <Button type="submit" variant="outline" className="min-h-11 rounded-xl" disabled={pending}>
           {t("blockSubmit")}
         </Button>

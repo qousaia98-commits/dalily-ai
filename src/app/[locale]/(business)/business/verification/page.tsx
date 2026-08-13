@@ -10,7 +10,7 @@ import {
   resolveVerificationFeedback,
   resolveVerificationUiStatus,
 } from "@/lib/verification/status";
-import { markVerificationNotificationsRead } from "@/lib/service-requests/queries";
+import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
 import { VerificationUploadForm } from "@/components/business/verification-upload-form";
 import { VerificationTimeline } from "@/components/business/verification-timeline";
@@ -34,9 +34,6 @@ export default async function BusinessVerificationPage() {
     );
   }
 
-  // Opening the verification page clears verification notification badges.
-  await markVerificationNotificationsRead(authUser.id);
-
   const verificationRow = await getProviderVerificationForOwner(provider.id);
   const verification = toBusinessVerificationView(verificationRow);
   const displayStatus = resolveVerificationUiStatus(provider, verification);
@@ -49,6 +46,7 @@ export default async function BusinessVerificationPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <MarkNavChannelSeen channel="verification" />
       <div>
         <h1 className="text-2xl font-bold">{t("title")}</h1>
         <p className="mt-1 text-muted-foreground">{t("subtitle")}</p>

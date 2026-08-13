@@ -7,12 +7,17 @@ import { logAdminAudit } from "@/lib/admin/audit";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidateSubscriptionSurfaces } from "@/lib/subscription/revalidate";
 import { subscriptionService } from "@/lib/subscription/subscription.service";
+import { isAdminMigrationV2Enabled } from "@/lib/config/feature-flags";
 import type { PlanSlug } from "@/lib/subscription/types";
 
 export type AdminSubscriptionActionState = {
   success: boolean;
   error?: string;
 };
+
+function subscriptionWritesFrozen(): boolean {
+  return isAdminMigrationV2Enabled();
+}
 
 async function providerSlug(providerId: string): Promise<string | null> {
   const admin = createAdminClient();
@@ -25,6 +30,7 @@ async function revalidateForProvider(providerId: string) {
 }
 
 export async function approvePaymentAction(paymentId: string): Promise<AdminSubscriptionActionState> {
+  if (subscriptionWritesFrozen()) return { success: false, error: "subscription_writes_frozen" };
   const authUser = await requireAdminUser();
   if (!isPlatformAdmin(authUser.roles)) return { success: false, error: "forbidden" };
 
@@ -48,6 +54,7 @@ export async function rejectPaymentAction(
   paymentId: string,
   adminNote?: string,
 ): Promise<AdminSubscriptionActionState> {
+  if (subscriptionWritesFrozen()) return { success: false, error: "subscription_writes_frozen" };
   const authUser = await requireAdminUser();
   if (!isPlatformAdmin(authUser.roles)) return { success: false, error: "forbidden" };
 
@@ -76,6 +83,7 @@ export async function extendSubscriptionAction(
   providerId: string,
   days: number,
 ): Promise<AdminSubscriptionActionState> {
+  if (subscriptionWritesFrozen()) return { success: false, error: "subscription_writes_frozen" };
   const authUser = await requireAdminUser();
   if (!isPlatformAdmin(authUser.roles)) return { success: false, error: "forbidden" };
 
@@ -101,6 +109,7 @@ export async function extendSubscriptionAction(
 export async function cancelSubscriptionAdminAction(
   providerId: string,
 ): Promise<AdminSubscriptionActionState> {
+  if (subscriptionWritesFrozen()) return { success: false, error: "subscription_writes_frozen" };
   const authUser = await requireAdminUser();
   if (!isPlatformAdmin(authUser.roles)) return { success: false, error: "forbidden" };
 
@@ -125,6 +134,7 @@ export async function changePlanAdminAction(
   providerId: string,
   planSlug: PlanSlug,
 ): Promise<AdminSubscriptionActionState> {
+  if (subscriptionWritesFrozen()) return { success: false, error: "subscription_writes_frozen" };
   const authUser = await requireAdminUser();
   if (!isPlatformAdmin(authUser.roles)) return { success: false, error: "forbidden" };
 

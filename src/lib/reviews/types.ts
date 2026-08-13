@@ -6,12 +6,24 @@ export type ReviewSort =
   | "lowest"
   | "helpful"
   | "verified"
-  | "photos";
+  | "photos"
+  | "recommended"
+  | "language";
 
 export type ReviewImage = {
   id: string;
   url: string;
   path: string;
+  mediaKind?: string;
+};
+
+export type ReviewDimensionScores = {
+  overall?: number;
+  communication?: number;
+  quality?: number;
+  punctuality?: number;
+  professionalism?: number;
+  value?: number;
 };
 
 export type PublicReview = {
@@ -33,6 +45,10 @@ export type PublicReview = {
   customerDisplayName: string;
   images: ReviewImage[];
   viewerHasVotedHelpful: boolean;
+  language?: string | null;
+  aiSummary?: string | null;
+  sentiment?: string | null;
+  dimensions?: ReviewDimensionScores;
 };
 
 export type ProviderReviewStats = {
@@ -41,6 +57,10 @@ export type ProviderReviewStats = {
   trustScore: number;
   distribution: import("@/lib/reviews/trust-score").RatingDistribution;
   photoCount: number;
+  recommendationRate: number | null;
+  qualityLabel: string | null;
+  aiSummary: string | null;
+  responseRate: number | null;
 };
 
 export const REVIEW_PAGE_SIZE = 8;

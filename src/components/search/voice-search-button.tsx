@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Loader2, Mic, RotateCcw, Send, Square, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { VoiceWaveform } from "@/components/search/voice-waveform";
-import { VoiceRecorder, VoiceRecorderError, MAX_RECORDING_MS } from "@/lib/voice/recorder";
+import { VoiceRecorder, VoiceRecorderError, MAX_RECORDING_MS } from "@/domains/speech/client";
 import { transcribeVoiceQueryAction } from "@/actions/voice.actions";
 import { cn } from "@/lib/utils";
 

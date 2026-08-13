@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Dalily — Find trusted local experts in Syria",
-    "description": "AI platform that helps you describe a problem and find the right trusted local expert."
+    "title": "Dalily — From problem to trusted local help",
+    "description": "Describe what you need, compare offers from matched businesses, unlock contact when you choose, then chat — closed beta in Syria."
   },
   "common": {
     "brand": "Dalily",
@@ -19,10 +19,488 @@
       "selectRequired": "Please make a selection"
     }
   },
+  "notificationCenter": {
+    "title": "Notification center",
+    "bellAria": "Open notifications",
+    "close": "Close",
+    "unread": "{count} unread",
+    "empty": "You're all caught up.",
+    "search": "Search notifications…",
+    "markAllRead": "Read all",
+    "seedDemo": "Add sample",
+    "loading": "Loading…",
+    "grouped": "{count} updates · {title}",
+    "tabs": {
+      "inbox": "Inbox",
+      "digest": "AI digest",
+      "prefs": "Preferences"
+    },
+    "digestHint": "Summaries only include notifications you can already see.",
+    "digestEmpty": "No digests yet.",
+    "digestError": "Could not generate digest",
+    "digestReady": "Digest ready",
+    "digestKinds": {
+      "morning": "Morning",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "unread": "Unread"
+    },
+    "prefs": {
+      "channels": "Delivery channels",
+      "inApp": "In-app",
+      "push": "Push",
+      "email": "Email",
+      "categories": "Categories",
+      "chat": "Chat",
+      "bookings": "Bookings",
+      "emergency": "Emergency",
+      "projects": "Projects",
+      "marketplace": "Marketplace",
+      "payments": "Payments",
+      "voice": "Voice messages",
+      "quiet": "Quiet hours",
+      "quietEnabled": "Enable quiet hours"
+    },
+    "prefsSaved": "Preferences saved",
+    "prefsError": "Could not save preferences"
+  },
+  "monetization": {
+    "dashboard": {
+      "badge": "Business plan",
+      "title": "Subscription & leads",
+      "subtitle": "One flat monthly plan — unlimited leads. Customers never pay unlock fees.",
+      "currentPlan": "Current plan",
+      "planFree": "Unpaid — not visible",
+      "planBusiness": "Business",
+      "premiumBadge": "Premium badge",
+      "includedUnlocks": "Included leads",
+      "unlocksRemaining": "{remaining} of {total} left",
+      "unlocksUnlimited": "Unlimited",
+      "payPerLead": "Flat monthly subscription",
+      "usedThisMonth": "{count} used this month",
+      "monthSpend": "Unlock spend this month",
+      "unlockedTotal": "Total unlocked leads",
+      "upgradeTitle": "Activate Business",
+      "upgradeBody": "{price} USD/month — unlimited leads. Visibility requires a current paid period.",
+      "benefitBadge": "Premium badge",
+      "benefitSearch": "Search & match visibility",
+      "benefitAnalytics": "Business analytics",
+      "benefitMarketing": "Marketing promotions",
+      "benefitAi": "AI business insights",
+      "upgradeCta": "Start payment — {price} USD/mo",
+      "upgradeSuccess": "Business plan activated",
+      "upgradeError": "Could not upgrade",
+      "upgradePaymentStarted": "Payment created — transfer and upload your receipt",
+      "upgradePaymentTitle": "Pay for Business",
+      "upgradePaymentSubtitle": "Complete the transfer, then upload your receipt. Your plan activates after verification.",
+      "businessActiveHint": "Your plan includes unlimited leads each month at {price} USD. Extra pay-per-lead fees no longer apply.",
+      "viewUnlocks": "View unlock leads",
+      "viewHistory": "Payment history",
+      "viewSubscription": "Subscription status"
+    },
+    "admin": {
+      "title": "Provider subscription settings",
+      "subtitle": "Configure the flat Business plan price and lead allowance (-1 = unlimited).",
+      "businessPrice": "Business price (USD/mo)",
+      "includedUnlocks": "Included leads / month (-1 = unlimited)",
+      "minLead": "Min lead price (USD, legacy)",
+      "maxLead": "Max lead price (USD, legacy)",
+      "baseLead": "Base lead price (USD, legacy)",
+      "emergencyMul": "Emergency multiplier",
+      "urgencyMul": "Urgency multiplier",
+      "multiMul": "Multi-service multiplier",
+      "complexityMul": "Complexity multiplier",
+      "distanceMul": "Distance multiplier / km",
+      "demandMul": "Demand multiplier",
+      "save": "Save settings",
+      "saved": "Settings saved",
+      "saveError": "Could not save",
+      "markPaidTitle": "Override: mark provider paid",
+      "markPaidSubtitle": "Manual comp / goodwill / refund extension — prefer reviewing receipt payments under Admin → Payments.",
+      "providerId": "Provider ID",
+      "months": "Months to add",
+      "markPaidCta": "Activate / extend",
+      "markPaidSuccess": "Subscription activated",
+      "markPaidError": "Could not activate subscription",
+      "overrideSection": "Manual override",
+      "reviewPaymentsHint": "Providers upload receipts on /business/subscription. Review them under Admin → Payments (purpose: Business plan)."
+    }
+  },
+  "assistant": {
+    "customer": {
+      "badge": "Dalily Assistant",
+      "title": "Your job guide",
+      "nextAction": "Next",
+      "missing": "Still missing",
+      "offerCompare": "Offer comparison",
+      "verified": "Verified",
+      "appointment": "Appointment briefing",
+      "afterJob": "After the job",
+      "askReview": "A short review helps other customers."
+    },
+    "provider": {
+      "badge": "Dalily Assistant",
+      "title": "Your day coach",
+      "today": "Today’s schedule",
+      "noToday": "No jobs scheduled today.",
+      "suggestedJobs": "Suggested next jobs",
+      "prep": "Preparation",
+      "travel": "Travel tips",
+      "customerSummary": "Customer summary",
+      "chatSummary": "Conversation summary",
+      "missed": "{count} missed opportunities recently"
+    },
+    "suggestions": {
+      "title": "Suggestions",
+      "accept": "Do it",
+      "ignore": "Later",
+      "reject": "Not useful"
+    }
+  },
+  "predictive": {
+    "wait": {
+      "badge": "Expected wait",
+      "confidence": "Confidence {pct}%"
+    },
+    "notifications": {
+      "title": "Marketplace tips"
+    }
+  },
+  "dualMarketplace": {
+    "trustBadge": "Two ways to get help",
+    "heroTitle": "What do you need?",
+    "heroSubtitle": "Publish a request for offers, or find a provider and contact them directly.",
+    "intentLabel": "Describe your need",
+    "intentPlaceholder": "e.g. Broken light switch, or full kitchen renovation…",
+    "aiSuggests": "AI recommendation",
+    "canIgnore": "You can ignore this and choose either path.",
+    "recommended": "Recommended",
+    "publish": {
+      "title": "Publish request",
+      "body": "Receive multiple offers from providers.",
+      "cta": "Publish"
+    },
+    "find": {
+      "title": "Find provider",
+      "body": "Browse providers and contact them directly.",
+      "cta": "Browse"
+    },
+    "switch": {
+      "badge": "Try another way",
+      "toFindTitle": "No suitable offers yet?",
+      "toFindBody": "Contact providers directly from search.",
+      "toFindCta": "Find providers",
+      "toPublishTitle": "No providers nearby?",
+      "toPublishBody": "Publish your request so more providers can respond.",
+      "toPublishCta": "Publish request"
+    },
+    "opportunity": {
+      "budget": "Budget {amount}",
+      "photos": "{count} photo(s)"
+    }
+  },
+  "projects": {
+    "dashboard": {
+      "badge": "Multi-service project",
+      "back": "Back to orders",
+      "progress": "{pct}% complete",
+      "completion": "Overall progress",
+      "estimate": "Estimate {min}–{max} days",
+      "packages": "Work packages",
+      "appointments": "Upcoming appointments",
+      "timeline": "Project timeline",
+      "documents": "Documents & photos",
+      "documentsEmpty": "No documents uploaded yet.",
+      "messages": "Communication",
+      "messagesHint": "Project-wide and package chats stay separated once a provider is assigned.",
+      "openFull": "Open project dashboard",
+      "openPackage": "Package waiting room",
+      "markDone": "Mark done",
+      "reorderSuccess": "Execution order updated",
+      "reorderError": "Could not reorder packages",
+      "statusError": "Could not update package",
+      "packageCompleted": "Package marked completed",
+      "status": {
+        "detected": "Detected",
+        "planning": "Planning",
+        "offers": "Collecting offers",
+        "booked": "Booked",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "packageStatus": {
+        "planned": "Planned",
+        "matching": "Matching",
+        "offers": "Offers",
+        "booked": "Booked",
+        "blocked": "Blocked by dependency",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      }
+    },
+    "workspace": {
+      "badge": "Collaboration workspace",
+      "title": "Shared project workspace",
+      "subtitle": "Tasks, checklists, approvals and activity in one place.",
+      "loading": "Loading workspace…",
+      "loadError": "Could not load workspace",
+      "tabs": {
+        "overview": "Overview",
+        "tasks": "Tasks",
+        "checklists": "Checklists",
+        "approvals": "Approvals",
+        "activity": "Activity",
+        "ai": "AI assistant"
+      },
+      "progress": {
+        "overall": "Workspace progress",
+        "packages": "Packages {done}/{total}",
+        "tasksOpen": "Open tasks: {count}",
+        "overdue": "Overdue tasks: {count}",
+        "blocked": "Blocked tasks: {count}",
+        "approvals": "Pending approvals: {count}",
+        "delayedPackages": "Delayed packages: {count}"
+      },
+      "taskPlaceholder": "New shared task…",
+      "addTask": "Add task",
+      "taskCreated": "Task created",
+      "taskError": "Could not update task",
+      "tasksEmpty": "No shared tasks yet.",
+      "due": "Due {date}",
+      "taskStatus": {
+        "todo": "To do",
+        "in_progress": "In progress",
+        "blocked": "Blocked",
+        "completed": "Completed"
+      },
+      "checklistCreated": "Checklist added",
+      "checklistError": "Could not update checklist",
+      "checklistsEmpty": "No checklists yet — pick a template above.",
+      "completed": "Completed",
+      "approvalPlaceholder": "Approval title (e.g. Approve quotation)…",
+      "requestApproval": "Request approval",
+      "approvalRequested": "Approval requested",
+      "approvalAccepted": "Approved",
+      "approvalRejected": "Rejected",
+      "approvalError": "Could not update approval",
+      "approvalsEmpty": "No approval requests yet.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approvalKind": {
+        "quotation": "Quotation",
+        "package_completed": "Package completed",
+        "additional_work": "Additional work",
+        "final_completion": "Final completion",
+        "other": "Other"
+      },
+      "approvalStatus": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+      },
+      "activityEmpty": "No workspace activity yet.",
+      "aiDisclaimer": "AI suggests only — it never changes project data automatically.",
+      "aiGenerate": "Summarize project",
+      "aiError": "Could not generate AI summary",
+      "aiNextSteps": "Suggested next steps",
+      "aiRisks": "Risks / blocked work",
+      "aiMissingDocs": "Possibly missing documents",
+      "aiAccept": "Mark useful",
+      "aiAccepted": "Feedback saved"
+    }
+  },
+  "recurring": {
+    "dashboard": {
+      "badge": "Recurring services",
+      "title": "Maintenance plans",
+      "subtitle": "Subscribe once — visits schedule themselves.",
+      "metrics": "Retention ~{retention}% · Completion ~{completion}%",
+      "createTitle": "Create a plan",
+      "titlePlaceholder": "e.g. Garden maintenance",
+      "createCta": "Start plan",
+      "created": "Plan created",
+      "error": "Something went wrong",
+      "aiTitle": "AI recommendations",
+      "accept": "Accept",
+      "reject": "Not now",
+      "accepted": "Plan created from recommendation",
+      "rejected": "Recommendation dismissed",
+      "active": "Active plans",
+      "paused": "Paused plans",
+      "upcoming": "Upcoming visits",
+      "completed": "Completed visits",
+      "renewals": "Upcoming renewals",
+      "history": "History",
+      "pause": "Pause",
+      "resume": "Resume",
+      "cancel": "Cancel",
+      "renew": "Renew",
+      "skip": "Skip visit",
+      "skipped": "Visit skipped",
+      "emptyActive": "No active plans yet.",
+      "emptyPaused": "No paused plans.",
+      "emptyUpcoming": "No upcoming visits.",
+      "emptyCompleted": "No completed visits yet.",
+      "emptyRenewals": "No renewals due.",
+      "emptyHistory": "No cancelled plans.",
+      "interval": {
+        "weekly": "Weekly",
+        "biweekly": "Every 2 weeks",
+        "monthly": "Monthly",
+        "quarterly": "Every 3 months",
+        "semiannual": "Every 6 months",
+        "yearly": "Yearly",
+        "custom": "Custom"
+      }
+    },
+    "reminders": {
+      "upcoming_visit": {
+        "title": "Upcoming maintenance visit",
+        "body": "You have a recurring visit within 24 hours."
+      },
+      "plan_renewal": {
+        "title": "Plan renewal soon",
+        "body": "Your maintenance plan is due for renewal."
+      },
+      "visit_skipped": {
+        "title": "Visit skipped",
+        "body": "A recurring visit was skipped."
+      },
+      "plan_paused": {
+        "title": "Plan paused",
+        "body": "A maintenance plan was paused."
+      },
+      "plan_cancelled": {
+        "title": "Plan cancelled",
+        "body": "A maintenance plan was cancelled."
+      },
+      "maintenance_due": {
+        "title": "Maintenance due",
+        "body": "A recurring visit is overdue — schedule soon."
+      }
+    }
+  },
+  "automation": {
+    "suggestions": {
+      "title": "AI automations",
+      "mode": "Mode: {mode}",
+      "why": "Why"
+    },
+    "feedback": {
+      "accept": "Accept",
+      "reject": "Reject"
+    },
+    "providerSettings": {
+      "title": "AI automation",
+      "subtitle": "Optional workflows — you stay in control. Payments are never automated.",
+      "autoAccept": "Auto-accept high-confidence jobs",
+      "autoAcceptHint": "Only when confidence is very high and you opt in.",
+      "autoRejectArea": "Auto-reject outside service area",
+      "autoRejectAreaHint": "Decline jobs clearly outside your coverage.",
+      "autoRejectHours": "Flag jobs outside working hours",
+      "autoRejectHoursHint": "Suggest declining after-hours requests.",
+      "routeOpt": "Suggest route optimization",
+      "routeOptHint": "When you have multiple stops today.",
+      "scheduleGaps": "Suggest filling schedule gaps",
+      "scheduleGapsHint": "Recommend nearby work when you have free capacity.",
+      "safetyNote": "Never automated: payments, legal confirmations, account deletion, identity checks, or suspensions.",
+      "save": "Save automation settings",
+      "saving": "Saving…"
+    }
+  },
+  "paymentReceiptUpload": {
+    "title": "Attach a transfer receipt",
+    "subtitle": "We cannot review your payment before the receipt is uploaded.",
+    "formats": "PNG, JPG, JPEG, PDF",
+    "maxSize": "Max {size}",
+    "dropHint": "Drag a file here or click to choose",
+    "fromGallery": "Gallery",
+    "fromCamera": "Camera",
+    "change": "Change image",
+    "remove": "Remove image",
+    "previewAlt": "Transfer receipt preview",
+    "pdfSelected": "PDF ready to upload",
+    "imageLabel": "Image",
+    "selectedSuccess": "Image selected successfully",
+    "errors": {
+      "file_required": "Please choose a receipt file.",
+      "file_too_large": "File must be 10 MB or smaller.",
+      "invalid_file_type": "Allowed formats: PNG, JPG, JPEG, and PDF only.",
+      "upload_failed": "Receipt upload failed. Please try again.",
+      "save_failed": "Could not save the receipt. Please try again.",
+      "prepare_failed": "Could not start the upload. Please try again.",
+      "duplicate_receipt": "A receipt was already uploaded for this payment.",
+      "payment_not_submittable": "This payment can no longer accept a receipt.",
+      "invalid_payment": "Invalid payment.",
+      "use_direct_upload": "Please upload the receipt using the upload button.",
+      "receipt_failed": "Receipt upload failed. Please try again.",
+      "generic": "Could not complete the upload. Please try again."
+    }
+  },
+  "paymentExperience": {
+    "brand": "Dalily Pay",
+    "stepLabel": "Step {n}",
+    "unlockTitle": "Pay contact unlock fee",
+    "subscriptionTitle": "Complete payment",
+    "steps": {
+      "review": "Review payment details",
+      "upload": "Attach your transfer receipt",
+      "verify": "We’ll review payment, then open contact",
+      "verifySubscription": "We’ll review payment, then activate your plan"
+    },
+    "transferCta": "Transfer done — continue to upload",
+    "transferHint": "Transfer the amount using the details above, then upload your receipt photo.",
+    "submit": "Submit for review",
+    "uploading": "Submitting…",
+    "cancel": "Cancel",
+    "back": "Back",
+    "errorTitle": "Something went wrong while uploading the receipt.",
+    "errorFallback": "Please try again.",
+    "successTitle": "Receipt submitted successfully.",
+    "successBody": "Your payment will be reviewed shortly.",
+    "successNotify": "We’ll notify you as soon as payment is approved.",
+    "progress": "Upload progress",
+    "startPayment": "Start payment",
+    "details": {
+      "ariaLabel": "Payment details",
+      "amount": "Amount",
+      "reference": "Reference",
+      "receiver": "Recipient name",
+      "account": "Account",
+      "copy": "Copy",
+      "copyAmount": "Copy amount",
+      "copied": "Copied",
+      "referenceHint": "Add this number in the transfer note."
+    },
+    "shamcash": {
+      "checkingStatus": "Checking your payment status…",
+      "title": "Verify with Cham Cash",
+      "body": "Send the amount to the Cham Cash account above, then paste the transaction ID from your Cham Cash app below to activate instantly.",
+      "inputLabel": "Cham Cash transaction ID",
+      "inputPlaceholder": "e.g. 123456789",
+      "verifyCta": "Verify and activate",
+      "verifying": "Verifying…",
+      "fallbackToReceipt": "Or upload a receipt for manual review instead",
+      "errors": {
+        "transaction_id_required": "Please enter your Cham Cash transaction ID.",
+        "verification_unavailable": "We couldn't verify this automatically. Please use the receipt upload option instead.",
+        "invalid_payment": "This payment can't be verified this way.",
+        "payment_not_submittable": "This payment can no longer be verified.",
+        "forbidden": "You don't have access to this payment.",
+        "login_required": "Please sign in and try again.",
+        "feature_disabled": "This feature is not available right now."
+      }
+    }
+  },
   "nav": {
-    "search": "Search",
+    "search": "New request",
+    "find": "Find a business",
     "forBusiness": "For Business",
     "dashboard": "Dashboard",
+    "orders": "My Jobs",
     "admin": "Admin",
     "login": "Log in",
     "register": "Sign up",
@@ -39,16 +517,22 @@
       "home": "Home",
       "aiAssistant": "AI Assistant",
       "messages": "Messages",
-      "search": "Search",
+      "search": "New request",
+      "orders": "My Orders",
       "favorites": "Favorites",
       "account": "Account"
     },
     "business": {
       "dashboard": "Home",
       "requests": "Requests",
+      "orders": "My Jobs",
       "messages": "Messages",
       "growth": "Growth",
-      "account": "Account"
+      "account": "My Account",
+      "newJobs": "New Requests",
+      "opportunities": "New Requests",
+      "unlock": "Unlock",
+      "payments": "Payments"
     },
     "admin": {
       "controlCenter": "Home",
@@ -56,7 +540,46 @@
       "payments": "Payments",
       "messages": "Messages",
       "marketplace": "Market",
-      "admin": "Admin"
+      "admin": "Admin",
+      "issues": "Reports"
+    }
+  },
+  "orders": {
+    "customerEyebrow": "My orders",
+    "customerTitle": "My Orders",
+    "customerSubtitle": "Track every request from pending to completed — live.",
+    "providerEyebrow": "My jobs",
+    "providerTitle": "My Jobs",
+    "providerSubtitle": "Track your jobs by status — from waiting for confirmation to completed.",
+    "searchPlaceholder": "Search by title or name…",
+    "listLabel": "Orders by status",
+    "emptyTitle": "Nothing in this tab",
+    "emptyBody": "When something moves here, it will appear instantly.",
+    "customerTabs": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "in_progress": "In Progress",
+      "waiting": "Waiting",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "providerTabs": {
+      "waiting": "Awaiting confirmation",
+      "active": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "status": {
+      "pending": "Pending",
+      "waiting": "Waiting",
+      "accepted": "Accepted",
+      "quoted": "Quoted",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "disputed": "Disputed",
+      "reviewed": "Reviewed"
     }
   },
   "mobilePages": {
@@ -93,7 +616,23 @@
         "requestSettings": "Request settings",
         "requestSettingsDesc": "Manage how customers contact you",
         "myBookings": "My bookings",
-        "myBookingsDesc": "Appointments you requested with providers"
+        "myBookingsDesc": "Appointments you requested with providers",
+        "quality": "Quality & complaints",
+        "qualityDesc": "Track complaints and resolutions",
+        "pricing": "Fair market estimate",
+        "pricingDesc": "See a transparent price range for typical jobs",
+        "forecast": "Demand outlook",
+        "forecastDesc": "High demand days and booking tips",
+        "scheduling": "Availability windows",
+        "schedulingDesc": "Appointment windows and arrival estimates",
+        "wallet": "Wallet",
+        "walletDesc": "Balances, refunds, and history",
+        "assistant": "AI Assistant",
+        "assistantDesc": "Suggestions to improve your request",
+        "editProfile": "Edit profile",
+        "editProfileDesc": "Update your name and email",
+        "changePassword": "Change password",
+        "changePasswordDesc": "Update your account password"
       }
     },
     "myBusiness": {
@@ -109,7 +648,17 @@
         "hours": "Working hours",
         "hoursDesc": "When customers can reach you",
         "verification": "Verification",
-        "verificationDesc": "Build trust with a verified badge"
+        "verificationDesc": "Build trust with a verified badge",
+        "quality": "Quality insights",
+        "qualityDesc": "Complaints and improvement tips",
+        "pricing": "Pricing intelligence",
+        "pricingDesc": "Suggested ranges — you set the final price",
+        "forecast": "Demand forecast",
+        "forecastDesc": "Plan capacity and busy periods",
+        "scheduling": "AI scheduling",
+        "schedulingDesc": "Optimize routes, gaps and opportunities",
+        "assistant": "AI business assistant",
+        "assistantDesc": "Daily briefing, goals and growth tips"
       }
     },
     "businessMessages": {
@@ -118,19 +667,42 @@
       "comingSoon": "Chat is coming soon — you’ll get a badge when something needs attention."
     },
     "businessAccount": {
-      "title": "Account",
+      "title": "My Account",
+      "subtitle": "Manage your business profile and settings in one place.",
       "signedInAs": "Signed in as {name}",
       "language": "Language",
       "theme": "Appearance",
       "notifications": "Notifications",
-      "notificationsHint": "Managed in Growth",
+      "notificationsHint": "Badges update automatically",
+      "sections": {
+        "business": "Business settings",
+        "more": "More"
+      },
       "links": {
-        "profile": "Personal profile",
-        "profileDesc": "Your business contact details",
-        "subscription": "Subscription",
-        "subscriptionDesc": "Plan and upgrade options",
+        "profile": "Business profile",
+        "profileDesc": "Name, contact, and business details",
+        "services": "Services",
+        "servicesDesc": "What you offer customers",
+        "availability": "Availability",
+        "availabilityDesc": "When you can take new jobs",
+        "verification": "Verification",
+        "verificationDesc": "Build trust with a verified badge",
+        "settings": "Settings",
+        "settingsDesc": "Inbox and vacation mode",
+        "media": "Media",
+        "mediaDesc": "Photos and portfolio",
+        "calendar": "Calendar",
+        "calendarDesc": "Schedule and working days",
+        "bookings": "Bookings",
+        "bookingsDesc": "Appointments with customers",
+        "analytics": "Analytics",
+        "analyticsDesc": "Performance and growth",
         "payments": "Payments",
-        "paymentsDesc": "Payment status and history"
+        "paymentsDesc": "Unlocks, payments, and history",
+        "editProfile": "Edit profile",
+        "editProfileDesc": "Update your name and email",
+        "changePassword": "Change password",
+        "changePasswordDesc": "Update your account password"
       }
     },
     "growth": {
@@ -138,7 +710,6 @@
       "subtitle": "Insights, health, and tips to grow your business.",
       "lockedTitle": "Premium statistics",
       "lockedSubtitle": "Upgrade to unlock deeper insights. Starter still gets your core Growth dashboard above.",
-      "upgradeCta": "View plans",
       "locked": {
         "competitors": {
           "title": "Competitor pulse",
@@ -170,7 +741,9 @@
         "searches": "Search analytics",
         "searchesDesc": "What people look for",
         "subscriptions": "Subscriptions",
-        "subscriptionsDesc": "Plans and billing overview"
+        "subscriptionsDesc": "Plans and billing overview",
+        "monetization": "Lead monetization",
+        "monetizationDesc": "Business plan, unlock prices, multipliers"
       }
     }
   },
@@ -268,7 +841,29 @@
     "categoriesTitle": "Browse services",
     "categorySearchLabel": "Search for {category}",
     "trustBadge": "Trusted local businesses",
+    "intentTrustBadge": "Only relevant businesses see your request",
+    "intentHeroTitle": "What do you need?",
+    "intentHeroSubtitle": "Describe your problem. Businesses send offers. You choose — and stay private until you unlock contact.",
     "aiPowered": "Smart search",
+    "pathChooser": {
+      "trustBadge": "Two clear ways to get help",
+      "heroTitle": "What do you need?",
+      "heroSubtitle": "Publish a request for offers, or browse trusted local businesses.",
+      "publish": {
+        "title": "Publish a request",
+        "body": "Describe the job once — matching businesses send offers. You stay private until you choose.",
+        "cta": "Start request"
+      },
+      "find": {
+        "title": "Find a business",
+        "body": "Browse by category near you — filter by city or name when you know what you want.",
+        "cta": "Browse businesses"
+      }
+    },
+    "floatingAi": {
+      "label": "Ask Dalily AI",
+      "ariaLabel": "Open Dalily AI chat to describe your problem"
+    },
     "howItWorks": {
       "title": "How Dalily works",
       "subtitle": "Three clear steps from problem to help",
@@ -291,6 +886,754 @@
     "featured": {
       "title": "Featured businesses",
       "subtitle": "Trusted local services across Syria"
+    },
+    "trustStats": {
+      "ariaLabel": "Marketplace trust signals",
+      "providers": "Verified providers",
+      "categories": "Service categories",
+      "closedBeta": "Access",
+      "closedBetaValue": "Closed beta"
+    }
+  },
+  "intentFlow": {
+    "pageTitle": "Tell us what you need",
+    "pageSubtitle": "Usually under a minute — then we notify matching businesses.",
+    "metaDescription": "Describe your problem, get offers from matched businesses, unlock contact when you choose, then chat.",
+    "targeted": {
+      "pageTitle": "Send a request to this business",
+      "pageSubtitle": "Describe the job — we notify only this business.",
+      "banner": "Requesting: {name}",
+      "bannerHint": "Other businesses will not be notified. Category is already set."
+    },
+    "hero": {
+      "placeholder": "What do you need?",
+      "cta": "Continue",
+      "hint": "Describe the problem in your words",
+      "overlayTitle": "✨ What do you need today?",
+      "overlaySubtitle": "Describe the problem in your words and I’ll find the right specialist."
+    },
+    "back": "Back",
+    "continue": "Continue",
+    "trust": {
+      "privacy": "Your phone number stays hidden until you choose a business.",
+      "relevantOnly": "Only relevant businesses receive your request.",
+      "addressLater": "Exact address is shared only after you choose and unlock contact.",
+      "youControl": "You stay in control of who receives your contact details.",
+      "verified": "Verified businesses are clearly identified."
+    },
+    "suggestions": {
+      "s1": "Leaking kitchen pipe",
+      "s2": "AC not cooling",
+      "s3": "Locked out of apartment",
+      "s4": "Need an electrician today",
+      "contextual": {
+        "general": {
+          "g1": "Need a technician today",
+          "g2": "Home repair issue",
+          "g3": "Home maintenance",
+          "g4": "Urgent repair"
+        },
+        "electrical": {
+          "e1": "Power outage",
+          "e2": "Install chandelier",
+          "e3": "Fix light switch",
+          "e4": "Replace outlet",
+          "e5": "Fix lighting"
+        },
+        "plumbing": {
+          "p1": "Water leak",
+          "p2": "Clogged sink",
+          "p3": "Fix faucet",
+          "p4": "Fix water heater",
+          "p5": "Unblock drain"
+        },
+        "painting": {
+          "a1": "Paint a room",
+          "a2": "Refresh walls",
+          "a3": "Fix wall cracks",
+          "a4": "Paint exterior"
+        },
+        "carpentry": {
+          "c1": "Fix door",
+          "c2": "Fix window",
+          "c3": "Install shelves",
+          "c4": "Fix wardrobe"
+        },
+        "hvac": {
+          "h1": "AC not cooling",
+          "h2": "Clean the AC",
+          "h3": "Refill refrigerant",
+          "h4": "Fix outdoor unit"
+        }
+      }
+    },
+    "clarify": {
+      "electrical": {
+        "scope": "Is the issue in one room or the whole home?",
+        "safety": "Any sparks or burning smell?"
+      },
+      "plumbing": {
+        "where": "Where is the leak or fault roughly?",
+        "ongoing": "Is water still leaking now?"
+      },
+      "hvac": {
+        "symptom": "Does the AC run but without cooling?",
+        "age": "How long has this been happening?"
+      },
+      "carpentry": {
+        "item": "What needs repair (door, cabinet, wood)?",
+        "urgency": "Does it stop you from securing the home?"
+      },
+      "painting": {
+        "indoor": "Indoor or outdoor painting?",
+        "size": "One room or more?"
+      },
+      "locksmith": {
+        "lockedOut": "Are you locked out right now?",
+        "break": "Is the lock broken or is the key lost?"
+      }
+    },
+    "smartQuestions": {
+      "common": {
+        "photo": "Can you add a photo of the issue?",
+        "area": "Which area or landmark is closest?"
+      },
+      "electrical": {
+        "outage": "Is this a power outage?",
+        "wholeHome": "Is it the entire apartment or one spot?",
+        "fuseChecked": "Have you already checked the fuse / breaker?"
+      },
+      "plumbing": {
+        "leak": "Is there an active leak?",
+        "where": "Pipe, toilet, kitchen, or bathroom?",
+        "stillRunning": "Is water still running or leaking now?"
+      },
+      "hvac": {
+        "symptom": "Does the AC run but without cooling?"
+      },
+      "locksmith": {
+        "lockedOut": "Are you locked out right now?",
+        "breakOrLost": "Is the lock broken or is the key lost?"
+      },
+      "painting": {
+        "indoorOutdoor": "Indoor or outdoor painting?",
+        "size": "About how large is the area (rooms or m²)?"
+      },
+      "carpentry": {
+        "item": "What needs repair (door, cabinet, wood)?"
+      }
+    },
+    "workflow": {
+      "emergency": "Emergency — prioritize available providers nearby.",
+      "guided": "A few details will help match the right business.",
+      "collectOffers": "Larger job — collecting multiple offers is recommended.",
+      "directContact": "Small repair — a direct provider match should work well."
+    },
+    "steps": {
+      "intent": {
+        "label": "Describe the problem",
+        "placeholder": "Write a short description of what you need…",
+        "continue": "Continue"
+      },
+      "voice": {
+        "record": "Record voice message",
+        "stop": "Stop",
+        "cancel": "Cancel",
+        "recording": "Recording…",
+        "transcribing": "Transcribing your message…",
+        "aiSummary": "Voice understanding",
+        "category": "Detected category",
+        "urgency": "Detected urgency",
+        "language": "Language",
+        "unknownCategory": "Not sure yet",
+        "confirm": "Looks right",
+        "editTranscript": "Edit transcript",
+        "saveEdit": "Save transcript",
+        "cancelEdit": "Cancel",
+        "confirmed": "Thanks — we’ll use this for matching.",
+        "clarifyMismatch": "Voice and other details may not match. Please confirm or edit.",
+        "errors": {
+          "permission_denied": "Microphone permission is required.",
+          "not_supported": "Voice recording is not supported in this browser.",
+          "unknown": "Could not start recording.",
+          "feature_disabled": "Voice input is not enabled.",
+          "no_audio": "No audio recorded.",
+          "file_too_large": "Audio is too large.",
+          "invalid_file_type": "Unsupported audio format.",
+          "transcription_failed": "We couldn’t transcribe this. You can type instead.",
+          "no_api_key": "Voice transcription is temporarily unavailable."
+        }
+      },
+      "confirm": {
+        "badge": "Smart suggestion",
+        "title": "I think you need a {category}.",
+        "subtitle": "Is that correct?",
+        "yes": "Yes, that’s right",
+        "no": "No, correct it"
+      },
+      "category": {
+        "title": "Confirm the category",
+        "subtitle": "We suggested a match — change it if needed.",
+        "suggested": "Suggested: {category}",
+        "change": "Category"
+      },
+      "clarify": {
+        "title": "Quick questions",
+        "subtitle": "Only the details still missing — you can skip.",
+        "placeholder": "Optional…",
+        "skip": "Skip",
+        "completeness": "Request completeness: {score}%"
+      },
+      "photos": {
+        "title": "Add photos (optional)",
+        "subtitle": "Photos help businesses send better offers.",
+        "add": "Add photos",
+        "skip": "Skip",
+        "count": "{count} photo(s) selected",
+        "analyzing": "Analyzing your photo…",
+        "aiSummary": "AI photo summary",
+        "confirm": "Looks right",
+        "correct": "Not quite",
+        "correctionPlaceholder": "What should we see instead?",
+        "saveCorrection": "Save correction",
+        "cancelCorrection": "Cancel",
+        "confirmed": "Thanks — we’ll use this for matching.",
+        "clarifyMismatch": "Your photo and description seem different. Please confirm or correct.",
+        "failed": "We couldn’t analyze this photo. You can continue anyway."
+      },
+      "location": {
+        "title": "Where do you need help?",
+        "subtitle": "City is enough for matching. Exact address stays private for now.",
+        "city": "City",
+        "areaOptional": "Area or landmark (optional)",
+        "areaPlaceholder": "e.g. near Mazzeh highway"
+      },
+      "urgency": {
+        "title": "Is this an emergency?",
+        "subtitle": "Urgent requests get higher marketplace priority.",
+        "emergency": "Emergency",
+        "normal": "Normal request"
+      },
+      "publish": {
+        "title": "Publish your request",
+        "subtitle": "Matching businesses can send offers. You choose later.",
+        "reviewTitle": "Review your request",
+        "reviewSubtitle": "Check the details before publishing — you can edit.",
+        "edit": "Edit",
+        "loginRequired": "Sign in to publish — your number stays private until you choose.",
+        "cta": "Publish request",
+        "fields": {
+          "category": "Category",
+          "problem": "Problem",
+          "location": "Location",
+          "urgency": "Priority",
+          "photos": "Photos"
+        }
+      }
+    },
+    "waiting": {
+      "title": "We’re notifying matching businesses",
+      "subtitle": "You’ll see offers here when providers respond.",
+      "loading": "Loading your request…",
+      "trustNotBroadcast": "Your request is not sent to everyone — only relevant businesses.",
+      "emptyTitle": "No offers yet",
+      "emptyBody": "Offers arrive when assigned businesses respond. Your request is saved.",
+      "matchedTitle": "{count} matching businesses notified",
+      "matchedBody": "They can send offers soon. You stay in control of who gets your contact details.",
+      "undersupplyTitle": "Looking for more matches",
+      "undersupplyBody": "We widened the search where needed. You’ll see offers when eligible businesses respond.",
+      "requestLabel": "Your request",
+      "emergencyBadge": "Marked as emergency",
+      "myRequests": "My requests",
+      "startNew": "New request",
+      "errorTitle": "Request not found",
+      "errorBody": "This waiting room is unavailable or you don’t have access."
+    },
+    "emergency": {
+      "badge": "Emergency dispatch",
+      "title": "Help is being dispatched now",
+      "subtitle": "We skipped the normal wait and notified the fastest available providers.",
+      "etaLabel": "Estimated arrival",
+      "etaUpdated": "Updated {time}",
+      "liveLocation": "Provider live location",
+      "locationUpdated": "Location at {time}",
+      "timelineTitle": "Live status",
+      "timelineEmpty": "Waiting for the first dispatch update…",
+      "notified": "{count} providers notified",
+      "status": {
+        "detected": "Emergency detected",
+        "dispatching": "Dispatching",
+        "awaiting_accept": "Awaiting provider",
+        "accepted": "Provider accepted",
+        "on_the_way": "On the way",
+        "arrived": "Arrived",
+        "in_progress": "Work in progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "stopped": "Dispatch closed"
+      }
+    },
+    "errors": {
+      "unknown": "Something went wrong. Try again.",
+      "feature_disabled": "This flow is not enabled.",
+      "login_required": "Please sign in to continue.",
+      "intent_too_short": "Please describe what you need in a bit more detail.",
+      "category_required": "Please confirm a category.",
+      "category_invalid": "That category is not available.",
+      "location_required": "Please choose a city.",
+      "location_invalid": "That city is not available.",
+      "urgency_required": "Please confirm urgency.",
+      "publish_failed": "Could not publish your request. Try again.",
+      "contact_info_blocked": "Don't share phone numbers or emails here. Contact details unlock after the unlock fee is paid.",
+      "provider_not_found": "That business is not available.",
+      "provider_unavailable": "This business is not accepting requests right now.",
+      "provider_category_mismatch": "This business category does not match your request.",
+      "already_matched": "Providers were already assigned to this request.",
+      "pool_insert_failed": "Could not create the assignment. Try again.",
+      "assignment_failed": "Could not assign this business. Try again."
+    }
+  },
+  "intakeChat": {
+    "title": "Describe your problem",
+    "metaDescription": "Chat with Dalily AI to clarify what you need, then continue to the request form.",
+    "eyebrow": "Dalily AI",
+    "subtitle": "Tell us what’s going on — we’ll ask a few short questions, then you continue the normal request.",
+    "welcome": "What do you need help with? Describe the problem in your own words — no account needed to chat.",
+    "placeholder": "e.g. Kitchen sink is leaking under the cabinet…",
+    "send": "Send",
+    "thinking": "Thinking…",
+    "inputHint": "You stay in control — nothing is submitted until you continue.",
+    "continueHint": "Ready when you are — continue to fill in category, photos, and location.",
+    "readyHint": "Looks like we have enough to continue.",
+    "continueCta": "Continue to request",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "rateLimited": "Too many messages — wait a moment and try again.",
+      "contentBlocked": "That message couldn’t be processed. Please rephrase your problem.",
+      "unavailable": "AI chat is temporarily unavailable. You can still start a request directly.",
+      "tooLong": "Message is too long — shorten it and try again.",
+      "tooMany": "This chat is long enough — continue to the request form.",
+      "needMore": "Add a bit more detail about the problem before continuing."
+    }
+  },
+  "businessSubscription": {
+    "eyebrow": "Subscription",
+    "title": "Your Business plan",
+    "subtitle": "One flat monthly fee keeps you visible to customers and matching — unlimited leads included.",
+    "statusLabel": "Visibility status",
+    "phase": {
+      "active": "Active",
+      "grace": "Grace period",
+      "hidden": "Hidden — payment overdue",
+      "unpaid": "Not paid — not visible"
+    },
+    "price": "{price} USD / month",
+    "unlimitedLeads": "Unlimited leads included — no per-lead fees.",
+    "periodEnd": "Current period ends: {date}",
+    "noPeriod": "No active paid period yet. Pay below and upload your receipt for admin review.",
+    "graceRemaining": "{days} day(s) left in the {graceDays}-day grace window before you are hidden.",
+    "approachingExpiry": "Your period ends in {days} day(s). Renew now to stay visible.",
+    "hiddenHint": "You are not shown in search, category browse, or new matching until your subscription is current again. Your account and history stay intact.",
+    "planLabel": "Business plan",
+    "paymentTitle": "Pay your subscription",
+    "paymentBody": "Transfer {price} USD using the instructions, then upload your receipt. An admin reviews it and activates your period.",
+    "payCta": "Start payment — {price} USD",
+    "renewCta": "Renew — {price} USD",
+    "resumeCheckout": "Resume checkout",
+    "paymentStarted": "Payment started — follow the transfer steps",
+    "paymentStartError": "Could not start payment. Try again.",
+    "activeTitle": "You're all set",
+    "activeBody": "Your Business plan is active. We'll remind you a few days before the period ends.",
+    "paymentsHub": "Payments hub",
+    "backHome": "Business home"
+  },
+  "findFlow": {
+    "title": "Browse businesses near you",
+    "metaDescription": "Browse trusted local businesses by category and city — contact stays hidden until you send a request and unlock.",
+    "subtitle": "Pick a category and city to see matching businesses. You can also search by name — no phone numbers or exact addresses.",
+    "placeholder": "Optional: business name…",
+    "submit": "Show results",
+    "emptyPrompt": "Pick a category or city to browse businesses nearby.",
+    "noResults": "No matching businesses. Try a different category or city.",
+    "filteringBy": "Showing: {category}",
+    "resultsLabel": "Results",
+    "resultsCount": "{count} results",
+    "distanceKm": "~{km} km",
+    "broadcastHint": "Not sure which business?",
+    "broadcastCta": "Post a marketplace request",
+    "sendRequestCta": "Send this business a request",
+    "filters": {
+      "category": "Category",
+      "city": "City",
+      "anyCategory": "Any category",
+      "anyCity": "Any city"
+    },
+    "errors": {
+      "searchFailed": "Search failed. Please try again."
+    }
+  },
+  "offerFlow": {
+    "customer": {
+      "title": "Offers",
+      "subtitle": "Compare up to 3, then choose one. Contact details stay private.",
+      "noContactYet": "Selecting an offer does not share your phone or open chat yet.",
+      "select": "Accept request",
+      "accept": "Accept request",
+      "decline": "Decline",
+      "viewProfile": "View profile",
+      "back": "Back",
+      "trustBarHint": "Contact details stay private until you accept and unlock completes.",
+      "viewGallery": "Gallery",
+      "viewReviews": "Reviews",
+      "completedJobs": "{count, plural, =0 {No jobs yet} one {# completed job} other {# completed jobs}}",
+      "compare": "Compare",
+      "removeCompare": "Remove from compare",
+      "business": "Business",
+      "verified": "Verified",
+      "selectedBadge": "Selected",
+      "comparing": "Comparing",
+      "rating": "{rating}★",
+      "selectedPendingUnlock": "Offer selected. Unlock and contact release come in the next step — nothing is shared yet."
+    },
+    "decision": {
+      "recommendedBadge": "Recommended provider",
+      "recommendedAria": "Recommended provider",
+      "trustScore": "Trust {score}%",
+      "sortLabel": "Sort",
+      "filtersLabel": "Filters",
+      "shortlist": "Shortlist",
+      "addShortlist": "Save to shortlist",
+      "removeShortlist": "Remove from shortlist",
+      "shortlistedBadge": "Shortlisted",
+      "details": "Insights",
+      "emptyTitle": "No offers yet",
+      "emptyBody": "When businesses send offers, you’ll compare them here.",
+      "noMatches": "No offers match these filters.",
+      "clearFilters": "Clear filters",
+      "assistantTitle": "Why this provider stands out",
+      "insightsTitle": "Offer insights",
+      "risksTitle": "Things to consider",
+      "sorts": {
+        "recommended": "Recommended",
+        "rating": "Highest rating",
+        "trust": "Best trust score",
+        "completed_jobs": "Most experienced",
+        "response_time": "Fastest response",
+        "price": "Lowest price",
+        "newest": "Newest",
+        "alphabetical": "Alphabetical"
+      },
+      "filters": {
+        "verified_only": "Verified only",
+        "available_now": "Available now",
+        "shortlisted": "Shortlisted"
+      },
+      "summaries": {
+        "satisfaction_and_speed": "High customer satisfaction and fast response time.",
+        "reliability_and_jobs": "Excellent reliability and many successful jobs.",
+        "verified_and_completion": "Verified business with a strong completion record.",
+        "fast_response": "Responds quickly to customers.",
+        "high_satisfaction": "Highly rated by customers.",
+        "strong_reliability": "Strong reliability signals.",
+        "highly_rated": "Highly rated by customers.",
+        "category_specialist": "Specialized in this category.",
+        "frequently_hired": "Frequently hired.",
+        "new_provider": "Newer provider on Dalily.",
+        "excellent_completion": "Excellent completion history.",
+        "similar_experience": "Experienced in similar jobs.",
+        "verified_business": "Verified business.",
+        "good_value": "Competitive offer value."
+      },
+      "insights": {
+        "fast_response": "Responds very quickly",
+        "highly_rated": "Highly rated by customers",
+        "category_specialist": "Specialized in this category",
+        "frequently_hired": "Frequently hired",
+        "new_provider": "New provider",
+        "excellent_completion": "Excellent completion history",
+        "similar_experience": "Experienced in similar jobs",
+        "verified_business": "Verified business",
+        "strong_reliability": "Strong reliability",
+        "good_value": "Good value"
+      },
+      "risks": {
+        "new_provider": "Newer on the platform — fewer completed jobs so far.",
+        "limited_history": "Limited work history on Dalily.",
+        "slow_response": "Typically slower to respond.",
+        "recent_cancellations": "Some recent cancellations on record.",
+        "incomplete_profile": "Profile is still incomplete.",
+        "temporarily_unavailable": "May be temporarily unavailable."
+      },
+      "badges": {
+        "top_rated": "Top Rated",
+        "fast_responder": "Fast Responder",
+        "highly_recommended": "Highly Recommended",
+        "verified": "Verified",
+        "reliable": "Reliable",
+        "experienced": "Experienced",
+        "popular": "Popular",
+        "community_favorite": "Community Favorite"
+      },
+      "assistant": {
+        "excellent_reviews": "Excellent reviews",
+        "fast_communication": "Fast communication",
+        "verified_business": "Verified business",
+        "strong_reliability": "Strong reliability",
+        "category_fit": "Strong category fit",
+        "strong_demand": "Frequently chosen by customers",
+        "emerging_talent": "Promising newer provider",
+        "strong_completion": "Strong job completion",
+        "relevant_experience": "Relevant experience",
+        "good_value": "Competitive value"
+      },
+      "compare": {
+        "title": "Provider comparison",
+        "metric": "Metric",
+        "rating": "Rating",
+        "trust": "Trust score",
+        "jobs": "Completed jobs",
+        "response": "Response (hours)",
+        "acceptance": "Acceptance %",
+        "price": "Price",
+        "verified": "Verified",
+        "portfolio": "Portfolio",
+        "yes": "Yes",
+        "no": "No"
+      }
+    },
+    "provider": {
+      "eyebrow": "New requests",
+      "listTitle": "New Requests",
+      "listSubtitle": "Jobs matched to your business. Send an offer directly — no accept step opens chat yet.",
+      "empty": "No new requests right now. Matching jobs will appear here.",
+      "noProvider": "Create your business profile first.",
+      "statusOffered": "Offer sent",
+      "statusOpen": "Awaiting your offer",
+      "emergency": "Emergency",
+      "back": "All opportunities",
+      "area": "Area note",
+      "noAcceptRequired": "No accept step — submit an offer directly.",
+      "composeTitle": "Send offer",
+      "useTemplate": "Start from template",
+      "noTemplate": "Blank offer",
+      "etaPlaceholder": "e.g. today 4–6pm",
+      "submit": "Send offer",
+      "success": "Offer sent to the customer.",
+      "offerSentTitle": "Your offer was sent successfully.",
+      "offerSentBody": "Waiting for the customer’s decision.",
+      "offerSent": "Your offer was sent successfully. Waiting for the customer’s decision.",
+      "saveTemplate": "Save current fields as template",
+      "templateLabel": "Template name",
+      "saveTemplateCta": "Save template",
+      "templateSaved": "Template saved.",
+      "clarifications": "Customer questions",
+      "prep": {
+        "badge": "AI job prep",
+        "title": "Preparation summary",
+        "duration": "Likely duration",
+        "complexity": "Estimated complexity",
+        "priceRange": "Market range (estimate)",
+        "tools": "Likely tools",
+        "materials": "Likely materials",
+        "relatedTrades": "Other trades may be needed",
+        "detectedObjects": "Detected in photo",
+        "likelyDamage": "Likely damage",
+        "estimatedRisk": "Estimated risk",
+        "imageConfidence": "Image confidence",
+        "visionMismatch": "Photo and description may not match — confirm with the customer."
+      },
+      "voice": {
+        "badge": "Customer voice",
+        "title": "Voice message",
+        "transcript": "Transcript",
+        "original": "Original wording",
+        "aiSummary": "AI summary",
+        "category": "Detected category",
+        "urgency": "Estimated urgency",
+        "language": "Language / dialect",
+        "noAudio": "Audio file not available — transcript only.",
+        "audioUnsupported": "Your browser cannot play this audio."
+      },
+      "emergencyActions": {
+        "badge": "Emergency",
+        "title": "Quick response",
+        "subtitle": "One tap — customer is waiting.",
+        "accept": "Accept",
+        "decline": "Decline",
+        "busy": "Busy",
+        "onMyWay": "On my way",
+        "navigate": "Navigate",
+        "shareLocation": "Share location",
+        "stopShare": "Stop sharing",
+        "noLocation": "No address available yet",
+        "geoUnsupported": "Location not supported on this device",
+        "locationShared": "Live location shared",
+        "locationError": "Could not share location",
+        "error": "Could not update emergency status",
+        "success": {
+          "accepted": "Emergency accepted",
+          "declined": "Marked declined",
+          "busy": "Marked busy",
+          "on_the_way": "Customer notified — on the way",
+          "arrived": "Marked arrived",
+          "started": "Work started",
+          "completed": "Marked completed",
+          "notified": "Notified"
+        }
+      }
+    },
+    "fields": {
+      "price": "Price",
+      "currency": "Currency",
+      "priceModel": "Price type",
+      "eta": "ETA",
+      "inclusions": "What's included",
+      "message": "Short pitch"
+    },
+    "priceModel": {
+      "fixed": "Fixed",
+      "hourly": "Hourly",
+      "estimate": "Estimate"
+    },
+    "quality": {
+      "nudge": "Tip: add ETA and a short pitch so customers can compare fairly."
+    },
+    "qa": {
+      "title": "Quick questions",
+      "hint": "Limited Q&A only — not full chat. No phone numbers.",
+      "placeholder": "Ask or answer briefly…",
+      "send": "Send",
+      "customer": "You",
+      "provider": "Business",
+      "errors": {
+        "failed": "Could not send.",
+        "feature_disabled": "Offers are not enabled.",
+        "body_invalid": "Message must be 1–500 characters.",
+        "offer_closed": "This offer is closed.",
+        "clarification_limit": "Question limit reached.",
+        "forbidden": "Not allowed.",
+        "clarification_failed": "Could not send.",
+        "contact_info_blocked": "Don't share phone numbers or emails here. Contact details unlock after the unlock fee is paid."
+      }
+    },
+    "errors": {
+      "failed": "Something went wrong.",
+      "feature_disabled": "Offers are not enabled.",
+      "login_required": "Please sign in.",
+      "forbidden": "Not allowed.",
+      "assignment_required": "This opportunity is not assigned to you.",
+      "price_invalid": "Enter a valid price.",
+      "not_found": "Request not found.",
+      "not_marketplace_native": "This request uses the legacy path.",
+      "legacy_assigned": "This request is already assigned.",
+      "already_selected": "A selection already exists.",
+      "offer_exists": "You already have an active offer.",
+      "offer_failed": "Could not create offer.",
+      "offer_not_found": "Offer not found.",
+      "selection_failed": "Could not select offer.",
+      "decline_failed": "Could not decline offer.",
+      "label_required": "Template name required.",
+      "template_failed": "Could not save template.",
+      "use_offers": "Use the offers flow for this request.",
+      "rate_limited": "Too many actions — please wait a moment.",
+      "shortlist_full": "Shortlist is full for this request.",
+      "save_failed": "Could not update shortlist.",
+      "validation_error": "Invalid request.",
+      "contact_info_blocked": "Don't share phone numbers or emails in the offer. Contact details unlock after the unlock fee is paid."
+    }
+  },
+  "unlockFlow": {
+    "customer": {
+      "pendingTitle": "Unlock in progress",
+      "pendingBody": "The selected business must complete unlock before contact details are shared.",
+      "connectingTitle": "Connecting you",
+      "connectingBody": "Contact details are opening — this usually takes a moment. You never pay a fee.",
+      "sla": "Decision deadline: {deadline}",
+      "noContactYet": "Phone, WhatsApp, address, and chat stay hidden until unlock succeeds.",
+      "unlockedTitle": "Contact unlocked",
+      "unlockedBody": "You can contact this business and open full chat. Phone and chat stay locked until unlock succeeds.",
+      "unlockedBodyFree": "You can contact this business and open full chat — no payment required.",
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
+      "noPhoneOnFile": "No phone on file — you can still use chat when the session is ready.",
+      "openChat": "Open chat"
+    },
+    "provider": {
+      "listTitle": "Unlock leads",
+      "listSubtitle": "Selected offers waiting for unlock. Contact stays locked until you complete this step.",
+      "empty": "No unlock sessions yet.",
+      "noProvider": "Create your business profile first.",
+      "title": "Unlock this lead",
+      "fee": "Unlock fee: {amount} {currency}",
+      "sla": "SLA deadline: {deadline}",
+      "noContactUntilPay": "Customer contact is not released until unlock succeeds.",
+      "devConfirm": "Confirm unlock (dev bypass)",
+      "awaitAdminOrSprint6": "Payment capture arrives in Sprint 6. An admin can manually confirm unlock for now.",
+      "startPayment": "Start unlock payment",
+      "paymentInstructions": "Transfer the unlock fee using this reference",
+      "payAmount": "Amount due: {amount} {currency}",
+      "receiver": "Receiver",
+      "account": "Account",
+      "uploadReceipt": "Upload transfer receipt",
+      "cancelPayment": "Cancel payment",
+      "awaitingReview": "Receipt submitted — waiting for admin confirmation. Contact stays locked until then.",
+      "decline": "Decline lead",
+      "succeeded": "Unlock succeeded — customer contact was released.",
+      "back": "All unlocks",
+      "devBypassHint": "UNLOCK_DEV_BYPASS is on — grants without payment are allowed locally only.",
+      "unlockPrice": "Unlock price: {amount} {currency}",
+      "aiExplanation": "Why this price",
+      "estValue": "Estimated project value: {amount} USD",
+      "estDuration": "Expected duration: ~{hours}h",
+      "potentialRevenue": "Potential revenue: ~{amount} USD",
+      "includedLeft": "{count} included Business unlocks remaining this month",
+      "unlockIncluded": "Unlock with included credit",
+      "unlockRequest": "Unlock request",
+      "status": {
+        "opened": "Opened",
+        "payment_pending": "Payment pending",
+        "succeeded": "Succeeded",
+        "declined": "Declined",
+        "timed_out": "Timed out"
+      }
+    },
+    "status": {
+      "opened": "Opened",
+      "payment_pending": "Payment pending",
+      "succeeded": "Succeeded",
+      "declined": "Declined",
+      "timed_out": "Timed out"
+    },
+    "errors": {
+      "failed": "Something went wrong.",
+      "feature_disabled": "Unlock is not enabled.",
+      "login_required": "Please sign in.",
+      "forbidden": "Not allowed.",
+      "bypass_forbidden": "Dev bypass is disabled.",
+      "session_not_found": "Unlock session not found.",
+      "invalid_status": "This unlock is no longer actionable.",
+      "grant_failed": "Could not create contact grant.",
+      "request_not_found": "Request not found.",
+      "payment_integration_pending": "Payment capture is not wired yet (Sprint 6).",
+      "payments_disabled": "Unlock payments are not enabled.",
+      "payment_not_configured": "Payment bank details are not configured.",
+      "payment_create_failed": "Could not create unlock payment.",
+      "payment_not_found": "Payment not found.",
+      "payment_required": "Unlock requires a confirmed payment.",
+      "payment_not_confirmed": "Payment is not confirmed.",
+      "payment_verify_failed": "Payment could not be verified.",
+      "payment_update_failed": "Could not update payment.",
+      "not_unlock_fee": "Not an unlock fee payment.",
+      "session_required": "Unlock session required.",
+      "receipt_failed": "Receipt upload failed.",
+      "prepare_failed": "Could not start the upload. Please try again.",
+      "upload_failed": "Receipt upload failed. Please try again.",
+      "save_failed": "Could not save the receipt. Please try again.",
+      "duplicate_receipt": "A receipt was already uploaded for this payment.",
+      "selection_not_found": "Selection not found.",
+      "selection_not_pending": "Selection is not pending unlock.",
+      "provider_required": "Provider required.",
+      "session_failed": "Could not open unlock session."
     }
   },
   "search": {
@@ -701,7 +2044,31 @@
         "premium": "PREMIUM",
         "best_match": "Best match",
         "highest_rated": "Highest rated",
-        "verified": "Verified first"
+        "verified": "Verified first",
+        "response": "Fastest response"
+      },
+      "availability": "Availability",
+      "availabilityOptions": {
+        "all": "Any",
+        "today": "Available today"
+      },
+      "emergency": "Emergency",
+      "emergencyOptions": {
+        "all": "Any",
+        "yes": "Handles emergencies"
+      },
+      "language": "Language",
+      "languageOptions": {
+        "all": "Any",
+        "ar": "Arabic",
+        "en": "English"
+      },
+      "priceLevel": "Price level",
+      "priceOptions": {
+        "all": "Any",
+        "budget": "Budget",
+        "standard": "Standard",
+        "premium": "Premium"
       }
     },
     "recommendationBadges": {
@@ -745,8 +2112,81 @@
     "planPremium": "PREMIUM",
     "memberSince": "Member since {date}",
     "healthScore": "Health {score}%",
+    "stats": {
+      "response": "Response",
+      "completion": "Completion",
+      "completionValue": "{score}%",
+      "area": "Service area",
+      "availability": "Availability",
+      "open": "Accepting",
+      "paused": "Paused"
+    },
+    "publicStats": {
+      "title": "Public statistics",
+      "completedJobs": "Completed jobs",
+      "successRate": "Success rate",
+      "acceptanceRate": "Acceptance rate",
+      "repeatCustomers": "Repeat customers",
+      "responseRate": "Response rate",
+      "avgResponse": "Avg. response time",
+      "reliability": "Reliability",
+      "profileCompletion": "Profile completion",
+      "yearsOnDalily": "Years on Dalily",
+      "pct": "{value}%",
+      "hours": "{hours}h",
+      "years": "{count, plural, one {# year} other {# years}}",
+      "lessThanYear": "New"
+    },
+    "workingHours": "Business hours",
+    "languages": "Languages",
+    "certificates": "Certificates",
+    "awards": "Awards & badges",
+    "closedDay": "Closed",
+    "trustOnlyNote": "Phone, email, and exact address stay private until a booking is confirmed.",
+    "completedJobsShort": "{count, plural, one {# job} other {# jobs}}",
+    "fromPrice": "From {price} {currency}",
+    "availability": {
+      "available": "Available",
+      "limited": "Limited hours",
+      "paused": "Not accepting"
+    },
+    "galleryEmptyTitle": "No portfolio yet",
+    "galleryEmptyBody": "This business has not published gallery photos.",
+    "galleryFullscreen": "Portfolio preview",
+    "galleryClose": "Close",
+    "portfolioKind": {
+      "gallery": "Gallery",
+      "before": "Before",
+      "after": "After",
+      "video": "Video",
+      "videoSoon": "Video coming soon"
+    },
+    "errors": {
+      "title": "Could not load this profile",
+      "body": "Please try again or return to search.",
+      "retry": "Try again",
+      "backSearch": "Back to search"
+    },
     "healthShort": "Health",
     "featured": "Featured"
+  },
+  "publicVerification": {
+    "eyebrow": "Trust",
+    "title": "Verification details",
+    "badgeDefault": "Verified",
+    "openDetails": "Open verification details for {label}",
+    "close": "Close",
+    "loading": "Loading verification details…",
+    "empty": "No public verification details are available yet.",
+    "verifiedOn": "Verified on: {date}",
+    "trustBody": "Verified providers have confirmed their identity and address.",
+    "trustOptional": "Optional business and professional documents increase customer confidence and improve provider visibility on Dalily.",
+    "privacyNote": "For your privacy and theirs, Dalily never shows identity documents, ID numbers, home addresses, insurance policy numbers, or uploaded files to customers.",
+    "expiration": {
+      "valid": "Valid",
+      "expiring_soon": "Expiring soon",
+      "expired": "Expired"
+    }
   },
   "reviews": {
     "sectionTitle": "Customer reviews",
@@ -754,6 +2194,20 @@
     "empty": "No reviews yet. Completed jobs can leave the first review.",
     "averageLabel": "Average rating",
     "basedOn": "Based on {count} reviews",
+    "basedOnVerified": "Based on {count} verified reviews",
+    "recommendedBy": "Recommended by {pct}% of customers",
+    "aiSummaryLabel": "AI Summary",
+    "trustLevel": {
+      "eyebrow": "Trust level",
+      "excellent": "Excellent",
+      "very_good": "Very good",
+      "good": "Good",
+      "developing": "Developing",
+      "new_provider": "New provider",
+      "needs_attention": "Needs attention",
+      "rising": "Improving recently",
+      "fallback": "Trust signals build as verified reviews and completed jobs accumulate."
+    },
     "breakdownLabel": "Rating breakdown",
     "anonymous": "Anonymous customer",
     "customer": "Customer",
@@ -768,6 +2222,20 @@
     "replyPlaceholder": "Write an official reply…",
     "submitReply": "Post reply",
     "replying": "Posting…",
+    "quality": {
+      "excellent": "Excellent",
+      "veryGood": "Very good",
+      "good": "Good",
+      "fair": "Fair",
+      "needsImprovement": "Needs improvement"
+    },
+    "dimensions": {
+      "communication": "Communication",
+      "quality": "Quality of work",
+      "punctuality": "Punctuality",
+      "professionalism": "Professionalism",
+      "value": "Value for money"
+    },
     "errors": {
       "login_required": "Please log in",
       "forbidden": "Not allowed",
@@ -783,7 +2251,9 @@
       "lowest": "Lowest rating",
       "helpful": "Most helpful",
       "verified": "Verified first",
-      "photos": "With photos"
+      "photos": "With photos",
+      "recommended": "Recommended",
+      "language": "Your language"
     },
     "badges": {
       "top_rated": "Top Rated",
@@ -851,10 +2321,12 @@
       "send": "Send message",
       "error": "Could not send message. Please try again.",
       "attach": "Attach file",
-      "attachHint": "Images and documents — compressed automatically",
+      "attachHint": "Images, video, PDF, Office, ZIP, audio — drag, paste or browse",
       "removeFile": "Remove",
       "shareLocation": "Share location",
-      "locationShared": "Shared location"
+      "locationShared": "Shared location",
+      "replying": "Replying",
+      "cancelReply": "Cancel"
     },
     "typing": {
       "one": "{name} is typing…",
@@ -870,12 +2342,193 @@
       "offline": "Offline",
       "lastSeen": "Last seen {time}"
     },
+    "search": {
+      "placeholder": "Search messages…",
+      "cta": "Search"
+    },
+    "inbox": {
+      "markAllRead": "Mark all as read"
+    },
+    "media": {
+      "dropHere": "Drop files to attach",
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "progress": "Uploading {pct}%",
+      "failed": "Upload failed",
+      "cancelled": "Cancelled",
+      "done": "Uploaded",
+      "queued": "Ready to send",
+      "download": "Download",
+      "voice": "Voice message"
+    },
+    "projectMedia": {
+      "title": "Project gallery",
+      "upload": "Upload",
+      "dropHint": "Drag & drop photos, videos or documents here",
+      "all": "All",
+      "allPackages": "All packages",
+      "empty": "No media yet",
+      "uploading": "Uploading…",
+      "categories": {
+        "before": "Before",
+        "progress": "Progress",
+        "completed": "Completed",
+        "documents": "Documents",
+        "invoices": "Invoices",
+        "certificates": "Certificates",
+        "other": "Other"
+      }
+    },
+    "voice": {
+      "record": "Record voice message",
+      "recording": "Recording…",
+      "paused": "Paused",
+      "pause": "Pause",
+      "resume": "Resume",
+      "send": "Send",
+      "cancel": "Cancel",
+      "sending": "Sending voice message…",
+      "noCalls": "Voice notes only — no live calls.",
+      "aiLabel": "AI transcript",
+      "grantConsent": "Allow transcription",
+      "revokeConsent": "Revoke transcription",
+      "consentHint": "Transcription needs your consent. Recordings stay private and are not used for training.",
+      "summary": "Summary",
+      "viewOriginal": "Original",
+      "viewTranslated": "Translated",
+      "deleteTranscript": "Delete transcript",
+      "noTranscript": "No transcript yet for this voice note.",
+      "searchTitle": "Search voice transcripts",
+      "searchPlaceholder": "Search spoken words…",
+      "errors": {
+        "permission_denied": "Microphone permission denied.",
+        "not_supported": "Voice recording is not supported here.",
+        "no_audio": "No audio captured.",
+        "too_large": "Voice note is too large.",
+        "upload_failed": "Upload failed.",
+        "send_failed": "Could not send voice message.",
+        "feature_disabled": "Voice messaging is disabled.",
+        "unknown": "Something went wrong."
+      }
+    },
+    "aiAssistant": {
+      "title": "AI assistant",
+      "aiLabel": "AI-generated",
+      "privacyNote": "AI assists only and never sends messages. Private chat is not used for model training.",
+      "disableAi": "Disable AI",
+      "enableAi": "Enable AI",
+      "disabledHint": "AI assistance is off for your account.",
+      "deleteSummaries": "Delete AI summaries",
+      "summarize": "Summarize",
+      "suggestReplies": "Suggest replies",
+      "extract": "Extract & tasks",
+      "error": "Could not run AI assistant. Try again.",
+      "repliesTitle": "Suggested replies",
+      "extractionsTitle": "Extracted info",
+      "tasksTitle": "Open tasks",
+      "viewOriginal": "Original",
+      "viewTranslated": "Translated",
+      "windows": {
+        "last_10": "Last 10",
+        "today": "Today",
+        "last_7_days": "7 days",
+        "entire": "Entire"
+      },
+      "styles": {
+        "short": "Short",
+        "detailed": "Detailed",
+        "timeline": "Timeline",
+        "action": "Action"
+      },
+      "fields": {
+        "appointment": "Appointment",
+        "address": "Address",
+        "phone": "Phone",
+        "budget": "Budget",
+        "requested_date": "Requested date",
+        "service_type": "Service",
+        "materials": "Materials",
+        "urgency": "Urgency",
+        "other": "Other"
+      },
+      "sentiment": {
+        "positive": "Positive tone",
+        "neutral": "Neutral",
+        "frustrated": "Frustration signals",
+        "urgent": "Urgency signals",
+        "escalation_risk": "Escalation risk"
+      },
+      "priority": {
+        "low": "Low priority",
+        "normal": "Normal priority",
+        "high": "High priority",
+        "critical": "Critical"
+      }
+    },
     "actions": {
       "pin": "Pin",
       "unpin": "Unpin",
       "archive": "Archive",
       "unarchive": "Unarchive",
-      "searchMessages": "Search messages"
+      "searchMessages": "Search messages",
+      "copy": "Copy",
+      "reply": "Reply",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edited": "Edited",
+      "forward": "Forward"
+    },
+    "timeline": {
+      "aria": "Job progress timeline",
+      "offer": "Offer",
+      "acceptance": "Accepted",
+      "appointment": "Appointment",
+      "arrival": "Arrival",
+      "completion": "Done",
+      "review": "Review",
+      "payment": "Payment"
+    },
+    "reactions": {
+      "aria": "Message reactions",
+      "add": "React with {emoji}"
+    },
+    "safety": {
+      "mute": "Mute conversation",
+      "unmute": "Unmute conversation",
+      "block": "Block user",
+      "unblock": "Unblock user",
+      "report": "Report conversation",
+      "reportTitle": "Report this conversation",
+      "reason": "Reason",
+      "submitReport": "Submit report",
+      "cancel": "Cancel",
+      "reasons": {
+        "spam": "Spam",
+        "harassment": "Harassment",
+        "fraud": "Fraud / scam",
+        "inappropriate": "Inappropriate content",
+        "other": "Other"
+      },
+      "errors": {
+        "failed": "Something went wrong.",
+        "feature_disabled": "Not available.",
+        "login_required": "Please sign in.",
+        "forbidden": "Not allowed.",
+        "rate_limited": "Too many attempts.",
+        "update_failed": "Could not update.",
+        "report_failed": "Could not submit report.",
+        "validation_error": "Invalid request.",
+        "chat_locked": "Chat is locked.",
+        "not_found": "Not found."
+      }
+    },
+    "center": {
+      "title": "Communication center",
+      "unread": "{count, plural, =0 {No unread} one {# unread} other {# unread}}",
+      "customerHint": "Current jobs and past conversations stay inside Dalily.",
+      "businessHint": "Coordinate bookings here — no need for WhatsApp before acceptance."
     }
   },
   "marketplace": {
@@ -890,7 +2543,7 @@
     "pinnedSummary": "Pinned request",
     "viewRequest": "View full request",
     "photoAlt": "Photo for request {title}",
-    "chatLocked": "Chat unlocks after the business accepts your request.",
+    "chatLocked": "Chat unlocks after contact release (unlock grant).",
     "timeline": {
       "label": "Request timeline",
       "currentHint": "Current step",
@@ -906,6 +2559,7 @@
     },
     "status": {
       "pending": "Pending",
+      "waiting": "Waiting",
       "accepted": "Accepted",
       "quoted": "Quoted",
       "quote_accepted": "Quote accepted",
@@ -1013,6 +2667,20 @@
       "comment": "Comment",
       "photos": "Photos (optional)",
       "photosHint": "Up to 5 images of the completed work.",
+      "photoKind": "Photo type",
+      "photoKinds": {
+        "before": "Before",
+        "after": "After",
+        "completed": "Completed work",
+        "general": "General"
+      },
+      "dimensions": {
+        "communication": "Communication",
+        "quality": "Quality of work",
+        "punctuality": "Punctuality",
+        "professionalism": "Professionalism",
+        "value": "Value for money"
+      },
       "anonymous": "Show my name as anonymous",
       "recommend": "Recommend this business?",
       "recommendSkip": "Prefer not to say",
@@ -1063,7 +2731,8 @@
       "pending_exists": "You already have a pending request with this business.",
       "self_request": "You cannot send a request to your own business.",
       "settings_failed": "Could not save settings.",
-      "provider_not_found": "Business not found."
+      "provider_not_found": "Business not found.",
+      "use_offers": "Use the offers flow for this marketplace request."
     }
   },
   "notifications": {
@@ -1097,7 +2766,7 @@
     },
     "serviceCompleted": {
       "title": "Service completed",
-      "body": "“{title}” was marked completed. Please confirm."
+      "body": "The provider marked “{title}” as completed. Please confirm."
     },
     "completionConfirmed": {
       "title": "Completion confirmed",
@@ -1115,6 +2784,46 @@
       "title": "New message",
       "body": "You have a new message.",
       "attachmentBody": "You received a new attachment."
+    },
+    "chatReply": {
+      "title": "New reply",
+      "body": "Someone replied to your message."
+    },
+    "chatPinned": {
+      "title": "Message pinned",
+      "body": "A message was pinned in your conversation."
+    },
+    "chatMention": {
+      "title": "You were mentioned",
+      "body": "Someone mentioned you in a chat."
+    },
+    "chatEmergency": {
+      "title": "Emergency chat",
+      "body": "New message in an emergency conversation."
+    },
+    "offerReceived": {
+      "title": "New offer",
+      "body": "A provider sent an offer on your request. Review it in the waiting room."
+    },
+    "matchAssignment": {
+      "title": "New matching request",
+      "body": "A customer request matches your business. Open Opportunities to respond with an offer."
+    },
+    "unlockOpened": {
+      "title": "Lead unlock pending",
+      "body": "A customer selected your offer. Complete unlock within the SLA to release contact."
+    },
+    "unlockGranted": {
+      "title": "Contact unlocked",
+      "body": "The business completed unlock. You can now see contact details."
+    },
+    "unlockFallback": {
+      "title": "Next business selected",
+      "body": "The previous business declined or timed out. We moved you to the next offer."
+    },
+    "unlockFallbackExhausted": {
+      "title": "No unlock yet",
+      "body": "No further offers were available after timeout or decline. Check your waiting room."
     },
     "bookingCreated": {
       "title": "New booking request",
@@ -1187,7 +2896,8 @@
     "account": "Account",
     "legal": "Legal",
     "links": {
-      "search": "Search",
+      "search": "New request",
+      "find": "Find a business",
       "forBusiness": "For Business",
       "login": "Log in",
       "register": "Sign up",
@@ -1200,51 +2910,51 @@
   "legal": {
     "privacy": {
       "metaTitle": "Privacy Policy — Dalily",
-      "metaDescription": "How Dalily collects and uses your information.",
+      "metaDescription": "How Dalily handles your data during the closed beta marketplace flow.",
       "title": "Privacy Policy",
-      "updated": "Last updated: July 2026",
-      "intro": "Dalily helps people find trusted local service providers. This policy explains what information we collect during the beta and how we use it.",
+      "updated": "Last updated: August 2026",
+      "intro": "Dalily is a closed-beta marketplace: you describe a need, matched businesses send offers, you choose one and may pay an unlock fee to reveal contact details, then chat opens. This policy explains what we collect and how we use it during the beta. Operated by Dalily.",
       "sections": {
         "collect": {
           "title": "Information we collect",
-          "body": "We collect account details (such as email and name), business profile information you submit, search queries, and basic usage data needed to operate the platform."
+          "body": "We collect account details (such as email and name), the problem description and details you submit in a request, location or city preferences you share for matching, offers and messages exchanged on the platform, unlock-fee payment records (processed via our payment providers), and basic usage data needed to operate and secure the service."
         },
         "use": {
           "title": "How we use information",
-          "body": "We use your information to provide search results, manage business accounts, improve the service, and keep the platform secure. Search queries may be logged to improve matching quality."
+          "body": "We use your information to match requests with relevant businesses, deliver offers, process unlock fees when you choose to reveal contact details, open and operate chat after unlock, improve matching quality during the beta, and keep the platform secure. We do not use your data to publish open “search result” directories that expose contact information before unlock."
         },
         "sharing": {
           "title": "Sharing",
-          "body": "We do not sell your personal data. Provider contact details you choose to publish may be visible to users. We use infrastructure providers (such as Supabase) to host the service."
+          "body": "We do not sell your personal data. Before unlock, businesses typically see request context without your private contact details. After you unlock, the selected parties can see the contact information needed to continue. We use infrastructure and payment providers (such as Supabase and our configured payment processor) to host and operate the service. Dalily currently operates without a formal registered business entity."
         },
         "contact": {
           "title": "Contact",
-          "body": "For privacy questions during the beta, contact the Dalily team through your account email or business support channel."
+          "body": "For privacy questions during the closed beta, contact us at privacy@dalily.app or through your account support channel."
         }
       }
     },
     "terms": {
       "metaTitle": "Terms of Service — Dalily",
-      "metaDescription": "Terms for using Dalily during the beta.",
+      "metaDescription": "Terms for using Dalily’s closed-beta request, offer, unlock, and chat marketplace.",
       "title": "Terms of Service",
-      "updated": "Last updated: July 2026",
-      "intro": "By using Dalily during the beta, you agree to these terms. The service connects users with independent service providers.",
+      "updated": "Last updated: August 2026",
+      "intro": "By using Dalily during the closed beta, you agree to these terms. Dalily connects customers with independent local businesses through requests, offers, optional unlock fees, and chat.",
       "sections": {
         "service": {
           "title": "The service",
-          "body": "Dalily is a discovery platform. We help you find providers but do not perform the services ourselves. Features may change during the beta."
+          "body": "Dalily is a marketplace platform, not a directory of public contact lists. Customers describe a problem; matched businesses may send offers; the customer selects an offer and may pay an unlock fee to reveal contact information; chat then opens between the parties. Dalily does not perform the underlying services. Features, fees, and availability may change during the closed beta."
         },
         "accounts": {
           "title": "Accounts",
-          "body": "You are responsible for your account credentials and for information you submit. Business accounts must provide accurate profile details."
+          "body": "You are responsible for your account credentials and for information you submit. Business accounts must provide accurate profile and service details. Misuse of the request, offer, unlock, or chat flows may result in suspension during the beta."
         },
         "providers": {
-          "title": "Providers",
-          "body": "Providers listed on Dalily are independent businesses. Users should verify details and agree terms directly with the provider before work begins."
+          "title": "Providers and unlock fees",
+          "body": "Providers on Dalily are independent businesses. Offers are invitations to continue; customers should verify details and agree the job terms directly with the provider. Unlock fees grant access to contact information and chat for that selection — they are not payment for the provider’s service work unless we clearly state otherwise. Users should not expect contact details before a successful unlock."
         },
         "liability": {
           "title": "Limitation of liability",
-          "body": "Dalily is provided during the beta on an as-is basis. We are not liable for disputes, damages, or service quality between users and providers."
+          "body": "Dalily is provided during the closed beta on an as-is basis. We are not liable for disputes, damages, service quality, or agreements between customers and providers."
         }
       }
     }
@@ -1261,6 +2971,11 @@
       "title": "Business panel",
       "menu": "Menu",
       "dashboard": "Home",
+      "newJobs": "New Requests",
+      "orders": "My Jobs",
+      "messages": "Messages",
+      "payments": "Payments",
+      "account": "My Account",
       "profile": "Profile",
       "services": "Services",
       "gallery": "Gallery",
@@ -1268,8 +2983,10 @@
       "analytics": "Analytics",
       "verification": "Verification",
       "upgrade": "⭐ Upgrade",
-      "messages": "Messages",
+      "plan": "Plan tools",
       "requests": "Requests",
+      "opportunities": "New Requests",
+      "unlock": "Unlock",
       "settings": "Settings",
       "bookings": "Bookings",
       "calendar": "Calendar",
@@ -1344,6 +3061,44 @@
         "login_required": "Please log in to continue.",
         "forbidden": "You cannot change these settings.",
         "failed": "Something went wrong."
+      },
+      "handlesEmergency": "Handle emergency requests",
+      "handlesEmergencyHint": "When off, emergency matches skip your business. Be honest — unlock trust depends on it."
+    },
+    "publicVisibility": {
+      "title": "Public profile privacy",
+      "subtitle": "Choose what customers see on your public trust profile before booking.",
+      "save": "Save visibility",
+      "saving": "Saving…",
+      "saved": "Visibility saved.",
+      "error": "Could not save visibility settings.",
+      "flags": {
+        "showLogo": "Show profile photo / logo",
+        "showGallery": "Show portfolio gallery",
+        "showCompletedJobs": "Show completed jobs count",
+        "showServiceArea": "Show service area / cities",
+        "showStatistics": "Show public statistics",
+        "showLanguages": "Show languages",
+        "showCertificates": "Show certificates"
+      }
+    },
+    "paymentsHub": {
+      "title": "Payments",
+      "subtitle": "Unlocks, subscriptions, and payment history in one place.",
+      "priorityTitle": "Unlocks waiting for you",
+      "priorityBody": "You have {count} unlock session(s) to complete.",
+      "priorityCta": "View unlock sessions",
+      "links": {
+        "unlock": "Contact unlock",
+        "unlockDesc": "Complete payment to release customer contact",
+        "history": "Payment history",
+        "historyDesc": "Subscriptions, lead unlocks, and receipts",
+        "monetization": "Plans & unlocks",
+        "monetizationDesc": "Business plan details",
+        "subscription": "Subscription",
+        "subscriptionDesc": "Plan status, price, and visibility",
+        "wallet": "Wallet & payouts",
+        "walletDesc": "Available balance, escrow, and payout status"
       }
     },
     "dashboard": {
@@ -1582,6 +3337,20 @@
           "body": "A complete profile helps you get more booking requests."
         }
       }
+    },
+    "subscriptionVisibility": {
+      "title": "Subscribe to appear to customers",
+      "readyBody": "Your profile basics are ready — one more step so customers can find you.",
+      "body": "You will not appear in search or category browse, and you will not receive new requests, until you subscribe ({price} USD / month).",
+      "benefits": {
+        "search": "Visible in search and category browse",
+        "gallery": "Your photos and gallery are shown",
+        "contact": "Customers can find and message you",
+        "matching": "You appear in matching for new requests"
+      },
+      "cta": "Subscribe — {price} USD / mo",
+      "remindLater": "Remind me later",
+      "dismiss": "Dismiss"
     },
     "growth": {
       "hero": {
@@ -2173,128 +3942,6 @@
       }
     },
     "subscription": {
-      "title": "Grow your business with Dalily",
-      "eyebrow": "Growth",
-      "subtitle": "Choose the plan that helps you reach more customers.",
-      "currentPlan": "Your plan",
-      "expiresAt": "Expires on {date}",
-      "noExpiration": "No expiration date",
-      "renew": "Renew",
-      "downgrade": "Downgrade to Starter",
-      "cancel": "Cancel subscription",
-      "upgrade": "Upgrade",
-      "current": "Current plan",
-      "freePrice": "FREE",
-      "perMonth": "Month",
-      "paymentHistory": "Payment history",
-      "noPayments": "No payments yet.",
-      "errors": {
-        "upgradeFailed": "Could not start the upgrade. Please try again.",
-        "notApproved": "Plans unlock after your business is approved.",
-        "paymentPending": "You already have a payment under review.",
-        "paymentNotConfigured": "Paid upgrades are temporarily unavailable. Please try again later or contact support.",
-        "downgradeFailed": "Could not switch to Starter. Please try again."
-      },
-      "lowerPlanHint": "Included in your higher plan",
-      "paymentPendingHint": "Finish your pending payment first",
-      "downgradeConfirm": {
-        "eyebrow": "Downgrade",
-        "title": "Switch back to Starter?",
-        "body": "This is a downgrade. You will lose Pro/Premium visibility benefits immediately and return to the free Starter plan.",
-        "cta": "Switch to Starter",
-        "confirm": "Yes, switch to Starter",
-        "cancel": "Keep my plan",
-        "working": "Switching…"
-      },
-      "locked": {
-        "pendingTitle": "Waiting for approval",
-        "pendingBody": "Subscription plans unlock after an admin approves your business. We will email you when that happens.",
-        "draftTitle": "Finish your profile first",
-        "draftBody": "Upload logo, cover, gallery and ID, then submit for approval. Plans appear only after approval.",
-        "completeProfile": "Complete profile",
-        "uploadId": "Upload ID"
-      },
-      "plans": {
-        "starter": {
-          "name": "Starter",
-          "price": "FREE",
-          "headline": "Start your business on Dalily.",
-          "subtitle": "Build trust. Get discovered.",
-          "description": "A complete presence so customers can find and contact you — free forever.",
-          "why": "Build trust, appear in search, and let customers reach you.",
-          "cta": "Continue with Starter",
-          "includes": {
-            "profile": "Complete business profile",
-            "photos": "Photos that show your work",
-            "reviews": "Customer reviews that build trust",
-            "contact": "WhatsApp & phone — customers can reach you",
-            "search": "Appear in search results",
-            "reach": "Customers can contact you directly",
-            "info": "Business information"
-          }
-        },
-        "pro": {
-          "name": "PRO",
-          "price": "13 USD",
-          "badge": "Most Popular",
-          "headline": "Get More Customers",
-          "subtitle": "Increase your visibility and receive more opportunities.",
-          "description": "Higher search visibility so more customers discover your business.",
-          "why": "More businesses discover you. More opportunities. Measurable growth.",
-          "cta": "Upgrade to PRO",
-          "includes": {
-            "ranking": "Higher search visibility",
-            "badge": "PRO badge that builds trust",
-            "insights": "Understand how your business grows",
-            "visibility": "See how many customers discovered you",
-            "contacts": "Contact statistics that show real interest",
-            "priority": "Priority visibility where people search",
-            "support": "Priority support when you need help",
-            "stats": "Understand how your business grows",
-            "ai": "Smarter profile guidance"
-          }
-        },
-        "premium": {
-          "name": "PREMIUM",
-          "price": "20 USD",
-          "headline": "Become the First Choice",
-          "subtitle": "Maximum visibility for businesses ready to lead.",
-          "description": "Everything from PRO — plus homepage features and deeper growth insights.",
-          "why": "Stand out first — maximum reach, premium trust, and room to expand.",
-          "cta": "Become Premium",
-          "includes": {
-            "everything": "Everything from PRO",
-            "homepage": "Featured on the homepage",
-            "badge": "Premium badge",
-            "maxVisibility": "Maximum visibility in search",
-            "insights": "Search trends & visitor cities",
-            "campaigns": "Future Premium campaigns",
-            "branches": "Multiple branches",
-            "top": "Top search placement",
-            "locations": "Visitor cities",
-            "support": "Priority support",
-            "early": "New features first"
-          }
-        },
-        "free": "Starter",
-        "proLegacy": "PRO",
-        "premiumLegacy": "PREMIUM"
-      },
-      "status": {
-        "trial": "Trial",
-        "active": "Active",
-        "pending_payment": "Waiting for payment",
-        "expired": "Expired",
-        "cancelled": "Cancelled"
-      },
-      "paymentStatus": {
-        "pending": "Awaiting transfer",
-        "pending_review": "Pending payment review",
-        "paid": "Paid",
-        "failed": "Failed",
-        "cancelled": "Cancelled",
-        "rejected": "Rejected"
-      },
       "payment": {
         "stepLabel": "Payment",
         "title": "Complete your payment",
@@ -2342,60 +3989,6 @@
         },
         "uploadProgress": "Upload progress",
         "uploading": "Uploading…"
-      },
-      "features": {
-        "maxServices": "Up to {value} services",
-        "maxImages": "Up to {value} images",
-        "verifiedBadge": "Verified badge",
-        "advancedAnalytics": "Advanced analytics",
-        "featuredSection": "Featured section",
-        "premiumBadge": "Premium badge",
-        "unlimitedServices": "Unlimited services"
-      },
-      "intro": "No pressure. Pick what fits your business today — upgrade when you are ready to grow.",
-      "hero": {
-        "title": "Grow your business with Dalily.",
-        "subtitle": "Choose the plan that helps you reach more customers."
-      },
-      "summary": {
-        "eyebrow": "Upgrade summary",
-        "continue": "Continue",
-        "back": "Back",
-        "blurb": {
-          "pro": "More customers will discover your business and reach out with confidence.",
-          "premium": "Become the first choice in your city with maximum visibility on Dalily."
-        }
-      },
-      "faq": {
-        "title": "Questions",
-        "subtitle": "Clear answers before you upgrade.",
-        "items": {
-          "active": {
-            "q": "When will my subscription become active?",
-            "a": "After you transfer and upload your receipt, our team reviews it. Your plan activates only after admin approval — never automatically."
-          },
-          "pay": {
-            "q": "How do I pay?",
-            "a": "You transfer the monthly amount manually using the bank details we show, then upload a clear receipt for verification."
-          },
-          "upgrade": {
-            "q": "Can I upgrade later?",
-            "a": "Yes. Start with Starter for free, then move to PRO or PREMIUM whenever you want more customers to find you."
-          },
-          "cancel": {
-            "q": "Can I cancel?",
-            "a": "Yes. You can cancel or move back to Starter from your plan settings. There are no automatic charges."
-          }
-        }
-      },
-      "trust": {
-        "title": "Trusted by local businesses",
-        "items": {
-          "secure": "Secure manual verification",
-          "noAuto": "No automatic charges",
-          "transparent": "Transparent pricing",
-          "support": "Friendly support"
-        }
       }
     },
     "messages": {
@@ -2440,7 +4033,11 @@
       },
       "subscriptionExpiring": {
         "title": "Subscription expiring soon",
-        "body": "Renew soon to keep your plan benefits."
+        "body": "Your Business plan ends in about {days} days. Renew for {price} USD/mo to stay visible."
+      },
+      "subscriptionGrace": {
+        "title": "Grace period — renew to stay visible",
+        "body": "{days} day(s) left in your {graceDays}-day grace window. Renew now or you will leave search and matching."
       },
       "newFeature": {
         "title": "New feature available",
@@ -2537,8 +4134,6 @@
       "withPro": "⭐ With PRO",
       "withPremium": "👑 With PREMIUM",
       "impressions": "Impressions",
-      "ctaPro": "Get more customers with PRO",
-      "ctaPremium": "Become the first choice",
       "premiumTitle": "You already use Dalily’s highest plan",
       "premiumBody": "This week’s real visibility from PREMIUM.",
       "emptyTitle": "No growth data yet",
@@ -2583,6 +4178,8 @@
         "actionsHint": "Jump to the tools you use most.",
         "recommendations": "Recommendations",
         "recommendationsHint": "Simple tips to get more work.",
+        "reputation": "Reputation insights",
+        "reputationHint": "Private strengths, trends, and AI suggestions — scores stay internal.",
         "statistics": "Statistics",
         "statisticsHint": "Charts, history, and achievements."
       },
@@ -2779,15 +4376,43 @@
           "improve_response": "Reply faster to messages and booking requests."
         }
       }
+    },
+    "reputationInsights": {
+      "eyebrow": "Private",
+      "title": "Your reputation",
+      "strengths": "Strengths",
+      "improvements": "Improvement opportunities",
+      "suggestions": "AI suggestions",
+      "monthlyTrend": "Recent trust trend",
+      "scorePrivateNote": "Numeric scores are private — customers only see your trust level.",
+      "metrics": {
+        "completedJobs": "Completed jobs",
+        "cancellationRate": "Cancellation rate",
+        "responseTime": "Response time",
+        "recommendationRate": "Recommendation rate"
+      },
+      "levels": {
+        "excellent": "Excellent",
+        "very_good": "Very good",
+        "good": "Good",
+        "developing": "Developing",
+        "new_provider": "New provider",
+        "needs_attention": "Needs attention"
+      },
+      "trend": {
+        "rising": "Rising",
+        "stable": "Stable",
+        "declining": "Declining"
+      }
     }
   },
   "admin": {
     "nav": {
-      "title": "Control Center",
+      "title": "Operations",
       "menu": "Admin menu",
-      "dashboard": "Dashboard",
+      "dashboard": "Home",
       "providers": "Providers",
-      "businesses": "Businesses",
+      "businesses": "Providers",
       "verification": "Verification",
       "searches": "Search analytics",
       "users": "Users",
@@ -2799,13 +4424,43 @@
       "learning": "Learning AI",
       "ranking": "Ranking",
       "customers": "Customers",
-      "issues": "Issues",
+      "issues": "Reports",
+      "support": "Support",
       "reviewModeration": "Review moderation",
+      "reputation": "Reputation engine",
       "analytics": "Analytics",
+      "aiPredictions": "AI Predictions",
+      "aiAutomation": "AI Automation",
+      "emergency": "Emergency",
+      "projects": "Projects",
+      "recurring": "Recurring",
       "content": "Content",
       "broadcasts": "Broadcasts",
-      "health": "System health",
-      "audit": "Audit log"
+      "health": "System status",
+      "audit": "Activity log",
+      "unlockOps": "Unlock requests",
+      "cells": "Cells",
+      "inspect": "Inspect",
+      "refunds": "Refunds",
+      "finance": "Finance",
+      "settings": "Settings",
+      "groups": {
+        "people": "People",
+        "operations": "Operations",
+        "system": "System",
+        "more": "More"
+      },
+      "quality": "Quality cases",
+      "fraud": "Fraud & risk",
+      "aiOps": "AI Operations",
+      "matching": "Smart matching",
+      "pricing": "Dynamic pricing",
+      "forecast": "Demand forecast",
+      "scheduling": "AI scheduling",
+      "businessAssistant": "Business assistant",
+      "marketplaceIntelligence": "Marketplace intelligence",
+      "wallet": "Wallet & escrow",
+      "aiPlatform": "AI Platform"
     },
     "learning": {
       "eyebrow": "Internal · Learning AI",
@@ -2855,6 +4510,15 @@
       "hasReceipt": "Receipt",
       "noReceipt": "No receipt",
       "searchPlaceholder": "Search by business, owner, reference, email or phone…",
+      "stats": {
+        "total": "Total payments",
+        "pendingReview": "Pending review",
+        "paidUsd": "Paid (USD)",
+        "currentMonth": "This month (USD)",
+        "previousMonth": "Previous month (USD)",
+        "leadUnlocks": "Lead unlocks paid",
+        "businessSubs": "Business subscriptions paid"
+      },
       "tabs": {
         "pendingReview": "🟡 Pending Review",
         "approved": "🟢 Approved",
@@ -2890,7 +4554,9 @@
       "plans": {
         "free": "Starter",
         "pro": "PRO",
-        "premium": "PREMIUM"
+        "premium": "PREMIUM",
+        "unlock_fee": "Unlock fee",
+        "business": "Business plan"
       },
       "status": {
         "pending": "Awaiting transfer",
@@ -3222,20 +4888,87 @@
         "failed": "Failed",
         "cancelled": "Cancelled",
         "rejected": "Rejected"
-      }
+      },
+      "readOnlyBanner": "Subscription tools are read-only. Day-2 ops use Unlock ops and Cells. Removal in Sprint 10."
     },
     "controlCenter": {
       "hero": {
-        "eyebrow": "Control Center",
-        "title": "Welcome back. Today's Overview.",
+        "eyebrow": "Operations Center",
+        "title": "Welcome back.",
         "subtitleAttention": "{count} items need your attention today.",
-        "subtitleClear": "You are clear for now — great work.",
-        "pendingBusinesses": "Pending businesses",
-        "pendingPayments": "Pending payments",
-        "changesRequested": "Changes requested",
-        "registrationsWeek": "Registrations (7d)",
-        "unreadMessages": "Unread messages",
-        "approvalsToday": "Today's approvals"
+        "subtitleClear": "You are clear for now — great work."
+      },
+      "health": {
+        "title": "Platform status",
+        "status": {
+          "healthy": {
+            "label": "All systems running normally",
+            "hint": "No urgent queues right now."
+          },
+          "attention": {
+            "label": "Some tasks are waiting",
+            "hint": "Review payments, verification, or approvals."
+          },
+          "critical": {
+            "label": "Issues need immediate attention",
+            "hint": "Open reports require follow-up."
+          }
+        }
+      },
+      "today": {
+        "title": "Today overview",
+        "subtitle": "Only the queues that matter right now.",
+        "open": "Open",
+        "cards": {
+          "businesses": "Approvals waiting",
+          "verification": "New verifications",
+          "payments": "Payments to confirm",
+          "issues": "New reports",
+          "messages": "New messages",
+          "changes": "Updates requested"
+        }
+      },
+      "priorities": {
+        "title": "Today's priorities",
+        "empty": "No urgent priorities — you are clear.",
+        "items": {
+          "payments": "There are {count} payments waiting for review.",
+          "verification": "You have {count} new verification requests.",
+          "businesses": "There are {count} provider approvals waiting.",
+          "issues": "There are {count} reports that need follow-up.",
+          "changes": "There are {count} profiles still updating documents.",
+          "messages": "You have {count} unread messages."
+        }
+      },
+      "quickActions": {
+        "title": "Quick actions",
+        "items": {
+          "payments": "Review payments",
+          "verification": "Verification requests",
+          "users": "Manage users",
+          "issues": "Reports",
+          "settings": "Settings"
+        }
+      },
+      "activity": {
+        "title": "Recent activity",
+        "viewAll": "View all activity",
+        "empty": "No recent activity yet.",
+        "by": "By {name}",
+        "system": "System",
+        "actions": {
+          "provider_approved": "A provider was approved",
+          "provider_rejected": "A provider was rejected",
+          "provider_changes_requested": "Document updates were requested",
+          "payment_approved": "A payment was confirmed",
+          "payment_rejected": "A payment was rejected",
+          "provider_suspended": "A provider was suspended",
+          "provider_archived": "A provider was archived",
+          "verification_approved": "A verification was approved",
+          "verification_rejected": "A verification was rejected",
+          "verification_changes_requested": "Verification changes were requested",
+          "generic": "An important update was recorded"
+        }
       },
       "tasks": {
         "title": "Today's Tasks",
@@ -3271,21 +5004,6 @@
         "starter": "Starter",
         "pro": "PRO",
         "premium": "PREMIUM"
-      },
-      "activity": {
-        "title": "Activity",
-        "empty": "No recent activity yet.",
-        "by": "By {name}",
-        "system": "System",
-        "actions": {
-          "provider_approved": "Business approved",
-          "provider_rejected": "Business rejected",
-          "provider_changes_requested": "Changes requested",
-          "payment_approved": "Payment approved",
-          "payment_rejected": "Payment rejected",
-          "provider_suspended": "Business suspended",
-          "provider_archived": "Business archived"
-        }
       },
       "marketplace": {
         "title": "Marketplace pulse",
@@ -3420,6 +5138,33 @@
         "response": "Response"
       }
     },
+    "offerDecision": {
+      "title": "Offer decision ops",
+      "subtitle": "Feature override, fraud suspend, and request ranking diagnostics. Weights are never shown.",
+      "feature": "Mark featured",
+      "unfeature": "Remove featured",
+      "featuredBadge": "Featured",
+      "suspendFraud": "Suspend (fraud)",
+      "reactivate": "Reactivate",
+      "diagnosticsTitle": "Ranking diagnostics",
+      "requestIdPlaceholder": "Service request UUID",
+      "runDiagnostics": "Run diagnostics",
+      "generatedAt": "Generated {at}",
+      "signals": "Active signals",
+      "score": "Score {score}",
+      "recommended": "Recommended"
+    },
+    "chatModeration": {
+      "title": "Conversation moderation",
+      "subtitle": "Review reported chats, suspend abusive threads, and keep the marketplace safe.",
+      "empty": "No open conversation reports.",
+      "enableHint": "Enable ENTERPRISE_COMMUNICATION to open the moderation queue.",
+      "conversation": "Conversation",
+      "resolve": "Resolve",
+      "dismiss": "Dismiss",
+      "resolveAndSuspend": "Resolve & suspend",
+      "suspendOnly": "Suspend conversation"
+    },
     "controlCenterV2": {
       "title": "Platform health",
       "subtitle": "Live marketplace KPIs for operators and moderators.",
@@ -3466,22 +5211,51 @@
         "close": "Close"
       }
     },
+    "support": {
+      "eyebrow": "Support Inbox",
+      "title": "Support messages",
+      "subtitle": "Messages sent directly to the platform team by customers and businesses.",
+      "empty": "No messages in this filter.",
+      "status": {
+        "all": "All",
+        "open": "Open",
+        "in_progress": "In progress",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      },
+      "role": {
+        "customer": "Customer",
+        "business": "Business"
+      },
+      "actions": {
+        "inProgress": "Start",
+        "resolve": "Resolve",
+        "close": "Close"
+      }
+    },
     "reviewModeration": {
       "eyebrow": "Moderation",
       "title": "Review moderation",
-      "subtitle": "Newest, low ratings, and reported reviews. Spam detection ready.",
+      "subtitle": "Newest, low ratings, AI flags, and delete requests. Fake-review heuristics active when REVIEWS_REPUTATION_V2 is on.",
       "empty": "No reviews in this filter.",
-      "spamReady": "Spam detection extension point is ready (AI not enabled).",
+      "spamReady": "AI fake-review detection is active (heuristic-v1).",
       "spamNotReady": "Spam detection unavailable.",
       "verified": "Verified",
       "noComment": "No comment",
       "provider": "Provider",
       "warnDefault": "Please follow Dalily community guidelines.",
+      "aiSummary": "AI summary",
+      "fakeRisk": "Fake risk",
+      "flags": "Flags",
+      "history": "History",
+      "deleteRequested": "Delete requested",
       "filters": {
         "newest": "Newest",
         "low": "Low ratings",
         "hidden": "Hidden",
-        "pending": "Pending"
+        "pending": "Pending",
+        "flagged": "AI flagged",
+        "delete_requests": "Delete requests"
       },
       "actions": {
         "hide": "Hide",
@@ -3489,6 +5263,36 @@
         "delete": "Delete",
         "deleteConfirm": "Soft-delete this review?",
         "warnCustomer": "Warn customer"
+      }
+    },
+    "reputation": {
+      "eyebrow": "Trust",
+      "title": "AI Reputation Engine",
+      "subtitle": "Internal scores are admin-only. Customers only see trust levels and positive explanations.",
+      "distribution": "Trust level distribution",
+      "highest": "Highest reputation",
+      "rising": "Improving rapidly",
+      "declining": "Declining",
+      "needsReview": "Needs review",
+      "complaintHeavy": "Repeated reliability issues",
+      "empty": "No providers in this list yet. Recalculate after migration.",
+      "internalScore": "Internal score",
+      "levels": {
+        "excellent": "Excellent",
+        "very_good": "Very good",
+        "good": "Good",
+        "developing": "Developing",
+        "new_provider": "New provider",
+        "needs_attention": "Needs attention"
+      },
+      "trend": {
+        "rising": "Rising",
+        "stable": "Stable",
+        "declining": "Declining"
+      },
+      "links": {
+        "reviews": "Review moderation",
+        "providers": "Providers"
       }
     },
     "broadcasts": {
@@ -3564,7 +5368,8 @@
         "searches": "Search analytics",
         "marketplace": "Marketplace",
         "learning": "Learning AI",
-        "ranking": "Ranking inspector"
+        "ranking": "Ranking inspector",
+        "predictions": "AI Predictions"
       },
       "kpis": {
         "bookingsTotal": "Bookings total",
@@ -3580,6 +5385,96 @@
         "avgRating": "Average rating",
         "recClickRate": "Recommendation CTR"
       }
+    },
+    "predictive": {
+      "eyebrow": "AI Engine · Phase 8",
+      "title": "Predictive intelligence",
+      "subtitle": "Demand forecasts, supply balance, market insights, and prediction accuracy.",
+      "kpis": {
+        "health": "Marketplace health",
+        "accuracy": "Forecast accuracy",
+        "avgResponse": "Avg response",
+        "completion": "Completion trend"
+      },
+      "demandTitle": "Demand forecast highlights",
+      "balanceTitle": "Demand / supply balance",
+      "balanceEmpty": "No open imbalance detected.",
+      "actions": "Recommended",
+      "topServices": "Most requested services",
+      "growing": "Fastest growing",
+      "heatmap": "Regional demand intensity",
+      "peakHours": "Peak hours (UTC)",
+      "links": {
+        "analytics": "Analytics center",
+        "marketplace": "Marketplace",
+        "learning": "Learning AI"
+      }
+    },
+    "automation": {
+      "eyebrow": "AI Engine · Phase 9",
+      "title": "AI Automation",
+      "subtitle": "Executed workflows, pending approvals, accuracy, and learning from user decisions.",
+      "kpis": {
+        "executed": "Executed",
+        "pending": "Pending approvals",
+        "accuracy": "Automation accuracy",
+        "acceptance": "Acceptance rate"
+      },
+      "pendingTitle": "Pending approvals",
+      "pendingEmpty": "No pending confirmations.",
+      "successful": "Most successful workflows",
+      "noWorkflows": "No executed workflows yet.",
+      "rejected": "Rejected suggestions",
+      "rejectedHint": "User declined automation suggestions in the last 14 days.",
+      "recent": "Recent automations",
+      "links": {
+        "predictions": "AI Predictions",
+        "learning": "Learning AI",
+        "analytics": "Analytics"
+      }
+    },
+    "emergency": {
+      "eyebrow": "Sprint 4 · Phase 3",
+      "title": "Emergency monitoring",
+      "subtitle": "Active emergencies, response times, ETA, and dispatch success.",
+      "kpis": {
+        "active": "Active emergencies",
+        "avgResponse": "Avg response",
+        "avgEta": "Avg ETA",
+        "successRate": "Dispatch success"
+      },
+      "activeTitle": "Active emergencies",
+      "activeEmpty": "No active emergency dispatches.",
+      "volumeTitle": "Volume by category",
+      "volumeEmpty": "No emergency volume in the last 7 days.",
+      "noEta": "ETA pending",
+      "openRequest": "Open request"
+    },
+    "projects": {
+      "eyebrow": "Sprint 4 · Phase 4",
+      "title": "Multi-service projects",
+      "subtitle": "Complex renovations split into trade packages with AI coordination.",
+      "kpis": {
+        "active": "Active projects",
+        "completed": "Completed",
+        "avgProgress": "Avg progress"
+      },
+      "listTitle": "Recent projects",
+      "empty": "No multi-service projects yet.",
+      "open": "Open"
+    },
+    "recurring": {
+      "eyebrow": "Sprint 4 · Phase 5",
+      "title": "Recurring & maintenance",
+      "subtitle": "Active plans, upcoming visits, and route optimization hints.",
+      "kpis": {
+        "active": "Active plans",
+        "paused": "Paused",
+        "upcoming": "Upcoming visits"
+      },
+      "optimizeTitle": "Route optimization",
+      "optimizeEmpty": "No grouping opportunities today.",
+      "customerView": "Customer recurring dashboard"
     },
     "content": {
       "eyebrow": "Content",
@@ -3604,6 +5499,1040 @@
           "body": "Search analytics by city and trending problems."
         }
       }
+    },
+    "unlockOps": {
+      "title": "Unlock operations",
+      "subtitle": "Unlock fee queue, open SLA sessions, and audited comps. Never bypass payment without a reason.",
+      "allPayments": "All payments",
+      "pendingPayments": "Pending unlock fees",
+      "noPendingPayments": "No pending unlock fees.",
+      "openSessions": "Open unlock sessions",
+      "noOpenSessions": "No open sessions.",
+      "timedOut": "Recent timeouts",
+      "noTimedOut": "No recent timeouts.",
+      "approve": "Approve payment",
+      "reject": "Reject",
+      "paymentDetail": "Payment detail",
+      "inspectRequest": "Inspect request",
+      "compReason": "Comp reason (required)",
+      "compReasonPlaceholder": "Why is payment waived?",
+      "compUnlock": "Comp unlock (audited)"
+    },
+    "cells": {
+      "title": "Cell policies",
+      "subtitle": "Freeze or limit city × category cells. Frozen cells skip matching.",
+      "upsertTitle": "Set policy",
+      "city": "City",
+      "category": "Category",
+      "select": "Select…",
+      "frozen": "Frozen",
+      "limited": "Limited availability",
+      "concierge": "Concierge",
+      "reason": "Audit reason",
+      "note": "Internal note",
+      "save": "Save policy",
+      "listTitle": "Active policies",
+      "empty": "No cell overrides yet."
+    },
+    "inspect": {
+      "title": "Marketplace inspect",
+      "subtitle": "Read-only match / offer / unlock view. No contact PII.",
+      "requestIdPlaceholder": "Service request UUID",
+      "load": "Load",
+      "notFound": "Request not found.",
+      "cellFrozen": "Cell frozen",
+      "cellLimited": "Limited availability",
+      "cellConcierge": "Concierge",
+      "noCellPolicy": "No cell override",
+      "pool": "Match pool",
+      "noPool": "No pool",
+      "offers": "Offers",
+      "noOffers": "No offers",
+      "unlock": "Selection & unlock",
+      "noSelection": "No selection",
+      "noUnlock": "No unlock session",
+      "grantYes": "Contact release grant: yes",
+      "grantNo": "Contact release grant: no"
+    },
+    "stripeWebhooks": {
+      "eyebrow": "Stripe",
+      "pageTitle": "Stripe webhooks",
+      "pageSubtitle": "Verified Stripe events and retry failed processing.",
+      "backToPayments": "Back to payments",
+      "title": "Webhook history",
+      "subtitle": "Idempotent ledger for Stripe events.",
+      "empty": "No Stripe webhook events yet.",
+      "retry": "Retry",
+      "retrySuccess": "Reprocessed",
+      "retryError": "Retry failed"
+    },
+    "financialDocuments": {
+      "eyebrow": "Finance",
+      "pageTitle": "Financial documents",
+      "pageSubtitle": "Invoices, receipts, company billing settings, and missing-document detection.",
+      "backToPayments": "Back to payments",
+      "companySettings": "Company billing settings",
+      "searchPlaceholder": "Search documents…",
+      "loadError": "Could not load",
+      "downloadError": "Download failed",
+      "download": "Download",
+      "regenerate": "Regenerate",
+      "regenSuccess": "PDF regenerated",
+      "regenError": "Regeneration failed",
+      "generate": "Generate",
+      "generateSuccess": "Document generated",
+      "generateError": "Generation failed",
+      "missingTitle": "Paid payments without documents",
+      "stats": {
+        "total": "Documents",
+        "invoices": "Invoices",
+        "receipts": "Receipts",
+        "missing": "Missing"
+      }
+    },
+    "companyBilling": {
+      "companyName": "Company name",
+      "companyAddress": "Address",
+      "country": "Country",
+      "vatNumber": "VAT number",
+      "taxId": "Tax ID",
+      "supportEmail": "Support email",
+      "website": "Website",
+      "phone": "Phone",
+      "currency": "Currency",
+      "taxRate": "Default tax rate (e.g. 0.0)",
+      "invoiceFooter": "Invoice footer",
+      "legalNotice": "Legal notice",
+      "save": "Save settings",
+      "saved": "Settings saved",
+      "saveError": "Could not save"
+    },
+    "refunds": {
+      "eyebrow": "Finance",
+      "pageTitle": "Refunds & disputes",
+      "pageSubtitle": "Review refund requests, approve Stripe refunds, and track payment disputes.",
+      "backToPayments": "Back to payments",
+      "toDocuments": "Financial documents",
+      "searchPlaceholder": "Search by payment, reference, Stripe ID…",
+      "loadError": "Could not load",
+      "refundsTitle": "Refund requests",
+      "disputesTitle": "Payment disputes",
+      "emptyRefunds": "No refund requests.",
+      "emptyDisputes": "No disputes.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approveSuccess": "Refund approved",
+      "approveError": "Could not approve",
+      "rejectSuccess": "Refund rejected",
+      "rejectError": "Could not reject",
+      "rejectPrompt": "Rejection reason (optional)",
+      "remaining": "Remaining after refund",
+      "uploadEvidence": "Add evidence note",
+      "evidencePlaceholder": "Evidence summary for Stripe…",
+      "evidenceSuccess": "Evidence recorded",
+      "evidenceError": "Could not save evidence",
+      "filters": {
+        "statusAll": "All statuses"
+      },
+      "stats": {
+        "total": "Total",
+        "requested": "Pending review",
+        "succeeded": "Succeeded",
+        "failed": "Failed",
+        "refundedUsd": "Refunded (USD)"
+      },
+      "status": {
+        "requested": "Requested",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "processing": "Processing",
+        "succeeded": "Succeeded",
+        "failed": "Failed",
+        "cancelled": "Cancelled"
+      },
+      "type": {
+        "full": "Full",
+        "partial": "Partial",
+        "manual": "Manual",
+        "automatic": "Automatic"
+      },
+      "disputeStatus": {
+        "opened": "Opened",
+        "evidence_requested": "Evidence requested",
+        "evidence_submitted": "Evidence submitted",
+        "under_review": "Under review",
+        "won": "Won",
+        "lost": "Lost",
+        "closed": "Closed"
+      }
+    },
+    "finance": {
+      "eyebrow": "Finance",
+      "pageTitle": "Revenue & finance analytics",
+      "pageSubtitle": "Real-time insights into revenue, subscriptions, lead unlocks, refunds, and growth — read-only over existing payment data.",
+      "loadError": "Could not load finance data",
+      "refreshed": "Dashboard refreshed",
+      "refresh": "Refresh",
+      "computedAt": "Updated {at} · {cache}",
+      "fromCache": "cached",
+      "live": "live",
+      "exportError": "Export failed",
+      "exportSuccess": "Export downloaded",
+      "exportCsv": "Export CSV",
+      "exportPdf": "Export PDF",
+      "revenueTitle": "Revenue",
+      "subscriptionsTitle": "Subscriptions",
+      "leadsTitle": "Lead payments",
+      "refundsTitle": "Refunds & disputes",
+      "chartsTitle": "Trends",
+      "providersTitle": "Top providers",
+      "reportsTitle": "Reports",
+      "reportsSubtitle": "Generate period reports and export CSV or PDF. Exports are audited.",
+      "emptyChart": "No data in this range yet.",
+      "byCategory": "By category",
+      "byCountry": "By country",
+      "byCity": "By city",
+      "topReasons": "Top refund reasons",
+      "recentTransactions": "Recent transactions",
+      "recentRefunds": "Recent refunds",
+      "recentSubscriptions": "Recent subscriptions",
+      "viewAllPayments": "All payments",
+      "viewAllRefunds": "All refunds",
+      "businessFreeRatio": "Business {business} · Free {free}",
+      "links": {
+        "payments": "Payments",
+        "refunds": "Refunds",
+        "documents": "Documents"
+      },
+      "periods": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "quarterly": "Quarterly",
+        "yearly": "Yearly"
+      },
+      "charts": {
+        "dailyRevenue": "Daily revenue (30d)",
+        "monthlyRevenue": "Monthly revenue (12m)",
+        "subscriptionGrowth": "Active Business plans",
+        "leadRevenue": "Lead revenue (30d)",
+        "refundTrend": "Refund volume (30d)",
+        "mrrTrend": "MRR trend",
+        "arrTrend": "ARR trend"
+      },
+      "table": {
+        "provider": "Provider",
+        "plan": "Plan",
+        "revenue": "Revenue",
+        "unlocks": "Unlocks",
+        "ltv": "Lifetime value"
+      },
+      "kpis": {
+        "today": "Today",
+        "thisWeek": "This week",
+        "thisMonth": "This month",
+        "thisYear": "This year",
+        "lifetime": "Lifetime revenue",
+        "mrr": "MRR",
+        "arr": "ARR",
+        "arpp": "ARPP",
+        "activeBusiness": "Active Business",
+        "freeProviders": "Free providers",
+        "newSubscriptions": "New (30d)",
+        "renewals": "Renewals (30d)",
+        "expiringSoon": "Expiring (7d)",
+        "cancelled": "Cancelled",
+        "conversionRate": "Free → Business",
+        "churnRate": "Churn rate",
+        "unlockedLeads": "Unlocked leads",
+        "avgLeadPrice": "Avg lead price",
+        "leadRevenue": "Lead revenue",
+        "refundCount": "Refund count",
+        "refundVolume": "Refund volume",
+        "refundRate": "Refund rate",
+        "partialVsFull": "Partial / full",
+        "openDisputes": "Open disputes",
+        "wonDisputes": "Won",
+        "lostDisputes": "Lost",
+        "avgResolution": "Avg resolution"
+      }
+    },
+    "quality": {
+      "eyebrow": "Quality",
+      "title": "Case management",
+      "subtitle": "Assign, escalate, merge, and resolve marketplace quality cases.",
+      "empty": "No quality cases yet.",
+      "byCategory": "By category",
+      "provider": "Provider",
+      "stats": {
+        "open": "Open cases",
+        "escalated": "Escalated",
+        "resolvedWeek": "Resolved this week"
+      },
+      "actions": {
+        "assign": "Assign to me",
+        "changeStatus": "Change status…",
+        "escalate": "Escalate",
+        "resolve": "Resolve",
+        "reject": "Reject",
+        "rejectConfirm": "Reject this case?",
+        "mergeIntoNewest": "Merge into newest"
+      },
+      "links": {
+        "issues": "Booking reports",
+        "refunds": "Refunds"
+      },
+      "categories": {
+        "customer_complaint": "Customer complaint",
+        "provider_complaint": "Provider complaint",
+        "booking_issue": "Booking issue",
+        "service_quality": "Service quality issue",
+        "communication": "Communication issue",
+        "damage_report": "Damage report",
+        "late_arrival": "Late arrival",
+        "no_show": "No show",
+        "policy_violation": "Policy violation",
+        "other": "Other"
+      },
+      "statuses": {
+        "open": "Open",
+        "pending_information": "Pending information",
+        "under_review": "Under review",
+        "waiting_for_provider": "Waiting for provider",
+        "waiting_for_customer": "Waiting for customer",
+        "resolved": "Resolved",
+        "rejected": "Rejected",
+        "escalated": "Escalated",
+        "closed": "Closed"
+      },
+      "priorities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      }
+    },
+    "fraud": {
+      "eyebrow": "Risk",
+      "title": "Fraud & risk intelligence",
+      "subtitle": "Admin-assisted detection. Risk levels are internal only and never shown to customers.",
+      "privacyNotice": "Internal scores never appear on public profiles or customer surfaces.",
+      "riskScores": "Highest internal risk scores",
+      "investigations": "Investigations",
+      "events": "Recent fraud events",
+      "triggered": "Triggered rules",
+      "emptyScores": "No risk scores yet. Recalculate an entity to seed.",
+      "emptyInvestigations": "No investigations yet.",
+      "emptyEvents": "No fraud events yet.",
+      "stats": {
+        "open": "Open investigations",
+        "escalated": "Escalated",
+        "highRisk": "High / critical entities",
+        "eventsToday": "Events today"
+      },
+      "recalculate": {
+        "title": "Recalculate risk",
+        "hint": "Runs the modular rule engine (+ optional ML layer). Never auto-suspends.",
+        "entityId": "Entity UUID",
+        "submit": "Calculate"
+      },
+      "entities": {
+        "provider": "Provider",
+        "customer": "Customer"
+      },
+      "actions": {
+        "investigate": "Open investigation",
+        "assign": "Assign to me",
+        "changeStatus": "Change status…",
+        "escalate": "Escalate",
+        "resolve": "Resolve",
+        "falsePositive": "False positive",
+        "mergeIntoNewest": "Merge into newest"
+      },
+      "links": {
+        "quality": "Quality cases",
+        "reviews": "Review moderation"
+      },
+      "levels": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical"
+      },
+      "statuses": {
+        "open": "Open",
+        "in_progress": "In progress",
+        "awaiting_info": "Awaiting info",
+        "escalated": "Escalated",
+        "resolved": "Resolved",
+        "closed": "Closed",
+        "false_positive": "False positive"
+      },
+      "priorities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      },
+      "graph": {
+        "title": "Confirmed relationships",
+        "loading": "Loading graph…",
+        "empty": "No confirmed links yet."
+      }
+    },
+    "aiOps": {
+      "eyebrow": "Operations",
+      "title": "AI Operations & platform health",
+      "subtitle": "Unified operational intelligence across quality, trust, fraud, payments and experience.",
+      "health": {
+        "title": "Platform health",
+        "levels": {
+          "healthy": "Healthy",
+          "degraded": "Degraded",
+          "critical": "Critical"
+        }
+      },
+      "kpis": {
+        "activeUsers": "Active users",
+        "bookingsToday": "Bookings today",
+        "completedJobs": "Completed jobs",
+        "openCases": "Open cases",
+        "escalatedCases": "Escalated cases",
+        "fraudAlerts": "Fraud alerts",
+        "reviews": "Reviews (7d)",
+        "verificationPending": "Verification pending",
+        "verificationVerified": "Verified providers",
+        "paymentSuccess": "Payment success",
+        "refundRate": "Refund rate",
+        "systemHealth": "System health"
+      },
+      "trust": {
+        "title": "Trust distribution",
+        "empty": "No reputation data yet."
+      },
+      "insights": {
+        "title": "AI insights",
+        "empty": "Refresh to generate insights.",
+        "tones": {
+          "positive": "Positive",
+          "neutral": "Neutral",
+          "warning": "Warning",
+          "critical": "Critical"
+        }
+      },
+      "alerts": {
+        "title": "Operational alerts",
+        "empty": "No open alerts."
+      },
+      "anomalies": {
+        "title": "Anomalies",
+        "empty": "No open anomalies."
+      },
+      "trends": {
+        "title": "Trends"
+      },
+      "categories": {
+        "title": "Category health",
+        "empty": "Refresh to compute category health.",
+        "score": "Score"
+      },
+      "regions": {
+        "title": "Region health",
+        "empty": "Refresh to compute region health."
+      },
+      "tasks": {
+        "title": "Action center tasks",
+        "empty": "No open tasks."
+      },
+      "severity": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical"
+      },
+      "alertStatus": {
+        "open": "Open",
+        "acknowledged": "Acknowledged",
+        "resolved": "Resolved",
+        "dismissed": "Dismissed"
+      },
+      "actions": {
+        "refresh": "Refresh health",
+        "export": "Export report",
+        "acknowledge": "Acknowledge",
+        "resolve": "Resolve",
+        "assignTask": "Assign task",
+        "completeTask": "Complete",
+        "createInvestigation": "Create investigation",
+        "openQualityCase": "Open quality case"
+      },
+      "links": {
+        "fraud": "Fraud & risk",
+        "quality": "Quality cases",
+        "reputation": "Reputation",
+        "systemHealth": "System status"
+      }
+    },
+    "matching": {
+      "eyebrow": "Matching",
+      "title": "AI Smart Matching",
+      "subtitle": "Modular weighted matching with fairness, preferences and ML-ready experiments.",
+      "privacyNotice": "Internal scores stay admin-only. Customers see providers and public explanations only.",
+      "stats": {
+        "avgLatency": "Avg latency",
+        "feedback": "Feedback rows",
+        "accepted": "Accepted recs",
+        "model": "Model"
+      },
+      "experiment": {
+        "title": "A/B experiment",
+        "hint": "Rules vs ML-ready shadow traffic.",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable B traffic",
+        "disable": "Disable experiment",
+        "empty": "No experiment row yet — apply migration."
+      },
+      "weights": {
+        "title": "Signal weights",
+        "hint": "No hardcoded scoring — adjust live weights.",
+        "weight": "Weight",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "mlReady": "ML-ready",
+        "save": "Save"
+      },
+      "simulate": {
+        "title": "Simulation / replay",
+        "hint": "Paste provider UUIDs to compare ranking.",
+        "placeholder": "provider-uuid-1, provider-uuid-2",
+        "run": "Run simulation"
+      },
+      "history": {
+        "title": "Recent matching runs",
+        "empty": "No history yet."
+      },
+      "fairness": {
+        "title": "Fairness",
+        "body": "Cold-start boost, exploration, controlled rotation and boost decay prevent permanent dominance."
+      },
+      "links": {
+        "reputation": "Reputation",
+        "fraud": "Fraud",
+        "aiOps": "AI Operations"
+      }
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "AI Dynamic Pricing",
+      "subtitle": "Weighted market intelligence that recommends ranges — Dalily never forces prices.",
+      "privacyNotice": "Internal signal math stays admin-only. Providers and customers see public ranges and explanations.",
+      "stats": {
+        "avgLatency": "Avg latency",
+        "feedback": "Feedback rows",
+        "accepted": "Accepted offers",
+        "model": "Model"
+      },
+      "experiment": {
+        "title": "A/B experiment",
+        "hint": "Rules vs ML-ready shadow traffic for pricing versions.",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable B traffic",
+        "disable": "Disable experiment",
+        "empty": "No experiment row yet — apply migration."
+      },
+      "weights": {
+        "title": "Signal weights",
+        "hint": "No hardcoded final formula — adjust live weights.",
+        "weight": "Weight",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "mlReady": "ML-ready",
+        "save": "Save"
+      },
+      "simulate": {
+        "title": "Simulation",
+        "hint": "Replay pricing for a category and travel distance.",
+        "category": "Category key",
+        "distance": "Distance km",
+        "run": "Run simulation"
+      },
+      "market": {
+        "title": "Market snapshots",
+        "empty": "No market data yet — refresh after offers exist.",
+        "refresh": "Refresh market stats"
+      },
+      "history": {
+        "title": "Recent recommendations",
+        "empty": "No history yet.",
+        "replay": "Replay"
+      },
+      "links": {
+        "matching": "Smart matching",
+        "reputation": "Reputation",
+        "aiOps": "AI Operations"
+      }
+    },
+    "forecast": {
+      "eyebrow": "Forecast",
+      "title": "AI Demand Forecasting",
+      "subtitle": "Modular demand predictions for capacity planning — advisory only, never guaranteed.",
+      "privacyNotice": "Internal signal math stays admin-only. Providers and customers see public horizons and explanations.",
+      "stats": {
+        "avgLatency": "Avg latency",
+        "accuracyRows": "Accuracy rows",
+        "avgError": "Avg error",
+        "model": "Model"
+      },
+      "models": {
+        "title": "Prediction models",
+        "hint": "Compare rule-based and ML-ready forecasting models.",
+        "empty": "No models yet — apply migration.",
+        "default": "Default"
+      },
+      "experiment": {
+        "title": "A/B experiment",
+        "hint": "Rules vs ML-ready shadow traffic for forecast versions.",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable B traffic",
+        "disable": "Disable experiment",
+        "empty": "No experiment row yet — apply migration."
+      },
+      "weights": {
+        "title": "Signal weights",
+        "hint": "Independent signals — adjust live weights.",
+        "weight": "Weight",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "mlReady": "ML-ready",
+        "save": "Save"
+      },
+      "simulate": {
+        "title": "Simulation",
+        "hint": "Replay a forecast for a category and horizon.",
+        "category": "Category key",
+        "run": "Run simulation"
+      },
+      "market": {
+        "title": "Market snapshots",
+        "empty": "No snapshots yet — refresh after requests exist.",
+        "refresh": "Refresh market stats",
+        "growing": "Growing",
+        "declining": "Declining"
+      },
+      "history": {
+        "title": "Recent forecasts",
+        "empty": "No history yet.",
+        "replay": "Replay",
+        "evaluate": "Evaluate accuracy",
+        "actual": "Actual"
+      },
+      "links": {
+        "pricing": "Dynamic pricing",
+        "matching": "Smart matching",
+        "aiOps": "AI Operations"
+      }
+    },
+    "scheduling": {
+      "eyebrow": "Scheduling",
+      "title": "AI Scheduling & Capacity",
+      "subtitle": "Optimize routes, fill gaps and plan opportunities — advisory only.",
+      "privacyNotice": "Internal signal math stays admin-only. Providers decide every acceptance.",
+      "stats": {
+        "avgLatency": "Avg latency",
+        "utilization": "Avg utilization",
+        "idle": "Avg idle",
+        "capture": "Opp. capture"
+      },
+      "profiles": {
+        "title": "Optimization profiles",
+        "empty": "No profiles yet — apply migration.",
+        "default": "Default"
+      },
+      "experiment": {
+        "title": "A/B experiment",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable B traffic",
+        "disable": "Disable experiment",
+        "empty": "No experiment row yet — apply migration."
+      },
+      "weights": {
+        "title": "Signal weights",
+        "hint": "Independent optimization signals.",
+        "weight": "Weight",
+        "mlReady": "ML-ready",
+        "save": "Save"
+      },
+      "simulate": {
+        "title": "Simulation / replay",
+        "placeholder": "provider-uuid",
+        "run": "Run simulation"
+      },
+      "history": {
+        "title": "Recent optimizations",
+        "empty": "No history yet.",
+        "replay": "Replay"
+      },
+      "links": {
+        "forecast": "Demand forecast",
+        "matching": "Smart matching",
+        "pricing": "Dynamic pricing"
+      }
+    },
+    "businessAssistant": {
+      "eyebrow": "Business",
+      "title": "AI Business Insights",
+      "subtitle": "Aggregated marketplace coaching analytics — never competitor identities.",
+      "stats": {
+        "providers": "Providers tracked",
+        "briefings": "Briefings (7d)",
+        "healthy": "Healthy",
+        "atRisk": "At risk"
+      },
+      "experiment": {
+        "title": "A/B experiment",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable B traffic",
+        "disable": "Disable experiment",
+        "empty": "No experiment row yet — apply migration."
+      },
+      "regions": {
+        "title": "Regional opportunities",
+        "empty": "No regional signals yet."
+      },
+      "categories": {
+        "title": "Category opportunities",
+        "empty": "No category signals yet."
+      },
+      "privacy": "Admins see aggregates only. Provider metrics stay private to each owner.",
+      "links": {
+        "scheduling": "AI scheduling",
+        "forecast": "Demand forecast"
+      }
+    },
+    "marketplaceIntelligence": {
+      "eyebrow": "Intelligence",
+      "title": "Marketplace Intelligence Center",
+      "subtitle": "Unified advisory intelligence across the marketplace. Simulations never affect production.",
+      "stats": {
+        "health": "Health",
+        "liquidity": "Liquidity",
+        "bookings": "Bookings (30d)",
+        "latency": "Latency",
+        "demand": "Demand",
+        "supply": "Supply",
+        "completion": "Completion",
+        "satisfaction": "Satisfaction"
+      },
+      "executive": {
+        "title": "Executive report",
+        "trend": "Trend",
+        "confidence": "Confidence"
+      },
+      "kpis": {
+        "title": "Marketplace KPIs",
+        "growth": "Growth",
+        "acceptance": "Acceptance",
+        "cancellation": "Cancellation",
+        "trust": "Trust",
+        "fraud": "Fraud pressure",
+        "quality": "Quality",
+        "pricing": "Pricing trends",
+        "forecast": "Forecast accuracy",
+        "scheduling": "Scheduling efficiency"
+      },
+      "opportunities": {
+        "title": "Opportunities",
+        "empty": "No opportunities yet."
+      },
+      "regions": {
+        "title": "Regional intelligence",
+        "empty": "No regional signals."
+      },
+      "categories": {
+        "title": "Category intelligence",
+        "empty": "No category signals."
+      },
+      "decisions": {
+        "title": "Decision support",
+        "confidence": "Confidence"
+      },
+      "simulation": {
+        "title": "Digital twin",
+        "notice": "Isolated simulations — production is never modified.",
+        "run": "Run provider +15 simulation"
+      },
+      "modules": {
+        "title": "Intelligence modules",
+        "on": "On",
+        "off": "Off",
+        "enableMl": "Enable ML shadow",
+        "disableMl": "Disable ML shadow"
+      },
+      "agents": {
+        "title": "Future AI agents",
+        "notice": "Agents may recommend only — irreversible actions require explicit authorization."
+      },
+      "meta": {
+        "reports": "Reports stored",
+        "simulations": "Simulations logged",
+        "version": "Algorithm"
+      },
+      "privacy": "Executive dashboards are admin-restricted. Knowledge graph is internal only.",
+      "links": {
+        "businessAssistant": "Business assistant",
+        "forecast": "Demand forecast",
+        "pricing": "Dynamic pricing"
+      }
+    },
+    "enterprisePayments": {
+      "eyebrow": "Enterprise payments",
+      "title": "Wallet, escrow & payouts",
+      "subtitle": "Manage wallets, escrow holds, payouts, fees, and marketplace disputes.",
+      "toPayments": "Payments →",
+      "toRefunds": "Refunds →",
+      "toFinance": "Finance →",
+      "escrowTitle": "Escrow holds",
+      "payoutTitle": "Payouts",
+      "feesTitle": "Fee rules",
+      "disputesTitle": "Marketplace disputes",
+      "empty": "Nothing here yet.",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "stats": {
+        "wallets": "Active wallets",
+        "balance": "Wallet balance",
+        "escrowReserved": "Escrow reserved",
+        "escrowDisputed": "Escrow disputed",
+        "payoutsPending": "Payouts pending",
+        "payoutsPaid": "Payouts paid",
+        "disputes": "Open disputes",
+        "feeRules": "Fee rules"
+      },
+      "cols": {
+        "status": "Status",
+        "amount": "Amount",
+        "created": "Created",
+        "actions": "Actions",
+        "method": "Method"
+      },
+      "actions": {
+        "release": "Release",
+        "refund": "Refund",
+        "retry": "Retry",
+        "process": "Process"
+      }
+    },
+    "aiPlatform": {
+      "eyebrow": "Enterprise AI",
+      "title": "AI Platform Center",
+      "subtitle": "Insights, usage, and risk — recommendations only, never auto-ban.",
+      "toOps": "AI Ops →",
+      "toFraud": "Fraud →",
+      "stats": {
+        "requests": "Requests 24h",
+        "errors": "Errors",
+        "latency": "Avg latency",
+        "fallbacks": "Fallbacks",
+        "fraud": "Fraud alerts",
+        "moderation": "Moderation reports"
+      },
+      "providersTitle": "Providers",
+      "providersBody": "Primary: {primary} · Fallback: {fallback}",
+      "centersTitle": "Linked centers",
+      "usageTitle": "Recent usage",
+      "moderationTitle": "Moderation recommendations",
+      "empty": "Nothing here yet.",
+      "on": "On",
+      "off": "Off",
+      "ok": "OK",
+      "fail": "Fail"
+    }
+  },
+  "pricing": {
+    "provider": {
+      "title": "Pricing intelligence",
+      "subtitle": "Suggested ranges from market data. You always set the final price.",
+      "stats": {
+        "suggestedRange": "Suggested range",
+        "marketAverage": "Market average",
+        "pastAccepted": "Past accepted avg",
+        "acceptanceRate": "Acceptance rate",
+        "competitiveness": "Competitiveness",
+        "confidence": "Confidence"
+      },
+      "competitiveness": {
+        "below": "Below market",
+        "at": "At market",
+        "above": "Above market",
+        "unknown": "Not enough data"
+      },
+      "position": {
+        "budget": "Budget band",
+        "fair": "Fair market",
+        "premium": "Premium band"
+      },
+      "aiTitle": "AI recommendation",
+      "suggestedAvg": "Suggested average",
+      "neverForced": "Dalily never forces this price — it is guidance only.",
+      "tipsTitle": "AI tips"
+    },
+    "customer": {
+      "eyebrow": "Market estimate",
+      "title": "Fair market range",
+      "subtitle": "Based on similar jobs in your area — not a final quote.",
+      "fairAverage": "Typical mid-range",
+      "position": {
+        "budget": "Budget-friendly band",
+        "fair": "Fair market band",
+        "premium": "Premium band"
+      },
+      "budget": {
+        "under": "Your budget sits under the typical range.",
+        "within": "Your budget fits the fair market range.",
+        "over": "Your budget is above the typical range."
+      },
+      "disclaimer": "Providers set their own prices. This estimate does not show provider internals."
+    }
+  },
+  "forecast": {
+    "provider": {
+      "title": "Demand forecast",
+      "subtitle": "Plan staffing and busy periods. Forecasts are advisory — never guaranteed.",
+      "stats": {
+        "staffing": "Recommended staffing",
+        "revenue": "Revenue opportunity",
+        "busy": "Busy period"
+      },
+      "horizonsTitle": "Forecast horizons",
+      "horizon": {
+        "24h": "Next 24 hours",
+        "7d": "Next 7 days",
+        "30d": "Next 30 days",
+        "90d": "Next 90 days"
+      },
+      "trend": {
+        "rising": "Rising",
+        "stable": "Stable",
+        "declining": "Declining"
+      },
+      "expectedDemand": "Expected demand",
+      "confidence": "Confidence",
+      "capacity": "Recommended capacity",
+      "bestHours": "Best working hours",
+      "vacation": "Suggested vacation windows",
+      "accept": "Mark useful",
+      "advisory": "Advisory only — Dalily does not guarantee future demand or outcomes."
+    },
+    "customer": {
+      "eyebrow": "Availability",
+      "title": "Demand outlook",
+      "subtitle": "Helpful hints for when to book — not a guarantee.",
+      "demand": {
+        "low": "Lower demand today",
+        "moderate": "Moderate demand today",
+        "high": "High demand today"
+      },
+      "availability": {
+        "scarce": "Providers may fill up faster",
+        "normal": "Typical availability",
+        "ample": "Faster availability likely"
+      },
+      "bookEarly": "Book early recommendation.",
+      "faster": "Low demand — faster availability expected.",
+      "advisory": "Advisory only — Dalily does not guarantee future availability."
+    }
+  },
+  "scheduling": {
+    "provider": {
+      "title": "AI scheduling",
+      "subtitle": "Optimize today, fill idle gaps and capture nearby opportunities. You decide.",
+      "stats": {
+        "utilization": "Utilization",
+        "idle": "Idle time",
+        "travel": "Travel time",
+        "burnout": "Burnout risk"
+      },
+      "optimizedTitle": "AI optimized schedule",
+      "departure": "Departure",
+      "finish": "Expected finish",
+      "lunch": "Lunch",
+      "break": "Break",
+      "revenue": "Revenue forecast",
+      "opportunityScore": "Opportunity score",
+      "capacityTitle": "Capacity",
+      "remaining": "Remaining",
+      "overbooking": "Overbooking risk",
+      "opportunitiesTitle": "Opportunity planner",
+      "opportunitiesEmpty": "No fillable gaps right now.",
+      "accept": "Accept",
+      "ignore": "Ignore",
+      "advisory": "Advisory only — Dalily never auto-books or forces decisions."
+    },
+    "customer": {
+      "eyebrow": "Scheduling",
+      "title": "Availability windows",
+      "subtitle": "Helpful timing hints — not a hard guarantee.",
+      "confidence": "Booking confidence",
+      "arrival": "Estimated arrival window",
+      "availability": {
+        "scarce": "Limited availability",
+        "normal": "Normal availability",
+        "ample": "Good availability"
+      },
+      "advisory": "Advisory only — confirm the final slot with your provider."
+    }
+  },
+  "businessAssistant": {
+    "provider": {
+      "title": "AI business assistant",
+      "subtitle": "Personal coaching to grow revenue and quality — you stay in control.",
+      "stats": {
+        "health": "Business health",
+        "revenue": "Revenue (30d)",
+        "bookings": "Bookings",
+        "acceptance": "Acceptance",
+        "completion": "Completion",
+        "cancellation": "Cancellation",
+        "response": "Response time",
+        "satisfaction": "Satisfaction",
+        "trust": "Trust",
+        "reputation": "Reputation",
+        "capacity": "Capacity",
+        "benchmark": "Benchmark"
+      },
+      "trend": {
+        "rising": "Rising",
+        "stable": "Stable",
+        "declining": "Declining"
+      },
+      "cohort": {
+        "top_20": "Top 20%",
+        "above_average": "Above average",
+        "average": "Average",
+        "improving": "Improving",
+        "below_average": "Below average"
+      },
+      "briefingTitle": "Morning briefing",
+      "todaysBookings": "Today's bookings",
+      "revenueForecast": "Revenue forecast",
+      "busyHours": "Busy hours",
+      "reminders": "Reminders",
+      "insightsTitle": "Business insights",
+      "recsTitle": "AI recommendations",
+      "growthTitle": "Growth opportunities",
+      "goalsTitle": "Goals",
+      "goalsEmpty": "No goals yet — set one below.",
+      "goalPlaceholder": "Monthly bookings goal",
+      "addGoal": "Add goal",
+      "accept": "Accept",
+      "dismiss": "Dismiss",
+      "advisory": "Advisory coaching only — Dalily never forces provider decisions."
     }
   },
   "auth": {
@@ -3616,9 +6545,13 @@
     },
     "login": {
       "title": "Log in",
+      "metaDescription": "Log in to Dalily to manage requests, offers, unlocks, and chat.",
       "subtitle": "Welcome back to Dalily",
       "email": "Email",
       "password": "Password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "forgotPassword": "Forgot your password?",
       "submit": "Log in",
       "noAccount": "Don't have an account?",
       "register": "Sign up",
@@ -3633,8 +6566,45 @@
         "unknown": "Something went wrong. Please try again"
       }
     },
+    "forgotPassword": {
+      "title": "Reset password",
+      "metaDescription": "Request a password reset email for your Dalily account.",
+      "subtitle": "Enter your email and we’ll send a reset link.",
+      "email": "Email",
+      "submit": "Send reset link",
+      "sent": "If an account exists, you’ll receive an email shortly. Check your inbox.",
+      "backToLogin": "Back to log in",
+      "errors": {
+        "validation_error": "Please enter a valid email",
+        "unknown": "Something went wrong. Please try again."
+      }
+    },
+    "resetPassword": {
+      "title": "New password",
+      "metaDescription": "Set a new password for your Dalily account.",
+      "subtitle": "Choose a strong password for your account.",
+      "changeTitle": "Change password",
+      "changeSubtitle": "Enter your current password, then choose a new one.",
+      "currentPassword": "Current password",
+      "password": "New password",
+      "confirmPassword": "Confirm password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "submit": "Save password",
+      "success": "Password updated. You can log in now.",
+      "toLogin": "Log in",
+      "toForgot": "Request a reset email instead",
+      "errors": {
+        "validation_error": "Password must be at least 6 characters",
+        "password_mismatch": "Passwords do not match",
+        "session_required": "Open the reset link from your email first",
+        "reauth_required": "Confirm your current password to change it, or request a reset email.",
+        "unknown": "Something went wrong. Please try again."
+      }
+    },
     "register": {
       "title": "Create account",
+      "metaDescription": "Create a Dalily customer account to post requests and compare offers.",
       "subtitle": "Join Dalily and find trusted services",
       "name": "Full name",
       "email": "Email",
@@ -3659,6 +6629,7 @@
     },
     "businessWizard": {
       "title": "Register your business",
+      "metaDescription": "Register your business on Dalily to receive matched customer requests and send offers.",
       "subtitle": "Complete the steps to appear on Dalily",
       "step": "Step {current} of {total}",
       "steps": {
@@ -3697,6 +6668,45 @@
       }
     }
   },
+  "support": {
+    "navTitle": "Contact support",
+    "navDesc": "Questions, complaints, or anything else — we're here to help.",
+    "title": "Contact support",
+    "subtitle": "Send us a message and our team will get back to you.",
+    "subjectLabel": "Subject",
+    "subjectPlaceholder": "What's this about?",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Describe your question or issue in detail…",
+    "submit": "Send message",
+    "sending": "Sending…",
+    "successTitle": "Message sent",
+    "successBody": "Thanks for reaching out — our team will get back to you soon.",
+    "errors": {
+      "required": "Please fill in both fields.",
+      "subject_required": "Please enter a subject.",
+      "message_required": "Please enter a message.",
+      "submit_failed": "Could not send your message. Please try again.",
+      "login_required": "Please sign in and try again."
+    }
+  },
+  "profile": {
+    "edit": {
+      "title": "Edit profile",
+      "subtitle": "Update your name and email address.",
+      "nameLabel": "Name",
+      "emailLabel": "Email address",
+      "submit": "Save changes",
+      "saving": "Saving…",
+      "success": "Your profile was updated.",
+      "successEmailPending": "Saved. Check your new email address to confirm the change.",
+      "errors": {
+        "required": "Please fill in both fields.",
+        "validation_error": "Please enter a valid name and email.",
+        "save_failed": "Could not save your changes. Please try again.",
+        "email_update_failed": "Could not update your email. Please try again."
+      }
+    }
+  },
   "notFound": {
     "code": "404",
     "title": "Page not found",
@@ -3720,6 +6730,45 @@
     "duration": "Duration",
     "minutes": "{count} min",
     "pickSlot": "Available times",
+    "appointmentType": "Appointment type",
+    "types": {
+      "immediate": "Immediate",
+      "today": "Today",
+      "scheduled": "Scheduled",
+      "recurring": "Recurring",
+      "emergency": "Emergency",
+      "video": "Video consultation"
+    },
+    "smart": {
+      "recommended": "AI recommended times",
+      "best": "Best",
+      "alt": "Alt",
+      "moreTimes": "More available times",
+      "buffer": "Includes {minutes} min travel buffer"
+    },
+    "reschedule": {
+      "open": "Reschedule",
+      "close": "Hide reschedule",
+      "hint": "Pick a new available slot. The other party will be notified.",
+      "loading": "Loading alternatives…",
+      "empty": "No alternative slots right now.",
+      "confirm": "Confirm new time"
+    },
+    "optimize": {
+      "badge": "AI schedule",
+      "title": "Today's route review",
+      "empty": "No stops today."
+    },
+    "reminders": {
+      "title24h": "Appointment tomorrow",
+      "body24h": "Reminder: you have an appointment in about 24 hours.",
+      "title2h": "Appointment in 2 hours",
+      "body2h": "Your appointment starts soon — please be ready.",
+      "titleOnWay": "Provider on the way",
+      "bodyOnWay": "Your provider is heading to the appointment.",
+      "titleChanged": "Appointment updated",
+      "bodyChanged": "The appointment time was changed. Please review the new slot."
+    },
     "loadingSlots": "Loading slots…",
     "noSlots": "No available slots in the next two weeks.",
     "location": "Location / address",
@@ -3795,6 +6844,8 @@
       "timezone": "Timezone",
       "durations": "Slot durations (minutes, comma-separated)",
       "buffer": "Buffer between appointments (min)",
+      "travelBuffer": "Travel buffer (min)",
+      "defaultType": "Default appointment type",
       "notice": "Minimum notice (hours)",
       "ahead": "Bookable days ahead",
       "accepting": "Accepting new bookings",
@@ -3804,6 +6855,13 @@
       "blockStart": "Starts",
       "blockEnd": "Ends",
       "blockReason": "Reason",
+      "blockKind": "Block type",
+      "kinds": {
+        "vacation": "Vacation",
+        "blocked": "Blocked",
+        "holiday": "Holiday",
+        "manual": "Manual"
+      },
       "blockSubmit": "Block period",
       "noProvider": "Create your business profile first."
     },
@@ -3834,6 +6892,392 @@
         "validation_error": "Please choose a reason.",
         "login_required": "Please log in."
       }
+    }
+  },
+  "providerDashboard": {
+    "eyebrow": "Your daily business assistant",
+    "title": "{name}",
+    "subtitle": "Start with today’s overview, then open details when you need them.",
+    "today": {
+      "title": "Today’s overview",
+      "hint": "Only what matters now",
+      "opportunities": "New opportunities",
+      "unlock": "Waiting to unlock",
+      "waiting": "Awaiting customer reply",
+      "activeJobs": "Active jobs",
+      "messages": "Unread messages",
+      "rating": "Your rating",
+      "ratingEmpty": "—"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "opportunities": "Browse jobs",
+      "jobs": "My jobs",
+      "messages": "Messages",
+      "payments": "Payments",
+      "profile": "Business profile",
+      "availability": "Availability"
+    },
+    "sections": {
+      "title": "My jobs",
+      "newOpportunities": "New opportunities",
+      "waitingConfirmation": "Waiting for customer confirmation",
+      "unlockPending": "Contact unlock",
+      "activeJobs": "Confirmed / active jobs",
+      "pendingQa": "Questions waiting",
+      "allJobs": "View all jobs"
+    },
+    "pause": {
+      "title": "Matching paused",
+      "body": "Vacation mode or a closed inbox means you will not receive new opportunities.",
+      "cta": "Update settings"
+    },
+    "unlock": {
+      "title": "Contact unlock",
+      "empty": "No unlock sessions right now.",
+      "leadPending": "Complete unlock to contact the customer",
+      "sla": "Deadline: {deadline}",
+      "viewAll": "All unlocks",
+      "status": {
+        "opened": "Open",
+        "payment_pending": "Payment pending"
+      }
+    },
+    "opportunities": {
+      "title": "Latest opportunities",
+      "empty": "No open opportunities yet. Matching jobs will appear here.",
+      "open": "Awaiting your offer",
+      "offered": "Offer sent",
+      "emergency": "Emergency",
+      "viewAll": "All opportunities"
+    },
+    "qa": {
+      "title": "Questions waiting",
+      "empty": "No customer questions waiting."
+    },
+    "jobs": {
+      "title": "Active jobs",
+      "empty": "No unlocked jobs yet.",
+      "openChat": "Open chat"
+    },
+    "reliability": {
+      "title": "Unlock reliability (last 30 days)",
+      "body": "Declined: {declined} · Timed out: {timedOut}"
+    },
+    "visibility": {
+      "title": "Improve your visibility",
+      "subtitle": "Practical tips to help customers choose you — we never share ranking formulas.",
+      "cta": "Improve",
+      "tips": {
+        "complete_profile": {
+          "title": "Complete your profile",
+          "body": "A fuller profile builds trust before customers open your offer."
+        },
+        "get_verified": {
+          "title": "Get verified",
+          "body": "Verification badges help customers feel confident hiring you."
+        },
+        "collect_reviews": {
+          "title": "Collect more reviews",
+          "body": "Ask happy customers to leave a review after completed jobs."
+        },
+        "improve_response": {
+          "title": "Respond faster",
+          "body": "Faster replies make your offers stand out in the waiting room."
+        },
+        "reduce_cancellations": {
+          "title": "Reduce cancellations",
+          "body": "Keeping commitments improves how reliable you appear."
+        },
+        "add_portfolio": {
+          "title": "Add portfolio photos",
+          "body": "Show real work so customers can judge quality at a glance."
+        },
+        "stay_available": {
+          "title": "Stay available",
+          "body": "Turn off vacation mode when you can take new work."
+        }
+      }
+    },
+    "matchReasons": {
+      "label": "Why this opportunity matched you",
+      "category_fit": "Category fit",
+      "city_fit": "Same city",
+      "active_accepting": "Accepting requests",
+      "verified": "Verified",
+      "emergency_priority": "Emergency priority",
+      "newcomer_exploration": "Newcomer exploration",
+      "expanded_area": "Expanded area",
+      "high_rating": "High rating ({rating}★)",
+      "nearby": "{km} km away",
+      "available": "Available now",
+      "excellent_rating": "Excellent rating ({rating})",
+      "similar_jobs": "Completed {count}+ similar jobs",
+      "fast_response": "Responds within {minutes} minutes on average",
+      "high_acceptance": "High acceptance rate",
+      "match_score": "Match score {score}%",
+      "nearby_available": "Nearby and available today",
+      "route_fit": "Fits between your existing appointments ({km} km)",
+      "service_distance": "Matches your services · {km} km away",
+      "service_fit": "Matches your services and capacity",
+      "operational_score": "Operational score {score}%",
+      "response_band": "Response likelihood {pct}%",
+      "emergency_exposure": "Emergency broadcast priority"
+    }
+  },
+  "paymentHistory": {
+    "title": "Payment history",
+    "subtitle": "Subscriptions, lead unlocks, and receipts — searchable by month and status.",
+    "empty": "No payments match your filters.",
+    "loadError": "Could not load payments",
+    "downloadError": "Could not download receipt",
+    "downloadReceipt": "Download receipt",
+    "searchPlaceholder": "Search by reference…",
+    "resultCount": "{count} payment(s)",
+    "filters": {
+      "all": "All time",
+      "currentMonth": "This month",
+      "previousMonth": "Previous month",
+      "purpose": "Purpose",
+      "purposeAll": "All types",
+      "status": "Status",
+      "statusAll": "All statuses"
+    },
+    "purpose": {
+      "leadUnlock": "Lead unlock",
+      "business": "Business subscription",
+      "subscription": "Plan subscription"
+    },
+    "status": {
+      "pending": "Pending",
+      "pending_review": "Pending review",
+      "paid": "Paid",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "expired": "Expired"
+    },
+    "refund": {
+      "pending": "Refund pending review",
+      "refunded": "Refunded {amount} {currency}"
+    }
+  },
+  "stripeCheckout": {
+    "leadAmount": "Pay {amount} {currency}",
+    "payCta": "Pay securely",
+    "processing": "Processing…",
+    "errorTitle": "Payment failed",
+    "errorGeneric": "Could not complete payment",
+    "secureHint": "Card, Apple Pay and Google Pay when available. Powered by Stripe."
+  },
+  "stripeBilling": {
+    "renewal": "Renews {date}",
+    "cancelScheduled": "Cancellation scheduled",
+    "managePayment": "Update payment method",
+    "cancelRenewal": "Cancel auto-renewal",
+    "cancelSuccess": "Auto-renewal cancelled",
+    "cancelError": "Could not cancel renewal",
+    "portalError": "Could not open billing portal",
+    "viewInvoices": "Stripe invoices",
+    "invoicesError": "Could not load invoices",
+    "openInvoice": "Open",
+    "resumeCheckout": "Resume Stripe checkout"
+  },
+  "financialDocuments": {
+    "title": "Invoices & receipts",
+    "subtitle": "Download professional PDFs for subscriptions and lead unlocks.",
+    "empty": "No documents yet.",
+    "loadError": "Could not load documents",
+    "downloadError": "Could not download PDF",
+    "downloadPdf": "Download PDF",
+    "searchPlaceholder": "Search by document number…",
+    "filters": {
+      "type": "Type",
+      "allTypes": "All types"
+    },
+    "types": {
+      "invoice": "Business invoice",
+      "leadReceipt": "Lead unlock receipt",
+      "manualReceipt": "Manual payment receipt",
+      "creditNote": "Credit note"
+    }
+  },
+  "refunds": {
+    "title": "Refunds & disputes",
+    "subtitle": "Request a refund for review. Only admins can approve and process refunds.",
+    "requestTitle": "Request a refund",
+    "requestHint": "You cannot refund a payment yourself — an admin must approve.",
+    "historyTitle": "Refund history",
+    "disputesTitle": "Disputes",
+    "empty": "No refund requests yet.",
+    "emptyDisputes": "No payment disputes.",
+    "noPaidPayments": "No refundable paid payments",
+    "amountPlaceholder": "Partial amount (leave empty for full remaining)",
+    "reasonPlaceholder": "Reason for refund…",
+    "submitRequest": "Submit refund request",
+    "requestSuccess": "Refund request submitted",
+    "requestInvalid": "Enter a valid reason and amount",
+    "downloadCreditNote": "Download credit note",
+    "downloadError": "Download failed",
+    "remaining": "Remaining after this refund",
+    "alreadyRefunded": "already refunded",
+    "type": {
+      "full": "Full",
+      "partial": "Partial",
+      "manual": "Manual",
+      "automatic": "Automatic"
+    },
+    "status": {
+      "requested": "Requested",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "processing": "Processing",
+      "succeeded": "Succeeded",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    },
+    "disputeStatus": {
+      "opened": "Opened",
+      "evidence_requested": "Evidence requested",
+      "evidence_submitted": "Evidence submitted",
+      "under_review": "Under review",
+      "won": "Won",
+      "lost": "Lost",
+      "closed": "Closed"
+    },
+    "errors": {
+      "generic": "Could not submit refund request",
+      "feature_disabled": "Refunds are not enabled",
+      "login_required": "Please sign in",
+      "forbidden": "Not allowed",
+      "invalid_input": "Invalid input",
+      "payment_not_found": "Payment not found",
+      "payment_not_paid": "Payment is not paid",
+      "nothing_to_refund": "Nothing left to refund",
+      "amount_exceeds_remaining": "Amount exceeds remaining balance",
+      "refund_already_open": "A refund request is already open",
+      "create_failed": "Could not create request"
+    }
+  },
+  "quality": {
+    "form": {
+      "title": "Open a quality case",
+      "category": "Category",
+      "priority": "Priority",
+      "caseTitle": "Title",
+      "description": "Describe what happened",
+      "evidence": "Photo evidence (optional)",
+      "submit": "Submit case",
+      "submitting": "Submitting…",
+      "success": "Case {number} created. We will keep you updated.",
+      "categories": {
+        "customer_complaint": "Customer complaint",
+        "provider_complaint": "Provider complaint",
+        "booking_issue": "Booking issue",
+        "service_quality": "Service quality issue",
+        "communication": "Communication issue",
+        "damage_report": "Damage report",
+        "late_arrival": "Late arrival",
+        "no_show": "No show",
+        "policy_violation": "Policy violation",
+        "other": "Other"
+      },
+      "priorities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      }
+    },
+    "errors": {
+      "failed": "Could not submit the case.",
+      "feature_disabled": "Quality cases are not enabled.",
+      "login_required": "Please sign in.",
+      "forbidden": "Not allowed.",
+      "validation_error": "Check the form fields.",
+      "create_failed": "Could not create the case.",
+      "not_found": "Case not found.",
+      "invalid_status": "This action is not available for the current status."
+    },
+    "customer": {
+      "title": "Quality & complaints",
+      "subtitle": "Report an issue, upload evidence, and track resolution.",
+      "yourCases": "Your cases",
+      "empty": "No cases yet.",
+      "resolution": "Resolution",
+      "rateResolution": "How satisfied are you with the resolution?",
+      "statuses": {
+        "open": "Open",
+        "pending_information": "Pending information",
+        "under_review": "Under review",
+        "waiting_for_provider": "Waiting for provider",
+        "waiting_for_customer": "Waiting for customer",
+        "resolved": "Resolved",
+        "rejected": "Rejected",
+        "escalated": "Escalated",
+        "closed": "Closed"
+      }
+    },
+    "provider": {
+      "title": "Quality insights",
+      "subtitle": "Private view of complaints, resolution performance, and improvement tips.",
+      "openCase": "Report a quality issue",
+      "recommendations": "AI recommendations",
+      "history": "Complaint history",
+      "empty": "No quality cases for your business yet.",
+      "respondHint": "Respond to customers in Messages when asked for information.",
+      "metrics": {
+        "total": "Total cases",
+        "open": "Open",
+        "resolutionRate": "Resolution rate",
+        "avgHours": "Avg. resolution time"
+      }
+    }
+  },
+  "wallet": {
+    "eyebrow": "Wallet",
+    "title": "My wallet",
+    "subtitle": "Balances, ledger, and payment history.",
+    "businessTitle": "Business wallet",
+    "businessSubtitle": "Payouts, reserved funds, and transaction history.",
+    "loading": "Loading wallet…",
+    "errorTitle": "Could not load wallet",
+    "errorBody": "Please try again in a moment.",
+    "empty": "No wallet yet.",
+    "ledgerTitle": "Ledger",
+    "ledgerEmpty": "No ledger entries yet.",
+    "historyTitle": "Payment history",
+    "historyEmpty": "No transactions yet.",
+    "balances": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "pendingPayout": "Pending payout",
+      "refund": "Refunds",
+      "bonus": "Bonus"
+    }
+  },
+  "aiPlatform": {
+    "assistant": {
+      "eyebrow": "AI Assistant",
+      "pageTitle": "Dalily Assistant",
+      "pageSubtitle": "Recommendations only — you always decide.",
+      "providerPageTitle": "Business Assistant",
+      "providerPageSubtitle": "Drafts and tips — never auto-sent.",
+      "title": "Assistant",
+      "subtitle": "Improve requests and offers without auto-actions.",
+      "controlNote": "The assistant never submits requests or sends messages for you.",
+      "capability": "Capability",
+      "prompt": "Your input",
+      "promptPlaceholder": "Describe what you need…",
+      "generate": "Generate suggestion",
+      "regenerate": "Regenerate",
+      "copy": "Copy",
+      "loading": "Generating…",
+      "error": "Could not generate a suggestion.",
+      "confidence": "Confidence {value}%",
+      "feedbackUp": "Helpful",
+      "feedbackDown": "Not helpful"
     }
   }
 }

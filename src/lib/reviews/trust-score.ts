@@ -10,6 +10,16 @@ export type TrustScoreInput = {
   helpfulVotesTotal: number;
   verificationStatus: string;
   completedJobs: number;
+  /** 0–1 share of reviews that recommend the provider */
+  recommendationRate?: number;
+  /** 0–1 share of reviews with a provider reply */
+  responseRate?: number;
+  /** Recency-weighted average (last ~180 days), falls back to ratingAvg */
+  recentRatingAvg?: number;
+  /** Relative review-quality signal 0–1 (length, dimensions, photos) */
+  reviewQuality?: number;
+  /** Complaint / dispute rate 0–1 (penalizes score) */
+  complaintRate?: number;
 };
 
 export type TrustBadgeId =
@@ -31,24 +41,48 @@ export type TrustBadgeContext = {
   emergencyContext?: boolean;
 };
 
-/** Pure TS mirror of DB recompute_provider_trust_score (for UI / tests). */
+/**
+ * Pure TS mirror of DB recompute_provider_trust_score (for UI / tests).
+ * Weights recent ratings higher; recommendation & response rates included.
+ * Calculation remains internal — never expose formula to customers.
+ */
 export function calculateTrustScore(input: TrustScoreInput): number {
   const avg = Math.min(5, Math.max(0, input.ratingAvg || 0));
+  const recent = Math.min(
+    5,
+    Math.max(0, (input.recentRatingAvg ?? input.ratingAvg) || 0),
+  );
   const count = Math.max(0, input.reviewCount || 0);
   const verified = Math.max(0, input.verifiedReviewCount || 0);
   const helpful = Math.max(0, input.helpfulVotesTotal || 0);
   const completed = Math.max(0, input.completedJobs || 0);
 
   let score = 0;
-  score += Math.min(40, (avg / 5) * 40);
-  score += Math.min(20, Math.log(1 + count) * 6.5);
-  if (count > 0) score += (verified / count) * 15;
-  score += Math.min(10, Math.log(1 + helpful) * 3.5);
+  // Recency-weighted average (40% lifetime + 60% recent)
+  score += Math.min(40, ((avg * 0.4 + recent * 0.6) / 5) * 40);
+  score += Math.min(18, Math.log(1 + count) * 6);
+  if (count > 0) {
+    score += (verified / count) * 12;
+    if (input.recommendationRate != null) {
+      score += Math.min(1, Math.max(0, input.recommendationRate)) * 8;
+    }
+    if (input.responseRate != null) {
+      score += Math.min(1, Math.max(0, input.responseRate)) * 6;
+    }
+  }
+  score += Math.min(8, Math.log(1 + helpful) * 3);
 
   if (input.verificationStatus === "verified") score += 10;
   else if (input.verificationStatus === "partially_verified") score += 5;
 
   score += Math.min(5, Math.log(1 + completed) * 1.6);
+
+  if (input.reviewQuality != null) {
+    score += Math.min(1, Math.max(0, input.reviewQuality)) * 4;
+  }
+  if (input.complaintRate != null) {
+    score -= Math.min(1, Math.max(0, input.complaintRate)) * 8;
+  }
 
   return Math.max(0, Math.min(100, Math.round(score)));
 }

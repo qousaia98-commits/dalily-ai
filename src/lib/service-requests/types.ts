@@ -1,4 +1,5 @@
 import type { ServiceRequestStatus } from "@/lib/service-requests/status-machine";
+import type { MarketplaceRequestMeta } from "@/domains/marketplace/types";
 
 export type QuoteRow = {
   id: string;
@@ -28,7 +29,8 @@ export type ServiceReviewRow = {
 export type ServiceRequestRow = {
   id: string;
   customer_id: string;
-  provider_id: string;
+  /** Null for marketplace-native intent requests (lifecycle_version >= 2) until matching. */
+  provider_id: string | null;
   title: string;
   description: string;
   preferred_date: string | null;
@@ -53,6 +55,17 @@ export type ServiceRequestRow = {
   currency: string | null;
   created_at: string;
   updated_at: string;
+  /** Sprint 1 additive — present when DB migration applied; default treated as 1. */
+  lifecycle_version?: number;
+  /** Sprint 1 additive — selection placeholder FK (null until Sprint 4/5). */
+  selection_id?: string | null;
+  /** Sprint 2 additive */
+  category_id?: string | null;
+  urgency?: "emergency" | "normal" | null;
+  city_id?: string | null;
+  intent_text?: string | null;
+  category_confirmed?: boolean;
+  published_at?: string | null;
 };
 
 export type ServiceRequestDetail = ServiceRequestRow & {
@@ -64,6 +77,11 @@ export type ServiceRequestDetail = ServiceRequestRow & {
   quote: QuoteRow | null;
   review: ServiceReviewRow | null;
   conversationId: string | null;
+  /**
+   * Present only when MARKETPLACE_DOMAIN_V2=true.
+   * Flag off: omitted — identical legacy shape.
+   */
+  marketplace?: MarketplaceRequestMeta;
 };
 
 export type ProviderRequestSettings = {
@@ -73,6 +91,8 @@ export type ProviderRequestSettings = {
   auto_reject_message: string | null;
   vacation_mode: boolean;
   estimated_response_hours: number;
+  /** Sprint 8 — emergency matching honesty (default true). */
+  handles_emergency: boolean;
 };
 
 export type MarketplaceNotification = {

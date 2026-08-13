@@ -4,6 +4,8 @@ import { loadCustomerConversations } from "@/lib/customer/load-conversations";
 import { countUnreadConversations } from "@/lib/customer/conversations";
 import { ConversationList } from "@/components/business/conversation-list";
 import { CustomerMessagesGuest } from "@/components/customer/customer-messages-guest";
+import { MessagesInboxTools } from "@/components/messaging/messages-inbox-tools";
+import { CommunicationCenterHeader } from "@/components/messaging/communication-center-header";
 
 export default async function CustomerMessagesPage() {
   const t = await getTranslations("customer.messages");
@@ -35,6 +37,10 @@ export default async function CustomerMessagesPage() {
         </div>
         <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </header>
+
+      <CommunicationCenterHeader unread={unread} viewer="customer" />
+
+      <MessagesInboxTools messagesBasePath="/messages" />
 
       <ConversationList
         conversations={conversations}

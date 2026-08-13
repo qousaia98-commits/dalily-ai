@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { getAuthUser } from "@/lib/auth/session";
 import { isBusinessUser, canAccessAdminPanel } from "@/lib/auth/roles";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
@@ -8,6 +8,8 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { DalilyLogo } from "@/components/brand/dalily-logo";
 import { Button } from "@/components/ui/button";
+import { NotificationCenterBellLazy } from "@/components/notifications/notification-center-bell-lazy";
+import { isSmartNotificationCenterEnabled } from "@/lib/config/feature-flags";
 
 type AppHeaderProps = {
   /** When set, replaces personal account name (business dashboard). */
@@ -35,8 +37,8 @@ export async function AppHeader({
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/95 backdrop-blur-md">
       <div className="mx-auto grid h-16 max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:h-[4.5rem] sm:px-6">
         <Link
-          href="/"
-          className="justify-self-start rounded-lg outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
+          href={authUser && businessUser && !platformAdmin ? "/business" : "/"}
+          className="justify-self-start rounded-lg outline-none transition-[opacity,transform] duration-200 ease-out hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100"
           aria-label={t("brand")}
         >
           <DalilyLogo variant="horizontal" className="hidden lg:inline-flex" />
@@ -48,28 +50,47 @@ export async function AppHeader({
           className="hidden items-center justify-center gap-1 md:flex"
           aria-label={tNav("menu")}
         >
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/search">{tNav("search")}</Link>
-          </Button>
-          {platformAdmin ? (
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/admin">{tNav("admin")}</Link>
-            </Button>
-          ) : null}
-          {authUser && businessUser ? (
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/business">{tNav("dashboard")}</Link>
-            </Button>
+          {authUser && businessUser && !platformAdmin ? (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/business">{tNav("dashboard")}</Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/business/orders">{tNav("orders")}</Link>
+              </Button>
+            </>
           ) : (
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/register/business">{tNav("forBusiness")}</Link>
-            </Button>
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/request/new">{tNav("search")}</Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/find">{tNav("find")}</Link>
+              </Button>
+              {platformAdmin ? (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/admin">{tNav("admin")}</Link>
+                </Button>
+              ) : null}
+              {authUser && businessUser ? (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/business">{tNav("dashboard")}</Link>
+                </Button>
+              ) : (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/register/business">{tNav("forBusiness")}</Link>
+                </Button>
+              )}
+            </>
           )}
         </nav>
 
         <div className="flex items-center justify-end gap-1 sm:gap-2">
           {authUser ? (
             <>
+              {isSmartNotificationCenterEnabled() ? (
+                <NotificationCenterBellLazy />
+              ) : null}
               {accountLabel ? (
                 <span className="hidden max-w-[16rem] items-center gap-2 truncate text-sm text-muted-foreground lg:inline-flex">
                   <span className="truncate">{accountLabel}</span>

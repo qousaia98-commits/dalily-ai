@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getOwnedProvider } from "@/lib/providers/database";
 import { SERVICE_REQUEST_MEDIA_BUCKET } from "@/lib/service-requests/constants";
@@ -15,12 +16,18 @@ import type {
   ServiceRequestRow,
   ServiceReviewRow,
 } from "@/lib/service-requests/types";
+import { attachMarketplaceReadModels } from "@/domains/marketplace/repository";
+import {
+  customerFallbackLabel,
+  resolvePersonDisplayName,
+  resolveProviderBusinessName,
+} from "@/lib/people/display-name";
 
 function mapRequest(row: Record<string, unknown>): ServiceRequestRow {
   return {
     id: row.id as string,
     customer_id: row.customer_id as string,
-    provider_id: row.provider_id as string,
+    provider_id: (row.provider_id as string | null) ?? null,
     title: row.title as string,
     description: row.description as string,
     preferred_date: (row.preferred_date as string | null) ?? null,
@@ -47,6 +54,16 @@ function mapRequest(row: Record<string, unknown>): ServiceRequestRow {
     currency: (row.currency as string | null) ?? "SYP",
     created_at: row.created_at as string,
     updated_at: row.updated_at as string,
+    lifecycle_version:
+      row.lifecycle_version != null ? Number(row.lifecycle_version) : undefined,
+    selection_id: (row.selection_id as string | null | undefined) ?? undefined,
+    category_id: (row.category_id as string | null | undefined) ?? undefined,
+    urgency: (row.urgency as "emergency" | "normal" | null | undefined) ?? undefined,
+    city_id: (row.city_id as string | null | undefined) ?? undefined,
+    intent_text: (row.intent_text as string | null | undefined) ?? undefined,
+    category_confirmed:
+      row.category_confirmed != null ? Boolean(row.category_confirmed) : undefined,
+    published_at: (row.published_at as string | null | undefined) ?? undefined,
   };
 }
 
@@ -105,24 +122,109 @@ export async function listProviderRequests(
   search = "",
 ): Promise<ServiceRequestDetail[]> {
   const supabase = await createClient();
-  let query = supabase
+
+  // Legacy RFQ rows still set provider_id.
+  let legacyQuery = supabase
     .from("service_requests")
     .select("*")
     .eq("provider_id", providerId)
     .order("created_at", { ascending: false });
 
   if (tab !== "all") {
-    query = query.in("status", statusesForTab(tab));
+    legacyQuery = legacyQuery.in("status", statusesForTab(tab));
   }
-
   if (search.trim()) {
     const escaped = search.trim().replace(/[%_,]/g, "\\$&");
-    query = query.or(`title.ilike.%${escaped}%,description.ilike.%${escaped}%`);
+    legacyQuery = legacyQuery.or(`title.ilike.%${escaped}%,description.ilike.%${escaped}%`);
   }
 
-  const { data, error } = await query;
-  if (error || !data?.length) return [];
-  return hydrateDetails(data as Record<string, unknown>[]);
+  const { data: legacyRows } = await legacyQuery;
+
+  // Marketplace v2 keeps provider_id null — load via grants / unlocked selections.
+  const [{ data: grants }, { data: selections }] = await Promise.all([
+    supabase
+      .from("contact_release_grants")
+      .select("service_request_id")
+      .eq("provider_id", providerId),
+    supabase
+      .from("marketplace_selections")
+      .select("service_request_id")
+      .eq("provider_id", providerId)
+      .in("status", ["unlocked", "pending_unlock"]),
+  ]);
+
+  const assignedIds = [
+    ...new Set(
+      [
+        ...(grants ?? []).map((g) => g.service_request_id as string),
+        ...(selections ?? []).map((s) => s.service_request_id as string),
+      ].filter(Boolean),
+    ),
+  ];
+
+  let marketplaceRows: Record<string, unknown>[] = [];
+  if (assignedIds.length > 0) {
+    let mQuery = supabase
+      .from("service_requests")
+      .select("*")
+      .in("id", assignedIds)
+      .is("provider_id", null)
+      .order("created_at", { ascending: false });
+    if (tab !== "all") {
+      mQuery = mQuery.in("status", statusesForTab(tab));
+    }
+    if (search.trim()) {
+      const escaped = search.trim().replace(/[%_,]/g, "\\$&");
+      mQuery = mQuery.or(`title.ilike.%${escaped}%,description.ilike.%${escaped}%`);
+    }
+    const { data } = await mQuery;
+    marketplaceRows = (data as Record<string, unknown>[]) ?? [];
+  }
+
+  const byId = new Map<string, Record<string, unknown>>();
+  for (const row of [...(legacyRows ?? []), ...marketplaceRows]) {
+    byId.set(row.id as string, row as Record<string, unknown>);
+  }
+  const merged = [...byId.values()].sort(
+    (a, b) =>
+      new Date(b.created_at as string).getTime() - new Date(a.created_at as string).getTime(),
+  );
+  if (merged.length === 0) return [];
+  return hydrateDetails(merged);
+}
+
+/**
+ * Provider request detail — never requires service_requests.provider_id for v2.
+ */
+export async function getProviderVisibleRequestDetail(
+  requestId: string,
+  providerId: string,
+): Promise<ServiceRequestDetail | null> {
+  const detail = await getRequestDetail(requestId);
+  if (detail?.provider_id === providerId) return detail;
+
+  const { providerCanAccessMarketplaceRequest } = await import(
+    "@/domains/marketplace/access"
+  );
+  const canAccess = await providerCanAccessMarketplaceRequest({
+    providerId,
+    serviceRequestId: requestId,
+  });
+  if (!canAccess) return null;
+
+  if (detail && (detail.lifecycle_version ?? 1) >= 2) return detail;
+
+  // Fallback when user RLS still hides the row (pre-migration).
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from("service_requests")
+    .select("*")
+    .eq("id", requestId)
+    .maybeSingle();
+  if (error || !data) return null;
+  const [hydrated] = await hydrateDetails([data as Record<string, unknown>]);
+  return hydrated ?? null;
 }
 
 export async function listCustomerRequests(userId: string): Promise<ServiceRequestDetail[]> {
@@ -167,47 +269,63 @@ async function hydrateDetails(
   const supabase = await createClient();
   const requestIds = rows.map((r) => r.id as string);
   const customerIds = [...new Set(rows.map((r) => r.customer_id as string))];
-  const providerIds = [...new Set(rows.map((r) => r.provider_id as string))];
+  const providerIds = [
+    ...new Set(
+      rows
+        .map((r) => r.provider_id as string | null)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
 
-  const [{ data: profiles }, { data: providers }, imagesByRequest, quotesByRequest, { data: conversations }, { data: reviews }] =
+  const [profilesRes, providersRes, imagesByRequest, quotesByRequest, conversationsRes, reviewsRes] =
     await Promise.all([
-      supabase.from("profiles").select("user_id, display_name").in("user_id", customerIds),
-      supabase.from("providers").select("id, name").in("id", providerIds),
+      customerIds.length
+        ? supabase.from("profiles").select("user_id, display_name").in("user_id", customerIds)
+        : Promise.resolve({ data: [] as { user_id: string; display_name: string }[] }),
+      providerIds.length
+        ? supabase.from("providers").select("id, name").in("id", providerIds)
+        : Promise.resolve({ data: [] as { id: string; name: unknown }[] }),
       loadRequestImages(requestIds),
       loadLatestQuotes(requestIds),
-      supabase
-        .from("conversations")
-        .select("id, service_request_id")
-        .in("service_request_id", requestIds),
-      supabase.from("service_reviews").select("*").in("service_request_id", requestIds),
+      requestIds.length
+        ? supabase
+            .from("conversations")
+            .select("id, service_request_id")
+            .in("service_request_id", requestIds)
+        : Promise.resolve({ data: [] as { id: string; service_request_id: string }[] }),
+      requestIds.length
+        ? supabase.from("service_reviews").select("*").in("service_request_id", requestIds)
+        : Promise.resolve({ data: [] as Record<string, unknown>[] }),
     ]);
+
+  const profiles = profilesRes.data;
+  const providers = providersRes.data;
+  const conversations = conversationsRes.data;
+  const reviews = reviewsRes.data;
+  const locale = await getLocale();
+  const customerFallback = customerFallbackLabel(locale);
 
   const profileMap = new Map(
     (profiles ?? []).map((p) => [p.user_id, p.display_name as string]),
   );
   const providerMap = new Map(
-    (providers ?? []).map((p) => {
-      const name =
-        typeof p.name === "object" && p.name !== null
-          ? ((p.name as { en?: string }).en ?? (p.name as { ar?: string }).ar ?? "Business")
-          : "Business";
-      return [p.id, name];
-    }),
+    (providers ?? []).map((p) => [p.id, resolveProviderBusinessName(p.name, locale)]),
   );
   const convMap = new Map(
     (conversations ?? []).map((c) => [c.service_request_id as string, c.id as string]),
   );
   const reviewMap = new Map<string, ServiceReviewRow>();
-  for (const r of reviews ?? []) {
-    reviewMap.set(r.service_request_id, {
-      id: r.id,
-      service_request_id: r.service_request_id,
-      provider_id: r.provider_id,
-      customer_id: r.customer_id,
-      rating: r.rating,
-      comment: r.comment,
-      recommend: r.recommend,
-      created_at: r.created_at,
+  for (const r of (reviews ?? []) as Array<Record<string, unknown>>) {
+    const serviceRequestId = r.service_request_id as string;
+    reviewMap.set(serviceRequestId, {
+      id: r.id as string,
+      service_request_id: serviceRequestId,
+      provider_id: r.provider_id as string,
+      customer_id: r.customer_id as string,
+      rating: r.rating as number,
+      comment: (r.comment as string | null) ?? null,
+      recommend: (r.recommend as boolean | null) ?? null,
+      created_at: r.created_at as string,
     });
   }
 
@@ -223,23 +341,31 @@ async function hydrateDetails(
     });
   }
 
-  return rows.map((row) => {
-    const mapped = mapRequest(row);
-    const paths = imagesByRequest.get(mapped.id) ?? [];
-    const imageUrls = paths
-      .map((path) => signedByPath.get(path))
-      .filter((url): url is string => Boolean(url));
-    return {
-      ...mapped,
-      customerName: profileMap.get(mapped.customer_id) ?? "Customer",
-      providerName: providerMap.get(mapped.provider_id) ?? "Business",
-      imagePaths: paths,
-      imageUrls,
-      quote: quotesByRequest.get(mapped.id) ?? null,
-      review: reviewMap.get(mapped.id) ?? null,
-      conversationId: convMap.get(mapped.id) ?? null,
-    };
-  });
+  return attachMarketplaceReadModels(
+    rows.map((row) => {
+      const mapped = mapRequest(row);
+      const paths = imagesByRequest.get(mapped.id) ?? [];
+      const imageUrls = paths
+        .map((path) => signedByPath.get(path))
+        .filter((url): url is string => Boolean(url));
+      return {
+        ...mapped,
+        customerName: resolvePersonDisplayName(
+          profileMap.get(mapped.customer_id),
+          customerFallback,
+        ),
+        providerName: mapped.provider_id
+          ? (providerMap.get(mapped.provider_id) ??
+            resolveProviderBusinessName(null, locale))
+          : "—",
+        imagePaths: paths,
+        imageUrls,
+        quote: quotesByRequest.get(mapped.id) ?? null,
+        review: reviewMap.get(mapped.id) ?? null,
+        conversationId: convMap.get(mapped.id) ?? null,
+      };
+    }),
+  );
 }
 
 export const countPendingRequestsForOwner = cache(async function countPendingRequestsForOwner(
@@ -326,9 +452,14 @@ export async function getProviderRequestSettings(
       auto_reject_message: null,
       vacation_mode: false,
       estimated_response_hours: 24,
+      handles_emergency: true,
     };
   }
-  return data as ProviderRequestSettings;
+  return {
+    ...(data as ProviderRequestSettings),
+    handles_emergency:
+      (data as { handles_emergency?: boolean | null }).handles_emergency ?? true,
+  };
 }
 
 export async function getUnreadNotificationCount(userId: string): Promise<number> {
@@ -341,38 +472,10 @@ export async function getUnreadNotificationCount(userId: string): Promise<number
   return count ?? 0;
 }
 
-const VERIFICATION_NOTIFY_TYPES = [
-  "verification_approved",
-  "verification_rejected",
-  "verification_changes_requested",
-  "verification_resubmitted",
-] as const;
-
-export async function getUnreadVerificationNotificationCount(
-  userId: string,
-): Promise<number> {
-  const supabase = await createClient();
-  const { count } = await supabase
-    .from("marketplace_notifications")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", userId)
-    .is("read_at", null)
-    .in("type", [...VERIFICATION_NOTIFY_TYPES]);
-  return count ?? 0;
-}
-
-export async function markVerificationNotificationsRead(
-  userId: string,
-): Promise<void> {
-  const supabase = await createClient();
-  const now = new Date().toISOString();
-  await supabase
-    .from("marketplace_notifications")
-    .update({ read_at: now })
-    .eq("user_id", userId)
-    .is("read_at", null)
-    .in("type", [...VERIFICATION_NOTIFY_TYPES]);
-}
+export {
+  getUnreadVerificationNotificationCount,
+  markVerificationNotificationsRead,
+} from "@/lib/orders/notifications";
 
 export async function listNotifications(
   userId: string,

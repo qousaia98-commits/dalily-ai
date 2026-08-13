@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { ReviewCard } from "@/components/reviews/review-card";
 import { RatingBreakdown } from "@/components/reviews/rating-breakdown";
 import { ReviewSortSelect } from "@/components/reviews/review-sort-select";
@@ -58,6 +58,9 @@ export async function ProviderReviewsSection({
             distribution={stats.distribution}
             ratingAvg={stats.ratingAvg}
             reviewCount={stats.reviewCount}
+            recommendationRate={stats.recommendationRate}
+            qualityLabel={stats.qualityLabel}
+            aiSummary={stats.aiSummary}
           />
           <ReviewSortSelect current={sort} />
           <div className="space-y-3">

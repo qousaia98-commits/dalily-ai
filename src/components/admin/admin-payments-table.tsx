@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { ExternalLink, FileText } from "lucide-react";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import { getLocalizedField } from "@/types/provider.types";
 import { formatDateTime } from "@/lib/format/datetime";
 import { Badge } from "@/components/ui/badge";

@@ -33,6 +33,8 @@ export type ApplyDalilyRankingInput = {
   weightOverrides?: Partial<DalilyWeightMap> | null;
   /** When false, attach scores but do not re-sort */
   resort?: boolean;
+  /** Soft reputation search boosts by provider id (from AI Reputation Engine) */
+  reputationBoostByProviderId?: Map<string, number>;
 };
 
 function toCalculatorInput(
@@ -62,6 +64,8 @@ function toCalculatorInput(
       input.targetCategorySlug && cat && cat === input.targetCategorySlug,
     ),
     planIsPremium: c.planSlug === "premium" || c.planSlug === "pro",
+    reputationSearchBoost:
+      input.reputationBoostByProviderId?.get(c.provider.id) ?? null,
   };
 }
 

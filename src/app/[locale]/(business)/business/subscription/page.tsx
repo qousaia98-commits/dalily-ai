@@ -1,61 +1,160 @@
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { requireAuthUser } from "@/lib/auth/session";
 import { getOwnedProvider } from "@/lib/providers/database";
-import { isProviderSubscriptionUnlocked } from "@/lib/providers/approval-readiness";
-import { getSubscriptionPageData } from "@/actions/subscription.actions";
-import { BusinessSubscriptionPanel } from "@/components/business/business-subscription-panel";
-import { ProviderCreateFormLoader } from "@/components/business/provider-create-form-loader";
-import { SubscriptionLockedState } from "@/components/business/subscription-locked-state";
-import { SubscriptionHero } from "@/components/business/subscription-hero";
-import { SubscriptionFaq } from "@/components/business/subscription-faq";
-import { SubscriptionTrust } from "@/components/business/subscription-trust";
-import type { PlanSlug } from "@/lib/subscription/types";
+import { isProviderMonetizationEnabled } from "@/lib/config/feature-flags";
+import {
+  ensureProviderMonetizationPlan,
+  getBillingSettings,
+  getSubscriptionVisibility,
+  SUBSCRIPTION_GRACE_DAYS,
+  SUBSCRIPTION_REMINDER_LEAD_DAYS,
+} from "@/lib/monetization";
+import { getActiveBusinessSubscriptionPayment } from "@/lib/payment/business-subscription";
+import { Link } from "@/lib/i18n/navigation";
+import { Button } from "@/components/ui/button";
+import { PatternBackdrop } from "@/components/brand/pattern-backdrop";
+import { cn } from "@/lib/utils";
+import { BusinessSubscriptionPaySection } from "@/components/business/business-subscription-pay-section";
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Provider subscription — flat $5/mo: status + manual receipt payment when needed.
+ */
 export default async function BusinessSubscriptionPage() {
-  const t = await getTranslations("business.subscription");
+  if (!isProviderMonetizationEnabled()) {
+    redirect("/business");
+  }
+
   const authUser = await requireAuthUser();
   const provider = await getOwnedProvider(authUser.id);
+  if (!provider) redirect("/business");
 
-  if (!provider) {
-    return (
-      <div className="mx-auto w-full max-w-lg space-y-6 animate-fade-in px-1">
-        <SubscriptionHero />
-        <ProviderCreateFormLoader />
-      </div>
-    );
-  }
+  const t = await getTranslations("businessSubscription");
+  const [plan, settings, pendingPayment] = await Promise.all([
+    ensureProviderMonetizationPlan(provider.id),
+    getBillingSettings(),
+    getActiveBusinessSubscriptionPayment(provider.id),
+  ]);
+  const visibility = getSubscriptionVisibility(plan);
 
-  if (!isProviderSubscriptionUnlocked(provider.status)) {
-    return (
-      <div className="mx-auto w-full max-w-lg space-y-8 animate-fade-in px-1">
-        <SubscriptionHero />
-        <SubscriptionLockedState status={provider.status} />
-      </div>
-    );
-  }
+  const daysUntilEnd =
+    visibility.periodEnd && visibility.phase === "active"
+      ? Math.ceil(
+          (new Date(visibility.periodEnd).getTime() - Date.now()) / DAY_MS,
+        )
+      : null;
 
-  const { subscription, payments, pendingPayment } = await getSubscriptionPageData(authUser.id);
-  const planSlug = (subscription?.planSlug ?? "free") as PlanSlug;
+  const approachingExpiry =
+    daysUntilEnd != null &&
+    daysUntilEnd >= 0 &&
+    daysUntilEnd <= SUBSCRIPTION_REMINDER_LEAD_DAYS;
+
+  const needsPayment =
+    visibility.phase !== "active" || approachingExpiry || Boolean(pendingPayment);
+
+  const payMode: "new" | "renew" =
+    visibility.phase === "unpaid" ? "new" : "renew";
+
+  const phaseKey =
+    visibility.phase === "active"
+      ? "phase.active"
+      : visibility.phase === "grace"
+        ? "phase.grace"
+        : visibility.phase === "hidden"
+          ? "phase.hidden"
+          : "phase.unpaid";
 
   return (
-    <div className="w-full max-w-5xl space-y-10 overflow-x-hidden animate-fade-in pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:space-y-14 md:space-y-16">
-      <SubscriptionHero />
+    <main className="relative mx-auto w-full max-w-2xl space-y-6 px-4 py-8 animate-fade-in sm:px-6">
+      <PatternBackdrop patternOpacity={0.04} density="sparse" wash={false} />
 
-      <p className="mx-auto max-w-xl text-center text-sm leading-relaxed text-muted-foreground sm:text-base">
-        {t("intro")}
-      </p>
+      <header className="relative space-y-2">
+        <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--dalily-gold)]">
+          {t("eyebrow")}
+        </p>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("title")}</h1>
+        <p className="text-sm text-muted-foreground sm:text-base">{t("subtitle")}</p>
+      </header>
 
-      <BusinessSubscriptionPanel
-        currentPlanSlug={planSlug}
-        status={subscription?.status ?? "active"}
-        expiresAt={subscription?.expiresAt ?? null}
-        pendingPayment={pendingPayment}
-        payments={payments}
-        showFaq={false}
-      />
+      <section
+        className={cn(
+          "relative space-y-3 rounded-3xl border p-5 sm:p-6",
+          visibility.visible
+            ? "border-[var(--dalily-gold)]/40 bg-[color-mix(in_oklab,var(--dalily-gold)_8%,transparent)]"
+            : "border-border bg-card",
+        )}
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-sm font-medium text-muted-foreground">{t("statusLabel")}</p>
+          <span
+            className={cn(
+              "rounded-full px-2.5 py-0.5 text-xs font-semibold",
+              visibility.visible
+                ? "bg-[color-mix(in_oklab,var(--dalily-gold)_18%,transparent)] text-foreground"
+                : "bg-muted text-muted-foreground",
+            )}
+          >
+            {t(phaseKey)}
+          </span>
+        </div>
 
-      <SubscriptionFaq />
-      <SubscriptionTrust />
-    </div>
+        <p className="text-lg font-semibold tracking-tight">
+          {t("price", { price: settings.businessPriceUsd })}
+        </p>
+        <p className="text-sm text-muted-foreground">{t("unlimitedLeads")}</p>
+
+        {visibility.periodEnd ? (
+          <p className="text-sm text-muted-foreground">
+            {t("periodEnd", {
+              date: new Date(visibility.periodEnd).toLocaleDateString(),
+            })}
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">{t("noPeriod")}</p>
+        )}
+
+        {approachingExpiry && daysUntilEnd != null ? (
+          <p className="text-sm font-medium text-amber-700 dark:text-amber-400">
+            {t("approachingExpiry", { days: daysUntilEnd })}
+          </p>
+        ) : null}
+
+        {visibility.phase === "grace" && visibility.graceDaysRemaining != null ? (
+          <p className="text-sm font-medium text-amber-700 dark:text-amber-400">
+            {t("graceRemaining", {
+              days: visibility.graceDaysRemaining,
+              graceDays: SUBSCRIPTION_GRACE_DAYS,
+            })}
+          </p>
+        ) : null}
+
+        {!visibility.visible ? (
+          <p className="text-sm text-muted-foreground">{t("hiddenHint")}</p>
+        ) : null}
+      </section>
+
+      {needsPayment ? (
+        <BusinessSubscriptionPaySection
+          priceUsd={settings.businessPriceUsd}
+          mode={payMode}
+          pendingPayment={pendingPayment}
+        />
+      ) : (
+        <section className="relative space-y-3 rounded-3xl border border-border bg-card/80 p-5 sm:p-6">
+          <h2 className="text-base font-semibold">{t("activeTitle")}</h2>
+          <p className="text-sm text-muted-foreground">{t("activeBody")}</p>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild variant="outline" className="rounded-xl">
+              <Link href="/business/payments">{t("paymentsHub")}</Link>
+            </Button>
+            <Button asChild variant="ghost" className="rounded-xl">
+              <Link href="/business">{t("backHome")}</Link>
+            </Button>
+          </div>
+        </section>
+      )}
+    </main>
   );
 }

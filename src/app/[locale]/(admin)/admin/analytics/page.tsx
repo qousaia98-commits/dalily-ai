@@ -5,7 +5,7 @@ import {
   getExtendedSearchAnalytics,
 } from "@/lib/admin/control-center-v2";
 import { getMarketplaceStats } from "@/lib/admin/marketplace-stats";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 
 export default async function AdminAnalyticsPage() {
   await requireAdminUser();
@@ -65,6 +65,12 @@ export default async function AdminAnalyticsPage() {
         </Link>
         <Link href="/admin/ranking" className="rounded-lg border px-3 py-1.5 hover:bg-muted">
           {t("links.ranking")}
+        </Link>
+        <Link href="/admin/ai-predictions" className="rounded-lg border px-3 py-1.5 hover:bg-muted">
+          {t("links.predictions")}
+        </Link>
+        <Link href="/admin/emergency" className="rounded-lg border px-3 py-1.5 hover:bg-muted">
+          Emergency
         </Link>
       </div>
     </div>

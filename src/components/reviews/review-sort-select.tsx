@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, usePathname } from "@/lib/i18n/routing";
+import { useRouter, usePathname } from "@/lib/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { ReviewSort } from "@/lib/reviews/types";
@@ -13,6 +13,7 @@ const SORTS: ReviewSort[] = [
   "helpful",
   "verified",
   "photos",
+  "recommended",
 ];
 
 type Props = {

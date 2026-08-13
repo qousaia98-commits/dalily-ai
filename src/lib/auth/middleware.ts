@@ -1,7 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { AUTH_ROUTES, getPostLoginPath, isBusinessUser } from "@/lib/auth/roles";
+import {
+  AUTH_ROUTES,
+  canAccessAdminPanel,
+  getPostLoginPath,
+  isBusinessUser,
+} from "@/lib/auth/roles";
 import type { AppRole } from "@/types/database.types";
 import type { AppSupabaseClient } from "@/lib/supabase/app-client";
+
 function stripLocalePrefix(pathname: string): string {
   if (pathname === "/en" || pathname.startsWith("/en/")) {
     const stripped = pathname.slice(3);
@@ -22,6 +28,17 @@ function isAdminRoute(path: string): boolean {
   return path === "/admin" || path.startsWith("/admin/");
 }
 
+/** Customer marketplace discovery — providers must not land here. */
+function isCustomerMarketplaceRoute(path: string): boolean {
+  if (path === "/" || path === "/search" || path === "/ai" || path === "/find") return true;
+  if (path.startsWith("/search/") || path.startsWith("/ai/") || path.startsWith("/find/")) {
+    return true;
+  }
+  if (path === "/request/new" || path.startsWith("/request/")) return true;
+  if (path.startsWith("/providers/")) return true;
+  return false;
+}
+
 function localePrefix(pathname: string): string {
   if (pathname === "/en" || pathname.startsWith("/en/")) return "/en";
   return "";
@@ -31,7 +48,8 @@ export async function enforceRouteAuth(
   request: NextRequest,
   response: NextResponse,
   supabase: AppSupabaseClient,
-): Promise<NextResponse> {  const pathname = stripLocalePrefix(request.nextUrl.pathname);
+): Promise<NextResponse> {
+  const pathname = stripLocalePrefix(request.nextUrl.pathname);
   const prefix = localePrefix(request.nextUrl.pathname);
 
   const {
@@ -56,10 +74,13 @@ export async function enforceRouteAuth(
   const roles = (roleRows ?? []).map((row) => row.role as AppRole);
 
   if (isAuthRoute(pathname)) {
-    // Exception: authenticated users who aren't a business yet must still be
-    // able to reach /register/business to complete business onboarding —
-    // otherwise they'd be bounced straight back by this same rule that also
-    // sends them here from the /business guard below.
+    // Allow /reset-password for authenticated users: recovery link lands here
+    // after exchangeCodeForSession, and logged-in users may change password
+    // with current_password verification.
+    if (pathname === "/reset-password" || pathname.startsWith("/reset-password/")) {
+      return response;
+    }
+
     const isBusinessRegistrationRoute =
       pathname === "/register/business" || pathname.startsWith("/register/business/");
     if (isBusinessRegistrationRoute && !isBusinessUser(roles)) {
@@ -74,9 +95,19 @@ export async function enforceRouteAuth(
     return NextResponse.redirect(new URL(`${prefix}/register/business`, request.url));
   }
 
-  if (isAdminRoute(pathname) && !roles.includes("admin")) {
+  if (isAdminRoute(pathname) && !canAccessAdminPanel(roles)) {
     return NextResponse.redirect(new URL(`${prefix}/`, request.url));
+  }
+
+  // Role-aware home: providers never see customer marketplace discovery.
+  if (
+    isBusinessUser(roles) &&
+    !canAccessAdminPanel(roles) &&
+    isCustomerMarketplaceRoute(pathname)
+  ) {
+    return NextResponse.redirect(new URL(`${prefix}/business`, request.url));
   }
 
   return response;
 }
+

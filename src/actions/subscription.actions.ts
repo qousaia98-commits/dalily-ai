@@ -16,6 +16,7 @@ import { revalidateSubscriptionSurfaces } from "@/lib/subscription/revalidate";
 import { subscriptionService } from "@/lib/subscription/subscription.service";
 import type { PlanSlug } from "@/lib/subscription/types";
 import { createClient } from "@/lib/supabase/server";
+import { isUnlockPaymentsV2Enabled } from "@/lib/config/feature-flags";
 
 export type PaymentInstructionsData = {
   paymentId: string;
@@ -30,6 +31,8 @@ export type PaymentInstructionsData = {
   reference: string;
   status: string;
   hasReceipt: boolean;
+  /** "manual" | "stripe" | "shamcash" | ... — drives which verify step the panel shows. */
+  paymentProvider?: string;
 };
 
 export type SubscriptionActionState = {
@@ -115,10 +118,24 @@ export const getSubscriptionPageData = cache(async function getSubscriptionPageD
     ? "pending_payment"
     : (subscription?.status ?? "active");
 
+  // The flat $5/mo Business plan lives in provider_monetization_plans, a
+  // separate table from the legacy tiered `subscriptions` used above. A
+  // provider who only ever paid the flat plan still has a legacy "free"
+  // row (auto-created by ensureFreeSubscription), which would otherwise
+  // show "Starter" everywhere despite an active paid subscription.
+  const { ensureProviderMonetizationPlan } = await import("@/lib/monetization/plans");
+  const monetizationPlan = await ensureProviderMonetizationPlan(provider.id);
+  const isBusinessPlanActive =
+    monetizationPlan.billingMode === "business" && monetizationPlan.status === "active";
+
   return {
     provider,
     subscription: subscription
-      ? { ...subscription, status: statusForUi }
+      ? {
+          ...subscription,
+          status: statusForUi,
+          planSlug: isBusinessPlanActive ? ("pro" as PlanSlug) : subscription.planSlug,
+        }
       : subscription,
     plans,
     payments,
@@ -130,6 +147,10 @@ export async function upgradeSubscriptionAction(
   planSlug: PlanSlug,
   billingCycle: "monthly" | "yearly" = "monthly",
 ): Promise<SubscriptionActionState> {
+  if (isUnlockPaymentsV2Enabled()) {
+    return { success: false, error: "subscription_upgrades_frozen" };
+  }
+
   const authUser = await requireAuthUser();
   const provider = await requireOwnedProvider(authUser.id);
 
@@ -197,12 +218,18 @@ export async function preparePaymentReceiptUploadAction(
   const validated = validateReceiptMeta(metaParsed.data);
   if (!validated.ok) return { success: false, error: validated.error };
 
-  const history = await getPaymentHistory(provider.id);
-  const payment = history.find((p) => p.id === idParsed.data);
-  if (!payment || payment.paymentStatus !== "pending") {
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const adminLookup = createAdminClient();
+  const { data: paymentRow } = await adminLookup
+    .from("payments")
+    .select("id, payment_status, receipt_path")
+    .eq("id", idParsed.data)
+    .eq("provider_id", provider.id)
+    .maybeSingle();
+  if (!paymentRow || paymentRow.payment_status !== "pending") {
     return { success: false, error: "payment_not_submittable" };
   }
-  if (payment.receiptPath) {
+  if (paymentRow.receipt_path) {
     return { success: false, error: "duplicate_receipt" };
   }
 
@@ -266,18 +293,23 @@ export async function confirmPaymentReceiptUploadAction(
     return { success: false, error: "invalid_payment" };
   }
 
-  const history = await getPaymentHistory(provider.id);
-  const payment = history.find((p) => p.id === idParsed.data);
-  if (!payment || payment.paymentStatus !== "pending") {
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const adminLookup = createAdminClient();
+  const { data: paymentRow } = await adminLookup
+    .from("payments")
+    .select("id, payment_status, receipt_path")
+    .eq("id", idParsed.data)
+    .eq("provider_id", provider.id)
+    .maybeSingle();
+  if (!paymentRow || paymentRow.payment_status !== "pending") {
     return { success: false, error: "payment_not_submittable" };
   }
-  if (payment.receiptPath) {
+  if (paymentRow.receipt_path) {
     return { success: false, error: "duplicate_receipt" };
   }
 
   // Owner has no SELECT on receipts — verify object exists via admin client.
-  const { createAdminClient } = await import("@/lib/supabase/admin");
-  const admin = createAdminClient();
+  const admin = adminLookup;
   const { data: signed } = await admin.storage
     .from(PAYMENT_RECEIPTS_BUCKET)
     .createSignedUrl(metaParsed.data.path, 60);
@@ -303,14 +335,6 @@ export async function confirmPaymentReceiptUploadAction(
 
   revalidate(provider.slug);
   return { success: true, message: "pending_review" };
-}
-
-/**
- * @deprecated File bodies must not go through Server Actions.
- * Use preparePaymentReceiptUploadAction + confirmPaymentReceiptUploadAction.
- */
-export async function submitPaymentReceiptAction(): Promise<SubscriptionActionState> {
-  return { success: false, error: "use_direct_upload" };
 }
 
 export async function downgradeSubscriptionAction(): Promise<SubscriptionActionState> {
@@ -340,6 +364,10 @@ export async function cancelSubscriptionAction(): Promise<SubscriptionActionStat
 }
 
 export async function renewSubscriptionAction(): Promise<SubscriptionActionState> {
+  if (isUnlockPaymentsV2Enabled()) {
+    return { success: false, error: "subscription_upgrades_frozen" };
+  }
+
   const authUser = await requireAuthUser();
   const provider = await requireOwnedProvider(authUser.id);
 

@@ -3,7 +3,7 @@
 import { useCallback, useState, useTransition } from "react";
 import { MapPin, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/lib/i18n/routing";
+import { useRouter } from "@/lib/i18n/navigation";
 import {
   disableLocationAction,
   enableLocationWithCoordsAction,

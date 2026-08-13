@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter, Link } from "@/lib/i18n/routing";
+import { useRouter, Link } from "@/lib/i18n/navigation";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import {
   approvePaymentAction,

@@ -15,7 +15,7 @@ import { localizedField } from "@/lib/categories/format";
 import { CITY_IDS } from "@/lib/constants/reference-data";
 import type { Locale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
-import { Link } from "@/lib/i18n/routing";
+import { Link } from "@/lib/i18n/navigation";
 import {
   Select,
   SelectContent,

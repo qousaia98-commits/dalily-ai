@@ -40,7 +40,8 @@ export type SearchSort =
   | "rating"
   | "newest"
   | "pro"
-  | "premium";
+  | "premium"
+  | "response";
 
 export function parseSearchSort(value: string | undefined | null): SearchSort {
   if (
@@ -48,7 +49,8 @@ export function parseSearchSort(value: string | undefined | null): SearchSort {
     value === "rating" ||
     value === "newest" ||
     value === "pro" ||
-    value === "premium"
+    value === "premium" ||
+    value === "response"
   ) {
     return value;
   }

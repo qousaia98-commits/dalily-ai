@@ -9,8 +9,7 @@ import {
   compareConversationsByLatestMessage,
 } from "@/lib/business/conversations";
 import { MSG_READ_COOKIE, parseMsgReadCookie } from "@/lib/business/message-read-state";
-import { loadConversationsForBusiness } from "@/lib/messaging/queries";
-import { listDalilyInboxMessages } from "@/lib/dalily-messages/inbox";
+import { loadConversationsForBusiness, listDalilyInboxMessages } from "@/domains/chat";
 import type { PlanSlug } from "@/lib/subscription/types";
 
 function planLabel(slug: string): string {

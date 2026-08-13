@@ -37,12 +37,21 @@ export const createQuoteSchema = z.object({
   notes: z.string().trim().max(2000).optional().or(z.literal("")),
 });
 
+const dimensionScore = z.coerce.number().int().min(1).max(5).optional();
+
 export const reviewSchema = z.object({
   requestId: z.string().uuid(),
   rating: z.coerce.number().int().min(1).max(5),
   comment: z.string().trim().max(2000).optional().or(z.literal("")),
   recommend: z.enum(["yes", "no", ""]).optional(),
   anonymous: z.enum(["true", "false", ""]).optional(),
+  communication: dimensionScore,
+  quality: dimensionScore,
+  punctuality: dimensionScore,
+  professionalism: dimensionScore,
+  value: dimensionScore,
+  language: z.enum(["en", "ar", ""]).optional(),
+  photoKind: z.enum(["before", "after", "completed", "general", ""]).optional(),
 });
 
 export const disputeSchema = z.object({
@@ -56,4 +65,5 @@ export const providerRequestSettingsSchema = z.object({
   autoRejectMessage: z.string().trim().max(500).optional().or(z.literal("")),
   vacationMode: z.boolean(),
   estimatedResponseHours: z.coerce.number().int().min(1).max(168),
+  handlesEmergency: z.boolean().default(true),
 });

@@ -53,3 +53,49 @@ export function DashboardSkeleton() {
     </div>
   );
 }
+
+/** Waiting room / offer board — matches card layout, no spinner. */
+export function WaitingRoomSkeleton({ label }: { label?: string }) {
+  return (
+    <div
+      className="mx-auto w-full max-w-lg space-y-5 py-10"
+      aria-busy="true"
+      aria-live="polite"
+    >
+      {label ? <p className="sr-only">{label}</p> : null}
+      <div className="flex flex-col items-center gap-3 text-center">
+        <Skeleton className="size-28 rounded-2xl" />
+        <Skeleton className="h-7 w-48 rounded-lg" />
+        <Skeleton className="h-4 w-64 max-w-full rounded-lg" />
+      </div>
+      <Skeleton className="h-14 w-full rounded-2xl" />
+      <Skeleton className="h-40 w-full rounded-2xl" />
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Skeleton className="h-11 flex-1 rounded-xl" />
+        <Skeleton className="h-11 flex-1 rounded-xl" />
+      </div>
+    </div>
+  );
+}
+
+/** Compact inline panel loading (prefs, badge details, graphs). */
+export function InlinePanelSkeleton({
+  rows = 3,
+  className,
+}: {
+  rows?: number;
+  className?: string;
+}) {
+  return (
+    <div className={className} aria-busy="true">
+      <div className="space-y-2">
+        {Array.from({ length: rows }).map((_, i) => (
+          <Skeleton
+            key={i}
+            className={i === 0 ? "h-4 w-2/3 rounded-lg" : "h-3 w-full rounded-md"}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}

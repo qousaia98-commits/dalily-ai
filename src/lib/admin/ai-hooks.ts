@@ -23,8 +23,47 @@ export function listAdminAiExtensions(): AdminAiExtension[] {
 
 export async function runAdminAiHook(
   extension: AdminAiExtension,
-  _context: Record<string, unknown>,
-): Promise<{ extension: AdminAiExtension; supported: false }> {
-  void _context;
+  context: Record<string, unknown>,
+): Promise<
+  | { extension: AdminAiExtension; supported: false }
+  | {
+      extension:
+        | "fraud_detection"
+        | "automatic_abuse_detection"
+        | "trend_detection";
+      supported: true;
+      result: unknown;
+    }
+> {
+  if (
+    (extension === "fraud_detection" || extension === "automatic_abuse_detection") &&
+    (await import("@/lib/config/feature-flags")).isFraudDetectionEnabled()
+  ) {
+    const entityType = String(context.entityType ?? "provider") as
+      | "provider"
+      | "customer";
+    const entityId = String(context.entityId ?? "");
+    if (!entityId) {
+      return { extension, supported: false };
+    }
+    const { recalculateEntityRisk } = await import("@/lib/fraud/service");
+    const result = await recalculateEntityRisk({
+      entityType,
+      entityId,
+      mlRiskScore:
+        typeof context.mlRiskScore === "number" ? context.mlRiskScore : null,
+    });
+    return { extension, supported: true, result };
+  }
+
+  if (
+    extension === "trend_detection" &&
+    (await import("@/lib/config/feature-flags")).isAiOpsEnabled()
+  ) {
+    const { refreshPlatformOps } = await import("@/lib/ai-ops/service");
+    const result = await refreshPlatformOps({});
+    return { extension, supported: true, result };
+  }
+
   return { extension, supported: false };
 }
