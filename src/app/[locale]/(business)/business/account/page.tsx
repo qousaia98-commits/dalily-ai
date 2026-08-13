@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Settings,
   User,
+  User2,
   Wrench,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -112,6 +113,12 @@ export default async function BusinessAccountPage() {
       title: t("links.analytics"),
       description: t("links.analyticsDesc"),
       icon: BarChart3,
+    },
+    {
+      href: "/account/profile",
+      title: t("links.editProfile"),
+      description: t("links.editProfileDesc"),
+      icon: User2,
     },
     {
       href: "/reset-password",

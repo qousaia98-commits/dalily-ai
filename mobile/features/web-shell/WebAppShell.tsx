@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, ActivityIndicator, Platform, BackHandler } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Platform, BackHandler, Image } from 'react-native';
 import { WebView, type WebViewNavigation } from 'react-native-webview';
 import * as Linking from 'expo-linking';
 import { useTranslation } from 'react-i18next';
@@ -7,9 +7,24 @@ import { Text, ErrorState } from '@/components/ui';
 import { env } from '@/constants/env';
 import { buildMobileBridgeWebViewUrl, shouldOpenExternally } from '@/services/web-bridge';
 import { useTheme } from '@/theme/ThemeProvider';
-import { spacing } from '@/theme/tokens';
+import { palette, spacing } from '@/theme/tokens';
 
 type Phase = 'issuing' | 'ready' | 'error';
+
+/** Same brand mark used for the app icon — Dalily name + tagline underneath. */
+function BrandedLoading() {
+  return (
+    <View style={styles.center}>
+      <Image source={require('../../assets/splash-icon.png')} style={styles.mark} resizeMode="contain" />
+      <Text style={styles.wordmark}>Dalily</Text>
+      <Text style={styles.nameAr}>دليلي</Text>
+      <Text style={styles.tagline}>
+        FROM PROBLEM <Text style={styles.taglineGold}>TO</Text> SOLUTION
+      </Text>
+      <ActivityIndicator color={palette.gold} style={styles.spinner} />
+    </View>
+  );
+}
 
 /**
  * Full-screen web-app shell — the native app defers entirely to the real,
@@ -83,12 +98,7 @@ export function WebAppShell({ target = '/' }: { target?: string }) {
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
-      {phase === 'issuing' ? (
-        <View style={styles.center}>
-          <ActivityIndicator color={colors.primary} size="large" />
-          <Text muted>{t('customer.webRequest.loading')}</Text>
-        </View>
-      ) : null}
+      {phase === 'issuing' ? <BrandedLoading /> : null}
 
       {phase === 'error' ? (
         <ErrorState message={t(errorKey)} onRetry={() => void issueBridge()} />
@@ -98,7 +108,7 @@ export function WebAppShell({ target = '/' }: { target?: string }) {
         <>
           {webLoading ? (
             <View style={styles.loadingOverlay} pointerEvents="none">
-              <ActivityIndicator color={colors.primary} size="large" />
+              <BrandedLoading />
             </View>
           ) : null}
           <WebView
@@ -138,12 +148,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: spacing.md,
     padding: spacing.lg,
+    // Brand loading screen always uses navy, independent of light/dark
+    // theme — the white/gold wordmark text needs a guaranteed-dark backdrop.
+    backgroundColor: palette.navy,
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFill,
     zIndex: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.55)',
   },
+  mark: { width: 64, height: 64, marginBottom: spacing.sm },
+  wordmark: {
+    color: palette.white,
+    fontSize: 22,
+    fontWeight: '700',
+    letterSpacing: -0.3,
+  },
+  nameAr: {
+    color: palette.gold,
+    fontSize: 15,
+    fontWeight: '600',
+    marginTop: 2,
+  },
+  tagline: {
+    color: palette.muted,
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 2,
+    marginTop: spacing.sm,
+  },
+  taglineGold: { color: palette.gold },
+  spinner: { marginTop: spacing.lg },
 });

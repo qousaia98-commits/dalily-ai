@@ -7,6 +7,7 @@ import {
   LogIn,
   Settings,
   ShieldAlert,
+  User2,
   UserPlus,
   Wallet,
   Sparkles,
@@ -149,6 +150,12 @@ export default async function AccountPage() {
                 icon: Building2,
               },
             ]),
+        {
+          href: "/account/profile",
+          title: t("links.editProfile"),
+          description: t("links.editProfileDesc"),
+          icon: User2,
+        },
         {
           href: "/reset-password",
           title: t("links.changePassword"),

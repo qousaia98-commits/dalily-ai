@@ -6,6 +6,7 @@ import { isBusinessUser } from "@/lib/auth/roles";
 import { listCustomerRequests } from "@/lib/service-requests/queries";
 import { countCustomerOrderTabs } from "@/lib/orders/tabs";
 import { OrdersBoard } from "@/components/orders/orders-board";
+import { MarkNavChannelSeen } from "@/components/shared/mark-nav-channel-seen";
 
 export default async function CustomerOrdersPage() {
   const t = await getTranslations("orders");
@@ -25,6 +26,7 @@ export default async function CustomerOrdersPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-6 px-4 py-8 sm:px-6 animate-fade-in">
+      <MarkNavChannelSeen channel="orders" />
       <header className="space-y-2">
         <p className="text-xs font-bold tracking-[0.16em] text-[var(--dalily-gold)] uppercase">
           {t("customerEyebrow")}

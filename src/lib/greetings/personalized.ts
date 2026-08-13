@@ -11,6 +11,11 @@ export type PersonalizedGreeting = {
   subtitle: string;
 };
 
+/** Capitalizes the first code point only — a no-op for scripts without case (e.g. Arabic). */
+function capitalizeFirst(value: string): string {
+  return value.length > 0 ? value[0]!.toUpperCase() + value.slice(1) : value;
+}
+
 /** First token of display name, else email local-part, else warm fallback. */
 export function getFirstName(
   displayName: string | null | undefined,
@@ -18,9 +23,9 @@ export function getFirstName(
   locale: Locale = "ar",
 ): string {
   const fromName = displayName?.trim().split(/\s+/)[0];
-  if (fromName && fromName.length >= 2) return fromName;
+  if (fromName && fromName.length >= 2) return capitalizeFirst(fromName);
   const fromEmail = email?.split("@")[0]?.trim();
-  if (fromEmail && fromEmail.length >= 2) return fromEmail;
+  if (fromEmail && fromEmail.length >= 2) return capitalizeFirst(fromEmail);
   return locale === "ar" ? "صديقي" : "there";
 }
 
